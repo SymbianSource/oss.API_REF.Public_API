@@ -1,0 +1,1 @@
+senxmlproperties.h

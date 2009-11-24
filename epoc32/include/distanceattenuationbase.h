@@ -1,0 +1,1 @@
+distanceattenuationbase.h

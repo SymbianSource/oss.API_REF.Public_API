@@ -1,0 +1,1 @@
+mstereowideningobserver.h

@@ -1,0 +1,1 @@
+senservicemanager.h

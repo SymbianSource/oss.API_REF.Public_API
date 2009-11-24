@@ -1,0 +1,1 @@
+audioequalizerbase.h

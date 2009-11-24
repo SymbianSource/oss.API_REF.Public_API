@@ -1,0 +1,1 @@
+cmmanager.inl

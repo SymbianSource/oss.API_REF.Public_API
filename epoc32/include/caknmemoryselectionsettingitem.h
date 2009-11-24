@@ -1,0 +1,1 @@
+caknmemoryselectionsettingitem.h

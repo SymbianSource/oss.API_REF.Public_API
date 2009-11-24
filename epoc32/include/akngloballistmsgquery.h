@@ -1,0 +1,1 @@
+akngloballistmsgquery.h

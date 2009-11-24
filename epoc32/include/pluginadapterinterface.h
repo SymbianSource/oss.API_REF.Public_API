@@ -1,0 +1,1 @@
+pluginadapterinterface.h

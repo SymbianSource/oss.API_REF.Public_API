@@ -1,0 +1,1 @@
+calcategorymanager.h

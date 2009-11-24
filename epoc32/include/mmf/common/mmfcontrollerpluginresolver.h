@@ -1,0 +1,1 @@
+mmfcontrollerpluginresolver.h

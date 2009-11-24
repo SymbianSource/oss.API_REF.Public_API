@@ -1,0 +1,1 @@
+imagetransformplugin.h

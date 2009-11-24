@@ -1,0 +1,1 @@
+aknmessagequerydialog.h

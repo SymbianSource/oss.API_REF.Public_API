@@ -1,0 +1,1 @@
+stereowideningbase.h

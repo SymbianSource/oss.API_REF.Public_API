@@ -1,0 +1,1 @@
+cntviewfindconfig.inl

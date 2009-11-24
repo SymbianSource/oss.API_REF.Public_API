@@ -1,0 +1,1 @@
+sipregistrationbinding.h

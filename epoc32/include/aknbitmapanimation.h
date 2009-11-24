@@ -1,0 +1,1 @@
+aknbitmapanimation.h

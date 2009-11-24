@@ -1,0 +1,1 @@
+sipresolvedclient.inl

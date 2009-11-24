@@ -1,0 +1,1 @@
+msenproperties.h

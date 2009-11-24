@@ -1,0 +1,1 @@
+mdaaudiosampleeditor.h

@@ -1,0 +1,1 @@
+akntextsettingpage.h

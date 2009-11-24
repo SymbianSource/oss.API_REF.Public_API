@@ -1,0 +1,1 @@
+sensrvmagnetometersensor.h

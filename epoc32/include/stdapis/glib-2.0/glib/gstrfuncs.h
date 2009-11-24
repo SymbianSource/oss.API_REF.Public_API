@@ -1,0 +1,1 @@
+gstrfuncs.h

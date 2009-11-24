@@ -1,0 +1,1 @@
+textresolver.h

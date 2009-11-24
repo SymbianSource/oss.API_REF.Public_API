@@ -1,0 +1,1 @@
+mdistanceattenuationobserver.h

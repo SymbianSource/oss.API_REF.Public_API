@@ -1,0 +1,1 @@
+aknstaticnotedialog.h

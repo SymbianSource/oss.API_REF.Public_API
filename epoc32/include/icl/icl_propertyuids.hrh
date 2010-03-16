@@ -1,0 +1,89 @@
+// Copyright (c) 2006-2009 Nokia Corporation and/or its subsidiary(-ies).
+// All rights reserved.
+// This component and the accompanying materials are made available
+// under the terms of the License "Symbian Foundation License v1.0" to Symbian Foundation members and "Symbian Foundation End User License Agreement v1.0" to non-members
+// which accompanies this distribution, and is available
+// at the URL "http://www.symbianfoundation.org/legal/licencesv10.html".
+//
+// Initial Contributors:
+// Nokia Corporation - initial contribution.
+//
+// Contributors:
+//
+// Description:
+// Defines the numerical value for KUidHwCodec.
+// 
+//
+/**
+ @file
+ @publishedAll
+ @released 
+ @see KUidHwCodec
+*/
+#define KHwCodecUidValue	0x102737FA
+
+/** 
+Defines the numerical value for KUidSwCodec.
+ @see KUidSwCodec
+*/
+#define KSwCodecUidValue	0x102737FB
+
+/** 
+Defines the numerical value for KUidDefaultCodec.
+ @see KUidDefaultCodec
+*/
+#define KDefaultCodecUidValue	0x102737FC
+
+/** 
+Defines the numerical value for KUidExifSupport.
+ @see KUidExifSupport
+*/
+#define KExifSupportUidValue		0x102737FF
+
+/** 
+Defines the numerical value for KUidJPGSequential.
+ @see KUidJPGSequential
+*/
+#define KJPGSequentialUidValue		0x10273803
+
+/** 
+Defines the numerical value for KUidJPGProgressive.
+ @see KUidJPGProgressive
+*/
+#define KJPGProgressiveUidValue		0x10273804
+
+/** 
+Defines the numerical value for KUidArbitraryScaling.
+ @see KUidArbitraryScaling
+*/
+#define KArbitraryScalingUidValue	0x1027380C
+
+/** 
+Defines the numerical value for KUidEColor16MASupport.
+ @see KUidEColor16MASupport
+*/
+#define KEColor16MASupportUidValue	0x1027380D
+
+/** 
+Defines the numerical value for KUidThumbnailSupport.
+ @see KUidThumbnailSupport
+*/
+#define KThumbnailSupportUidValue	0x1027380E
+
+/** 
+Defines the numerical value for KUidThumbnailAutogeneration.
+ @see KUidThumbnailAutogenerationUidValue
+*/
+#define KThumbnailAutogenerationUidValue	 0x1027380F
+
+/** 
+Defines the numerical value for KUidDecodeToReducedSizeSupport.
+ @see KUidDecodeToReducedSizeSupport
+*/
+#define KDecodeToReducedSizeSupportUidValue	0x10273810
+
+/**
+Defines the numerical value for KUidICLExtension.
+ @see KUidICLExtension
+*/
+#define KICLExtensionUidValue	0x102833D8

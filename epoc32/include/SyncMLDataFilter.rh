@@ -1,0 +1,57 @@
+/*
+* Copyright (c) 2005 Nokia Corporation and/or its subsidiary(-ies). 
+* All rights reserved.
+* This component and the accompanying materials are made available
+* under the terms of the License "Symbian Foundation License v1.0" to Symbian Foundation members and "Symbian Foundation End User License Agreement v1.0" to non-members
+* which accompanies this distribution, and is available
+* at the URL "http://www.symbianfoundation.org/legal/licencesv10.html".
+*
+* Initial Contributors:
+* Nokia Corporation - initial contribution.
+*
+* Contributors:
+*
+* Description:  Resource file format for filters
+*
+*/
+
+
+STRUCT SYNCML_FILTER_PROPERTY
+	{
+	BYTE	version=1;
+	LTEXT	name;					// Name
+	LONG	datatype_default_values;		// Datatypes - from hrh file
+	LONG	datatype_query_value;			// Datatypes - from hrh file
+	WORD	max_text_length;			// Max text length to strings
+	LTEXT	text_16_default_values[];		// Default values for text16 datatype
+	LTEXT8	text_8_default_values[];		// Default values for text8 datatype
+	WORD	int_or_bool_default_values[];		// Default values for integer or boolean datatype
+	LTEXT	time_default_values[];			// Default values for date datatype
+	BYTE	default_values_selection[];		// Boolean fof every default value - defines if default value is selected or not by default
+	LTEXT	text_16_default_query_value;		// If query is selected or query can be used then default value is defined here to text16 datatype
+	LTEXT8	text_8_default_query_value;		// If query is selected or query can be used then default value is defined here to text8 datatype
+	WORD	int_or_bool_default_query_Value;	// If query is selected or query can be used then default value is defined here to boolean or integer datatype
+	LTEXT	time_default_query_value;		// If query is selected or query can be used then default value is defined here to time datatype
+	BYTE	query_value_selected_by_default;	// Defines if query value is selected by default
+	BYTE	can_use_query_value;			// Defines if query value can be used with this property
+	BYTE	supports_multiple_selection;		// Defines if many values can be selected same time
+	BYTE	supports_empty_selection;		// Defines if selection can be leaved empty or not
+	}
+
+STRUCT SYNCML_FILTER
+	{
+	BYTE	version = 1;
+	WORD	filter_id;				// Filter ID
+	LTEXT	display_name;				// Display name
+	LTEXT	display_description;			// Display description
+	BYTE	enabled_by_default;			// Defines if filter is enable or not by default
+	BYTE	supported_by_server_by_default;		// Defines if filter is supported by remote server by default
+	BYTE	match_type_supported_by_default;	// Defines if match type selection affects to filter by default
+	STRUCT	filter_properties[];			// Structure for Properties - SYNCML_FILTER_PROPERTY
+	}
+
+
+
+
+
+

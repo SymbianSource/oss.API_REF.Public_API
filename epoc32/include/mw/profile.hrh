@@ -1,1 +1,98 @@
-profile.hrh
+/*
+* Copyright (c) 2002 Nokia Corporation and/or its subsidiary(-ies).
+* All rights reserved.
+* This component and the accompanying materials are made available
+* under the terms of the License "Symbian Foundation License v1.0" to Symbian Foundation members and "Symbian Foundation End User License Agreement v1.0" to non-members
+* which accompanies this distribution, and is available
+* at the URL "http://www.symbianfoundation.org/legal/licencesv10.html".
+*
+* Initial Contributors:
+* Nokia Corporation - initial contribution.
+*
+* Contributors:
+*
+* Description:  Profiles Engine enumerations TProfileKeypadVolume,
+*                TProfileRingingType, TDefaultProfileId and
+*                TProfileRingingVolume
+*
+*/
+
+
+#ifndef __PROFILE_HRH__
+#define __PROFILE_HRH__
+
+// DATA TYPES
+
+/**
+* Ringing type of an alert tone. This affects how the tone is actually played
+* when a call or a message arrives.
+*/
+enum TProfileRingingType
+    {
+    /** The tone is played in a loop.
+    */
+    EProfileRingingTypeRinging      = 0,
+    /**
+    * The tone is played in a loop. On the 1st round, the volume is gradually
+    * increment from the lowest level to the set level.
+    */
+    EProfileRingingTypeAscending    = 1,
+    /** The tone is played only once.
+    */
+    EProfileRingingTypeRingingOnce  = 2,
+    /**
+    * The phone only beeps once instead of playing the tone if one has been set.
+    */
+    EProfileRingingTypeBeepOnce     = 3,
+    /** The phone is silent.
+    */
+    EProfileRingingTypeSilent       = 4
+    };
+
+/**
+* Available volume levels for keypad tones.
+*/
+enum TProfileKeypadVolume
+    {
+    EProfileKeypadVolumeOff    = 0,
+    EProfileKeypadVolumeLevel1 = 1,
+    EProfileKeypadVolumeLevel2 = 2,
+    EProfileKeypadVolumeLevel3 = 3
+    };
+
+/**
+* Default profile identifiers. Default profiles are those pre-installed in the
+* phone.
+*/
+enum TDefaultProfileId
+    {
+    EProfileGeneralId   = 0,
+    EProfileSilentId    = 1,
+    EProfileMeetingId   = 2,
+    EProfileOutdoorId   = 3,
+    EProfilePagerId     = 4,
+	EProfileOffLineId   = 5, ///< Use this only if Off-Line Profile is supported
+	EProfileDriveId   = 6    ///< Use this only if Drive Profile is supported
+    };
+
+/**
+* Available volume levels for alert tones.
+*/
+enum TProfileRingingVolume
+    {
+    EProfileRingingVolumeLevel1 = 1,
+    EProfileRingingVolumeLevel2 = 2,
+    EProfileRingingVolumeLevel3 = 3,
+    EProfileRingingVolumeLevel4 = 4,
+    EProfileRingingVolumeLevel5 = 5,
+    EProfileRingingVolumeLevel6 = 6,
+    EProfileRingingVolumeLevel7 = 7,
+    EProfileRingingVolumeLevel8 = 8,
+    EProfileRingingVolumeLevel9 = 9,
+    EProfileRingingVolumeLevel10 = 10
+    };
+
+#endif // __PROFILE_HRH__
+
+// End of File
+

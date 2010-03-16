@@ -1,1 +1,62 @@
-signal.h
+/*
+* Copyright (c) 1997-2009 Nokia Corporation and/or its subsidiary(-ies).
+* All rights reserved.
+* This component and the accompanying materials are made available
+* under the terms of the License "Symbian Foundation License v1.0" to Symbian Foundation members and "Symbian Foundation End User License Agreement v1.0" to non-members
+* which accompanies this distribution, and is available
+* at the URL "http://www.symbianfoundation.org/legal/licencesv10.html".
+*
+* Initial Contributors:
+* Nokia Corporation - initial contribution.
+*
+* Contributors:
+*
+* Description:
+*
+*/
+
+
+
+
+
+
+/**
+ @file
+ @publishedAll
+ @released
+*/
+
+#ifndef _SIGNAL_H_
+#define _SIGNAL_H_
+#ifdef __cplusplus
+extern "C" {
+#endif
+
+#include "_ansi.h"
+#include <sys/signal.h>
+
+/** Atomic entity type (ANSI)
+ */
+typedef int	sig_atomic_t;		
+
+/** Default action 
+*/
+#define SIG_DFL ((void (*)())0)		
+
+/** Ignore action
+ */
+#define SIG_IGN ((void (*)())1)		
+
+/** Error return 
+*/
+#define SIG_ERR ((void (*)())-1)	
+
+typedef void (*_sig_func_ptr) ();
+
+extern _sig_func_ptr signal(int, _sig_func_ptr);
+extern int raise(int);
+
+#ifdef __cplusplus
+}
+#endif
+#endif /* _SIGNAL_H_ */

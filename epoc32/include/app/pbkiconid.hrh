@@ -1,1 +1,75 @@
-pbkiconid.hrh
+/*
+* Copyright (c) 2002 Nokia Corporation and/or its subsidiary(-ies).
+* All rights reserved.
+* This component and the accompanying materials are made available
+* under the terms of the License "Symbian Foundation License v1.0" to Symbian Foundation members and "Symbian Foundation End User License Agreement v1.0" to non-members
+* which accompanies this distribution, and is available
+* at the URL "http://www.symbianfoundation.org/legal/licencesv10.html".
+*
+* Initial Contributors:
+* Nokia Corporation - initial contribution.
+*
+* Contributors:
+*
+* Description: 
+*    Phonebook icon names.
+*
+*/
+
+
+#ifndef __PbkIconId_HRH__
+#define __PbkIconId_HRH__
+
+// CONSTANTS
+
+/**
+ * Phonebook Icon Id's.
+ */
+enum TPbkIconId
+    {
+    EPbkNullIconId = -1,
+    EPbkqgn_indi_marked_add = 1,
+    EPbkqgn_prop_checkbox_off,
+    EPbkqgn_prop_checkbox_on,
+    EPbkqgn_prop_nrtyp_phone,
+    EPbkqgn_prop_nrtyp_home,
+    EPbkqgn_prop_nrtyp_work,
+    EPbkqgn_prop_nrtyp_mobile,
+    EPbkqgn_prop_nrtyp_fax,
+    EPbkqgn_prop_nrtyp_pager,
+    EPbkqgn_prop_nrtyp_email,
+    EPbkqgn_prop_nrtyp_address,
+    EPbkqgn_prop_nrtyp_url,
+    EPbkqgn_prop_nrtyp_date,
+    EPbkqgn_prop_nrtyp_note,
+    EPbkqgn_prop_nrtyp_tone,
+    EPbkqgn_prop_pb_all_tab2,       // deprecated
+    EPbkqgn_prop_group_tab2,        // deprecated
+    EPbkqgn_prop_group_open_tab1,
+    EPbkqgn_prop_pb_contacts_tab1,
+    EPbkqgn_prop_pb_contacts_tab3,  // deprecated
+    EPbkqgn_prop_pb_personal_tab3,  // deprecated
+    EPbkqgn_prop_pb_photo_tab3,     // deprecated
+    EPbkqgn_prop_group_small,
+    EPbkqgn_graf_pb_status_backg,
+    EPbkqgn_graf_phob_pcard_backg,  // deprecated
+    EPbkqgn_graf_note_start,        // deprecated
+    EPbkqgn_note_error,             // deprecated
+    EPbkqgn_prop_nrtyp_empty,
+    EPbkqgn_menu_phob_cxt,          // deprecated
+    EPbkqgn_indi_voice_add,
+    EPbkqgn_indi_qdial_add,
+    EPbkqgn_prop_nrtyp_video,
+    EPbkqgn_prop_nrtyp_voip,
+    EPbkqgn_prop_nrtyp_poc,
+    EPbkqgn_prop_nrtyp_swis,
+    EPbkqgn_prop_nrtyp_sip,
+    EPbkqgn_menu_empty_cxt,
+    EPbkqgn_graf_phob_thumbnail_backg,
+    EPbkqgn_prop_nrtyp_assistant,
+    EPbkqgn_prop_nrtyp_car
+    };
+
+#endif // __PbkIconId_HRH__
+
+// End of File

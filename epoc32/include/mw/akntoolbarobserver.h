@@ -1,1 +1,62 @@
-akntoolbarobserver.h
+/*
+* Copyright (c) 2005 Nokia Corporation and/or its subsidiary(-ies).
+* All rights reserved.
+* This component and the accompanying materials are made available
+* under the terms of the License "Symbian Foundation License v1.0" to Symbian Foundation members and "Symbian Foundation End User License Agreement v1.0" to non-members
+* which accompanies this distribution, and is available
+* at the URL "http://www.symbianfoundation.org/legal/licencesv10.html".
+*
+* Initial Contributors:
+* Nokia Corporation - initial contribution.
+*
+* Contributors:
+*
+* Description:  Observer for avkon toolbar
+*
+*/
+
+
+
+#ifndef __AKNTOOLBAROBSERVER_H__
+#define __AKNTOOLBAROBSERVER_H__
+
+// INCLUDES
+#include <e32def.h>
+
+// FORWARD DECLARATIONS
+class CAknToolbar;
+
+// CLASS DECLARATION
+
+/**
+*  The observer interface to handle toolbar events
+*
+*  @lib eikcoctl.lib
+*  @since Series 60 3.1
+*/
+class MAknToolbarObserver
+    {
+    public:
+        /**
+         * Should be used to set the properties of some toolbar components 
+         * before it is drawn.
+         * @param aResourceId The resource ID for particular toolbar
+         * @param aToolbar The toolbar object pointer
+         */
+        IMPORT_C virtual void DynInitToolbarL( TInt aResourceId, 
+                                               CAknToolbar* aToolbar );
+        
+        /**
+         * Handles toolbar events for a certain toolbar item.
+         * @param aCommand The command ID of some toolbar item.
+         */
+        virtual void OfferToolbarEventL( TInt aCommand ) = 0;
+    
+    protected:
+        IMPORT_C virtual TInt MAknToolbarObserver_Reserved_1();
+        IMPORT_C virtual TInt MAknToolbarObserver_Reserved_2();
+    };
+    
+#endif // __AKNTOOLBAROBSERVER_H__
+
+// end of file

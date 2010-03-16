@@ -1,1 +1,231 @@
-appinfo.rh
+// Copyright (c) 2004-2009 Nokia Corporation and/or its subsidiary(-ies).
+// All rights reserved.
+// This component and the accompanying materials are made available
+// under the terms of the License "Symbian Foundation License v1.0" to Symbian Foundation members and "Symbian Foundation End User License Agreement v1.0" to non-members
+// which accompanies this distribution, and is available
+// at the URL "http://www.symbianfoundation.org/legal/licencesv10.html".
+//
+// Initial Contributors:
+// Nokia Corporation - initial contribution.
+//
+// Contributors:
+//
+// Description:
+//
+
+#if !defined __APPINFO_RH__
+#define __APPINFO_RH__
+
+//
+// contains definitions for the Application Information resource files
+
+/**
+@publishedAll
+@released
+*/
+#define KMaxFileNameLength 256
+
+//////////////////////////////////////////////////////////////////
+// DEFINITIONS FOR THE NON-LOCALISABLE REGISTRATION RESOURCE FILE
+//////////////////////////////////////////////////////////////////
+
+/**
+@publishedAll
+@released
+*/
+#define KUidAppRegistrationResourceFile 0x101f8021
+
+/**
+@publishedAll
+@released
+*/
+// constants for capability.hidden
+#define KAppNotHidden	0
+#define KAppIsHidden	1
+
+/**
+@publishedAll
+@released
+*/
+// constants for capability.newfile
+#define KAppDoesNotSupportNewFile	0
+#define KAppSupportsNewFile			1
+
+/**
+@publishedAll
+@released
+*/
+// constants for capability.embeddability
+#define KAppNotEmbeddable				0
+#define KAppEmbeddable					1
+#define KAppEmbeddableOnly				2
+#define KAppEmbeddableUiOrStandAlone	5
+#define KAppEmbeddableUiNotStandAlone	6
+
+/**
+@publishedAll
+@released
+*/
+// constants for capability.launch
+#define KAppLaunchInForeground	0
+#define KAppLaunchInBackground	1
+
+/**
+@publishedAll
+@released
+*/
+// bit flags for capability.attributes
+#define KAppBuiltAsDll				0x00000001
+#define KAppIsControlPanelItem		0x00000002
+#define KAppNonNative				0x00000004
+
+/**
+@publishedAll
+@released
+*/
+// application group name
+#define KAppMaxGroupName 16
+
+
+/**
+@publishedAll
+@released
+*/
+STRUCT APP_REGISTRATION_INFO
+	{
+	LONG reserved_long = 0; // reserved for future use, do not use
+	LLINK reserved_llink = 0; // reserved for future use, do not use
+	//
+	LTEXT app_file(KMaxFileNameLength) = ""; // name of application binary file (not including extension) - mandatory
+	LONG attributes = 0;
+	//
+	LTEXT localisable_resource_file(KMaxFileNameLength) = ""; // path (not including drive) and name of localisable resource file
+	LONG localisable_resource_id = 1;
+	//
+	BYTE hidden = KAppNotHidden;
+	BYTE embeddability = KAppNotEmbeddable;
+	BYTE newfile = KAppDoesNotSupportNewFile;
+	BYTE launch = KAppLaunchInForeground;
+	LTEXT group_name(KAppMaxGroupName) = "";
+	//
+	BYTE default_screen_number = 0;
+	//
+	LEN WORD STRUCT datatype_list[]; // DATATYPE
+	//
+	LEN WORD STRUCT file_ownership_list[]; // FILE_OWNERSHIP_INFO
+	//
+	LEN WORD STRUCT service_list[]; // SERVICE_INFO
+	//
+	LLINK opaque_data = 0;	// use for opaque data to send to non-native application launchers i.e. MIDlet id
+	}
+
+
+/**
+@publishedAll
+@released
+*/
+#define KMaxDataTypeLength 256
+
+/**
+@publishedAll
+@released
+*/
+enum
+	{
+	EDataTypePrioritySystem = 0xFFF9,
+	EDataTypePriorityHigh = 10000,
+	EDataTypePriorityNormal = 0,
+	EDataTypePriorityLow = -10000,
+	EDataTypePriorityLastResort = -20000
+	};
+
+/**
+@publishedAll
+@released
+*/
+STRUCT DATATYPE
+	{
+	LONG priority;
+	LTEXT8 type(KMaxDataTypeLength);
+	}
+
+/**
+@publishedAll
+@released
+*/
+STRUCT FILE_OWNERSHIP_INFO
+	{
+	LTEXT file_name(KMaxFileNameLength);
+	}
+
+/**
+@publishedAll
+@released
+*/
+STRUCT SERVICE_INFO
+	{
+	LONG uid = 0;
+	LEN WORD STRUCT datatype_list[];
+	LLINK opaque_data = 0;
+	}
+
+
+/////////////////////////////////////////////////
+// DEFINITIONS FOR THE LOCALISABLE RESOURCE FILE
+/////////////////////////////////////////////////
+
+/**
+@publishedAll
+@released
+*/
+#define KMaxCaption 256
+
+/**
+@publishedAll
+@released
+*/
+STRUCT LOCALISABLE_APP_INFO
+	{
+	LONG reserved_long = 0; // reserved for future use, do not use
+	LLINK reserved_llink = 0; // reserved for future use, do not use
+	//
+	LTEXT short_caption(KMaxCaption) = "";
+	STRUCT caption_and_icon; // CAPTION_AND_ICON_INFO
+	//
+	LEN WORD STRUCT view_list[]; // VIEW_DATA
+	//
+	LTEXT group_name(KAppMaxGroupName) = "";
+	}
+
+/**
+@publishedAll
+@released
+*/
+STRUCT CAPTION_AND_ICON_INFO
+	{
+	LONG reserved_long = 0; // reserved for future use, do not use
+	LLINK reserved_llink = 0; // reserved for future use, do not use
+	//
+	LTEXT caption(KMaxCaption) = "";
+	//
+	WORD number_of_icons = 0; // each icon must be a bitmap/mask pair
+	LTEXT icon_file(KMaxFileNameLength) = "";
+	}
+
+/**
+@publishedAll
+@released
+*/
+STRUCT VIEW_DATA
+	{
+	LONG reserved_long = 0; // reserved for future use, do not use
+	LLINK reserved_llink = 0; // reserved for future use, do not use
+	//
+	LONG uid = 0;
+	//
+	LONG screen_mode = 0;
+	//
+	STRUCT caption_and_icon; // CAPTION_AND_ICON_INFO
+	}
+
+#endif

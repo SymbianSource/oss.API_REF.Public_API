@@ -1,1 +1,31 @@
-mmfbuffer.hrh
+// Copyright (c) 2002-2009 Nokia Corporation and/or its subsidiary(-ies).
+// All rights reserved.
+// This component and the accompanying materials are made available
+// under the terms of the License "Symbian Foundation License v1.0" to Symbian Foundation members and "Symbian Foundation End User License Agreement v1.0" to non-members
+// which accompanies this distribution, and is available
+// at the URL "http://www.symbianfoundation.org/legal/licencesv10.html".
+//
+// Initial Contributors:
+// Nokia Corporation - initial contribution.
+//
+// Contributors:
+//
+// Description:
+// include\mmf\server\mmfbuffer.hrh
+// 
+//
+
+#ifndef __MMF_SERVER_BUFFER_HRH__
+#define __MMF_SERVER_BUFFER_HRH__
+
+static const TUid KUidMmfDataBuffer			= {0x101F5D09};//defaults to descriptor buffer so same Uid
+static const TUid KUidMmfDescriptorBuffer 		= {0x101F5D09};
+static const TUid KUidMmfTransferBuffer			= {0x101F5E66};
+static const TUid KUidMmfAudioBuffer			= {0x101F72A9};
+static const TUid KUidMmfYUVBuffer			= {0x101F5D0A};
+static const TUid KUidMmfBitmapFrameBuffer		= {0x101F5D0B};
+static const TUid KUidMmfPtrBuffer			= {0x101FD90B};
+
+
+
+#endif

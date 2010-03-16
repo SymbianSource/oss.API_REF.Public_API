@@ -1,1 +1,208 @@
-ecamuids.hrh
+// Copyright (c) 2003-2009 Nokia Corporation and/or its subsidiary(-ies).
+// All rights reserved.
+// This component and the accompanying materials are made available
+// under the terms of the License "Symbian Foundation License v1.0" to Symbian Foundation members and "Symbian Foundation End User License Agreement v1.0" to non-members
+// which accompanies this distribution, and is available
+// at the URL "http://www.symbianfoundation.org/legal/licencesv10.html".
+//
+// Initial Contributors:
+// Nokia Corporation - initial contribution.
+//
+// Contributors:
+//
+// Description:
+//
+
+
+
+/**
+ @publishedAll
+ @released
+ @file
+*/
+
+#ifndef ECAMUIDS_HRH
+#define ECAMUIDS_HRH
+
+#define KSharedLibraryUidDefine  268435597
+#define KUidOnboardCameraLibrary 270513347
+
+#define KUidECamAdvSettingsLibrary 		0x1020E76B
+
+#define	KUidOnboardCameraPlugin			0x1020707F
+#define KUidOnboardCameraInfoPlugin 	0x10207080
+#define KUidOnboardCameraStubDll		0x10207081
+#define KUidOnboardCameraStubPlugin 	0x10207082
+#define KUidOnboardCameraStubInfo		0x10207083
+
+#define	KUidECamHistogramLibrary		0x102737AC
+#define	KUidECamOverlayLibrary			0x102737AD
+#define	KUidECamSnapshotLibrary			0x102737AE 
+
+#define KUidOnboardCameraSecureIdPlugin    0x10283201
+
+
+#define	KUidECamDirectViewFinderLibrary 0x102825F3 
+
+/**
+Defines the numerical value for KUidECamEventClass2.
+@see KUidECamEventClass2
+*/
+#define KUidECamEventClass2UidValue  							0x10282622
+
+/**
+Defines the numerical value for KUidECamEventCIPSetColorSwapEntry.
+@see KUidECamEventCIPSetColorSwapEntry
+*/
+#define KUidECamEventCIPSetColorSwapEntryUidValue  				0x10282623
+
+/**
+Defines the numerical value for KUidECamEventCIPRemoveColorSwapEntry.
+@see KUidECamEventCIPRemoveColorSwapEntry
+*/
+#define KUidECamEventCIPRemoveColorSwapEntryUidValue			0x10282624
+
+/**
+Defines the numerical value for KUidECamEventCIPSetColorAccentEntry.
+@see KUidECamEventCIPSetColorAccentEntry
+*/
+#define KUidECamEventCIPSetColorAccentEntryUidValue				0x10282625
+
+/**
+Defines the numerical value for KUidECamEventCIPRemoveColorAccentEntry.
+@see KUidECamEventCIPRemoveColorAccentEntry
+*/
+#define KUidECamEventCIPRemoveColorAccentEntryUidValue			0x10282626
+
+/**
+Defines the numerical value for KUidECamEventCameraSettingPreCaptureWarning.
+@see KUidECamEventCameraSettingPreCaptureWarning
+*/
+#define KUidECamEventCameraSettingPreCaptureWarningUidValue		0x10282610
+
+/**
+Defines the numerical value for KUidECamEvent2CameraSettingContinuousZoomPercentageCompletion.
+@see KUidECamEvent2CameraSettingContinuousZoomPercentageCompletion
+@publishedPartner
+@prototype
+*/
+#define KUidECamEvent2CameraSettingContinuousZoomPercentageCompletionUidValue	0x10283233 
+
+/**
+Defines the numerical value for KUidECamEvent2CameraSettingAutoAperture.
+@see KUidECamEvent2CameraSettingAutoAperture
+@internalTechnology
+*/
+#define KUidECamEvent2CameraSettingAutoApertureUidValue 				0x10283235 
+
+/**
+Defines the numerical value for KECamEvent2ImageCaptureControlFocussingInformation.
+@see KECamEvent2ImageCaptureControlFocussingInformation
+
+@internalTechnology
+*/
+#define KECamEvent2ImageCaptureControlFocussingInformationUidValue 		0x10283236 
+
+/**
+Defines the numerical value for KUidECamEvent2ImageCaptureControlSpotCombination.
+@see KUidECamEvent2ImageCaptureControlSpotCombination
+
+@internalTechnology
+*/
+#define KUidECamEvent2ImageCaptureControlSpotCombinationUidValue 		0x10283237
+
+/**
+Defines the numerical value for KUidECamEvent2ViewFinderMagnification.
+@see KUidECamEvent2ViewFinderMagnification
+
+@internalTechnology
+*/
+#define KUidECamEvent2ViewFinderMagnificationUidValue 					0x1028323A 
+
+/**
+Defines the numerical value for KUidECamEvent2ViewFinderFadingEffect.
+@see KUidECamEvent2ViewFinderFadingEffect
+
+@internalTechnology
+*/
+#define KUidECamEvent2ViewFinderFadingEffectUidValue 					0x1028323B 
+
+/**
+Defines the numerical value for KUidECamEvent2ViewFinderImageEnhancement.
+@see KUidECamEvent2ViewFinderImageEnhancement
+
+@internalTechnology
+*/
+#define KUidECamEvent2ViewFinderImageEnhancementUidValue 				0x1028323D 
+
+/**
+Defines the numerical value for KUidECamEvent2CameraRequestForcedTimedTakeOver.
+@see KUidECamEvent2CameraRequestForcedTimedTakeOver
+
+@internalTechnology
+*/
+#define KUidECamEvent2CameraRequestForcedTimedTakeOverUidValue 			0x1028323E
+
+/**
+Defines the numerical value for KUidECamEvent2CameraRequestTimedTakeOver.
+@see KUidECamEvent2CameraRequestTimedTakeOver
+
+@internalTechnology
+*/
+#define KUidECamEvent2CameraRequestTimedTakeOverUidValue 				0x1028323F 
+
+/**
+Defines the numerical value for KUidECamEvent2CameraSettingManualGain.
+@see KUidECamEvent2CameraSettingManualGain
+
+@internalTechnology
+*/
+#define KUidECamEvent2CameraSettingManualGainUidValue 					0x10283240 
+
+/**
+Defines the numerical value for KUidECamEvent2CameraSettingFocusDistance.
+@see KUidECamEvent2CameraSettingFocusDistance
+
+@internalTechnology
+*/
+#define KUidECamEvent2CameraSettingFocusDistanceUidValue 				0x10283242 
+
+/**
+Defines the numerical value for KUidECamEvent2IndirectFeatureChange.
+@see KUidECamEvent2IndirectFeatureChange
+@publishedPartner
+@prototype
+*/
+#define KUidECamEvent2IndirectFeatureChangeUidValue  					0x10283243 
+
+/**
+Defines the numerical value for KUidECamEvent2CameraSettingChangeClientPriority.
+@see KUidECamEvent2CameraSettingChangeClientPriority
+
+@internalTechnology
+*/
+#define KUidECamEvent2CameraSettingChangeClientPriorityUidValue  		0x10283244 
+
+/**
+Defines the numerical value for KUidECamEventNewReserveComplete.
+@see KUidECamEventNewReserveComplete
+@publishedPartner
+@prototype
+*/
+#define KUidECamEventNewReserveCompleteUidValue  						0x1028322D  
+
+/**
+Ensures contiguous allocation for ECAM event 2 uids
+
+@internalComponent
+*/
+#define KECamUidEvent2RangeBegin  0x10283233
+
+/**
+Ensures contiguous allocation for ECAM event 2 uids
+
+@internalComponent
+*/
+#define KECamUidEvent2RangeEnd    0x102832B5
+
+#endif // ECAMUIDS_HRH

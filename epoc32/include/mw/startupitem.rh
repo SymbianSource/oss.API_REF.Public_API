@@ -1,1 +1,52 @@
-startupitem.rh
+/*
+* Copyright (c) 2005-2007 Nokia Corporation and/or its subsidiary(-ies). 
+* All rights reserved.
+* This component and the accompanying materials are made available
+* under the terms of the License "Symbian Foundation License v1.0" to Symbian Foundation members and "Symbian Foundation End User License Agreement v1.0" to non-members
+* which accompanies this distribution, and is available
+* at the URL "http://www.symbianfoundation.org/legal/licencesv10.html".
+*
+* Initial Contributors:
+* Nokia Corporation - initial contribution.
+*
+* Contributors:
+*
+* Description:  Definitions for the stucture of a configuration file required
+*		 for components started at boot time.
+*
+*/
+
+
+#ifndef STARTUPITEM_RH
+#define STARTUPITEM_RH
+
+#include <StartupItem.hrh>
+
+/** Defines the structure of the startup control resource file providing information about
+*   component(s) to be started at boot time.
+*
+* Example of the resource file:
+* 
+* @code
+* #include <startupitem.rh>
+*
+* RESOURCE STARTUP_ITEM_INFO example
+* {
+* executable_name = "c:\\sys\\bin\\example.exe";
+* recovery = EStartupItemExPolicyNone;
+* }
+* @endcode
+*
+*/
+
+STRUCT STARTUP_ITEM_INFO
+    {
+    BYTE version = 0;                          ///< Version info. Do NOT use.
+    LTEXT executable_name(255);                ///< The path and name of the executable.
+    WORD recovery = EStartupItemExPolicyNone;  ///< The exception recovery policy used.
+    LONG reserved_1 = 0;                       ///< Reserved for future use.
+    BYTE reserved_2 = 0;                       ///< Reserved for future use.
+    BYTE reserved_3 = 0;                       ///< Reserved for future use.
+    }
+
+#endif // STARTUPITEM_RH

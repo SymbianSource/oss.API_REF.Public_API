@@ -1,1 +1,50 @@
-aknfontcategory.hrh
+/*
+* Copyright (c) 2002-2004 Nokia Corporation and/or its subsidiary(-ies).
+* All rights reserved.
+* This component and the accompanying materials are made available
+* under the terms of the License "Symbian Foundation License v1.0" to Symbian Foundation members and "Symbian Foundation End User License Agreement v1.0" to non-members
+* which accompanies this distribution, and is available
+* at the URL "http://www.symbianfoundation.org/legal/licencesv10.html".
+*
+* Initial Contributors:
+* Nokia Corporation - initial contribution.
+*
+* Contributors:
+*
+* Description:   Avkon font categories correspond to the font "Category types" in the 
+*  Series60 layout tool
+*
+*/
+
+
+
+#ifndef AKNFONTCATEGORY_H
+#define AKNFONTCATEGORY_H
+
+
+/**
+* Definition of Series 60 logical font categories. 
+* Note: These are not logical font ids
+* 
+* @since Series 60 2.8
+*/
+#define KAknFontCategoryUndefined		0
+#define KAknFontCategoryPrimary			1
+#define KAknFontCategorySecondary		2
+#define KAknFontCategoryTitle			3
+#define KAknFontCategoryPrimarySmall	4
+#define KAknFontCategoryDigital			5
+
+enum TAknFontCategory
+	{
+	EAknFontCategoryUndefined =		KAknFontCategoryUndefined,
+	EAknFontCategoryPrimary =		KAknFontCategoryPrimary,
+	EAknFontCategorySecondary =		KAknFontCategorySecondary,
+	EAknFontCategoryTitle =			KAknFontCategoryTitle,
+	EAknFontCategoryPrimarySmall =	KAknFontCategoryPrimarySmall,
+	EAknFontCategoryDigital =		KAknFontCategoryDigital
+	};
+
+
+#endif
+// End of File

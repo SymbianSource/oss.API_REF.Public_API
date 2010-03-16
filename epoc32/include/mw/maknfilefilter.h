@@ -1,1 +1,57 @@
-maknfilefilter.h
+/*
+* Copyright (c) 2002-2006 Nokia Corporation and/or its subsidiary(-ies).
+* All rights reserved.
+* This component and the accompanying materials are made available
+* under the terms of the License "Symbian Foundation License v1.0" to Symbian Foundation members and "Symbian Foundation End User License Agreement v1.0" to non-members
+* which accompanies this distribution, and is available
+* at the URL "http://www.symbianfoundation.org/legal/licencesv10.html".
+*
+* Initial Contributors:
+* Nokia Corporation - initial contribution.
+*
+* Contributors:
+*
+* Description:  Filter interface for file selection.
+*
+*/
+
+
+#ifndef MAKNFILEFILTER_H
+#define MAKNFILEFILTER_H
+
+// INCLUDES
+#include <E32DEF.H> // TBool
+
+// FORWARD DECLARATIONS
+class TEntry;
+
+//  CLASS DEFINITION
+/**
+*  An abstract interface class for filters.
+*
+*  @lib CommonDialogs.lib
+*  @since 1.2
+*/
+class MAknFileFilter
+    {
+    public:     // Constructors and destructors
+        /**
+        * A virtual destructor to ensure that correct destructor gets called.
+        * Must have an empty implementation.
+        */
+        virtual ~MAknFileFilter() { };
+
+    public:
+        /**
+        * Checks if a file is accepted by the filter.
+        * @param aDriveAndPath Drive and full path of the file.
+        * @param aEntry A directory entry.
+        * @return Returns ETrue if filter accepts the file.
+        */
+        virtual TBool Accept( const TDesC& aDriveAndPath, const TEntry& aEntry ) const = 0;
+
+    };
+
+#endif // MAKNFILEFILTER_H
+
+// End of File

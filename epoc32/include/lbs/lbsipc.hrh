@@ -1,0 +1,101 @@
+/*
+* Copyright (c) 2002-2009 Nokia Corporation and/or its subsidiary(-ies).
+* All rights reserved.
+* This component and the accompanying materials are made available
+* under the terms of the License "Symbian Foundation License v1.0" to Symbian Foundation members and "Symbian Foundation End User License Agreement v1.0" to non-members
+* which accompanies this distribution, and is available
+* at the URL "http://www.symbianfoundation.org/legal/licencesv10.html".
+*
+* Initial Contributors:
+* Nokia Corporation - initial contribution.
+*
+* Contributors:
+*
+* Description:
+* Name        : lbsipc.hrh
+* Part of     : Mobile Location Framework/Location FW
+* Interface   : Location Acquisition API
+* Client-Server Request codes
+* Version     :
+* This material, including documentation and any related
+* computer programs, is protected by copyright controlled by
+* Nokia Corporation. All rights are reserved. Copying,
+* including reproducing, storing, adapting or translating, any
+* or all of this material requires the prior written consent of
+* Nokia Corporation. This material also contains confidential
+* information which may not be disclosed to others without the
+* prior written consent of Nokia Corporation.
+*
+*/
+
+
+
+
+/**
+ @file
+ @publishedAll
+ @released
+*/
+ 
+ // Following added to maintain compatibility with Symbian Loc Server	
+#define EPositioningCancelOffset		500
+#define EPositioningCompleteOffset		600
+#define IPC_LOCATION_START				1000
+
+// 0x00000000 to 0x00000FFF not used
+#define EPositioningIpcOffset           0x1000
+
+// 0x00001000 to 0x00001FFF reserved for RPositionServer requests
+#define EPositionServerIpcOffset        (EPositioningIpcOffset)
+
+// 0x00002000 to 0x00002FFF reserved for RPositioner requests
+#define EPositionerIpcOffset            (EPositionServerIpcOffset + 0x1000)
+
+// 0x00009000 to 0x3FFFFFFF unused IPC constants
+#define EPositionerRedundentOffset		0x9000
+
+// 0x40000000 to 0x7FFFFFFF reserved for 3rd party extensions to the LBS API.
+// All extensions implemented by 3rd parties should be implemented in this range.
+#define EPositionerCustomIpcOffset      0x40000000
+
+/**
+This class is not intended for public use - except for cancel requests
+*/
+enum TPositionIpcId
+    {
+	//
+    // Request IDs
+
+    EPositionServerCancelAsyncRequest       = EPositionServerIpcOffset,
+    EPositionServerConnect,
+    EPositionServerGetDefaultModuleId,
+    EPositionServerGetNumModules,
+    EPositionServerGetModuleInfoByIndex,
+    EPositionServerGetModuleInfoById,
+    EPositionServerGetModuleStatus,
+    EPositionServerNotifyModuleStatusEvent,
+
+    EPositionerCancelAsyncRequest           = EPositionerIpcOffset,
+    EPositionerOpen,
+    EPositionerOpenModuleId,
+    EPositionerOpenCriteria,
+    EPositionerClose,
+    EPositionerSetSingleRequestor,
+    EPositionerSetMultipleRequestors,
+    EPositionerSetUpdateOptions,
+    EPositionerGetUpdateOptions,
+    EPositionerGetLastKnownPosition,
+    EPositionerNotifyPositionUpdate,
+
+ 	// Following added to maintain compatibility with Symbian Loc Server	
+	EPositionerOpenServer							= EPositionerRedundentOffset,
+	EPositionCustomCodesBegin,
+	EPositionCancelIpcsBegin,
+	EPositionServerNotifyModuleStatusEventCancel,
+	EPositionerGetLastKnownPositionCancel,
+	EPositionerNotifyPositionUpdateCancel,
+	EPositionCustomCancelCodesBegin,
+ 
+    EPositionerCustomCodesBegin             = EPositionerCustomIpcOffset,
+
+    };

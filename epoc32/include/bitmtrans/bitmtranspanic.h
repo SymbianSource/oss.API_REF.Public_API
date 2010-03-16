@@ -1,0 +1,54 @@
+// Copyright (c) 2002-2009 Nokia Corporation and/or its subsidiary(-ies).
+// All rights reserved.
+// This component and the accompanying materials are made available
+// under the terms of the License "Symbian Foundation License v1.0" to Symbian Foundation members and "Symbian Foundation End User License Agreement v1.0" to non-members
+// which accompanies this distribution, and is available
+// at the URL "http://www.symbianfoundation.org/legal/licencesv10.html".
+//
+// Initial Contributors:
+// Nokia Corporation - initial contribution.
+//
+// Contributors:
+//
+// Description:
+// This is the public client API for the BitmapTransforms library
+// 
+//
+
+#ifndef BITMTRANSPANIC_H
+#define BITMTRANSPANIC_H
+
+
+#include <e32std.h>
+
+/**
+@panic	ENoSourceBitmap is raised when the src bitmap supplied to one of the api's
+		has not been created (i.e. it has a null handle)
+		ENoDestinationBitmap is raised when the destination bitmap supplied to one 
+		of the api's has not been properly created
+		EBitmapHasZeroDimension is raised when a bitmap has zero dimension
+
+@publishedAll		
+@released
+*/
+
+enum TBitmapTransformsPanic
+	{
+	/** Invalid source bitmap. */
+	ENoSourceBitmap,
+	/** Invalid destination bitmap. */
+	ENoDestinationBitmap,
+	/** The Bitmap has zero dimension. */
+	EBitmapHasZeroDimension,
+	/** Bad argument for scaling. */
+	EBadArgumentScale,
+	/** Bad argument for rotation. */
+	EBadArgumentRotate,
+	/** Null argument provided. */
+	ENullArgument,
+	/** Bad invariant. */
+	EBadInvariant
+	};
+
+
+#endif // BITMTRANSPANIC_H

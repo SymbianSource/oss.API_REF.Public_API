@@ -1,1 +1,63 @@
-registryinfo.rh
+// Copyright (c) 1997-2009 Nokia Corporation and/or its subsidiary(-ies).
+// All rights reserved.
+// This component and the accompanying materials are made available
+// under the terms of the License "Symbian Foundation License v1.0" to Symbian Foundation members and "Symbian Foundation End User License Agreement v1.0" to non-members
+// which accompanies this distribution, and is available
+// at the URL "http://www.symbianfoundation.org/legal/licencesv10.html".
+//
+// Initial Contributors:
+// Nokia Corporation - initial contribution.
+//
+// Contributors:
+//
+// Description:
+// The UID identifying client provided CResolver Interface Implementations. 
+// 
+//
+
+
+
+
+/**
+ @file
+ @publishedAll
+ @released
+ @internalComponent
+*/
+#define CUSTOM_RESOLVER_INTERFACE_UID 0x10009D90
+
+/** 
+The UID identifying Interface Implementation Resource Files. 
+@internalComponent
+*/
+UID2 0x101F747D
+
+STRUCT IMPLEMENTATION_INFO
+	{
+	LONG	implementation_uid;
+	BYTE	version_no;
+	LTEXT	display_name;
+	LTEXT8	default_data;
+	LTEXT8	opaque_data;
+	}
+
+STRUCT BINARY_IMPLEMENTATION_INFO
+	{
+	LONG	implementation_uid;
+	BYTE	version_no;
+	LTEXT	display_name;
+	LEN BYTE BYTE	default_data[];
+	LEN BYTE BYTE	opaque_data[];
+	}
+
+STRUCT INTERFACE_INFO
+	{
+	LONG	interface_uid;
+	STRUCT	implementations[];
+	}
+
+STRUCT REGISTRY_INFO
+	{
+	LONG	dll_uid;
+	STRUCT	interfaces[];
+	}

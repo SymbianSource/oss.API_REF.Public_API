@@ -1,1 +1,50 @@
-setjmp.h
+/*
+* Copyright (c) 1997-2009 Nokia Corporation and/or its subsidiary(-ies).
+* All rights reserved.
+* This component and the accompanying materials are made available
+* under the terms of the License "Symbian Foundation License v1.0" to Symbian Foundation members and "Symbian Foundation End User License Agreement v1.0" to non-members
+* which accompanies this distribution, and is available
+* at the URL "http://www.symbianfoundation.org/legal/licencesv10.html".
+*
+* Initial Contributors:
+* Nokia Corporation - initial contribution.
+*
+* Contributors:
+*
+* Description:
+*
+*/
+
+
+
+
+
+
+/**
+ @file
+ @publishedAll
+ @released
+*/
+
+#ifndef _SETJMP_H_
+#define _SETJMP_H_
+#ifdef __cplusplus
+extern "C" {
+#endif
+
+#include <_ansi.h>
+
+/** see MSVC 4.0 SETJMP.H & E32STD.H class TTrap
+ */
+#define _JBLEN	16		
+#define _JBTYPE	unsigned long
+
+typedef	_JBTYPE jmp_buf[_JBLEN];
+
+IMPORT_C void longjmp(jmp_buf __jmpb, int __retval);
+IMPORT_C int setjmp(jmp_buf __jmpb);
+
+#ifdef __cplusplus
+}
+#endif
+#endif /* _SETJMP_H_ */

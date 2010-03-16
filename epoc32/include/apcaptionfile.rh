@@ -1,1 +1,35 @@
-apcaptionfile.rh
+// Copyright (c) 2000-2009 Nokia Corporation and/or its subsidiary(-ies).
+// All rights reserved.
+// This component and the accompanying materials are made available
+// under the terms of the License "Symbian Foundation License v1.0" to Symbian Foundation members and "Symbian Foundation End User License Agreement v1.0" to non-members
+// which accompanies this distribution, and is available
+// at the URL "http://www.symbianfoundation.org/legal/licencesv10.html".
+//
+// Initial Contributors:
+// Nokia Corporation - initial contribution.
+//
+// Contributors:
+//
+// Description:
+// Contains definitions for the resource files that are input to 
+// caption files for Series 60
+// 
+//
+
+
+
+
+/**
+ @internalComponent
+*/
+#define KMaxCaption 256
+
+/**
+@publishedAll
+@released
+*/
+STRUCT CAPTION_DATA
+	{
+	LTEXT caption(KMaxCaption)="";
+	LTEXT shortcaption(KMaxCaption)="";
+	}

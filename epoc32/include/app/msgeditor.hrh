@@ -1,1 +1,179 @@
-msgeditor.hrh
+/*
+* Copyright (c) 2002-2006 Nokia Corporation and/or its subsidiary(-ies).
+* All rights reserved.
+* This component and the accompanying materials are made available
+* under the terms of the License "Symbian Foundation License v1.0" to Symbian Foundation members and "Symbian Foundation End User License Agreement v1.0" to non-members
+* which accompanies this distribution, and is available
+* at the URL "http://www.symbianfoundation.org/legal/licencesv10.html".
+*
+* Initial Contributors:
+* Nokia Corporation - initial contribution.
+*
+* Contributors:
+*
+* Description:  MsgEditor  declaration
+*
+*/
+
+
+
+#ifndef INC_MSGEDITOR_HRH
+#define INC_MSGEDITOR_HRH
+
+enum TMsgFormComponent
+    {
+    EMsgHeader = 0,
+    EMsgBody
+    };
+
+enum TMsgControlType
+    {
+    EMsgExpandableControl = 1,
+    EMsgAddressControl,
+    EMsgAttachmentControl,
+    EMsgBodyControl,
+    EMsgImageControl,
+    EMsgVideoControl,
+    EMsgAudioControl,
+    EMsgSvgControl,
+    EMsgXhtmlBodyControl,
+    EMsgFirstFreeCustomControlType
+    };
+
+enum TMsgControlId
+    {
+    EMsgComponentIdNull = 0,
+    EMsgComponentIdTo = 1,
+    EMsgComponentIdFrom,
+    EMsgComponentIdCc,
+    EMsgComponentIdBcc,
+    EMsgComponentIdSubject, 
+    EMsgComponentIdBody,
+    EMsgComponentIdDateTime,
+    EMsgComponentIdAttachment,    
+    EMsgComponentIdImage,
+    EMsgComponentIdVideo,
+    EMsgComponentIdAudio,
+    EMsgComponentIdSvg,
+    EMsgComponentIdFirstFreeEditorSpecificId
+    };
+
+enum TMsgFocusDirection
+    {
+    EMsgFocusUp = -1,
+    EMsgFocusDown = 1
+    };
+
+enum TMsgControlIndex
+    {
+    EMsgAppendControl = -1,
+    EMsgFirstControl = 0
+    };
+
+enum TMsgClipboardFunc
+    {
+    EMsgNoClipboard = 0,
+    EMsgCopy,
+    EMsgCut,
+    EMsgPaste,
+    EMsgPasteSpecial
+    };
+
+enum TMsgEditFunc
+    {
+    EMsgUndo = 0,
+    EMsgSelectAll
+    };
+
+enum TMsgCursorLocation
+    {
+    EMsgTop = 0,
+    EMsgBottom
+    };
+
+enum TMsgStateFlags
+    {
+    EMsgStateNormal                            = 0x0000,
+    EMsgStateInitializing                      = 0x0001,
+    EMsgStateInitialized                       = 0x0002,
+    EMsgStateRefreshing                        = 0x0004,
+    EMsgEnsureCorrectFormPositionRequestIssued = 0x0008
+    };
+
+enum TMsgControlModeFlags
+    {
+    EMsgControlModeNone                = 0x000000,
+    EMsgControlModeReadOnly            = 0x000001,    // Indicates read only state
+    EMsgControlModePlainTextMode       = 0x000002,    // Indicates plain text mode
+    EMsgControlModeSizeFixedToOneLine  = 0x000004,    // Forces control to one line heigh
+    EMsgControlModeUseSystemFont       = 0x000008,    // Forces control to use system font
+    EMsgControlModeSizeChanging        = 0x000010,    // Indicates control's size change
+    EMsgControlModeBodyMaxHeight       = 0x000020,    // Forces body control to max height
+    EMsgControlModeModified            = 0x000040,    // Indicates if control has been modified
+    EMsgControlModeInitialized         = 0x000080,    // Indicates if control has been initialized
+    EMsgControlModeShiftPressed        = 0x000100,    // Indicated if shift key is pressed
+    EMsgControlModeForceFocusStop      = 0x000200,    // Indicated if focus must stop on this
+                                                      // control (in read-only mode)
+    EMsgControlModeDoNotDrawFrameBgContext  = 0x000400,   // Do not draw frame around the edwin
+                                                        // valid only in ExpandableControls
+    EMsgControlModeForceSizeUpdate     = 0x000800,    // Indicated if size must be updated always                                                    
+    EMsgControlModeFirstReservedFlag   = 0x001000,    // Reserved for standard controls
+    EMsgControlModeFirstFreeFlag       = 0x100000
+    };
+
+enum TMsgViewEvent
+    {
+    EMsgViewEventPrepareFocusTransitionUp,
+    EMsgViewEventPrepareFocusTransitionDown,
+    EMsgViewEventPrepareForViewing,
+    EMsgViewEventPrepareForZooming,
+    EMsgViewEventFormHeightChanged,
+    EMsgViewEventFormScrolled,
+    EMsgViewEventSetCursorFirstPos,
+    EMsgViewEventSetCursorLastPos,
+    EMsgViewEventFocusMoveStarting,
+    EMsgViewEventFocusMoveFinished,
+    EMsgViewEventViewFocusLost,
+    EMsgViewEventViewFocusGain
+    };
+
+enum TMsgIndicatorFlags
+    {
+    // TODO: check avkon.hrh if they add more indicators there.
+    EMsgIndicatorT9              = 0x0001,
+    EMsgIndicatorUpperCase       = 0x0002,
+    EMsgIndicatorLowerCase       = 0x0004,
+    EMsgIndicatorTextCase        = 0x0008,
+    EMsgIndicatorNumberCase      = 0x0010,
+    EMsgIndicatorQuery           = 0x0020,
+    EMsgIndicatorPinyin          = 0x0040,
+    EMsgIndicatorZhuyin          = 0x0080,
+    EMsgIndicatorStroke          = 0x0100,
+    EMsgIndicatorAudioAttached   = 0x0200,
+    EMsgIndicatorImageAttached   = 0x0400,
+    EMsgIndicatorObjects         = 0x0800,
+    EMsgIndicatorAttachment      = 0x1000,
+    EMsgIndicatorMessageLength   = 0x2000
+    };
+
+/**
+* Enumeration for scroll directions.
+*/
+enum TMsgScrollDirection
+    {
+    EMsgScrollUp,
+    EMsgScrollDown
+    };
+
+enum TMsgCommonCommands
+    {
+    EMsgDispSizeAutomatic = 1,
+    EMsgDispSizeLarge,
+    EMsgDispSizeNormal,
+    EMsgDispSizeSmall,
+    EMsgFirstFreeComponentSpecificCommand = 2000
+    };
+
+#endif
+
+// End of File

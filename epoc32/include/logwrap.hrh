@@ -1,1 +1,116 @@
-logwrap.hrh
+// Copyright (c) 2003-2009 Nokia Corporation and/or its subsidiary(-ies).
+// All rights reserved.
+// This component and the accompanying materials are made available
+// under the terms of the License "Symbian Foundation License v1.0" to Symbian Foundation members and "Symbian Foundation End User License Agreement v1.0" to non-members
+// which accompanies this distribution, and is available
+// at the URL "http://www.symbianfoundation.org/legal/licencesv10.html".
+//
+// Initial Contributors:
+// Nokia Corporation - initial contribution.
+//
+// Contributors:
+//
+// Description:
+//
+
+
+
+/**
+ @file
+ @publishedAll
+ @released
+*/
+
+#if !defined(__LOGWRAP_HRH__)
+#define __LOGWRAP_HRH__
+
+// Event Uid's
+#define KLogCallEventType 0x1000550D
+#define KLogDataEventType 0x10005566
+#define KLogFaxEventType 0x10005567
+#define KLogShortMessageEventType 0x10005568
+#define KLogMailEventType 0x10005569
+#define KLogTaskSchedulerEventType  0x1000585E
+
+/**
+@internalComponent
+*/
+#define KLogPacketDataEventType  0x10008F8E
+
+/**
+Location Requested by On Board Application Event Uid
+@publishedPartner
+@released
+*/
+#define KLogLbsSelfLocateEventType 0x102822B2
+/**
+Location Requested by Remote Party Event Uid
+@publishedPartner
+@released
+*/
+#define KLogLbsExternalLocateEventType 0x102822B3
+/**
+Location Sent to Remote Party Event Uid
+@publishedPartner
+@released
+*/
+#define KLogLbsTransmitLocationEventType 0x102822B4
+/**
+Location Determined by Network Event Uid
+@publishedPartner
+@released
+*/
+#define KLogLbsNetworkLocateEventType 0x102822B5
+/**
+Location Data Obtained from Network Event Uid
+@publishedPartner
+@released
+*/
+#define KLogLbsAssistanceDataEventType 0x102822B6
+
+// Recent lists (Make consecutive)
+/**
+Log Recent Incoming Calls List
+@publishedPartner
+@released
+*/
+#define KLogRecentIncomingCalls 1
+/**
+Log Recent Outgoing Calls List
+@publishedPartner
+@released
+*/
+#define KLogRecentOutgoingCalls 2
+/**
+Log Recent Missed Calls List
+@publishedPartner
+@released
+*/
+#define KLogRecentMissedCalls 3
+
+// Filter fields
+/**
+@internalComponent
+*/
+#define ELogFirstFilterField 0x1
+
+#define ELogContactField 0x1
+#define ELogDirectionField 0x2
+#define ELogDurationTypeField 0x4
+#define ELogEventTypeField 0x8
+#define ELogNumberField 0x10
+#define ELogRemotePartyField 0x20
+#define ELogStatusField 0x40
+#define ELogStartTimeField 0x80
+#define ELogEndTimeField 0x100
+#define ELogFlagsField 0x200
+#define ELogSubjectField 0x400
+#define ELogLinkField 0x800
+#define ELogDataField 0x1000
+
+/**
+@internalComponent
+*/
+#define ELogLastFilterField 0x200
+
+#endif

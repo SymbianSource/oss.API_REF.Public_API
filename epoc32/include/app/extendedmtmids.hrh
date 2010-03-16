@@ -1,1 +1,163 @@
-extendedmtmids.hrh
+/*
+* Copyright (c) 2007 Nokia Corporation and/or its subsidiary(-ies).
+* All rights reserved.
+* This component and the accompanying materials are made available
+* under the terms of the License "Symbian Foundation License v1.0" to Symbian Foundation members and "Symbian Foundation End User License Agreement v1.0" to non-members
+* which accompanies this distribution, and is available
+* at the URL "http://www.symbianfoundation.org/legal/licencesv10.html".
+*
+* Initial Contributors:
+* Nokia Corporation - initial contribution.
+*
+* Contributors:
+*
+* Description:  
+*     Defines sdk extended capabilities
+*
+*/
+
+
+
+#ifndef __EXTENDEDMTMIDS_HRH__
+#define __EXTENDEDMTMIDS_HRH__
+
+/**
+ * UIDs for quering capabilities from MTMs (CBaseMtmUiData)
+ *
+ * How to use:
+ *
+ * @code
+ * #include <ExtendedMTMIDS.hrh>
+ *
+ * TInt CMyMtmUiData::QueryCapability( TUid aFunctionId, TInt& aResponse ) const
+ *     {
+ *     ...
+ *     switch ( aFunctionId.iUid )
+ *         {
+ *         // MTM supports linked attachments:
+ *         case KUidMsvMtmQuerySupportLinks:
+ *             {
+ *             aResponse = ETrue;
+ *             return KErrNone;
+ *             }
+ *         // MTM supports service validation:
+ *         case KUidMsvMtmQuerySupportValidateService:
+ *             {
+ *             aResponse = ETrue;
+ *             return KErrNone;
+ *             }
+ *         // MTM supports editor:
+ *         case KUidMsvMtmQuerySupportEditor:
+ *             {
+ *             aResponse = ETrue;
+ *             return KErrNone;
+ *             }
+ *         ...
+ *         } 
+ *     ...
+ *     }
+ * @endcode
+ *
+ */
+#define KUidMsvMtmQuerySupportLinks                 0x100059D4 // response true/false
+#define KUidMsvMtmQuerySupportValidateService       0x10005A11 // response true/false
+#define KUidMsvMtmQuerySupportEditor                0x101FD692 // response true/false
+
+
+/**
+ * Function ids for custom MTM commands
+ *
+ * For MTM specific command ids use consecutive numbering starting from
+ * KMtmUiFirstFreeMtmSpecificFunction.
+ *
+ * How to use:
+ *
+ * Define custom commands in resources:
+ *
+ * @code
+ *
+ * RESOURCE MTUD_FUNCTION_ARRAY r_my_mtm_function_array
+ *     {
+ *     functions =
+ *         {
+ *         // Settings to be shown in Message Center
+ *         MTUD_FUNCTION 
+ *             {
+ *             functiontext = "My settings";
+ *             command = KMtmUiMceSettings;
+ *             flags = EMtudCommandTransferSend;
+ *             } 
+ *         // Settings wizard to be shown in Email Wizard UI
+ *         MTUD_FUNCTION 
+ *             {
+ *             functiontext = "My wizard";
+ *             command = KMtmUiFunctionSettingsWizard;
+ *             flags = EMtudCommandTransferSend;
+ *             }
+ *          ...
+ *          }
+ *     }
+ *
+ * @endcode
+ *
+ * Implement functionality in the UI MTM (CBaseMtmUi)
+ *
+ * @code
+ * void CMyMtmUi::InvokeSyncFunctionL( TInt aFunctionId,
+ *                                     const CMsvEntrySelection& aSelection,
+ *                                     TDes8& aParameter)
+ *     {
+ *     switch ( aFunctionId )
+ *         {
+ *         case KMtmUiFunctionValidateService:
+ *             {
+ *             // Validate service
+ *             ...
+ *             // Service valid
+ *             TPckgBuf<TInt> resultPackage( KErrNone );
+ *             aParameter.Copy( resultPackage );
+ *             break;
+ *             }
+ *         case KMtmUiFunctionSettingsWizard:
+ *             {
+ *             // Show settings wizard
+ *             ...
+ *             // Wizard completed successfully
+ *             TPckgBuf<TInt> resultPackage( 1 );
+ *             aParameter.Copy( resultPackage );
+ *             break;
+ *             }
+ *         }
+ *     }
+ *
+ * @endcode
+ *
+ * "KMtmUiMceSettings" command is handled in a special way. The MTUD_FUNCTION is only
+ * used for registration purposes. The actual settings dialog is launched by 
+ * calling "CBaseMtmUi::EditL" for the service entry of the corresponding MTM.
+ *
+ * @code
+ *
+ * CMsvOperation* CMyMtmUi::EditL( TRequestStatus& aStatus )
+ *     {
+ *     switch ( iBaseMtm.Entry().Entry().iType.iUid )
+ *         {
+ *         case KUidMsvServiceEntryValue:
+ *             {
+ *             // Open settings dialog
+ *             return OpenServiceSettingsDialogOperationL( aStatus );
+ *             }
+ *         ...
+ *         }
+ *     }
+ *
+ * @endcode
+ */
+#define KMtmUiMceSettings                           0x00203004
+#define KMtmUiFunctionValidateService               0x00203006
+#define KMtmUiFunctionSettingsWizard                0x00203013
+#define KMtmUiFirstFreeMtmSpecificFunction          0x00300000
+
+#endif // __EXTENDEDMTMIDS_HRH__
+
+// End of file

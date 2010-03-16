@@ -1,1 +1,61 @@
-mmsclient.inl
+/*
+* Copyright (c) 2002 Nokia Corporation and/or its subsidiary(-ies).
+* All rights reserved.
+* This component and the accompanying materials are made available
+* under the terms of the License "Symbian Foundation License v1.0" to Symbian Foundation members and "Symbian Foundation End User License Agreement v1.0" to non-members
+* which accompanies this distribution, and is available
+* at the URL "http://www.symbianfoundation.org/legal/licencesv10.html".
+*
+* Initial Contributors:
+* Nokia Corporation - initial contribution.
+*
+* Contributors:
+*
+* Description:  
+*     Inline functions for CMmsClientMtm
+*
+*/
+
+
+
+inline TUid CMmsClientMtm::Type() const
+    {
+    return CBaseMtm::Type();
+    }
+
+inline CMsvSession& CMmsClientMtm::Session()
+    {
+    return CBaseMtm::Session();
+    }
+
+inline void CMmsClientMtm::SetCurrentEntryL( CMsvEntry * aEntry )
+    {
+    CBaseMtm::SetCurrentEntryL( aEntry );
+    }
+
+inline void CMmsClientMtm::SwitchCurrentEntryL( TMsvId aId )
+    {
+    CBaseMtm::SwitchCurrentEntryL( aId );
+    }
+
+inline CMsvEntry& CMmsClientMtm::Entry() const
+    {
+    return CBaseMtm::Entry();
+    }
+
+inline TBool CMmsClientMtm::HasContext() const
+    {
+    return CBaseMtm::HasContext();
+    }
+
+inline CRichText& CMmsClientMtm::Body()
+    {
+    return CBaseMtm::Body();
+    }
+
+inline const CRichText& CMmsClientMtm::Body() const
+    {
+    return CBaseMtm::Body();
+    }
+
+// End of File

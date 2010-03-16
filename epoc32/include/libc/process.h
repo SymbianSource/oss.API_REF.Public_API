@@ -1,1 +1,51 @@
-process.h
+/*
+* Copyright (c) 1997-2009 Nokia Corporation and/or its subsidiary(-ies).
+* All rights reserved.
+* This component and the accompanying materials are made available
+* under the terms of the License "Symbian Foundation License v1.0" to Symbian Foundation members and "Symbian Foundation End User License Agreement v1.0" to non-members
+* which accompanies this distribution, and is available
+* at the URL "http://www.symbianfoundation.org/legal/licencesv10.html".
+*
+* Initial Contributors:
+* Nokia Corporation - initial contribution.
+*
+* Contributors:
+*
+* Description:
+*
+*/
+
+
+
+
+
+
+/**
+ @file
+ @publishedAll
+ @released
+*/
+
+#ifndef __PROCESS_H_
+#define __PROCESS_H_
+
+#ifdef __cplusplus
+extern "C" {
+#endif
+
+extern int execl(const char *path, const char *argv0, ...);
+extern int execle(const char *path, const char *argv0, ... /*, char * const *envp */);
+extern int execlp(const char *path, const char *argv0, ...);
+extern int execlpe(const char *path, const char *argv0, ... /*, char * const *envp */);
+
+extern int execv(const char *path, char * const *argv);
+extern int execve(const char *path, char * const *argv, char * const *envp);
+extern int execvp(const char *path, char * const *argv);
+extern int execvpe(const char *path, char * const *argv, char * const *envp);
+
+
+#ifdef __cplusplus
+}
+#endif
+
+#endif

@@ -1,0 +1,997 @@
+/*
+* Copyright (c) 2006 Nokia Corporation and/or its subsidiary(-ies).
+* All rights reserved.
+* This component and the accompanying materials are made available
+* under the terms of the License "Symbian Foundation License v1.0" to Symbian Foundation members and "Symbian Foundation End User License Agreement v1.0" to non-members
+* which accompanies this distribution, and is available
+* at the URL "http://www.symbianfoundation.org/legal/licencesv10.html".
+*
+* Initial Contributors:
+* Nokia Corporation - initial contribution.
+*
+* Contributors:
+*
+* Description: 
+*
+*/
+
+#ifdef FF_3D_RINGING_TONES
+KFeatureId3DRingingTones,
+#endif
+
+#ifdef FF_3G_CELLBROADCAST
+KFeatureIdFf3gCellbroadcast,
+#endif
+
+#ifdef FF_ADAPTIVE_WLAN_SCANNING_SUPPORT
+KFeatureIdFfAdaptiveWlanScanningSupport,
+#endif
+
+#ifdef FF_AI_WLANSNIFFER_WIDGET
+KFeatureIdFfAiWlansnifferWidget,
+#endif
+
+#ifdef FF_ASYNCH_FILE_SAVE_QUEUE
+KFeatureIdAsynchFileSaveQueue,
+#endif
+
+#ifdef FF_AUDT
+KFeatureIdFfAudt,
+#endif
+
+#ifdef FF_AUTO_REDIAL_FOR_VIDEO_CALL
+KFeatureIdAutoRedialForVideoCall,
+#endif
+
+#ifdef FF_AVKON_EMOTION_ICON_ENABLED
+KFeatureIdFfAvkonEmotionIconEnabled,
+#endif
+
+#ifdef FF_BIRTHDAY_IMPROVEMENT
+KFeatureIdFfBirthdayImprovement,
+#endif
+
+#ifdef FF_BROWSER_PROGRESSIVE_DOWNLOAD
+KFeatureIdBrowserProgressiveDownload,
+#endif
+
+#ifdef FF_CAPACITIVE_DISPLAY
+KFeatureIdFfCapacitiveDisplay,
+#endif
+
+#ifdef FF_CHINESE_FONTS_HIRES
+KFeatureIdChineseFontsHires,
+#endif
+
+#ifdef FF_CLOCK_MULTIPROCOL_SUPPORT
+KFeatureIdFfClockMultiprocolSupport,
+#endif
+
+#ifdef FF_COMMSDAT_CREATION_FROM_XML
+KFeatureIdCommsDatCreationFromXml,
+#endif
+
+#ifdef FF_CONNECTION_OVERRIDE
+KFeatureIdFfConnectionOverride,
+#endif
+
+#ifdef FF_CONTACTS_NICKNAME
+KFeatureIdFfContactsNickname,
+#endif
+
+#ifdef FF_DM_INSTALL_SECURITY
+KFeatureIdDmInstallSecurity,
+#endif
+
+#ifdef FF_DUAL_LANGUAGE_SUPPORT
+KFeatureIdFfDualLanguageSupport,
+#endif
+
+#ifdef FF_EMAIL_FRAMEWORK
+KFeatureIdFfEmailFramework,
+#endif
+
+#ifdef FF_EMAIL_IPS_SERVICES
+KFeatureIdFfEmailIpsServices,
+#endif
+
+#ifdef FF_EMAIL_MCE_INTEGRATION
+KFeatureIdEmailMceIntegration,
+#endif
+
+#ifdef FF_EMAIL_PROTOCOL_PLUGINS
+KFeatureIdFfEmailProtocolPlugins,
+#endif
+
+#ifdef FF_EMAIL_UI
+KFeatureIdFfEmailUi,
+#endif
+
+#ifdef FF_FARSI_CALENDAR
+KFeatureIdFfFarsiCalendar,
+#endif
+
+#ifdef FF_FMTX
+KFeatureIdFmtx,
+#endif
+
+#ifdef FF_FULLSCR_HWR_INPUT
+KFeatureIdFullscrHwrInput,
+#endif
+
+#ifdef FF_GENERIC_FONTS_ASSETS
+KFeatureIdFfGenericFontsAssets,
+#endif
+
+#ifdef FF_HDMI
+KFeatureIdFfHdmi,
+#endif
+
+#ifdef FF_HELP_TUTORIAL_MERGE
+KFeatureIdFfHelpTutorialMerge,
+#endif
+
+#ifdef FF_HIJRI_CALENDAR
+KFeatureIdFfHijriCalendar,
+#endif
+
+#ifdef FF_HITCHCOCK_APP_SHELL
+KFeatureIdHitchcockAppShell,
+#endif
+
+#ifdef FF_HOMESCREEN_SWITCHABLE_ROOT
+KFeatureIdFfHomescreenSwitchableRoot,
+#endif
+
+#ifdef FF_IAUPDATE
+KFeatureIdIAUpdate,
+#endif
+
+#ifdef FF_IAUPDATE_PHASE2
+KFeatureIdFfIaupdatePhase2,
+#endif
+
+#ifdef FF_INPUTS_PER_ORIENTATION
+KFeatureIdFfInputsPerOrientation,
+#endif
+
+#ifdef FF_INTELLIGENT_TEXT_INPUT
+KFeatureIdFfIntelligentTextInput,
+#endif
+
+#ifdef FF_JAVA_GLOBAL_INDICATORS_API
+KFeatureIdFfJavaGlobalIndicatorsApi,
+#endif
+
+#ifdef FF_KOREAN
+KFeatureIdKorean,
+#endif
+
+#ifdef FF_LINKED_FONTS_CHINESE
+KFeatureIdFfLinkedFontsChinese,
+#endif
+
+#ifdef FF_MEETING_REQUEST_UI
+KFeatureIdFfMeetingRequestUi,
+#endif
+
+#ifdef FF_MENU_TEXTURE_PRELOADING
+KFeatureIdFfMenuTexturePreloading,
+#endif
+
+#ifdef FF_NCD_ENGINE
+KFeatureIdFfNcdEngine,
+#endif
+
+#ifdef FF_NCD_UI
+KFeatureIdFfNcdUi,
+#endif
+
+#ifdef FF_NEAR_FIELD_COMMUNICATION
+KFeatureIdNfc,
+#endif
+
+#ifdef FF_NLT_SUPPORT
+KFeatureIdNltSupport,
+#endif
+
+#ifdef FF_NO_CUG_SUPPORT
+KFeatureIdFfNoCugSupport,
+#endif
+
+#ifdef FF_NO_IDLE_SOFTKEYS
+KFeatureIdNoIdleSoftkeys,
+#endif
+
+#ifdef FF_ODE_COPYRIGHT_NOTICE
+KFeatureIdFfOdeLegalNotice,
+#endif
+
+#ifdef FF_OFN_FEATURE
+KFeatureIdFfOfnFeature,
+#endif
+
+#ifdef FF_OMA_SCOMO_ADAPTER
+KFeatureIdFfOmaScomoAdapter,
+#endif
+
+#ifdef FF_OSS_LEGAL_NOTICE
+KFeatureIdFfOssLegalNotice,
+#endif
+
+#ifdef FF_PNPMS_PROV_FILTER
+KFeatureIdFfPnpmsProvFilter,
+#endif
+
+#ifdef FF_PNPMS_SERVICE_HELP_PLUGIN
+KFeatureIdPnpmsServiceHelpPlugin,
+#endif
+
+#ifdef FF_POWER_SAVE
+KFeatureIdPowerSave,
+#endif
+
+#ifdef FF_PREMINET_CATALOGS_CLIENT
+KFeatureIdPreminetCatalogsClient,
+#endif
+
+#ifdef FF_PROV_AUTHTYPE_PLUGIN
+KFeatureIdProvAuthtypePlugin,
+#endif
+
+#ifdef FF_QWERTY_FN_KEY
+KFeatureIdQwertyFnKey,
+#endif
+
+#ifdef FF_ROCKER_KEY
+KFeatureIdRockerKey,
+#endif
+
+#ifdef FF_RUNTIME_DEVICE_CAPABILITY_CONFIGURATION
+KFeatureIdFfRuntimeDeviceCapabilityConfiguration,
+#endif
+
+#ifdef FF_SELECTABLE_EMAIL
+KFeatureIdSelectableEmail,
+#endif
+
+#ifdef FF_STARTUP_OMA_DM_SUPPORT
+KFeatureStartupOmaDmSupport,
+#endif
+
+#ifdef FF_TACTICONS
+KFeatureIdFfTacticons,
+#endif
+
+#ifdef FF_TACTILE_FEEDBACK
+KFeatureIdTactileFeedback,
+#endif
+
+#ifdef FF_TARM_CAPABILITY_BASED_ACCESS
+KFeatureIdFfTarmCapabilityBasedAccess,
+#endif
+
+#ifdef FF_TCP_MYFAVES_FEATURE
+KFeatureIdTcpMyfavesFeature,
+#endif
+
+#ifdef FF_TCP_MYPROFILE
+KFeatureIdFfTcpMyprofile,
+#endif
+
+#ifdef FF_TOUCHSCREENCALIB_IN_STARTUP
+KFeatureIdTouchscreencalibInStartup,
+#endif
+
+#ifdef FF_TOUCH_UNLOCK_STROKE
+KFeatureIdFfTouchUnlockStroke,
+#endif
+
+#ifdef FF_UPNP_FRAMEWORK_2_0
+KFeatureIdUpnpFramework20,
+#endif
+
+#ifdef FF_USB_CHARGING
+KFeatureIdUsbCharging,
+#endif
+
+#ifdef FF_USB_HOST
+KFeatureIdUsbHost,
+#endif
+
+#ifdef FF_USE_EGPRS_ICON
+KFeatureIdUseEGprsIcon,
+#endif
+
+#ifdef FF_VIRTUAL_FULLSCR_QWERTY_INPUT
+KFeatureIdVirtualFullscrQwertyInput,
+#endif
+
+#ifdef FF_VIRTUAL_ITUT_INPUT
+KFeatureIdVirtualItutInput,
+#endif
+
+#ifdef FF_VMBX_CALL_DIVERT_ICON
+KFeatureIdVmbxCallDivertIcon,
+#endif
+
+#ifdef FF_VOICE_CALL_CONTINUITY
+KFeatureIdFfVoiceCallContinuity,
+#endif
+
+#ifdef FF_VPN_CLIENT
+KFeatureIdFfVpnClient,
+#endif
+
+#ifdef FF_WEBVIDEO_PH2
+KFeatureIdWebvideoPh2,
+#endif
+
+#ifdef FF_WLANSNIFFER_VOIP_ENHANCEMENTS
+KFeatureIdFfWlansnifferVoipEnhancements,
+#endif
+
+#ifdef FF_WLAN_EXTENSIONS
+KFeatureIdFfWlanExtensions,
+#endif
+
+#ifdef FF_WLAN_WAPI
+KFeatureIdFfWlanWapi,
+#endif
+
+#ifdef __3D_MENU
+KFeatureId3DMenu,
+#endif
+
+#ifdef __3GP_EXTENTION
+KFeatureId3GpExtension,
+#endif
+
+#ifdef __AAC_ENCODER_PLUGIN
+KFeatureIdAacEncoderPlugin,
+#endif
+
+#ifdef __AAC_PLUS_DECODER_PLUGIN
+KFeatureIdAacPlusDecoderPlugin,
+#endif
+
+#ifdef __ACTIVE_IDLE
+KFeatureIdActiveIdle,
+#endif
+
+#ifdef __ALLOW_UPGRADE_HELIX
+KFeatureIdAllowUpgradeHelix,
+#endif
+
+#ifdef __APP_CSD_SUPPORT
+KFeatureIdAppCsdSupport,
+#endif
+
+#ifdef __AUDIO_EFFECTS_API
+KFeatureIdAudioEffectsApi,
+#endif
+
+#ifdef __AUDIO_MESSAGING
+KFeatureIdAudioMessaging,
+#endif
+
+#ifdef __AUDIO_RESOURCE_INDICATIONS
+KFeatureIdAudioResourceIndications,
+#endif
+
+#ifdef __AUTO_ACCESSORY_IDENTIFICATION
+KFeatureIdAutoAccessoryIdentification,
+#endif
+
+#ifdef __AVKON_APAC__
+KFeatureIdAvkonApac,
+#endif
+
+#ifdef __AVKON_ELAF__
+KFeatureIdAvkonELaf,
+#endif
+
+#ifdef __BASIC_LOCATION_INFO_DISPLAY
+KFeatureIdBasicLocationInfoDisplay,
+#endif
+
+#ifdef __BASS_BOOST_EFFECT_UI
+KFeatureIdBassBoostEffectUi,
+#endif
+
+#ifdef __BRIGHTNESS_CONTROL
+KFeatureIdBrightnessControl,
+#endif
+
+#ifdef __BROWSER_IMEI_NOTIFICATION
+KFeatureIdBrowserIMEINotification,
+#endif
+
+#ifdef __BTIC_BINARIES_CHECK_ENABLED
+KFeatureIdBticBinariesCheckEnabled,
+#endif
+
+#ifdef __BT_FAX_PROFILE
+KFeatureIdBtFaxProfile,
+#endif
+
+#ifdef __BT_SAP
+KFeatureIdBtSap,
+#endif
+
+#ifdef __CAMERA
+KFeatureIdCamera,
+#endif
+
+#ifdef __CAMERA_FULLSCREEN_VIEWFINDER
+KFeatureIdCameraFullscreenViewfinder,
+#endif
+
+#ifdef __CAMERA_LENS_COVER
+KFeatureIdCameraLensCover,
+#endif
+
+#ifdef __CAMERA_LOCATION_SUPPORT
+KFeatureIdCameraLocationSupport,
+#endif
+
+#ifdef __CHINESE
+KFeatureIdChinese,
+#endif
+
+#ifdef __CHINESE_PRC_FONTS
+KFeatureIdChinesePrcFonts,
+#endif
+
+#ifdef __CHINESE_TAIWAN_HK_FONTS
+KFeatureIdChineseTaiwanHkFonts,
+#endif
+
+#ifdef __COMMDB_PROTECTION
+KFeatureIdCommDBProtection,
+#endif
+
+#ifdef __COVER_DISPLAY
+KFeatureIdCoverDisplay,
+#endif
+
+#ifdef __CS_VIDEO_TELEPHONY
+KFeatureIdCsVideoTelephony,
+#endif
+
+#ifdef __CUSTOMISED_RFS
+KFeatureIdCustomisedRFS,
+#endif
+
+#ifdef __DEFAULT_CONNECTION
+KFeatureIdDefaultConnection,
+#endif
+
+#ifdef __DRM
+KFeatureIdDrm,
+#endif
+
+#ifdef __DRM_CLOCK
+KFeatureIdDrmClock,
+#endif
+
+#ifdef __DRM_FULL
+KFeatureIdDrmFull,
+#endif
+
+#ifdef __DRM_OMA2
+KFeatureIdDrmOma2,
+#endif
+
+#ifdef __DRM_PHASE2
+KFeatureIdDrmPhase2,
+#endif
+
+#ifdef __EDIT_KEY
+KFeatureIdEditKey,
+#endif
+
+#ifdef __EMAIL_OVER_SMS
+KFeatureIdEmailOverSms,
+#endif
+
+#ifdef __EQUALIZER
+KFeatureIdEqualizer,
+#endif
+
+#ifdef __FLASH_LITE_BROWSER_PLUGIN
+KFeatureIdFlashLiteBrowserPlugin,
+#endif
+
+#ifdef __FLASH_LITE_VIEWER
+KFeatureIdFlashLiteViewer,
+#endif
+
+#ifdef __FM_RADIO
+KFeatureIdFmRadio,
+#endif
+
+#ifdef __HANDWRITING_RECOGNITION_INPUT
+KFeatureIdHandwritingRecognitionInput,
+#endif
+
+#ifdef __HSXPA_SUPPORT
+KFeatureIdHsxpaSupport,
+#endif
+
+#ifdef __IM
+KFeatureIdIm,
+#endif
+
+#ifdef __IMAGE_VIEWER
+KFeatureIdImageViewer,
+#endif
+
+#ifdef __IMPS_STANDALONE_IP_CIR
+KFeatureIdImpsStandaloneIpCir,
+#endif
+
+#ifdef __INCLUDE_AAC_CMMFCODEC
+KFeatureIdIncludeAacCMMFCodec,
+#endif
+
+#ifdef __INCLUDE_AMR_NB_CMMFCODEC
+KFeatureIdIncludeAmrNbCMMFCodec,
+#endif
+
+#ifdef __INCLUDE_AMR_WB_CMMFCODEC
+KFeatureIdIncludeAmrWbCMMFCodec,
+#endif
+
+#ifdef __INCLUDE_EAACPLUS_CMMFCODEC
+KFeatureIdIncludeEaacplusCmmfcodec,
+#endif
+
+#ifdef __INCLUDE_MP3_CMMFCODEC
+KFeatureIdIncludeMp3CMMFCodec,
+#endif
+
+#ifdef __INCLUDE_QCELP_CMMFCODEC
+KFeatureIdIncludeQcelpCMMFCodec,
+#endif
+
+#ifdef __IPSEC
+KFeatureIdIpsec,
+#endif
+
+#ifdef __IRDA
+KFeatureIdIrda,
+#endif
+
+#ifdef __JAPANESE
+KFeatureIdJapanese,
+#endif
+
+#ifdef __JAPANESE_LARGER_DICTIONARY
+KFeatureIdJapaneseLargerDictionary,
+#endif
+
+#ifdef __JAPANESE_PICTOGRAPHS
+KFeatureIdJapanesePicto,
+#endif
+
+#ifdef __JAPAN_PREFIX_CHANGE
+KFeatureIdJapanPrefixChange,
+#endif
+
+#ifdef __JAVA
+KFeatureIdJava,
+#endif
+
+#ifdef __JAVA_STUBS
+KFeatureIdJavaStubs,
+#endif
+
+#ifdef __LAYOUT208_208
+KFeatureIdLayout208_208,
+#endif
+
+#ifdef __LAYOUT_240_320
+KFeatureIdLayout240_320,
+#endif
+
+#ifdef __LAYOUT_240_320_LARGE_SCREEN
+KFeatureIdLayout240_320_LargeScreen,
+#endif
+
+#ifdef __LAYOUT_240_320_QVGA3
+KFeatureIdLayout240_320_QVGA3,
+#endif
+
+#ifdef __LAYOUT_320_240
+KFeatureIdLayout320_240,
+#endif
+
+#ifdef __LAYOUT_320_240_LARGE_SCREEN
+KFeatureIdLayout320_240_LargeScreen,
+#endif
+
+#ifdef __LAYOUT_320_240_QVGA3
+KFeatureIdLayout320_240_QVGA3,
+#endif
+
+#ifdef __LAYOUT_360_640_TOUCH
+KFeatureIdLayout360_640_Touch,
+#endif
+
+#ifdef __LAYOUT_640_360_TOUCH
+KFeatureIdLayout640_360_Touch,
+#endif
+
+#ifdef __LOCATIONGPSHW
+KFeatureIdLocationGpsHw,
+#endif
+
+#ifdef __LOCATION_CENTRE
+KFeatureIdLocationCentre,
+#endif
+
+#ifdef __MACROMEDIA_FLASH_6
+KFeatureIdMacromediaFlash6,
+#endif
+
+#ifdef __MEDIA_TRANSFER_PROTOCOL
+KFeatureIdMediaTransferProtocol,
+#endif
+
+#ifdef __MMS_NONDESTRUCTIVE_FORWARD
+KFeatureIdMmsNonDestructiveForward,
+#endif
+
+#ifdef __MMS_NOTIFICATIONS_VIEW
+KFeatureIdMMSNotificationsView,
+#endif
+
+#ifdef __MMS_POSTCARD
+KFeatureIdMmsPostcard,
+#endif
+
+#ifdef __MPEG4_AAC_ENCODING
+KFeatureIdMpegAacEncoding,
+#endif
+
+#ifdef __MPEG4_VIDEO_ENCODING
+KFeatureIdMpeg4VideoEncoding,
+#endif
+
+#ifdef __MRT_SDK_LIBRARIES
+KFeatureIdMrtSdkLibraries,
+#endif
+
+#ifdef __MTP_PROTOCOL_SUPPORT
+KFeatureIdMtpProtocolSupport,
+#endif
+
+#ifdef __NEWSTICKER
+KFeatureIdNewsticker,
+#endif
+
+#ifdef __NO_POWERKEY
+KFeatureIdNoPowerkey,
+#endif
+
+#ifdef __OCR
+KFeatureIdOcr,
+#endif
+
+#ifdef __OCR_HANWANG
+KFeatureIdOcrHanwang,
+#endif
+
+#ifdef __OCR_ROMDB
+KFeatureIdOcrRomdb,
+#endif
+
+#ifdef __OMA_POC
+KFeatureIdOmaPoc,
+#endif
+
+#ifdef __ON_SCREEN_DIALER
+KFeatureIdOnScreenDialer,
+#endif
+
+#ifdef __OPENGL_ES_3DAPI
+KFeatureIdOpenGLES3DApi,
+#endif
+
+#ifdef __OPENGL_ES_SW_IMPLEMENTATION
+KFeatureIdOpenGLESSWImplementation,
+#endif
+
+#ifdef __OPERATOR_CACHE
+KFeatureIdOperatorCache,
+#endif
+
+#ifdef __OPERATOR_MENU
+KFeatureIdOperatorMenu,
+#endif
+
+#ifdef __PEN_SUPPORT
+KFeatureIdPenSupport,
+#endif
+
+#ifdef __PEN_SUPPORT_CALIBRATION
+KFeatureIdPenSupportCalibration,
+#endif
+
+#ifdef __PRESENCE
+KFeatureIdPresence,
+#endif
+
+#ifdef __PRODUCT_REMCON_TSP
+KFeatureIdProductRemconTsp,
+#endif
+
+#ifdef __PROTOCOL_WCDMA
+KFeatureIdProtocolWcdma,
+#endif
+
+#ifdef __PROTOCOL_WLAN
+KFeatureIdProtocolWlan,
+#endif
+
+#ifdef __QOS
+KFeatureIdQos,
+#endif
+
+#ifdef __QVGA2_LAYOUT_IN_USE
+KFeatureIdQvga2LayoutInUse,
+#endif
+
+#ifdef __QWERTY_INPUT
+KFeatureIdQwertyInput,
+#endif
+
+#ifdef __RSS_FEEDS
+KFeatureIdRssFeeds,
+#endif
+
+#ifdef __RTP_STACK
+KFeatureIdRtpStack,
+#endif
+
+#ifdef __RV9
+KFeatureIdRV9,
+#endif
+
+#ifdef __S60_FM_RADIO_APPLICATION
+KFeatureIdS60FmRadioApplication,
+#endif
+
+#ifdef __SDND
+KFeatureIdSdnd,
+#endif
+
+#ifdef __SENDUI_MMS_UPLOAD
+KFeatureIdSenduiMmsUpload,
+#endif
+
+#ifdef __SEND_FILE_IN_CALL
+KFeatureIdSendFileInCall,
+#endif
+
+#ifdef __SERIES60_AMBIENT_LIGHT_SENSOR
+KFeatureIdAmbientLightSensor,
+#endif
+
+#ifdef __SERIES60_HELP
+KFeatureIdHelp,
+#endif
+
+#ifdef __SERIES60_KEYPAD_NO_SLIDER
+KFeatureIdKeypadNoSlider,
+#endif
+
+#ifdef __SERIES60_KEYPAD_NO_VOICE_KEY
+KFeatureIdKeypadNoVoiceKey,
+#endif
+
+#ifdef __SERIES60_LUNAR_CALENDAR
+KFeatureIdLunarCalendar,
+#endif
+
+#ifdef __SERIES60_NATIVE_BROWSER
+KFeatureIdSeries60NativeBrowser,
+#endif
+
+#ifdef __SERIES60_PHONE_TTY
+KFeatureIdPhoneTty,
+#endif
+
+#ifdef __SHOW_PANICS
+KFeatureIdShowPanics,
+#endif
+
+#ifdef __SIDE_VOLUME_KEYS
+KFeatureIdSideVolumeKeys,
+#endif
+
+#ifdef __SIND
+KFeatureIdSind,
+#endif
+
+#ifdef __SIP_SIMPLE_PRESENCE_PROTOCOL
+KFeatureIdSipSimplePresenceProtocol,
+#endif
+
+#ifdef __SLIDESHOW_SCREENSAVER
+KFeatureIdSlideshowScreensaver,
+#endif
+
+#ifdef __STEREO_WIDENING_EFFECT_UI
+KFeatureIdStereoWideningEffectUi,
+#endif
+
+#ifdef __SVGT_VIEWER
+KFeatureIdSvgtViewer,
+#endif
+
+#ifdef __SYNCML_DM_DIAGNOSTICS
+KFeatureIdSyncMlDmDiagnostics,
+#endif
+
+#ifdef __SYNCML_DM_FOTA
+KFeatureIdSyncMlDmFota,
+#endif
+
+#ifdef __SYNCML_DM_IMPS
+KFeatureIdSyncMlDmImps,
+#endif
+
+#ifdef __SYNCML_DM_OBEX
+KFeatureIdSyncMlDmObex,
+#endif
+
+#ifdef __SYNCML_DM_OTA
+KFeatureIdSyncMlDmOta,
+#endif
+
+#ifdef __SYNCML_DM_SIP
+KFeatureIdSyncMlDmSIP,
+#endif
+
+#ifdef __SYNCML_DM_VOIP
+KFeatureIdSyncMlDmVoIP,
+#endif
+
+#ifdef __SYNCML_DM_WLAN
+KFeatureIdSyncMlDmWlan,
+#endif
+
+#ifdef __SYNCML_DS_BOOKMARK
+KFeatureIdSyncMlDsBookmark,
+#endif
+
+#ifdef __SYNCML_DS_MMS
+KFeatureIdSyncMlDsMMS,
+#endif
+
+#ifdef __SYNCML_DS_NOTEPAD
+KFeatureIdSyncMlDsNotepad,
+#endif
+
+#ifdef __SYNCML_DS_SMS
+KFeatureIdSyncMlDsSms,
+#endif
+
+#ifdef __SYNCML_ISYNC
+KFeatureIdSyncMlIsync,
+#endif
+
+#ifdef __SYNCML_TWIN_SUITE
+KFeatureIdSyncMlTwinSuite,
+#endif
+
+#ifdef __THAI
+KFeatureIdThai,
+#endif
+
+#ifdef __THAI_CALENDAR
+KFeatureIdThaiCalendar,
+#endif
+
+#ifdef __TV_OUT
+KFeatureIdTvOut,
+#endif
+
+#ifdef __UPNP_AVCP
+KFeatureIdUpnpAvcp,
+#endif
+
+#ifdef __UPNP_MEDIASERVER
+KFeatureIdUpnpMediaserver,
+#endif
+
+#ifdef __UPNP_PRINT_FRAMEWORK
+KFeatureIdUpnpPrintFramework,
+#endif
+
+#ifdef __UPNP_REMOTE_STORAGE
+KFeatureIdUpnpRemoteStorage,
+#endif
+
+#ifdef __UPNP_STACK
+KFeatureIdUpnpStack,
+#endif
+
+#ifdef __USE_AAC_CMMFCODEC
+KFeatureIdUseAacCMMFCodec,
+#endif
+
+#ifdef __USE_AMR_NB_CMMFCODEC
+KFeatureIdUseAmrNbCMMFCodec,
+#endif
+
+#ifdef __USE_AMR_WB_CMMFCODEC
+KFeatureIdUseAmrWbCMMFCodec,
+#endif
+
+#ifdef __USE_EAACPLUS_CMMFCODEC
+KFeatureIdUseEaacplusCmmfCodec,
+#endif
+
+#ifdef __USE_MP3_CMMFCODEC
+KFeatureIdUseMp3CMMFCodec,
+#endif
+
+#ifdef __USE_QCELP_CMMFCODEC
+KFeatureIdUseQcelpCMMFCodec,
+#endif
+
+#ifdef __VFP_HW_SUPPORT
+KFeatureIdVfpHwSupport,
+#endif
+
+#ifdef __VIBRA
+KFeatureIdVibra,
+#endif
+
+#ifdef __VIDEOCALL_MENU_VISIBILITY
+KFeatureIdVideocallMenuVisibility,
+#endif
+
+#ifdef __VIDEO_CENTER_SUPPORTED
+KFeatureIdVideoCenterSupported,
+#endif
+
+#ifdef __VIDEO_RECORDER
+KFeatureIdVideoRecorder,
+#endif
+
+#ifdef __VIRTUAL_KEYBOARD_INPUT
+KFeatureIdVirtualKeyboardInput,
+#endif
+
+#ifdef __WEB_WIDGETS
+KFeatureIdWebWidgets,
+#endif
+
+#ifdef __WLAN_WEP256_ENABLED
+KFeatureIdWlanWep256Enabled,
+#endif
+
+#ifdef __WMA
+KFeatureIdWma,
+#endif
+
+#ifdef __WORLD_CLOCK
+KFeatureIdWorldClock,
+#endif
+
+#ifdef __XDM
+KFeatureIdXdm,
+#endif
+
+#ifdef __XDM_LOCALSTORAGE
+KFeatureIdXdmLocalStorage,
+#endif
+
+#ifdef __XDM_XCAP
+KFeatureIdXdmXcap,
+#endif
+

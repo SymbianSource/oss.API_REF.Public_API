@@ -1,1 +1,95 @@
-conplugin.rh
+// Copyright (c) 2004-2009 Nokia Corporation and/or its subsidiary(-ies).
+// All rights reserved.
+// This component and the accompanying materials are made available
+// under the terms of the License "Symbian Foundation License v1.0" to Symbian Foundation members and "Symbian Foundation End User License Agreement v1.0" to non-members
+// which accompanies this distribution, and is available
+// at the URL "http://www.symbianfoundation.org/legal/licencesv10.html".
+//
+// Initial Contributors:
+// Nokia Corporation - initial contribution.
+//
+// Contributors:
+//
+// Description:
+// HEADER INFO
+// Describes the converter.
+// 
+//
+
+
+
+/**
+ @publishedAll 
+ @released 
+*/
+STRUCT CONARC_RESOURCE_FILE
+	{
+	/** Future use, do not use */
+	LLINK extension = 0;
+	//
+	LEN WORD STRUCT converter_list[]; // Converter_data
+	}
+
+STRUCT CONVERTER_DATA
+/** Describes a converter within a converter DLL.
+
+@publishedAll 
+@released */
+	{
+	/** Future use, do not use */
+	LLINK extension = 0;
+	/** The UID of the converter. */
+	LONG conv_uid;
+	//
+	/** Array of MIME resources describing the data types that the converter can convert. 
+	
+	Target type: MIME */
+	LEN WORD STRUCT from_list[]; // Mime Type
+	/** Array of MIME resources describing the data types to which the converter can convert. 
+	
+	Target type: MIME */
+	LEN WORD STRUCT to_list[]; // Mime Type
+	//
+	}
+
+/**
+@publishedAll 
+@released 
+*/
+#define KMaxMimeType 256
+
+/**
+@publishedAll 
+@released 
+*/
+#define KMaxTranslation 50
+
+STRUCT MIME
+/** Describes a data type that a converter can convert to or from.
+
+@publishedAll 
+@released */
+	{
+	/** Future use, do not use */
+	LLINK extension = 0;
+	/** The supported MIME type, e.g. text/html. */
+	LTEXT8 type(KMaxMimeType);
+	/** Array of LANG_DATA resources giving localised human-readable names for the MIME type. 
+	
+	Target type: LANG_DATA */
+	LEN WORD STRUCT lang_list[] ; //lang_data
+	}
+
+STRUCT LANG_DATA
+/** A localised human-readable name for a MIME type.
+
+@publishedAll 
+@released */
+	{
+	/** Future use, do not use */
+	LLINK extension = 0;
+	/** The ID of the language being used.Values should be as defined in TLanguage. */
+	WORD lang_id;
+	/** The human-readable name for the MIME type. */
+	LTEXT	translation(KMaxTranslation);
+	}

@@ -1,0 +1,1273 @@
+/*
+* Copyright (c) 2006 Nokia Corporation and/or its subsidiary(-ies).
+* All rights reserved.
+* This component and the accompanying materials are made available
+* under the terms of the License "Symbian Foundation License v1.0" to Symbian Foundation members and "Symbian Foundation End User License Agreement v1.0" to non-members
+* which accompanies this distribution, and is available
+* at the URL "http://www.symbianfoundation.org/legal/licencesv10.html".
+*
+* Initial Contributors:
+* Nokia Corporation - initial contribution.
+*
+* Contributors:
+*
+* Description: 
+*
+*/
+
+#ifdef FF_M3G_ICON_RESOURCES
+KFeatureIdM3gIconResources,
+#endif
+
+#ifdef FF_SIMLESS_OFFLINE_SUPPORT
+KFeatureIdFfSimlessOfflineSupport,
+#endif
+
+#ifdef FF_SYSAP_TIMECHANGEOBSERVER_ENABLED
+KFeatureIdSysapTimechangeobserverEnabled,
+#endif
+
+#ifdef FF_TEST_AT_COMMAND
+KFeatureIdTestATCommand,
+#endif
+
+#ifdef FF_TOUCH_CALL_HANDLING
+KFeatureIdTouchCallHandling,
+#endif
+
+#ifdef FF_WS_NCIM
+KFeatureIdFfWsNcim,
+#endif
+
+#ifdef HLP_ADDITIONAL_CALENDAR
+KFeatureIdHlpAdditionalCalendar,
+#endif
+
+#ifdef HLP_CAMERA_KEY
+KFeatureIdHlpCameraKey,
+#endif
+
+#ifdef HLP_CLEAR_KEY
+KFeatureIdHlpClearKey,
+#endif
+
+#ifdef HLP_INTERNET_SUITE_VERY_LITE
+KFeatureIdHlpInternetSuiteVeryLite,
+#endif
+
+#ifdef HLP_ITUT_INPUT
+KFeatureIdHlpItutInput,
+#endif
+
+#ifdef HLP_MSK
+KFeatureIdHlpMsk,
+#endif
+
+#ifdef HLP_OMA_DRM_METERING
+KFeatureIdHlpOmaDrmMetering,
+#endif
+
+#ifdef HLP_PREMINET_CATALOGS_CLIENT
+KFeatureIdHlpPreminetCatalogsClient,
+#endif
+
+#ifdef HLP_RECENTLY_PLAYED_FOLDER
+KFeatureIdHlpRecentlyPlayedFolder,
+#endif
+
+#ifdef HLP_SENSOR_SETTINGS
+KFeatureIdHlpSensorSettings,
+#endif
+
+#ifdef HLP_WAYPOINTS
+KFeatureIdHlpWaypoints,
+#endif
+
+#ifdef JSR_135_SUPPORT
+KFeatureIdJsr135Support,
+#endif
+
+#ifdef SYMBIAN_EXCLUDE_DNS_PROXY
+KFeatureIdExcludeDnsProxy,
+#endif
+
+#ifdef SYMBIAN_INCLUDE_DNS_PUNYCODE
+KFeatureIdDnsPunycode,
+#endif
+
+#ifdef SYMBIAN_INCLUDE_LOCATION_AGPS_PM
+KFeatureIdLocationAgpsPM,
+#endif
+
+#ifdef SYMBIAN_INCLUDE_LOCATION_GPS_PM
+KFeatureIdLocationGpsPm,
+#endif
+
+#ifdef SYMBIAN_INCLUDE_LOCATION_NETWORK_PM
+KFeatureIdLocationNetworkPm,
+#endif
+
+#ifdef SYMBIAN_INCLUDE_USB_RNDIS
+KFeatureIdIncludeUsbRndis,
+#endif
+
+#ifdef SYMBIAN_MULTIMEDIA_A3FDEVSOUND
+SymbianMultimediaA3fdevsoundId,
+#endif
+
+#ifdef __AAC
+KFeatureIdAac,
+#endif
+
+#ifdef __ACCESSORY_FW
+KFeatureIdAccessoryFw,
+#endif
+
+#ifdef __ALWAYS_ONLINE
+KFeatureIdAlwaysOnLine,
+#endif
+
+#ifdef __ALWAYS_ONLINE_EMAIL
+KFeatureIdAlwaysOnLineEmail,
+#endif
+
+#ifdef __ALWAYS_ONLINE_PDPCONTEXT
+KFeatureIdAlwaysOnlinePDPContext,
+#endif
+
+#ifdef __ALWAYS_ONLINE_PDPCONTEXT2
+KFeatureIdAlwaysOnlinePDPContext2,
+#endif
+
+#ifdef __AMR_NB
+KFeatureIdAmrNb,
+#endif
+
+#ifdef __AMR_WB
+KFeatureIdAmrWb,
+#endif
+
+#ifdef __APPLICATION_CONTROLLABLE_AUDIO_ROUTING
+KFeatureIdApplicationControllableAudioRouting,
+#endif
+
+#ifdef __APPSHELL_AVKON_UI
+KFeatureIdAppshellAvkonUi,
+#endif
+
+#ifdef __ARM_AVC
+KFeatureIdArmAvc,
+#endif
+
+#ifdef __ARM_MDF_H263MPEG4_DEC
+KFeatureIdArmMdfH263mpeg4Dec,
+#endif
+
+#ifdef __ARM_MDF_H264_DEC
+KFeatureIdArmMdfH264Dec,
+#endif
+
+#ifdef __ARM_MDF_POSTPROCESSOR
+KFeatureIdArmMdfPostprocessor,
+#endif
+
+#ifdef __ARM_MDF_REALVIDEO_DEC
+KFeatureIdArmMdfRealvideoDec,
+#endif
+
+#ifdef __AT_HANDLER
+KFeatureIdAtHandler,
+#endif
+
+#ifdef __AUDIO_AAC
+KFeatureIdAudioAac,
+#endif
+
+#ifdef __AUDIO_CONTROLLER_STREAMING
+KFeatureIdAudioControllerStreaming,
+#endif
+
+#ifdef __AUDIO_PLAYLIST
+KFeatureIdAudioPlaylist,
+#endif
+
+#ifdef __AVC_DECODER
+KFeatureIdAvcDecoder,
+#endif
+
+#ifdef __AVC_ENCODER
+KFeatureIdAvcEncoder,
+#endif
+
+#ifdef __BEATNIK_AUDIOENGINE
+KFeatureIdBeatnikAudioengine,
+#endif
+
+#ifdef __BLUETOOTHGPSPSY
+KFeatureIdBluetoothGpsPsy,
+#endif
+
+#ifdef __BRANDING_SERVER
+KFeatureIdBrandingServer,
+#endif
+
+#ifdef __BROWSER_ADAPTIVE_BOOKMARKS
+KFeatureIdBrowserAdaptiveBookm,
+#endif
+
+#ifdef __BROWSER_AUDIO_PLUGIN
+KFeatureIdBrowserAudioPlugin,
+#endif
+
+#ifdef __BROWSER_FILE_UPLOAD
+KFeatureIdBrowserFileUpload,
+#endif
+
+#ifdef __BROWSER_FRAMES
+KFeatureIdBrowserFrames,
+#endif
+
+#ifdef __BROWSER_FULLSCREEN
+KFeatureIdBrowserFullScr,
+#endif
+
+#ifdef __BROWSER_NARROW_SCREEN
+KFeatureIdBrowserNarrowScreen,
+#endif
+
+#ifdef __BROWSER_NETSCAPE_API
+KFeatureIdBrowserNetscapeAPI,
+#endif
+
+#ifdef __BROWSER_PLUGIN_INTERFACE_PROXY
+KFeatureIdBrowserPluginInterfaceProxy,
+#endif
+
+#ifdef __BROWSER_PROGRESS_IND
+KFeatureIdBrowserProgressInd,
+#endif
+
+#ifdef __BROWSER_URL_COMPLETION
+KFeatureIdBrowserUrlCompletion,
+#endif
+
+#ifdef __BROWSER_VIDEO_PLUGIN
+KFeatureIdBrowserVideoPlugin,
+#endif
+
+#ifdef __BT
+KFeatureIdBt,
+#endif
+
+#ifdef __BTIC_ENABLED
+KFeatureIdBticEnabled,
+#endif
+
+#ifdef __BT_AUDIO
+KFeatureIdBtAudio,
+#endif
+
+#ifdef __BT_IMAGING_PROFILE
+KFeatureIdBtImagingProfile,
+#endif
+
+#ifdef __BT_PAN_PROFILE
+KFeatureIdBtPanProfile,
+#endif
+
+#ifdef __BT_PBAP
+KFeatureIdBtPbap,
+#endif
+
+#ifdef __BT_PRINTING_PROFILE
+KFeatureIdBtPrintingProfile,
+#endif
+
+#ifdef __BT_STEREO_AUDIO
+KFeatureIdBtStereoAudio,
+#endif
+
+#ifdef __BT_TEST_MODE
+KFeatureIdBtTestMode,
+#endif
+
+#ifdef __CAE_VR_CUSTOM_COMMANDS
+KFeatureIdCaeVrCustomCommands,
+#endif
+
+#ifdef __CALL_IMAGETEXT
+KFeatureIdCallImagetext,
+#endif
+
+#ifdef __CAMERA_BURST_MODE
+KFeatureIdCameraBurstMode,
+#endif
+
+#ifdef __CDMA_CHANNEL_LISTING
+KFeatureIdCdmaChannelListing,
+#endif
+
+#ifdef __CDMA_EXTENDED_AMS
+KFeatureIdCdmaExtendedAms,
+#endif
+
+#ifdef __CDMA_FAST_DORMANT
+KFeatureIdCdmaFastDormant,
+#endif
+
+#ifdef __CDMA_IOTA
+KFeatureIdCdmaIota,
+#endif
+
+#ifdef __CELL_BROADCAST
+KFeatureIdCellBroadcast,
+#endif
+
+#ifdef __CHATNG
+KFeatureIdChatNG,
+#endif
+
+#ifdef __COMMON_DSY
+KFeatureIdCommonDsy,
+#endif
+
+#ifdef __COMMON_TSY
+KFeatureIdCommonTsy,
+#endif
+
+#ifdef __COMMON_TSY__EMERGENCY_CALLS_ENABLED_IN_OFFLINE_MODE
+KFeatureIdCommonTsyEmergencyCallsEnabledInOfflineMode,
+#endif
+
+#ifdef __CONNMON_EXTENSION
+KFeatureIdConnMonExtension,
+#endif
+
+#ifdef __CONNMON_UI
+KFeatureIdConnMonUI,
+#endif
+
+#ifdef __CONTENT_DOWNLOAD
+KFeatureIdContentDownload,
+#endif
+
+#ifdef __DHCP
+KFeatureIdDHCP,
+#endif
+
+#ifdef __DIALUP_NETWORKING
+KFeatureIdDialupNetworking,
+#endif
+
+#ifdef __DISPLAY_POST
+KFeatureIdDisplayPost,
+#endif
+
+#ifdef __DPB
+KFeatureIdDpb,
+#endif
+
+#ifdef __DRIVE_MODE
+KFeatureIdDriveMode,
+#endif
+
+#ifdef __DRM_USER_DATA_TRANSFER
+KFeatureIdDrmUserDataTransfer,
+#endif
+
+#ifdef __DYNAMIC_PROFILES
+KFeatureIdDynamicProfiles,
+#endif
+
+#ifdef __EDGE_KNOWLEDGE
+KFeatureIdEdgeKnowledge,
+#endif
+
+#ifdef __EMAIL_UI
+KFeatureIdEmailUi,
+#endif
+
+#ifdef __EN_POLICY_DOS
+KFeatureIdEnPolicyDos,
+#endif
+
+#ifdef __EXE_PROTECTION
+KFeatureIdExeProtection,
+#endif
+
+#ifdef __EXTENDED_STARTUP
+KFeatureIdExtendedStartup,
+#endif
+
+#ifdef __FLIGHT_MODE
+KFeatureIdFlightMode,
+#endif
+
+#ifdef __GENERAL_SEARCH_FRAMEWORK
+KFeatureIdGeneralSearchFramework,
+#endif
+
+#ifdef __GENERAL_SEARCH_UI
+KFeatureIdGeneralSearchUi,
+#endif
+
+#ifdef __HINDI_ROM_CONTENT
+KFeatureIdHindiRomContent,
+#endif
+
+#ifdef __HTTP_DIGEST_AUTH
+KFeatureIdHttpDigestAuth,
+#endif
+
+#ifdef __HWRM_TARGET_MODIFIER_PLUGIN
+KFeatureIdHwrmTargetModifierPlugin,
+#endif
+
+#ifdef __ID3V2_METADATA
+KFeatureIdId3V2Metadata,
+#endif
+
+#ifdef __IETD
+KFeatureIdIetd,
+#endif
+
+#ifdef __IMAGE_UPLOAD
+KFeatureIdImageUpload,
+#endif
+
+#ifdef __INDIC_ROM_CONTENT
+KFeatureIdIndicRomContent,
+#endif
+
+#ifdef __INSTALLER_SISX
+KFeatureIdInstallerSisx,
+#endif
+
+#ifdef __IPV4_NAT
+KFeatureIdIPv4Nat,
+#endif
+
+#ifdef __IPV6
+KFeatureIdIPv6,
+#endif
+
+#ifdef __IP_PUSH
+KFeatureIdIpPush,
+#endif
+
+#ifdef __I_CAL_SUPPORT
+KFeatureIdICalSupport,
+#endif
+
+#ifdef __JAPANESE_PICTOGRAPHS_GROUPING
+KFeatureIdJapanesePictographsGrouping,
+#endif
+
+#ifdef __JAVA_3DAPI
+KFeatureIdJava3DAPI,
+#endif
+
+#ifdef __JAVA_API_ENHANCEMENTS_IAP
+KFeatureIdJavaApiEnhancementsIap,
+#endif
+
+#ifdef __JAVA_API_ENHANCEMENTS_MOBINFO
+KFeatureIdJavaApiEnhancementsMobinfo,
+#endif
+
+#ifdef __JAVA_ESWT
+KFeatureIdJavaESWT,
+#endif
+
+#ifdef __JAVA_FILEAPI
+KFeatureIdJavaFileAPI,
+#endif
+
+#ifdef __JAVA_J2MEWEBSERVICESAPI
+KFeatureIdJ2MEWebServicesAPI,
+#endif
+
+#ifdef __JAVA_JSR177_SECURITY_AND_TRUST_SERVICES_APDU
+KFeatureIdJavaJsr177SecurityAndTrustServicesApdu,
+#endif
+
+#ifdef __JAVA_JSR177_SECURITY_AND_TRUST_SERVICES_CRYPTO
+KFeatureIdJavaJsr177SecurityAndTrustServicesCrypto,
+#endif
+
+#ifdef __JAVA_JSR177_SECURITY_AND_TRUST_SERVICES_PKI
+KFeatureIdJavaJsr177SecurityAndTrustServicesPki,
+#endif
+
+#ifdef __JAVA_JSR205_WMA_2_0_SUPPORT
+KFeatureIdJavaJsr205Wma20Support,
+#endif
+
+#ifdef __JAVA_JSR_177_SECURITY_AND_TRUST_SERVICES
+KFeatureIdJavaJsr177SecurityAndTrustServices,
+#endif
+
+#ifdef __JAVA_JSR_180_SIP_API
+KFeatureIdJavaJsr180SipAPI,
+#endif
+
+#ifdef __JAVA_JSR_226_2D_SVG_API
+KFeatureIdJavaJsr2262DSvgAPI,
+#endif
+
+#ifdef __JAVA_JSR_234_3D_AUDIO_AND_MUSIC_CAPABILITIES
+KFeatureIdJavaJsr2343DAudioAndMusicCapabilities,
+#endif
+
+#ifdef __JAVA_LOCATIONAPI
+KFeatureIdJavaLocationAPI,
+#endif
+
+#ifdef __JAVA_MIDP20
+KFeatureIdJavaMIDP20,
+#endif
+
+#ifdef __JAVA_MMAPI11
+KFeatureIdJavaMMAPI11,
+#endif
+
+#ifdef __JAVA_PIMAPI
+KFeatureIdJavaPIMAPI,
+#endif
+
+#ifdef __KEEP_DRM_CONTENT_ON_PHONE
+KFeatureIdKeepDRMContentOnPhone,
+#endif
+
+#ifdef __LANDMARKS
+KFeatureIdLandmarks,
+#endif
+
+#ifdef __LANDMARKS_CONVERTER
+KFeatureIdLandmarksConverter,
+#endif
+
+#ifdef __LAYOUT176_208
+KFeatureIdLayout176_208,
+#endif
+
+#ifdef __LAYOUT208_176
+KFeatureIdLayout208_176,
+#endif
+
+#ifdef __LAYOUT_240_320_TOUCH
+KFeatureIdLayout240_320_Touch,
+#endif
+
+#ifdef __LAYOUT_320_240_TOUCH
+KFeatureIdLayout320_240_Touch,
+#endif
+
+#ifdef __LAYOUT_320_480
+KFeatureIdLayout320_480,
+#endif
+
+#ifdef __LAYOUT_320_480_TOUCH
+KFeatureIdLayout320_480_Touch,
+#endif
+
+#ifdef __LAYOUT_352_416
+KFeatureIdLayout352_416,
+#endif
+
+#ifdef __LAYOUT_352_800
+KFeatureIdLayout352_800,
+#endif
+
+#ifdef __LAYOUT_416_352
+KFeatureIdLayout416_352,
+#endif
+
+#ifdef __LAYOUT_480_320
+KFeatureIdLayout480_320,
+#endif
+
+#ifdef __LAYOUT_480_320_TOUCH
+KFeatureIdLayout480_320_Touch,
+#endif
+
+#ifdef __LAYOUT_480_640
+KFeatureIdLayout480_640,
+#endif
+
+#ifdef __LAYOUT_480_640_TOUCH
+KFeatureIdLayout480_640_Touch,
+#endif
+
+#ifdef __LAYOUT_640_480
+KFeatureIdLayout640_480,
+#endif
+
+#ifdef __LAYOUT_640_480_TOUCH
+KFeatureIdLayout640_480_Touch,
+#endif
+
+#ifdef __LAYOUT_800_352
+KFeatureIdLayout800_352,
+#endif
+
+#ifdef __LIGHTSURF
+KFeatureIdLightSurf,
+#endif
+
+#ifdef __LOCATIONFRAMEWORKCORE
+KFeatureIdLocationFrameworkCore,
+#endif
+
+#ifdef __LOCATIONSYSUI
+KFeatureIdLocationSysUi,
+#endif
+
+#ifdef __LOCATIONVERIFIER
+KFeatureIdLocationVerifier,
+#endif
+
+#ifdef __LOGGER_GPRS
+KFeatureIdLoggerGprs,
+#endif
+
+#ifdef __MANNER_MODE
+KFeatureIdMannerMode,
+#endif
+
+#ifdef __MAP_AND_NAVIGATION_AIW_PROVIDER
+KFeatureIdMapAndNavigationAiwProvider,
+#endif
+
+#ifdef __MEDIATOR
+KFeatureIdMediator,
+#endif
+
+#ifdef __MEETING_REQUEST_ENABLER
+KFeatureIdMeetingRequestEnabler,
+#endif
+
+#ifdef __MEETING_REQUEST_SUPPORT
+KFeatureIdMeetingRequestSupport,
+#endif
+
+#ifdef __MIPV4
+KFeatureIdMIPv4,
+#endif
+
+#ifdef __MIPV6
+KFeatureIdMIPv6,
+#endif
+
+#ifdef __MMC
+KFeatureIdMmc,
+#endif
+
+#ifdef __MMCOMMSAVCONTROLLER
+KFeatureIdMmCommsAvController,
+#endif
+
+#ifdef __MMCOMMSCONTROLLER
+KFeatureIdMmCommsController,
+#endif
+
+#ifdef __MMCOMMSENGINE
+KFeatureIdMmCommsEngine,
+#endif
+
+#ifdef __MMC_EJECT
+KFeatureIdMmcEject,
+#endif
+
+#ifdef __MMC_HOTSWAP
+KFeatureIdMmcHotswap,
+#endif
+
+#ifdef __MMC_LOCK
+KFeatureIdMmcLock,
+#endif
+
+#ifdef __MMF_DRM_UTILITY
+KFeatureIdMmfDrmUtility,
+#endif
+
+#ifdef __MMS
+KFeatureIdMMS,
+#endif
+
+#ifdef __MMS_XID_HEADER_HTTP_FILTER
+KFeatureIdMmsXidHeaderHttpFilter,
+#endif
+
+#ifdef __MOBILE_ACTIVE_SYNC
+KFeatureIdMobileActiveSync,
+#endif
+
+#ifdef __MP3
+KFeatureIdMp3,
+#endif
+
+#ifdef __MROUTER
+KFeatureIdMRouter,
+#endif
+
+#ifdef __MULTIMEDIA_SHARING
+KFeatureIdMultimediaSharing,
+#endif
+
+#ifdef __MULTIPLE_PROV_CTX
+KFeatureIdMultipleProvCtx,
+#endif
+
+#ifdef __NETWORK_REGISTRATION
+KFeatureIdNetworkRegistration,
+#endif
+
+#ifdef __NOT_SUPPORTED_FEATURE1
+KFeatureIdNotSupportedFeature1,
+#endif
+
+#ifdef __NOT_SUPPORTED_FEATURE2
+KFeatureIdNotSupportedFeature2,
+#endif
+
+#ifdef __NO_OTA_CONFIGURATION
+KFeatureIdNoOtaConfig,
+#endif
+
+#ifdef __NP_PROXY
+KFeatureIdNpProxy,
+#endif
+
+#ifdef __OCSP
+KFeatureIdOCSP,
+#endif
+
+#ifdef __OFFLINE_MODE
+KFeatureIdOfflineMode,
+#endif
+
+#ifdef __OMA_EMAIL_NOTIFICATIONS
+KFeatureIdOmaEmailNotifications,
+#endif
+
+#ifdef __OMA_IMPS_12
+KFeatureIdOmaImps12,
+#endif
+
+#ifdef __OMA_IMPS_13
+KFeatureIdOmaImps13,
+#endif
+
+#ifdef __OMA_PROV
+KFeatureIdOmaProv,
+#endif
+
+#ifdef __OMA_SUPL_PLUGINS
+KFeatureIdOmaSuplPlugins,
+#endif
+
+#ifdef __OPENVG_SW_IMPLEMENTATION
+KFeatureIdOpenvgSwImplementation,
+#endif
+
+#ifdef __PALETTE_INDEX_ADDRESS_FIXED
+KFeatureIdPaletteIndexAddressFixed,
+#endif
+
+#ifdef __PHONE_HIDE_MO_DATACALL_NUMBER
+KFeatureIdPhoneHideDataCallNbr,
+#endif
+
+#ifdef __PHONE_NUMBER_GROUPING
+KFeatureIdPhoneNumberGrouping,
+#endif
+
+#ifdef __PLUG_AND_PLAY_MOBILE_SERVICES
+KFeatureIdPlugAndPlayMobileServices,
+#endif
+
+#ifdef __PRESENCE_FRAMEWORK
+KFeatureIdPresenceFramework,
+#endif
+
+#ifdef __PRIVACYFRAMEWORK
+KFeatureIdPrivacyFramework,
+#endif
+
+#ifdef __PROTOCOL_CDMA
+KFeatureIdProtocolCdma,
+#endif
+
+#ifdef __PROTOCOL_GSM
+KFeatureIdProtocolGsm,
+#endif
+
+#ifdef __PROTOCOL_TDMA
+KFeatureIdProtocolTdma,
+#endif
+
+#ifdef __PUSH_WHITELIST
+KFeatureIdPushWhiteList,
+#endif
+
+#ifdef __QCELP
+KFeatureIdQcelp,
+#endif
+
+#ifdef __REAL_PLAYER_AS_DEFAULT
+KFeatureIdRealPlayerAsDefault,
+#endif
+
+#ifdef __REMOTE_LOCK
+KFeatureIdRemoteLock,
+#endif
+
+#ifdef __REMOTE_STORAGE_FW
+KFeatureIdRemoteStorageFw,
+#endif
+
+#ifdef __RESTRICTED_CALL_BARRING
+KFeatureIdRestrictedCallBarring,
+#endif
+
+#ifdef __RESTRICTED_CALL_DIVERT
+KFeatureIdRestrictedCallDivert,
+#endif
+
+#ifdef __RESTRICTED_VOICE_MAIL
+KFeatureIdRestrictedVoiceMail,
+#endif
+
+#ifdef __RFID
+KFeatureIdRfid,
+#endif
+
+#ifdef __SAP_APPLICATION_MANAGEMENT
+KFeatureIdSapApplicationManagement,
+#endif
+
+#ifdef __SAP_DEVICE_LOCK_ENHANCEMENTS
+KFeatureIdSapDeviceLockEnhancements,
+#endif
+
+#ifdef __SAP_EMBEDDED_LINK_ADAPTER
+KFeatureIdSapEmbeddedLinkAdapter,
+#endif
+
+#ifdef __SAP_IDLE_SOFTKEY_ADAPTER
+KFeatureIdSapIdleSoftkeyAdapter,
+#endif
+
+#ifdef __SAP_OPERATOR_LOGO_ADAPTER
+KFeatureIdSapOperatorLogoAdapter,
+#endif
+
+#ifdef __SAP_POLICY_MANAGEMENT
+KFeatureIdSapPolicyManagement,
+#endif
+
+#ifdef __SAP_SCREENSAVER_ADAPTER
+KFeatureIdSapScreensaverAdapter,
+#endif
+
+#ifdef __SAP_STARTUP_ADAPTER
+KFeatureIdSapStartupAdapter,
+#endif
+
+#ifdef __SAP_TERMINAL_CONTROL_FW
+KFeatureIdSapTerminalControlFw,
+#endif
+
+#ifdef __SAP_THEMES_ADAPTER
+KFeatureIdSapThemesAdapter,
+#endif
+
+#ifdef __SAP_UI_SETTING_SERVER
+KFeatureIdSapUiSettingServer,
+#endif
+
+#ifdef __SAP_WALLPAPER_ADAPTER
+KFeatureIdSapWallpaperAdapter,
+#endif
+
+#ifdef __SAT_BIP
+KFeatureIdSatBip,
+#endif
+
+#ifdef __SAT_CALL_CONTROL
+KFeatureIdSatCallControl,
+#endif
+
+#ifdef __SAT_DISPLAY_TEXT
+KFeatureIdSatDisplayText,
+#endif
+
+#ifdef __SAT_GET_INKEY
+KFeatureIdSatGetInkey,
+#endif
+
+#ifdef __SAT_GET_INPUT
+KFeatureIdSatGetInput,
+#endif
+
+#ifdef __SAT_LANGUAGE_NOTIFICATION
+KFeatureIdSatLanguageNotification,
+#endif
+
+#ifdef __SAT_LAUNCH_BROWSER
+KFeatureIdSatLaunchBrowser,
+#endif
+
+#ifdef __SAT_MO_SM_CONTROL
+KFeatureIdSatMoSmControl,
+#endif
+
+#ifdef __SAT_PLAY_TONE
+KFeatureIdSatPlayTone,
+#endif
+
+#ifdef __SAT_PROVIDE_LOCAL_INFO
+KFeatureIdSatProvideLocalInfo,
+#endif
+
+#ifdef __SAT_REFRESH
+KFeatureIdSatRefresh,
+#endif
+
+#ifdef __SAT_SELECT_ITEM
+KFeatureIdSatSelectItem,
+#endif
+
+#ifdef __SAT_SEND_DTMF
+KFeatureIdSatSendDtfm,
+#endif
+
+#ifdef __SAT_SEND_SM
+KFeatureIdSatSendSm,
+#endif
+
+#ifdef __SAT_SEND_SS
+KFeatureIdSatSendSs,
+#endif
+
+#ifdef __SAT_SEND_USSD
+KFeatureIdSatSendUssd,
+#endif
+
+#ifdef __SAT_SETUP_CALL
+KFeatureIdSatSetupCall,
+#endif
+
+#ifdef __SAT_SET_UP_EVENT_LIST
+KFeatureIdSatSetUpEventList,
+#endif
+
+#ifdef __SAT_SET_UP_IDLE_MODE_TEXT
+KFeatureIdSatSetUpIdleModeText,
+#endif
+
+#ifdef __SAT_SET_UP_MENU
+KFeatureIdSatSetUpMenu,
+#endif
+
+#ifdef __SCALABLE_ICONS
+KFeatureIdScalableIcons,
+#endif
+
+#ifdef __SEAMLESS_LINKS
+KFeatureIdSeamlessLinks,
+#endif
+
+#ifdef __SECURE_HW
+KFeatureIdSecureHW,
+#endif
+
+#ifdef __SERIES60_MIDI
+KFeatureIdMidi,
+#endif
+
+#ifdef __SERIES60_PHONE_2DIGIT_DIAL
+KFeatureIdPhone2DigitDial,
+#endif
+
+#ifdef __SERIES60_PHONE_CNAP
+KFeatureIdPhoneCnap,
+#endif
+
+#ifdef __SERIES60_PUSH_SL
+KFeatureIdPushSL,
+#endif
+
+#ifdef __SERIES60_PUSH_SP
+KFeatureIdPushSP,
+#endif
+
+#ifdef __SERIES60_REAL_PLAYER
+KFeatureIdRealPlayer,
+#endif
+
+#ifdef __SERIES60_SETTINGS_PROTECTION
+KFeatureIdSettingsProtection,
+#endif
+
+#ifdef __SIMCARD
+KFeatureIdSimCard,
+#endif
+
+#ifdef __SIMPLE_LOGS
+KFeatureIdSimpleLogs,
+#endif
+
+#ifdef __SIM_CERTIFICATES
+KFeatureIdSimCertificates,
+#endif
+
+#ifdef __SIM_PHONEBOOK_MATCH
+KFeatureIdSimPhonebookMatch,
+#endif
+
+#ifdef __SMARTMSG_SMS_BOOKMARK_RECEIVING
+KFeatureIdSmartmsgSMSBookmarkReceiving,
+#endif
+
+#ifdef __SMARTMSG_SMS_GMS_MESSAGE_RECEIVING
+KFeatureIdSmartmsgSMSGmsMessageReceiving,
+#endif
+
+#ifdef __SMARTMSG_SMS_GMS_MESSAGE_SENDING_SUPPORTED 
+KFeatureIdSmartmsgSMSGmsMessageSendingSupported,
+#endif
+
+#ifdef __SMARTMSG_SMS_IAP_SETTINGS_RECEIVING
+KFeatureIdSmartmsgSMSIapSettingsReceiving,
+#endif
+
+#ifdef __SMARTMSG_SMS_OPERATOR_LOGO_RECEIVING
+KFeatureIdSmartmsgSMSOperatorLogoReceiving,
+#endif
+
+#ifdef __SMARTMSG_SMS_RINGING_TONE_RECEIVING
+KFeatureIdSmartmsgSMSRingingToneReceiving,
+#endif
+
+#ifdef __SMARTMSG_SMS_VCAL_RECEIVING
+KFeatureIdSmartmsgSMSVcalReceiving,
+#endif
+
+#ifdef __SMARTMSG_SMS_VCAL_SENDING
+KFeatureIdSmartmsgSMSVcalSending,
+#endif
+
+#ifdef __SMARTMSG_SMS_VCARD_RECEIVING
+KFeatureIdSmartmsgSMSVcardReceiving,
+#endif
+
+#ifdef __SMARTMSG_SMS_VCARD_SENDING
+KFeatureIdSmartmsgSMSVcardSending,
+#endif
+
+#ifdef __SMARTMSG_SMS_WAP_AP_RECEIVING
+KFeatureIdSmartmsgSMSWapApReceiving,
+#endif
+
+#ifdef __SMARTMSG_SMS_WV_SETTINGS_RECEIVING
+KFeatureIdSmartmsgSMSWvSettingsReceiving,
+#endif
+
+#ifdef __SMART_CARD_PROV
+KFeatureIdSmartCardProv,
+#endif
+
+#ifdef __SMIL_EDITOR
+KFeatureIdSmilEditor,
+#endif
+
+#ifdef __SMIL_STREAMING
+KFeatureIdSmilStreaming,
+#endif
+
+#ifdef __SRCS
+KFeatureIdSrcs,
+#endif
+
+#ifdef __SSO
+KFeatureIdSSO,
+#endif
+
+#ifdef __SUPL_FRAMEWORK
+KFeatureIdSuplFramework,
+#endif
+
+#ifdef __SUPPORTED_FEATURE1
+KFeatureIdSupportedFeature1,
+#endif
+
+#ifdef __SUPPORTED_FEATURE2
+KFeatureIdSupportedFeature2,
+#endif
+
+#ifdef __SVGT
+KFeatureIdSvgt,
+#endif
+
+#ifdef __SVGT_SCREENSAVER_PLUGIN
+KFeatureIdSvgtScreensaverPlugin,
+#endif
+
+#ifdef __SYNCML_DM
+KFeatureIdSyncMlDm,
+#endif
+
+#ifdef __SYNCML_DM_1_1_2
+KFeatureIdSyncMlDm112,
+#endif
+
+#ifdef __SYNCML_DM_DS
+KFeatureIdSyncMlDmDs,
+#endif
+
+#ifdef __SYNCML_DM_EMAIL
+KFeatureIdSyncMlDmEmail,
+#endif
+
+#ifdef __SYNCML_DM_IAP
+KFeatureIdSyncMlDmIAP,
+#endif
+
+#ifdef __SYNCML_DM_MMS
+KFeatureIdSyncMlDmMMS,
+#endif
+
+#ifdef __SYNCML_DM_STREAMING
+KFeatureIdSyncMlDmStreaming,
+#endif
+
+#ifdef __SYNCML_DS
+KFeatureIdSyncMlDs,
+#endif
+
+#ifdef __SYNCML_DS_AIW_PROVIDER
+KFeatureIdSyncMlDsAiwProvider,
+#endif
+
+#ifdef __SYNCML_DS_ALERT
+KFeatureIdSyncMlDsAlert,
+#endif
+
+#ifdef __SYNCML_DS_CAL
+KFeatureIdSyncMlDsCal,
+#endif
+
+#ifdef __SYNCML_DS_CON
+KFeatureIdSyncMlDsCon,
+#endif
+
+#ifdef __SYNCML_DS_EMAIL
+KFeatureIdSyncMlDsEmail,
+#endif
+
+#ifdef __SYNCML_DS_EMAIL_FILTERING
+KFeatureIdSyncMlDsEmailFiltering,
+#endif
+
+#ifdef __SYNCML_DS_OVER_HTTP
+KFeatureIdSyncMlDsOverHttp,
+#endif
+
+#ifdef __SYNCML_OBEX
+KFeatureIdSyncMlObex,
+#endif
+
+#ifdef __TELEPHONY_SERVICE
+KFeatureIdTelephonyService,
+#endif
+
+#ifdef __UI_TRANSITION_EFFECTS
+KFeatureIdUiTransitionEffects,
+#endif
+
+#ifdef __UI_ZOOM
+KFeatureIdUiZoom,
+#endif
+
+#ifdef __UPIN
+KFeatureIdUpin,
+#endif
+
+#ifdef __USB
+KFeatureIdUsb,
+#endif
+
+#ifdef __USB_DEVICE_LOCK
+KFeatureIdUsbDeviceLock,
+#endif
+
+#ifdef __USB_MULTIPERSONALITY
+KFeatureIdUsbMultiPersonality,
+#endif
+
+#ifdef __USB_PICTBRIDGE
+KFeatureIdUsbPictbridge,
+#endif
+
+#ifdef __USB_PICTBRIDGE_UI
+KFeatureIdUsbPictbridgeUi,
+#endif
+
+#ifdef __USB_PTP
+KFeatureIdUsbPtp,
+#endif
+
+#ifdef __USB_REMOTE_PERSONALITY
+KFeatureIdUsbRemotePersonality,
+#endif
+
+#ifdef __USB_STREAMING
+KFeatureIdUsbStreaming,
+#endif
+
+#ifdef __USER_CONFIGURABLE_USSD_MENU
+KFeatureIdUserConfigurableUssdMenu,
+#endif
+
+#ifdef __USE_DRMENGINE_IN_CCP
+KFeatureIdUseDrmEngineInCcp,
+#endif
+
+#ifdef __USSD
+KFeatureIdUSSD,
+#endif
+
+#ifdef __VIDEO_MENU
+KFeatureIdVideoMenu,
+#endif
+
+#ifdef __VOIP
+KFeatureIdCommonVoip,
+#endif
+
+#ifdef __WALLET
+KFeatureIdWallet,
+#endif
+
+#ifdef __WIM
+KFeatureIdWim,
+#endif
+
+#ifdef __WINDOWS_MEDIA
+KFeatureIdWindowsMedia,
+#endif
+
+#ifdef __WINDOWS_MEDIA_DRM
+KFeatureIdWindowsMediaDrm,
+#endif
+
+#ifdef __WSP
+KFeatureIdWsp,
+#endif
+
+#ifdef __XSP_EXTENSION_MANAGER
+KFeatureIdXspExtensionManager,
+#endif
+

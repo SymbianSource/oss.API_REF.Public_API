@@ -1,0 +1,32 @@
+// Copyright (c) 2004-2009 Nokia Corporation and/or its subsidiary(-ies).
+// All rights reserved.
+// This component and the accompanying materials are made available
+// under the terms of the License "Symbian Foundation License v1.0" to Symbian Foundation members and "Symbian Foundation End User License Agreement v1.0" to non-members
+// which accompanies this distribution, and is available
+// at the URL "http://www.symbianfoundation.org/legal/licencesv10.html".
+//
+// Initial Contributors:
+// Nokia Corporation - initial contribution.
+//
+// Contributors:
+//
+// Description:
+//
+
+#ifndef __IMAGEDISPLAY_HRH__
+
+#define __IMAGEDISPLAY_HRH__
+
+/** 	
+@file
+@publishedAll
+@released 
+*/
+
+#define KUidDisplayDll						0x101F7C45
+#define KUidDisplayInterface				0x101F7C46
+#define KUidDisplayDllResolver				0x101F7C47
+#define KUidDisplayImplementationResolver	0x101F7C48
+
+
+#endif // ndef __IMAGEDISPLAY_HRH__

@@ -20,7 +20,7 @@
 /** 
 @file
 
-@publishedPartner
+@publishedAll
 @released
 */
 
@@ -76,8 +76,6 @@ namespace ContentAccess
 	characters are present, under certain situations this will result in an invalid 
 	URI and UniqueId being created for the virtual path and can lead to an undefined failure.
 
-	@publishedPartner
-	@released
 	*/
 	class TVirtualPathPtr
 		{

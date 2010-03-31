@@ -1,9 +1,19 @@
+/* Portions Copyright (c) 2007-2009 Nokia Corporation and/or its subsidiary(-ies).
+ * All rights reserved.
+ */
+
 /* zconf.h -- configuration of the zlib compression library
  * Copyright (C) 1995-2005 Jean-loup Gailly.
  * For conditions of distribution and use, see copyright notice in zlib.h
  */
+ 
+/** 
+@file
+@publishedAll
+@externallyDefinedApi
+*/
 
-/* @(#) $Id: zconf.h,v 1.1.2.1 2008/08/14 15:26:57 e0222316 Exp $ */
+/* @(#) $Id$ */
 
 #ifndef _ZCONF_H
 #define _ZCONF_H

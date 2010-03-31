@@ -1,7 +1,6 @@
 /*-
  * Copyright (c) 1982, 1986, 1993
  *	The Regents of the University of California.  All rights reserved.
- * © Portions copyright (c) 2006 Symbian Software Ltd. All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
@@ -26,7 +25,7 @@
  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY
  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
- * © Portions copyright (c) 2007 Symbian Software Ltd. All rights reserved.
+ *  Portions Copyright (c) 2006-2007 Nokia Corporation and/or its subsidiary(-ies). All rights reserved.
  *	@(#)mman.h	8.2 (Berkeley) 1/9/95
  * $FreeBSD: src/sys/sys/mman.h,v 1.40 2005/04/02 12:33:31 das Exp $
  */
@@ -110,10 +109,19 @@ __BEGIN_DECLS
 #ifndef _MMAP_DECLARED
 #define	_MMAP_DECLARED
 IMPORT_C void *	mmap(void *, size_t, int, int, int, off_t);
+
+#if defined(SYMBIAN_OE_LARGE_FILE_SUPPORT) && !defined(SYMBIAN_OE_NO_LFS)
+#define mmap64	mmap
+#endif /* SYMBIAN_OE_LARGE_FILE_SUPPORT && !SYMBIAN_OE_NO_LFS */
+
 #endif
 IMPORT_C int	mprotect(const void *, size_t, int);
 IMPORT_C int	msync(void *, size_t, int);
 IMPORT_C int	munmap(void *, size_t);
+#if __POSIX_VISIBLE >= 199309
+IMPORT_C int	shm_open(const char *, int, mode_t);
+IMPORT_C int	shm_unlink(const char *);
+#endif
 __END_DECLS
 
 #endif /* !_KERNEL */

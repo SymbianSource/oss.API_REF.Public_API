@@ -1,5 +1,5 @@
 /*-
- * © Portions copyright (c) 2007 Symbian Software Ltd. All rights reserved.
+ * 
  * Copyright (c) 1980, 1986, 1993
  *	The Regents of the University of California.  All rights reserved.
  * Redistribution and use in source and binary forms, with or without
@@ -26,6 +26,7 @@
  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  *
+ * Portions Copyright (c) 2007 Nokia Corporation and/or its subsidiary(-ies). All rights reserved.
  *	@(#)route.h	8.4 (Berkeley) 1/9/95
  * $FreeBSD: src/sys/net/route.h,v 1.63 2005/01/07 01:45:35 imp Exp $
  */
@@ -97,7 +98,7 @@ struct mbuf;
  * gateway rather than the ultimate destination.
  */
 #ifndef RNF_NORMAL
-#include <net/radix.h>
+#include <stdapis/net/radix.h>
 #endif
 struct rtentry {
 	struct	radix_node rt_nodes[2];	/* tree glue, and other values */

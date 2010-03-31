@@ -1,9 +1,9 @@
 // Copyright (c) 1998-2009 Nokia Corporation and/or its subsidiary(-ies).
 // All rights reserved.
 // This component and the accompanying materials are made available
-// under the terms of the License "Symbian Foundation License v1.0" to Symbian Foundation members and "Symbian Foundation End User License Agreement v1.0" to non-members
+// under the terms of "Eclipse Public License v1.0"
 // which accompanies this distribution, and is available
-// at the URL "http://www.symbianfoundation.org/legal/licencesv10.html".
+// at the URL "http://www.eclipse.org/legal/epl-v10.html".
 //
 // Initial Contributors:
 // Nokia Corporation - initial contribution.
@@ -21,6 +21,10 @@
 #endif
 #ifndef __F32FILE_H__
 #include <f32file.h>
+#endif
+
+#ifndef SYMBIAN_ENABLE_SPLIT_HEADERS 
+	#include <d32dbmsconstants.h>
 #endif
 
 // other classes referenced
@@ -924,9 +928,11 @@ private:
 	TInt iSize;
 	TInt iPreferredPos;
 	};
+
 #if defined(__NO_CLASS_CONSTS__)
 /**
-@internalComponent
+@publishedAll
+@released
 */
 #define KDbUnlimitedWindow TDbWindow(TDbWindow::EUnlimited)
 #else
@@ -1461,11 +1467,6 @@ public:
 	IMPORT_C TInt Open(RFs& aFs,const TDesC& aDatabase,const TDesC& aFormat=TPtrC(),TAccess aMode=EReadWrite);
 	IMPORT_C TInt Open(RDbs& aDbs,const TDesC& aDatabase,const TDesC& aFormat=TPtrC());
 	};
-
-/**
-@internalComponent
-*/
-const TInt KDbStoreMaxColumnLength=255;
 
 /**
 DBMS Store database implementation

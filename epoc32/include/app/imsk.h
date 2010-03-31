@@ -1,9 +1,9 @@
 // Copyright (c) 1998-2009 Nokia Corporation and/or its subsidiary(-ies).
 // All rights reserved.
 // This component and the accompanying materials are made available
-// under the terms of the License "Symbian Foundation License v1.0" to Symbian Foundation members and "Symbian Foundation End User License Agreement v1.0" to non-members
+// under the terms of "Eclipse Public License v1.0"
 // which accompanies this distribution, and is available
-// at the URL "http://www.symbianfoundation.org/legal/licencesv10.html".
+// at the URL "http://www.eclipse.org/legal/epl-v10.html".
 //
 // Initial Contributors:
 // Nokia Corporation - initial contribution.
@@ -16,13 +16,11 @@
 // 
 //
 
-
-
 /**
  @file
+ @publishedAll
+ @released
 */
-
-
 #ifndef __IMSK_H__
 #define __IMSK_H__
 
@@ -35,6 +33,10 @@
 #include <miut_err.h>
 #include <miuthdr.h>
 
+#ifdef SYMBIAN_ENABLE_SPLIT_HEADERS  
+#include "timrfc822datefield.h"				
+#endif
+
 #ifdef _DEBUG
 #define __IMSK_SIMULATION
 #endif
@@ -44,19 +46,30 @@
 #define __IMSK_SCRIPTING
 #endif
 
+/** 
+@publishedAll
+@released
+*/
 const TInt EActivePriorityHigh = 1;
+/** 
+@publishedAll
+@released
+*/
 const TInt KCarriageLineFeedLength=2;
-/** Max numeric IP address len = "0:0:0:0:0:0:194.217.242.23" = 45 chars */
+/** Max numeric IP address len = "0:0:0:0:0:0:194.217.242.23" = 45 chars 
+@publishedAll
+@released
+*/
 const TInt KImskIPAddressLen=45;				// Max numeric IP address len = "255.255.255.255" = 15 chars
 
 /** Maximum buffer size of the received data 
-@internalTechnology
+@publishedAll
 @released
 */
 typedef TBuf8<KImMailMaxBufferSize> TImMailBuffer;
 
 /** received buffer data line type
-@internalTechnology
+@publishedAll
 @released
 */
 enum TImLineType
@@ -104,7 +117,7 @@ public:
 	IMPORT_C static CImTextServerSession *NewL();
 
 	/**
-	@internalTechnology
+	@publishedAll
 	@released
 	*/
 	IMPORT_C static CImTextServerSession* NewL(RSocketServ& aSocketServ, CImConnect& aConnect);
@@ -125,7 +138,7 @@ public:
 	IMPORT_C static CImTextServerSession* NewL(TInt aSendIdleTime, TInt aReceiveIdleTime);
 
 	/**
-	@internalTechnology
+	@publishedAll
 	@released
 	*/
 	IMPORT_C static CImTextServerSession* NewL(TInt aSendIdleTime, TInt aReceiveIdleTime, RSocketServ& aSocketServ, CImConnect& aConnect);
@@ -299,7 +312,7 @@ public:
 	IMPORT_C TInt GetIAPBearer(TUint32 &aBearer);
 
 /**
-	@internalTechnology
+	@publishedAll
 
 	@fn				GetLastSocketActivityTimeout(TUint32& aTimeout)
 	Intended Usage	:	Returns the last socket activity timeout value

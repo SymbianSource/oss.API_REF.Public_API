@@ -2,9 +2,9 @@
 * Copyright (c) 2002-2009 Nokia Corporation and/or its subsidiary(-ies). 
 * All rights reserved.
 * This component and the accompanying materials are made available
-* under the terms of the License "Symbian Foundation License v1.0" to Symbian Foundation members and "Symbian Foundation End User License Agreement v1.0" to non-members
+* under the terms of "Eclipse Public License v1.0"
 * which accompanies this distribution, and is available
-* at the URL "http://www.symbianfoundation.org/legal/licencesv10.html".
+* at the URL "http://www.eclipse.org/legal/epl-v10.html".
 *
 * Initial Contributors:
 * Nokia Corporation - initial contribution.
@@ -90,12 +90,14 @@
 #define NON_FOUNDATION_APP_LAYER_EXPORT_PATH(exported) /epoc32/include/ext/app/exported
 #define NON_FOUNDATION_MW_LAYER_EXPORT_PATH(exported) /epoc32/include/ext/mw/exported
 #define NON_FOUNDATION_OS_LAYER_EXPORT_PATH(exported) /epoc32/include/ext/os/exported
-#define NON_FOUNDATION_ADAPT_LAYER_EXPORT_PATH(exported) /epoc32/include/ext/adapt/exported
+// Temporarily commented out to help adaptation side migration
+// #define NON_FOUNDATION_ADAPT_LAYER_EXPORT_PATH(exported) /epoc32/include/ext/adapt/exported
 #else
 #define NON_FOUNDATION_APP_LAYER_EXPORT_PATH(exported) /epoc32/include/ext/app/##exported
 #define NON_FOUNDATION_MW_LAYER_EXPORT_PATH(exported) /epoc32/include/ext/mw/##exported
 #define NON_FOUNDATION_OS_LAYER_EXPORT_PATH(exported) /epoc32/include/ext/os/##exported
-#define NON_FOUNDATION_ADAPT_LAYER_EXPORT_PATH(exported) /epoc32/include/ext/adapt/##exported
+// Temporarily commented out to help adaptation side migration
+// #define NON_FOUNDATION_ADAPT_LAYER_EXPORT_PATH(exported) /epoc32/include/ext/adapt/##exported
 #endif
 
 
@@ -139,9 +141,10 @@
 * This define statements defines the SYSTEMINCLUDE-line, which is intended to be
 * used in the mmp-files that are part of the adapt-layer.
 */
-#define NON_FOUNDATION_ADAPT_LAYER_SYSTEMINCLUDE SYSTEMINCLUDE \
- /epoc32/include/ext/os \
- /epoc32/include/ext/adapt
+// Temporarily commented out to help adaptation side migration
+// #define NON_FOUNDATION_ADAPT_LAYER_SYSTEMINCLUDE SYSTEMINCLUDE \
+// /epoc32/include/ext/os \
+// /epoc32/include/ext/adapt
 
 
 /**

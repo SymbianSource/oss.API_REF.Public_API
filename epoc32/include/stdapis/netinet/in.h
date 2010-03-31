@@ -37,7 +37,7 @@
 
 #include <sys/cdefs.h>
 #include <sys/_types.h>
-#include <machine/endian.h>
+#include <stdapis/machine/endian.h>
 
 /* Protocols common to RFC 1700, POSIX, and X/Open. */
 #ifdef __SYMBIAN32__
@@ -668,7 +668,7 @@ char	*inet_ntoa(struct in_addr); /* in libkern */
 /* INET6 stuff */
 #if __POSIX_VISIBLE >= 200112
 #define	__KAME_NETINET_IN_H_INCLUDED_
-#include <netinet6/in6.h>
+#include <stdapis/netinet6/in6.h>
 #undef __KAME_NETINET_IN_H_INCLUDED_
 #endif
 

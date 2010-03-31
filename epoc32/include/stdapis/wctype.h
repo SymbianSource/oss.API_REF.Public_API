@@ -39,7 +39,7 @@
 #include <_ctype.h>
 
 #ifdef __SYMBIAN32__
-#include<_ansi.h>
+#include <_ansi.h>
 #endif// __SYMBIAN32__
 
 #ifndef _WCTRANS_T

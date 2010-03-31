@@ -1,20 +1,21 @@
 /*
-* Copyright (c) 2002-2006 Nokia Corporation and/or its subsidiary(-ies). 
+* Copyright (c) 2006-2009 Nokia Corporation and/or its subsidiary(-ies).
 * All rights reserved.
 * This component and the accompanying materials are made available
-* under the terms of the License "Symbian Foundation License v1.0" to Symbian Foundation members and "Symbian Foundation End User License Agreement v1.0" to non-members
+* under the terms of "Eclipse Public License v1.0"
 * which accompanies this distribution, and is available
-* at the URL "http://www.symbianfoundation.org/legal/licencesv10.html".
+* at the URL "http://www.eclipse.org/legal/epl-v10.html".
 *
 * Initial Contributors:
 * Nokia Corporation - initial contribution.
 *
 * Contributors:
 *
-* Description:  This file contains the header of the 
-*                CHWRMLight class.
+* Description:
 *
 */
+
+
 
 
 #ifndef HWRMLIGHT_H
@@ -27,39 +28,69 @@
 
 /**
 * Minimum allowed intensity setting for Light.
+*
+* @publishedAll
+* @released
 */
 const TInt KHWRMLightMinIntensity = 1;
 
 /**
 * Maximum allowed intensity setting for Light.
+*
+* @publishedAll
+* @released
 */
 const TInt KHWRMLightMaxIntensity = 100;
 
 /**
 * Indicates default intensity in various methods.
+*
+* @publishedAll
+* @released
 */
 const TInt KHWRMDefaultIntensity = 0;
 
 /**
 * Maximum allowed duration value.
+*
+* @publishedAll
+* @released
 */
 const TInt KHWRMLightMaxDuration = (KMaxTInt / 1000) - 1;
 
 /**
 * Infinite duration value.
+*
+* @publishedAll
+* @released
 */
 const TInt KHWRMInfiniteDuration = 0;
 
 /**
 * Indicates device default Blink cycle time.
+*
+* @publishedAll
+* @released
 */
 const TInt KHWRMDefaultCycleTime = 0;
 
 
-// FORWARD DECLARATIONS
 class MHWRMLightObserver;
+class CHWRMEnhancedLight;
 
-// CLASS DECLARATIONS
+/**  
+* RGB values.
+*
+* @publishedAll
+*/
+
+struct THWRMLightColor
+{
+    TUint8 iRed;
+    TUint8 iGreen;
+    TUint8 iBlue;
+};
+
 
 /**
 * The class used to control the device lights.
@@ -82,7 +113,7 @@ class MHWRMLightObserver;
 * Usage:
 *
 * @code
-* #include <HWRMLight.h>  // link against HWRMLightClient.lib
+* #include <hwrmlight.h> 
 *
 * // A CHWRMLight instance can be created by using NewL() or NewLC() methods. 
 * // Up-to-date status information not required, no callbacks.
@@ -96,8 +127,8 @@ class MHWRMLightObserver;
 * delete light;
 * @endcode
 *
-* @lib HWRMLIGHTCLIENT.DLL
-* @since S60 3.0
+* @publishedAll
+* @released
 */
 class CHWRMLight : public CBase
     {
@@ -108,10 +139,22 @@ class CHWRMLight : public CBase
 		*/
 		enum TLightStatus
 			{
-			ELightStatusUnknown = 0, ///< For debugging/development and signaling an error conditions.
-			ELightOn,                ///< Light state switch to light on.
-			ELightOff,               ///< Light state switch to light off.
-			ELightBlink            ///< Light state switch to light blinking.
+			/**
+			For debugging/development and signaling an error conditions.
+			*/
+			ELightStatusUnknown = 0,
+			/**
+			Light state switch to light on.
+			*/
+			ELightOn,              
+			/**
+			Light state switch to light off.
+			*/
+			ELightOff,             
+			/**
+			Light state switch to light blinking.
+			*/
+			ELightBlink            
 			};
 
         /**
@@ -126,24 +169,50 @@ class CHWRMLight : public CBase
         */
         enum TLightTarget
             {
-            ENoTarget                    = 0x0,     ///< No target. Not a valid target value, used only
-                                                    ///< for error checking.
-            
-            EPrimaryDisplay              = 0x1,     ///< Primary display of the device.
-            EPrimaryKeyboard             = 0x2,     ///< Primary keyboard of the device. 
-            EPrimaryDisplayAndKeyboard   = 0x3,     ///< Both primary display and the 
-                                                    ///< primary keyboard of the device.  
-            
-            ESecondaryDisplay            = 0x4,     ///< Secondary display of the device.
-            ESecondaryKeyboard           = 0x8,     ///< Secondary keyboard of the device. 
-            ESecondaryDisplayAndKeyboard = 0xC,     ///< Both secondary display and the 
-                                                    ///< secondary keyboard of the device.  
-                                                
-            ECustomTarget1               = 0x10,    ///< Device specific custom target 1.
-            ECustomTarget2               = 0x20,    ///< Device specific custom target 2.
-            ECustomTarget3               = 0x40,    ///< Device specific custom target 3.
-            ECustomTarget4               = 0x80,    ///< Device specific custom target 4.
-            
+            /**
+            No target. Not a valid target value, used only for error checking.
+            */
+            ENoTarget                    = 0x0,    
+            /**
+            Primary display of the device.
+            */            
+            EPrimaryDisplay              = 0x1,     
+            /**
+            Primary keyboard of the device. 
+            */
+            EPrimaryKeyboard             = 0x2,     
+            /**
+            Both primary display and the primary keyboard of the device.  
+            */
+            EPrimaryDisplayAndKeyboard   = 0x3,                
+            /**
+            Secondary display of the device.
+            */
+            ESecondaryDisplay            = 0x4,     
+            /**
+            Secondary keyboard of the device. 
+            */
+            ESecondaryKeyboard           = 0x8,     
+            /**
+            Both secondary display and the secondary keyboard of the device.  
+            */
+            ESecondaryDisplayAndKeyboard = 0xC,          
+            /**
+            Device specific custom target 1.
+            */
+            ECustomTarget1               = 0x10, 
+            /**
+            Device specific custom target 2.
+            */
+            ECustomTarget2               = 0x20, 
+            /**
+            Device specific custom target 3.
+            */
+            ECustomTarget3               = 0x40, 
+            /**
+            Device specific custom target 4.
+            */
+            ECustomTarget4               = 0x80,             
             /**
             * Special target used to control all currently available system lights.
             *
@@ -210,6 +279,12 @@ class CHWRMLight : public CBase
         */
         IMPORT_C static CHWRMLight* NewLC(MHWRMLightObserver* aCallback);
 
+		
+		/**
+		* Destructor
+		*/
+		IMPORT_C ~CHWRMLight();
+		
     public: // New functions
 
     	
@@ -237,7 +312,7 @@ class CHWRMLight : public CBase
 		*
 	 	* @see TLightTarget
     	*/
-    	virtual void ReserveLightL(TInt aTarget)=0;
+    	virtual void ReserveLightL(TInt aTarget);
     	
     	/**
     	* Reserves light target exclusively for this client.
@@ -272,7 +347,7 @@ class CHWRMLight : public CBase
     	*                        A client is considered trusted if it has nonstandard
         *                        priority defined in the internal lights policy of the 
         *                        HW Resource Manager. A client can be defined trusted
-        *                        only by S60 or a product.
+        *                        only by a product.
     	*
     	* @leave KErrNotSupported One or more of specified targets are not supported.
     	* @leave KErrAccessDenied Paramenter aForceNoCCoeEnv is ETrue and client is not trusted.
@@ -283,7 +358,7 @@ class CHWRMLight : public CBase
 		*
 	 	* @see TLightTarget
     	*/
-    	virtual void ReserveLightL(TInt aTarget, TBool aRestoreState, TBool aForceNoCCoeEnv)=0;
+    	virtual void ReserveLightL(TInt aTarget, TBool aRestoreState, TBool aForceNoCCoeEnv);
 
     	/**
     	* Releases light target if it was previously reserved for this client.
@@ -298,7 +373,7 @@ class CHWRMLight : public CBase
 		*
 	 	* @see TLightTarget
     	*/
-    	virtual void ReleaseLight(TInt aTarget)=0;
+    	virtual void ReleaseLight(TInt aTarget);
 
 
 	    /** 
@@ -321,7 +396,7 @@ class CHWRMLight : public CBase
 		*
 	 	* @see TLightTarget
 		*/
-		virtual void LightOnL(TInt aTarget) = 0;
+		virtual void LightOnL(TInt aTarget);
 
 	    /** 
 	    * The LightOnL method switches the specified target light on
@@ -354,7 +429,7 @@ class CHWRMLight : public CBase
 	 	* @see TLightTarget
 		*/
 		virtual void LightOnL(TInt aTarget, 
-		                      TInt aDuration) = 0;
+		                      TInt aDuration);
 
 	    /** 
 	    * The LightOnL method switches the specified target light on
@@ -393,15 +468,17 @@ class CHWRMLight : public CBase
 		virtual void LightOnL(TInt aTarget, 
 		                      TInt aDuration, 
 		                      TInt aIntensity,
-		                      TBool aFadeIn) = 0;
+		                      TBool aFadeIn);
 
 	    /** 
 	    * The LightBlinkL method blinks the target light(s) of the device for infinite duration
 	    * using default intensity.
         *
         * Calling this method is equal to call 
+        * @code
         * LightBlinkL(aTarget, KHWRMInfiniteDuration, KHWRMDefaultCycleTime, 
         *             KHWRMDefaultCycleTime, KHWRMDefaultIntensity).
+	   	* @endcode
 	   	*
 		* @param aTarget Defines which light should be controlled. Multiple lights can
 		*                be specified with using bitwise-or.
@@ -416,7 +493,7 @@ class CHWRMLight : public CBase
 		*
 	 	* @see TLightTarget
 		*/
-		virtual void LightBlinkL(TInt aTarget) = 0;
+		virtual void LightBlinkL(TInt aTarget);
 
 	    /** 
 	    * The LightBlinkL method blinks the target light(s) of the device for specified duration
@@ -450,7 +527,7 @@ class CHWRMLight : public CBase
 	 	* @see TLightTarget
 		*/
 		virtual void LightBlinkL(TInt aTarget, 
-		                         TInt aDuration) = 0;
+		                         TInt aDuration);
 
 	    /** 
 	    * The LightBlinkL method blinks the target light(s) of the device for specified duration
@@ -503,7 +580,7 @@ class CHWRMLight : public CBase
 		                         TInt aDuration, 
 		                         TInt aOnDuration, 
 		                         TInt aOffDuration, 
-		                         TInt aIntensity) = 0;
+		                         TInt aIntensity);
 
    	    /**
 	    * The LightOffL method switches the device light off for the specified target for
@@ -525,7 +602,7 @@ class CHWRMLight : public CBase
 		*
 	 	* @see TLightTarget
 		*/
-		virtual void LightOffL(TInt aTarget) = 0;
+		virtual void LightOffL(TInt aTarget);
 
    	    /**
 	    * The LightOffL method switches the device light off for the specified target for
@@ -557,7 +634,7 @@ class CHWRMLight : public CBase
 	 	* @see TLightTarget
 		*/
 		virtual void LightOffL(TInt aTarget, 
-		                       TInt aDuration) = 0;
+		                       TInt aDuration);
 
    	    /**
 	    * The LightOffL method switches the device light off for the specified target for
@@ -591,7 +668,7 @@ class CHWRMLight : public CBase
 		*/
 		virtual void LightOffL(TInt aTarget, 
 		                       TInt aDuration, 
-		                       TBool aFadeOut) = 0;
+		                       TBool aFadeOut);
 		                       
         /**
         * This method retrieves the current light status. 
@@ -605,7 +682,7 @@ class CHWRMLight : public CBase
         * @see MHWRMLightObserver
 	 	* @see TLightTarget
         */
-        virtual TLightStatus LightStatus(TInt aTarget) const = 0;
+        virtual TLightStatus LightStatus(TInt aTarget) const;
         
         /**
         * This method retrieves the supported light targets of the device.
@@ -616,7 +693,213 @@ class CHWRMLight : public CBase
         *
         * @see TLightTarget
         */
-        virtual TInt SupportedTargets() const = 0;
+        virtual TInt SupportedTargets() const;
+
+        
+        /*
+        *   Used for setting color of Light Target(s).
+        *
+        * @param aTarget Defines which light should be controlled. Multiple lights can
+        *                be specified with using bitwise-or.
+        *
+        * @param aRGB RGB Values to be set for the target(s).
+        *
+        * @leave KErrNotSupported One or more of specified targets are not supported.
+        * @leave KErrBadHandle Light session has been invalidated.
+        * @leave KErrTimedOut Timeout occurred in controlling light.
+        * @leave KErrInUse One or more of specified targets are not reserved for
+        *                  this client but are reserved for others.
+        * @leave KErrNoMemory There is a memory allocation failure. 
+
+        * @see THWRMLightColor
+        */
+        IMPORT_C void SetLightColorL(TInt aTarget, THWRMLightColor& aRGB);
+        
+        /*
+        *   Used for setting default color of Light Target(s).
+        *
+        * @param aTarget Defines which light should be controlled. Multiple lights can
+        *                be specified with using bitwise-or.
+        * @leave KErrNotSupported One or more of specified targets are not supported.
+        * @leave KErrBadHandle Light session has been invalidated.
+        * @leave KErrTimedOut Timeout occurred in controlling light.
+        * @leave KErrInUse One or more of specified targets are not reserved for
+        *                  this client but are reserved for others.
+        * @leave KErrNoMemory There is a memory allocation failure. 
+
+        */
+        
+        IMPORT_C void SetLightDefaultColorL(TInt aTarget);
+
+        /** 
+        * The LightOnL method switches the specified target light on
+        * for the specified duration and specified color.
+        * 
+        * @param aTarget Defines which light should be controlled. Multiple lights can
+        *                be specified with using bitwise-or.
+        * @param aDuration Duration of the time the light is switched on measured in milliseconds.
+        *                  After the duration expires, the light state for target will be changed 
+        *                  to whatever state was caused by the last infinite time duration call, or
+        *                  default state determined by inactivity timer, in case there has not 
+        *                  been a previous infinite time duration call in this session.
+        *                  If the aDuration time is KHWRMInfiniteDuration then it means 
+        *                  an infinite value that has to be stopped by calling of any of 
+        *                  the other light control methods.
+        *                  Duration can have maximum value of KHWRMLightMaxDuration.
+        * @param aRGBParam RGB Values to be set for the target(s).
+        *
+        * @leave KErrArgument One of the parameters is out of range.
+        * @leave KErrNotSupported One or more of specified targets are not supported.
+        * @leave KErrBadHandle Light session has been invalidated.
+        * @leave KErrTimedOut Timeout occurred in controlling light.
+        * @leave KErrInUse One or more of specified targets are not reserved for
+        *                  this client but are reserved for others.
+        * @leave KErrNoMemory There is a memory allocation failure. 
+        * @leave KErrGeneral There is a hardware error.
+        *
+        * @see TLightTarget
+        * @see THWRMLightColor
+        */
+        IMPORT_C void LightOnL(TInt aTarget, TInt aDuration, const THWRMLightColor& aRGBParam);
+
+        /** 
+        * The LightOnL method switches the specified target light on
+        * for the specified duration using specified intensity and color. Fade-in can also be controlled.
+        * 
+        * @param aTarget Defines which light should be controlled. Multiple lights can
+        *                be specified with using bitwise-or.
+        * @param aDuration Duration of the time the light is switched on measured in milliseconds.
+        *                  After the duration expires, the light state for target will be changed 
+        *                  to whatever state was caused by the last infinite time duration call, or
+        *                  default state determined by inactivity timer, in case there has not 
+        *                  been a previous infinite time duration call in this session.
+        *                  If the aDuration time is KHWRMInfiniteDuration then it means 
+        *                  an infinite value that has to be stopped by calling of any of 
+        *                  the other light control methods.
+        *                  Duration can have maximum value of KHWRMLightMaxDuration.
+        * @param aIntensity Intensity of the light. If aIntensity is KHWRMDefaultIntensity, device default 
+        *                   intensity will be used. 
+        *                   Note: All devices might not support user defined intensity, in which case
+        *                   device will behave in its default fashion.
+        * @param aFadeIn If ETrue, lights will not turn on instantly but instead smoothly fade-in.
+        *                Note: All devices will not support fade-in, in which case device will
+        *                behave in its default fashion.
+        * @param aRGBParam RGB Values to be set for the target(s).
+        *
+        * @leave KErrArgument One of the parameters is out of range.
+        * @leave KErrNotSupported One or more of specified targets are not supported.
+        * @leave KErrBadHandle Light session has been invalidated.
+        * @leave KErrTimedOut Timeout occurred in controlling light.
+        * @leave KErrInUse One or more of specified targets are not reserved for
+        *                  this client but are reserved for others.
+        * @leave KErrNoMemory There is a memory allocation failure. 
+        * @leave KErrGeneral There is a hardware error.
+        *
+        * @see TLightTarget
+        * @see THWRMLightColor
+        */
+
+        IMPORT_C void LightOnL(TInt aTarget, TInt aDuration, TInt aIntensity, TBool aFadeIn, 
+                      const  THWRMLightColor& aRGBParam);
+
+        /** 
+        * The LightBlinkL method blinks the target light(s) of the device for specified duration and color
+        * using default intensity.
+        *
+        *
+        * @param aTarget Defines which light should be controlled. Multiple lights can
+        *                be specified with using bitwise-or.
+        * @param aDuration Duration of the time the light is set to blink measured in milliseconds.
+        *                  After the duration expires, the light state for target will be changed 
+        *                  to whatever state was caused by the last infinite time duration call, or
+        *                  default state determined by inactivity timer, in case there has not 
+        *                  been a previous infinite time duration call in this session.
+        *                  If the aTotalDuration time is KHWRMInfiniteDuration then it
+        *                  means an infinite value that has to be
+        *                  stopped by calling of any of the other light control methods.
+        *                  Duration can have maximum value of KHWRMLightMaxDuration.
+        *
+        * @param aRGBParam RGB Values to be set for the target(s).
+        *
+        * @leave KErrArgument Parameter aDuration is out of range.
+        * @leave KErrNotSupported One or more of specified targets are not supported.
+        * @leave KErrBadHandle Light session has been invalidated.
+        * @leave KErrTimedOut Timeout occurred in controlling light.
+        * @leave KErrInUse One or more of specified targets are not reserved for
+        *                  this client but are reserved for others.
+        * @leave KErrNoMemory There is a memory allocation failure. 
+        * @leave KErrGeneral There is a hardware error.
+        *
+        * @see TLightTarget
+        * @see THWRMLightColor
+        */
+
+        IMPORT_C void LightBlinkL(TInt aTarget, TInt aDuration, const THWRMLightColor& aRGBParam);
+
+        /** 
+        * The LightBlinkL method blinks the target light(s) of the device for specified duration
+        * using specified intensity and color. On- and Off-cycle times of the blinking can also be controlled.
+        *
+        * @param aTarget Defines which light should be controlled. Multiple lights can
+        *                be specified with using bitwise-or.
+        * @param aDuration Duration of the time the light is set to blink measured in milliseconds.
+        *                  After the duration expires, the light state for target will be changed 
+        *                  to whatever state was caused by the last infinite time duration call, or
+        *                  default state determined by inactivity timer, in case there has not 
+        *                  been a previous infinite time duration call in this session.
+        *                  If the aTotalDuration time is KHWRMInfiniteDuration then it
+        *                  means an infinite value that has to be
+        *                  stopped by calling of any of the other light control methods.
+        *                  Duration can have maximum value of KHWRMLightMaxDuration.
+        * @param aOnDuration Duration time, measured in milliseconds, of how long the Light is
+        *                    switched on in every Blink cycle.
+        *                    Duration can have maximum value of KHWRMLightMaxDuration.
+        *                    For device default cycle duration, use value KHWRMDefaultCycleTime.
+        *                    If either of aOnDuration or aOffDuration is KHWRMDefaultCycleTime,
+        *                    both must be KHWRMDefaultCycleTime.
+        *                    Some devices might not support variable blink cycle times, in which
+        *                    case default value will be substituted.
+        * @param aOffDuration Duration time, measured in milliseconds, of how long the Light
+        *                     is switched off in every Blink cycle.
+        *                     Duration can have maximum value of KHWRMLightMaxDuration.
+        *                     For device default cycle duration, use value KHWRMDefaultCycleTime.
+        *                     If either of aOnDuration or aOffDuration is KHWRMDefaultCycleTime,
+        *                     both must be KHWRMDefaultCycleTime.
+        *                     Some devices might not support variable blink cycle times, in which
+        *                     case default value will be substituted.
+        * @param aIntensity Intensity of the light. If aIntensity is KHWRMDefaultIntensity, device default 
+        *                   intensity will be used.
+        *                   Note: All devices might not support user defined intensity, in which case
+        *                   device will behave in its default fashion.
+        *
+        * @param aRGBParam RGB Values to be set for the target(s).
+        *
+        * @leave KErrArgument One of the parameters is out of range or otherwise invalid.
+        * @leave KErrNotSupported One or more of specified targets are not supported.
+        * @leave KErrBadHandle Light session has been invalidated.
+        * @leave KErrTimedOut Timeout occurred in controlling light.
+        * @leave KErrInUse One or more of specified targets are not reserved for
+        *                  this client but are reserved for others.
+        * @leave KErrNoMemory There is a memory allocation failure. 
+        * @leave KErrGeneral There is a hardware error.
+        *
+        * @see TLightTarget
+        * @see THWRMLightColor
+        */
+        
+        IMPORT_C void LightBlinkL(TInt aTarget, TInt aDuration, TInt aOnDuration, TInt aOffDuration, 
+                         TInt aIntensity, const THWRMLightColor& aRGBParam);
+
+
+
+        
+private:
+		CHWRMLight();
+		void ConstructL(MHWRMLightObserver* aCallback);        
+        
+private:
+        CHWRMEnhancedLight* iEnhanced;
+
     };
     
 /**
@@ -630,7 +913,7 @@ class CHWRMLight : public CBase
 *
 * @code 
 * // INCLUDES
-* #include <HWRMLight.h> // Link against HWRMLightClient.lib.
+* #include <hwrmlight.h> // Link against HWRMLightClient.lib.
 *
 * class CTests : public CBase,
 *                public MHWRMLightObserver
@@ -681,7 +964,8 @@ class CHWRMLight : public CBase
 *
 * @endcode
 *
-* @since S60 3.0
+* @publishedAll
+* @released
 */
 class MHWRMLightObserver
     {    

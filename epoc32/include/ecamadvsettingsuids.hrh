@@ -1,9 +1,9 @@
 // Copyright (c) 2005-2009 Nokia Corporation and/or its subsidiary(-ies).
 // All rights reserved.
 // This component and the accompanying materials are made available
-// under the terms of the License "Symbian Foundation License v1.0" to Symbian Foundation members and "Symbian Foundation End User License Agreement v1.0" to non-members
+// under the terms of "Eclipse Public License v1.0"
 // which accompanies this distribution, and is available
-// at the URL "http://www.symbianfoundation.org/legal/licencesv10.html".
+// at the URL "http://www.eclipse.org/legal/epl-v10.html".
 //
 // Initial Contributors:
 // Nokia Corporation - initial contribution.
@@ -13,8 +13,6 @@
 // Description:
 //
 
-
-
 /**
  @file	
  @publishedAll
@@ -23,6 +21,10 @@
 #ifndef ECAMADVSETTINGSUIDS_HRH
 #define ECAMADVSETTINGSUIDS_HRH
 
+#ifndef SYMBIAN_ENABLE_SPLIT_HEADERS
+#include <ecamadvsettingsuidsconst.hrh>
+#include <ecamadvsettingsuidsdef.hrh>
+#endif
 /** Defines the numerical value for KECamAdvancedSettingUid. 
 @see KECamAdvancedSettingUid */
 #define KECamAdvancedSettingUidValue					0x1020E76F
@@ -50,13 +52,6 @@
 /** Defines the numerical value for KECamClientViewFinderUid. 
 @see KECamClientViewFinderUid */
 #define KECamClientViewFinderUidValue					0x10283228
-/** 
-Defines the numerical value for KECamDirectSnapshotUid.
-@see KECamDirectSnapshotUid
-@publishedPartner
-@prototype
-*/
-#define	KECamDirectSnapshotUidValue				0x102833FF	
 
 /** Defines the numerical value for KUidECamEventGlobalCamera00PluggedIn.
  @see KUidECamEventGlobalCamera00PluggedIn */
@@ -471,276 +466,7 @@ Defines the numerical value for KUidECamEventCIPStartColorAccent.
 */
 #define	KUidECamEventCIPStartColorAccentUidValue 	  		  0x1028262B 
 
-/** 
-Defines the numerical value for KUidECamEventCameraSettingContinuousZoomReachedLimit.
-@see KUidECamEventCameraSettingContinuousZoomReachedLimit 
-@publishedPartner
-@prototype
-*/
-#define	KUidECamEventCameraSettingContinuousZoomReachedLimitUidValue   		  0x10283205
-
-/** 
-Defines the numerical value for KUidECamEventCameraSettingFlickerRemovalValue.
-@see KUidECamEventCameraSettingFlickerRemovalValue 
-
-@internalTechnology
-*/
-#define	KUidECamEventCameraSettingFlickerRemovalValueUidValue 		  		  0x10283207
-
-/** 
-Defines the numerical value for KUidECamEventCameraSettingNDFilter.
-@see KUidECamEventCameraSettingNDFilter 
-
-@internalTechnology
-*/
-#define	KUidECamEventCameraSettingNDFilterUidValue 	 			 		  0x10283208
-
-/** 
-Defines the numerical value for KUidECamEventCameraSettingLEDEffect.
-@see KUidECamEventCameraSettingLEDEffect 
-
-@internalTechnology
-*/
-#define	KUidECamEventCameraSettingLEDEffectUidValue				 	  	  0x10283209
-
-/** 
-Defines the numerical value for KUidECamEventCameraSettingLEDCustomEffect.
-@see KUidECamEventCameraSettingLEDCustomEffect 
-
-@internalTechnology
-*/
-#define	KUidECamEventCameraSettingLEDCustomEffectUidValue				  0x102831F2
-
-/** 
-Defines the numerical value for KUidECamEventCameraSettingOperationPreference.
-@see KUidECamEventCameraSettingOperationPreference 
-@publishedPartner
-@prototype
-*/
-#define	KUidECamEventCameraSettingOperationPreferenceUidValue	 	  		  0x1028320A
-
-/** 
-Defines the numerical value for KUidECamEventImageCaptureControlColorSpace.
-@see KUidECamEventImageCaptureControlColorSpace 
-
-@internalTechnology
-*/
-#define	KUidECamEventImageCaptureControlColorSpaceUidValue			 	  	  0x1028320B
- 
-/** 
-Defines the numerical value for KUidECamEventCameraSettingLockWhiteBalance.
-@see KUidECamEventCameraSettingLockWhiteBalance 
-
-@internalTechnology
-*/
-#define	KUidECamEventCameraSettingLockWhiteBalanceUidValue 	  				  0x1028320D
-
-/** 
-Defines the numerical value for KUidECamEventCameraSettingRestoreClientPriority.
-@see KUidECamEventCameraSettingRestoreClientPriority 
-
-@internalTechnology
-*/
-#define	KUidECamEventCameraSettingRestoreClientPriorityUidValue 	  		  0x1028320E
-
-/** 
-Defines the numerical value for KUidECamPresetVideoTelephony.
-@see KUidECamPresetVideoTelephony 
-@publishedPartner
-@prototype
-*/
-#define	KUidECamPresetVideoTelephonyUidValue 	  		  					  0x1028322E
-
-
-/** 
-Defines the numerical value for KUidECamPresetNone.
-@see KUidECamPresetNone 
-@publishedPartner
-@prototype
-*/
-#define	KUidECamPresetNoneUidValue							 		  		  0x1028320F
-
-/** 
-Defines the numerical value for KUidECamEventRangeRestricted.
-@see KUidECamEventRangeRestricted 
-@publishedPartner
-@prototype
-*/
-#define	KUidECamEventRangeRestrictedUidValue		 	 			 		  0x10283210
-
-/** 
-Defines the numerical value for KUidECamEventFeatureRestricted.
-@see KUidECamEventFeatureRestricted 
-@publishedPartner
-@prototype
-*/
-#define	KUidECamEventFeatureRestrictedUidValue					 	  		  0x10283211
-
-/** 
-Defines the numerical value for KUidECamEventPresetLocked.
-@see KUidECamEventPresetLocked 
-@publishedPartner
-@prototype
-*/
-#define	KUidECamEventPresetLockedUidValue	 	  							  0x10283212
-
-/** 
-Defines the numerical value for KUidECamEventPresetUnlocked.
-@see KUidECamEventPresetUnlocked 
-@publishedPartner
-@prototype
-*/
-#define	KUidECamEventPresetUnlockedUidValue						 	  		  0x10283213
-
-/** 
-Defines the numerical value for KUidECamEventCIPAdjustContrastEnhancement.
-@see KUidECamEventCIPAdjustContrastEnhancement 
-
-@internalTechnology
-*/
-#define	KUidECamEventCIPAdjustContrastEnhancementUidValue				  	  0x10283214
-
-/** 
-Defines the numerical value for KUidECamEventCIPAdjustRedEyeReduction.
-@see KUidECamEventCIPAdjustRedEyeReduction
- 
-@internalTechnology
-*/
-#define	KUidECamEventCIPAdjustRedEyeReductionUidValue 		  				  0x10283215
-
-/** 
-Defines the numerical value for KUidECamEventCIPImageDistortionCorrection.
-@see KUidECamEventCIPImageDistortionCorrection 
-
-@internalTechnology
-*/
-#define	KUidECamEventCIPImageDistortionCorrectionUidValue			 	  	  0x1028320C
-
-/** 
-Defines the numerical value for KUidECamEventImageProcessingTransformRelativeOrientation.
-@see KUidECamEventImageProcessingTransformRelativeOrientation 
-@publishedPartner
-@prototype
-*/
-#define	KUidECamEventImageProcessingTransformRelativeOrientationUidValue	  0x10283216
-
-/** 
-Defines the numerical value for KUidECamEventImageCaptureControlEnableSubFrames.
-@see KUidECamEventImageCaptureControlEnableSubFrames 
-
-@internalTechnology
-*/
-#define	KUidECamEventImageCaptureControlEnableSubFramesUidValue	 	  		  0x10283219
-
-/** 
-Defines the numerical value for KUidECamEventImageCaptureControlDisableSubFrames.
-@see KUidECamEventImageCaptureControlDisableSubFrames 
-
-@internalTechnology
-*/
-#define	KUidECamEventImageCaptureControlDisableSubFramesUidValue	 		  0x1028321A
-
-/**
-Defines the numerical value for KUidECamEventImageCaptureControlStartPanoMode.
-@see KUidECamEventImageCaptureControlStartPanoMode
-
-@internalTechnology
-*/
-#define KUidECamEventImageCaptureControlStartPanoModeUidValue 				  0x102831F3
-
-/** 
-Defines the numerical value for KUidECamEventImageCaptureControlPanoDirection.
-@see KUidECamEventImageCaptureControlPanoDirection 
-
-@internalTechnology
-*/
-#define	KUidECamEventImageCaptureControlPanoDirectionUidValue			  	  0x10283217
-
-/** 
-Defines the numerical value for KUidECamEventReadyForNextPrepare.
-@see KUidECamEventReadyForNextPrepare 
-@publishedPartner
-@prototype
-*/
-#define KUidECamEventReadyForNextPrepareUidValue							  0x102833DC 
-
-/** 
-Defines the numerical value for KUidECamEventReadyForNextCapture.
-@see KUidECamEventReadyForNextCapture 
-@publishedPartner
-@prototype
-*/
-#define KUidECamEventReadyForNextCaptureUidValue							  0x1028321C
-
-/** 
-Defines the numerical value for KUidECamEventImageCaptureEvent.
-@see KUidECamEventImageCaptureEvent 
-@publishedPartner
-@prototype
-*/
-#define KUidECamEventImageCaptureEventUidValue							  	  0x1028321B
-
-/** 
-Defines the numerical value for KUidECamEventFailedEmbeddedStillCaptureSetting.
-@see KUidECamEventFailedEmbeddedStillCaptureSetting 
-
-@internalTechnology
-*/
-#define	KUidECamEventFailedEmbeddedStillCaptureSettingUidValue		 	  	  0x1028321D
-
-/** 
-Defines the numerical value for KUidECamEventVideoCaptureControlConversionCoefficient.
-@see KUidECamEventVideoCaptureControlConversionCoefficient 
-
-@internalTechnology
-*/
-#define	KUidECamEventVideoCaptureControlConversionCoefficientUidValue		  0x1028321E
-
-/** 
-Defines the numerical value for KUidECamEventVideoCaptureControlPrepareComplete.
-@see KUidECamEventVideoCaptureControlPrepareComplete 
-@publishedPartner
-@prototype
-*/
-#define	KUidECamEventVideoCaptureControlPrepareCompleteUidValue			  	  0x1028321F
-
-/** 
-Defines the numerical value for KUidECamEventPictureOrientationUnachievable.
-@see KUidECamEventPictureOrientationUnachievable 
-@publishedPartner
-@prototype
-*/
-#define	KUidECamEventPictureOrientationUnachievableUidValue				  	  0x102831F4
-
-/** 
-Defines the numerical value for KUidECamEventVideoCaptureControlSettingsRangeChanged.
-@see KUidECamEventVideoCaptureControlSettingsRangeChanged 
-@publishedPartner
-@prototype
-*/
-#define	KUidECamEventVideoCaptureControlSettingsRangeChangedUidValue	  	  0x102831F5
-
-/** 
-Defines the numerical value for KUidECamEventVideoCaptureControlSettingsValueChanged.
-@see KUidECamEventVideoCaptureControlSettingsValueChanged 
-@publishedPartner
-@prototype
-*/
-#define	KUidECamEventVideoCaptureControlSettingsValueChangedUidValue	  	  0x102831F6
-
-/** 
-Defines the numerical value for KUidECamEventVideoCaptureControlSettingsDisabled.
-@see KUidECamEventVideoCaptureControlSettingsDisabled 
-@publishedPartner
-@prototype
-*/
-#define	KUidECamEventVideoCaptureControlSettingsDisabledUidValue		  	  0x102831F7
-
-/** 
-Defines the numerical value for KUidECamEventVideoCaptureControlFadingEffect.
-@see KUidECamEventVideoCaptureControlFadingEffect 
-
-@internalTechnology
-*/
-#define	KUidECamEventVideoCaptureControlFadingEffectUidValue				  0x1028322B
 #endif // ECAMADVSETTINGSUIDS_HRH
+
+
+

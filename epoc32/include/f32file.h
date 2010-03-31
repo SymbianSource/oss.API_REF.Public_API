@@ -1,9 +1,9 @@
 // Copyright (c) 1995-2009 Nokia Corporation and/or its subsidiary(-ies).
 // All rights reserved.
 // This component and the accompanying materials are made available
-// under the terms of the License "Symbian Foundation License v1.0" to Symbian Foundation members and "Symbian Foundation End User License Agreement v1.0" to non-members
+// under the terms of the License "Eclipse Public License v1.0"
 // which accompanies this distribution, and is available
-// at the URL "http://www.symbianfoundation.org/legal/licencesv10.html".
+// at the URL "http://www.eclipse.org/legal/epl-v10.html".
 //
 // Initial Contributors:
 // Nokia Corporation - initial contribution.
@@ -12,8 +12,6 @@
 //
 // Description:
 //
-
-
 
 /**
  @file
@@ -28,11 +26,21 @@
 #include <e32base.h>
 #endif
 
+#ifndef SYMBIAN_ENABLE_PUBLIC_PLATFORM_HEADER_SPLIT
+// Old implementation including platform e32svr.h (which includes the several other platform headers)...
 #if !defined(__E32SVR_H__)
 #include <e32svr.h>
 #endif
-
 #include <e32ldr.h>
+#else
+// New implementation including only the public headers needed for f32file.h...
+#include <e32ldr.h>
+// And the public headers previously included via e32svr.h but otherwise not needed for f32file.h...
+#include <e32def.h>
+#include <e32event.h>
+#include <e32debug.h>
+#include <e32keys.h> 
+#endif
 
 
 /**
@@ -126,6 +134,15 @@ const TInt KExtDelimiter='.';
 The maximum number of available drives.
 */
 const TInt KMaxDrives=26;
+
+
+/**
+@publishedAll
+@released
+
+The maximum number of available proxy drives.
+*/
+const TInt KMaxProxyDrives=KMaxDrives-KMaxLocalDrives;
 
 
 /**
@@ -347,7 +364,7 @@ The following table summarises the assignment of attribute bits:
 	22 - File System Specific
 	23 - File System Specific
 	
-	24 - Reserved
+	24 - KEntryAttPacked
 	25 - Reserved
 	26 - Reserved
 	27 - KEntryAttMatchExclude
@@ -479,36 +496,23 @@ const TUint KEntryAttAllowUid=0x10000000;
 
 
 /**
-@publishedPartner
+@publishedAll
 @released
 
-Bit mask used when evaluating whether or not a session gets notified of a 
-debug event.
+Indicates that a TEntry (that is generally returned from a TEntryArray) is
+stored in packed format where the iSizeHigh and iReserved fields follow the
+valid characters of the name string.  Before accessing the aforementioned
+members, the entry must be unpacked.
 
-@see DebugNotifySessions
 */
-const TUint KDebugNotifyMask=0xFF000000; // Reserved for debug notification
+const TUint KEntryAttPacked = 0x01000000;
+
 
 /**
-   
+@publishedAll
+@released
 */
 const TUint KMaxMapsPerCall = 0x8;
-
-
-
-
-/** 
-@publishedPartner 
-@released 
-
-The default blocksize value.
-
-This value is returned when you query the blocksize for a media type that does not 
-support the concept of 'block' (e.g. NOR flash media).
-
-@see TVolumeIOParamInfo 
-*/
-const TUint KDefaultVolumeBlockSize = 512;
 
 
 
@@ -577,37 +581,33 @@ must be dynamically updated.
 	ENotifyDisk=0x40
 	};
 
-enum TNotifyDismountMode
 /**
-@publishedAll
-@released
+    @publishedAll
+    @released
 
-Notification modes for safe media removal notification API
+    Notification modes for safe media removal notification API
 
-@see RFs::NotifyDismount
+    @see RFs::NotifyDismount
 */
+enum TNotifyDismountMode
 	{
-	/**
-	Used by a client to register for notification of pending dismount.
-		- This is the default behaviour for RFs::NotifyDismount
-	*/
+	/** Used by a client to register for notification of pending dismount. This is the default behaviour for RFs::NotifyDismount*/
 	EFsDismountRegisterClient=0x01,
 	
-	/**
-	Used to notify clients of a pending dismount.
-	*/
+	/** 
+    Used for graceful file system dismounting with notifying clients of a pending dismount. 
+    If all clients have responded by RFs::AllowDismount(), the file system will be dismounted. 
+    */
 	EFsDismountNotifyClients=0x02,
 	
-	/**
-	Used to forcibly dismount the file system without notifying clients.
-	*/
+	/**  Used to forcibly dismount the file system without notifying clients. */
 	EFsDismountForceDismount=0x03,
 	};
 
 
 enum TFileCacheFlags
 /**
-@publishedPartner
+@publishedAll
 @released
 
 Flags used to enable file server drive-specific caching 
@@ -644,34 +644,8 @@ Flags used to enable file server drive-specific caching
 	EFileCacheWriteOn = 0x20,	
 	};
 
-
-enum TStartupConfigurationCmd
 /**
-@publishedPartner
-@released
-
-Command used to set file server configuration at startup.
-
-@see RFs::SetStartupConfiguration()
-*/
-    {
-    /**
-    Set loader thread priority
-    */
-    ELoaderPriority,
-
-    /**
-    Set TDrive flags. Value should be ETrue or EFalse
-    */
-    ESetRugged,
-    /**
-    Command upper boundary
-    */
-    EMaxStartupConfigurationCmd
-    };
-
-/**
-@publishedPartner
+@publishedAll
 @released
 
 Commands to query specific volume information.
@@ -777,11 +751,19 @@ public:
 	*/
 	TInt iRecWriteBufSize;
 
+
+    /** 
+    The maximum file size that is supported by the file system mounted on this volume. 
+    Not all file system may provide this parameter;  The value KMaxTUint64 (0xffffffffffffffff) means that this particular file system hasn't 
+    provided this information.
+    */
+    TUint64 iMaxSupportedFileSize;
+
 private:
 	/*
 	Reserved space for future use
 	*/
-	TInt iReserved[4];
+	TInt iReserved[2];
 	};
 
 enum TDriveNumber
@@ -1145,7 +1127,21 @@ Additionally, it may be OR’ed with either EFileRead or EFileWrite.
 	/**
 	Disables read ahead.
 	*/
-	EFileReadAheadOff	=0x00010000
+	EFileReadAheadOff	=0x00010000,
+
+	/**
+	Enable delete on close
+	*/
+	EDeleteOnClose		=0x00020000,
+	
+	/**
+	Enables operations on large files.
+	
+	@internalTechnology
+	
+	*/
+	EFileBigFile        =0x00040000
+
 	};
 
 
@@ -1174,43 +1170,67 @@ The format method.
 	{
 	/**
 	Indicates a high density floppy disk to be formatted.
+	
+	Obsolete.
+	
+	Can be ORed with EFullFormat or EQuickFormat, but does not
+	have any effect.
 	*/
 	EHighDensity,
     
     
     /**
-    Indicates a standard floppy disk to be formatted.
+    Indicates a low density floppy disk to be formatted.
+	
+	Obsolete. 
+	
+	Can be ORed with EFullFormat or EQuickFormat, but does not
+	have any effect.
 	*/
 	ELowDensity,
 
 
 	/**
-	Performs a full format, erasing existing content and resetting the FAT
-	and root directory.
+	Performs a full format, erasing whole media content and creating 
+	new file system layout.
 	
-	This is the default, and can be ORed with bit EHighDensity or ELowDensity.
+	This is the default mode.
 	*/
 	EFullFormat=0,
 
 
     /**
-    Does the minimum required to format the device, only resetting the FAT
-    and root directory.
-    
-    This is the default, and can be ORed with bit EHighDensity or ELowDensity.
+    Performs a quick media format, erasing only required minimum media content. 
+	For example, for FAT file system it resets FAT and root directory content. 
+	Also preserves bad sectors if there are some on the volume.
 	*/
 	EQuickFormat=0x100,
 	
 	
 	/**
-	Indicates a custom formatting mode.
+	Indicates a custom formatting mode. In this mode some optional file system 
+	specific parameters may be passed to RFormat::Open().
+	
+	@see TLDFormatInfo
+	@see TInt RFormat::Open(RFs &aFs, const TDesC &aName, TUint aFormatMode, TInt &aCount, const TDesC8 &anInfo);
 	*/
 	ESpecialFormat=0x200,
 
 	/**
 	Forced erase of locked media
 	*/
-	EForceErase=0x400
+	EForceErase=0x400,
+
+    /** 
+    This flag enables formatting the volume even if it has files or directories opened on it.
+    If this flag is specified, the volume will be forcedly dismounted before performing media formatting.
+ 
+    Even with this flag the RFormat::Open() can fail with KErrInUse in following cases:
+        1. if there are clamped files on the volume.
+        2. there are opened "disk access" objects, like RFormat or RRawDisk on the volume.
+    */
+    EForceFormat = 0x800,
+
 	};
 
 
@@ -1256,6 +1276,8 @@ allowing offsets of ?GB from the origin of the seek.
 	};
 
 /**
+@publishedAll
+@released
 
 */
 class TBlockMapEntry : public TBlockMapEntryBase
@@ -1267,7 +1289,9 @@ public:
 	};
 
 /**
-   
+@publishedAll
+@released
+
 */
 typedef TBuf8<KMaxMapsPerCall*sizeof(TBlockMapEntry)> TBlockArrayDes;
 
@@ -1277,7 +1301,8 @@ struct SBlockMapInfo : public SBlockMapInfoBase
 	};
 
 /**
-
+@publishedAll
+@released
 */
 enum TBlockMapUsage
 	{
@@ -1327,6 +1352,13 @@ public:
 	inline TBool IsUidPresent(TUid aUid) const;
 	inline TBool IsTypeValid() const;
 	inline TUid MostDerivedUid() const;
+	IMPORT_C TInt64 FileSize() const;
+	inline void SetFileSize(TInt64 aFileSize);
+
+private:
+	inline void Copy(const TEntry& aEntry);
+	inline void Unpack();
+
 public:
     /**
     The individual bits within this byte indicate which attributes
@@ -1368,10 +1400,11 @@ public:
 	TBufC<KMaxFileName> iName;
 	
 private:	
+	TUint32 iSizeHigh; 
 	/**
 	Reserved for future expansion
 	*/
-	TUint32 iReserved[2];
+	TUint32 iReserved;
 	};
 
 
@@ -1404,6 +1437,7 @@ private:
 	TBuf8<KEntryArraySize> iBuf;
 	friend class RDir;
 	friend class RFs;
+	friend class TRawEntryArray;
 	};
 
 
@@ -1424,14 +1458,14 @@ public:
     The type of media mounted on the drive.
     */
 	TMediaType iType;
- 
- 
+
+
     /**
     Indicates whether the drive supports a battery, and if so, its state.
     */
     TBatteryState iBattery;
- 
- 
+
+
     /**
     The drive attributes.
     
@@ -1440,7 +1474,8 @@ public:
     @see KDriveAttRedirected
     @see KDriveAttSubsted
     @see KDriveAttInternal
-    @see KDriveAttRemovable
+    @see KDriveAttRemovable 
+    @see KDriveAttExternal 
     */
 	TUint iDriveAtt;
  
@@ -1456,11 +1491,12 @@ public:
     @see KMediaAttLocked
     */
 	TUint iMediaAtt;
-private:	
+
+
 	/**
-	Reserved for future expansion
+	The type of interface used to connect to the media.
 	*/
-	TUint32 iReserved;	
+	TConnectionBusType iConnectionBusType;
 	};
 
 
@@ -1531,7 +1567,7 @@ public:
 	@see TFileCacheFlags
 	*/
 	TFileCacheFlags iFileCacheFlags;
-
+    
     /**
     @prototype
     @internalTechnology
@@ -1786,7 +1822,16 @@ protected:
 	};
 	
 	
+#if defined SYMBIAN_PRIVATE_EFSRV
+	#define EFSRV_EXPORT_C
+	#define EFSRV_IMPORT_C 
+#else
+	#define EFSRV_EXPORT_C EXPORT_C
+	#define EFSRV_IMPORT_C IMPORT_C
+#endif
 	
+// forward declarations from e32ldr_private.h
+class RFileClamp;
 
 class RFs : public RSessionBase
 /**
@@ -1860,103 +1905,106 @@ The following restrictions apply when a path is specified:
 */
 	{
 public:
-	IMPORT_C TInt Connect(TInt aMessageSlots=KFileServerDefaultMessageSlots);
-	IMPORT_C TVersion Version() const;
-	IMPORT_C TInt AddFileSystem(const TDesC& aFileName) const;
-	IMPORT_C TInt MountFileSystem(const TDesC& aFileSystemName,TInt aDrive) const;
-	IMPORT_C TInt MountFileSystem(const TDesC& aFileSystemName,TInt aDrive, TBool aIsSync) const;
-	IMPORT_C TInt MountFileSystemAndScan(const TDesC& aFileSystemName,TInt aDrive,TBool& aIsMountSuccess) const;
-	IMPORT_C TInt MountFileSystem(const TDesC& aFileSystemName,const TDesC& aExtensionName,TInt aDrive);
-	IMPORT_C TInt MountFileSystem(const TDesC& aFileSystemName,const TDesC& aExtensionName,TInt aDrive, TBool aIsSync);
-	IMPORT_C TInt MountFileSystemAndScan(const TDesC& aFileSystemName,const TDesC& aExtensionName,TInt aDrive,TBool& aIsMountSuccess) const;
-	IMPORT_C TInt DismountFileSystem(const TDesC& aFileSystemName,TInt aDrive) const;
-	IMPORT_C TInt RemoveFileSystem(const TDesC& aFileSystemName) const;
-	IMPORT_C TInt FileSystemName(TDes& aName,TInt aDrive) const;
-	IMPORT_C TInt AddExtension(const TDesC& aFileName);
-	IMPORT_C TInt MountExtension(const TDesC& aExtensionName,TInt aDrive);
-	IMPORT_C TInt DismountExtension(const TDesC& aExtensionName,TInt aDrive);
-	IMPORT_C TInt RemoveExtension(const TDesC& aExtensionName);
-	IMPORT_C TInt ExtensionName(TDes& aExtensionName,TInt aDrive,TInt aPos);
-	IMPORT_C TInt RemountDrive(TInt aDrive,const TDesC8* aMountInfo=NULL,TUint aFlags=0);
-	IMPORT_C void NotifyChange(TNotifyType aType,TRequestStatus& aStat);
-	IMPORT_C void NotifyChange(TNotifyType aType,TRequestStatus& aStat,const TDesC& aPathName);
-	IMPORT_C void NotifyChangeCancel();
-	IMPORT_C void NotifyChangeCancel(TRequestStatus& aStat);
-	IMPORT_C void NotifyDiskSpace(TInt64 aThreshold,TInt aDrive,TRequestStatus& aStat);
-	IMPORT_C void NotifyDiskSpaceCancel(TRequestStatus& aStat);
-	IMPORT_C void NotifyDiskSpaceCancel();
-	IMPORT_C TInt DriveList(TDriveList& aList) const;
-	IMPORT_C TInt DriveList(TDriveList& aList, TUint aFlags) const;
-	IMPORT_C TInt Drive(TDriveInfo& anInfo,TInt aDrive=KDefaultDrive) const;
-	IMPORT_C TInt Volume(TVolumeInfo& aVol,TInt aDrive=KDefaultDrive) const;
-    IMPORT_C void Volume(TVolumeInfo& aVol,TInt aDrive, TRequestStatus& aStat) const;
-	IMPORT_C TInt SetVolumeLabel(const TDesC& aName,TInt aDrive=KDefaultDrive);
-	IMPORT_C TInt Subst(TDes& aPath,TInt aDrive=KDefaultDrive) const;
-	IMPORT_C TInt SetSubst(const TDesC& aPath,TInt aDrive=KDefaultDrive);
-	IMPORT_C TInt RealName(const TDesC& aName,TDes& aResult) const;
-    IMPORT_C TInt GetMediaSerialNumber(TMediaSerialNumber& aSerialNum, TInt aDrive);
-	IMPORT_C TInt SessionPath(TDes& aPath) const;
-	IMPORT_C TInt SetSessionPath(const TDesC& aPath);
-	IMPORT_C TInt Parse(const TDesC& aName,TParse& aParse) const;
-	IMPORT_C TInt Parse(const TDesC& aName,const TDesC& aRelated,TParse& aParse) const;
-	IMPORT_C TInt MkDir(const TDesC& aPath);
-	IMPORT_C TInt MkDirAll(const TDesC& aPath);
-	IMPORT_C TInt RmDir(const TDesC& aPath);
-	IMPORT_C TInt GetDir(const TDesC& aName,TUint anEntryAttMask,TUint anEntrySortKey,CDir*& anEntryList) const;
-	IMPORT_C TInt GetDir(const TDesC& aName,TUint anEntryAttMask,TUint anEntrySortKey,CDir*& anEntryList,CDir*& aDirList) const;
-	IMPORT_C TInt GetDir(const TDesC& aName,const TUidType& anEntryUid,TUint anEntrySortKey,CDir*& aFileList) const;
-	IMPORT_C TInt Delete(const TDesC& aName);
-	IMPORT_C TInt Rename(const TDesC& anOldName,const TDesC& aNewName);
-	IMPORT_C TInt Replace(const TDesC& anOldName,const TDesC& aNewName);
-	IMPORT_C TInt Att(const TDesC& aName,TUint& aAttValue) const;
-	IMPORT_C TInt SetAtt(const TDesC& aName,TUint aSetAttMask,TUint aClearAttMask);
-	IMPORT_C TInt Modified(const TDesC& aName,TTime& aTime) const;
-	IMPORT_C TInt SetModified(const TDesC& aName,const TTime& aTime);
-	IMPORT_C TInt Entry(const TDesC& aName,TEntry& anEntry) const;
-	IMPORT_C TInt SetEntry(const TDesC& aName,const TTime& aTime,TUint aSetAttMask,TUint aClearAttMask);
-	IMPORT_C TInt ReadFileSection(const TDesC& aName,TInt aPos,TDes8& aDes,TInt aLength) const;
-	IMPORT_C static TBool IsValidDrive(TInt aDrive);
-	IMPORT_C static TInt CharToDrive(TChar aChar,TInt& aDrive);
-	IMPORT_C static TInt DriveToChar(TInt aDrive,TChar& aChar);
-	IMPORT_C static TBool IsRomAddress(TAny* aAny);
-	IMPORT_C static TDriveNumber GetSystemDrive();
-	IMPORT_C static TChar GetSystemDriveChar();
-	IMPORT_C TInt SetSystemDrive(TDriveNumber aSystemDrive);
-	IMPORT_C void ResourceCountMarkStart() const;
-	IMPORT_C void ResourceCountMarkEnd() const;
-	IMPORT_C TInt ResourceCount() const;
-	IMPORT_C TInt IsFileOpen(const TDesC& aFile,TBool& anAnswer) const;
-	IMPORT_C TInt CheckDisk(const TDesC& aDrive) const;
-	IMPORT_C TInt ScanDrive(const TDesC& aDrive) const;
-	IMPORT_C TInt GetShortName(const TDesC& aLongName,TDes& aShortName) const;
-	IMPORT_C TInt GetLongName(const TDesC& aShortName,TDes& aLongName) const;
-	IMPORT_C TBool GetNotifyUser();
-	IMPORT_C void SetNotifyUser(TBool aValue);
-	IMPORT_C TUint8* IsFileInRom(const TDesC& aFileName) const;
-	IMPORT_C TBool IsValidName(const TDesC& anEntryName) const;
-	IMPORT_C TBool IsValidName(const TDesC& aFileName,TText& aBadChar) const;
-	IMPORT_C TInt GetDriveName(TInt aDrive,TDes& aDriveName) const;
-	IMPORT_C TInt SetDriveName(TInt aDrive,const TDesC& aDriveName);
-	IMPORT_C TInt LoaderHeapFunction(TInt aFunction, TAny *aArg1=NULL, TAny *aArg2=NULL);
+	EFSRV_IMPORT_C TInt Connect(TInt aMessageSlots=KFileServerDefaultMessageSlots);
+	EFSRV_IMPORT_C void Close();
+	EFSRV_IMPORT_C TVersion Version() const;
+	EFSRV_IMPORT_C TInt AddFileSystem(const TDesC& aFileName) const;
+	EFSRV_IMPORT_C TInt MountFileSystem(const TDesC& aFileSystemName,TInt aDrive) const;
+	EFSRV_IMPORT_C TInt MountFileSystem(const TDesC& aFileSystemName,TInt aDrive, TBool aIsSync) const;
+	EFSRV_IMPORT_C TInt MountFileSystemAndScan(const TDesC& aFileSystemName,TInt aDrive,TBool& aIsMountSuccess) const;
+	EFSRV_IMPORT_C TInt MountFileSystem(const TDesC& aFileSystemName,const TDesC& aExtensionName,TInt aDrive);
+	EFSRV_IMPORT_C TInt MountFileSystem(const TDesC& aFileSystemName,const TDesC& aExtensionName,TInt aDrive, TBool aIsSync);
+	EFSRV_IMPORT_C TInt MountFileSystemAndScan(const TDesC& aFileSystemName,const TDesC& aExtensionName,TInt aDrive,TBool& aIsMountSuccess) const;
+	EFSRV_IMPORT_C TInt DismountFileSystem(const TDesC& aFileSystemName,TInt aDrive) const;
+	EFSRV_IMPORT_C TInt RemoveFileSystem(const TDesC& aFileSystemName) const;
+	EFSRV_IMPORT_C TInt FileSystemName(TDes& aName,TInt aDrive) const;
+	EFSRV_IMPORT_C TInt AddExtension(const TDesC& aFileName);
+	EFSRV_IMPORT_C TInt MountExtension(const TDesC& aExtensionName,TInt aDrive);
+	EFSRV_IMPORT_C TInt DismountExtension(const TDesC& aExtensionName,TInt aDrive);
+	EFSRV_IMPORT_C TInt RemoveExtension(const TDesC& aExtensionName);
+	EFSRV_IMPORT_C TInt ExtensionName(TDes& aExtensionName,TInt aDrive,TInt aPos);
+	EFSRV_IMPORT_C TInt RemountDrive(TInt aDrive,const TDesC8* aMountInfo=NULL,TUint aFlags=0);
+	EFSRV_IMPORT_C void NotifyChange(TNotifyType aType,TRequestStatus& aStat);
+	EFSRV_IMPORT_C void NotifyChange(TNotifyType aType,TRequestStatus& aStat,const TDesC& aPathName);
+	EFSRV_IMPORT_C void NotifyChangeCancel();
+	EFSRV_IMPORT_C void NotifyChangeCancel(TRequestStatus& aStat);
+	EFSRV_IMPORT_C void NotifyDiskSpace(TInt64 aThreshold,TInt aDrive,TRequestStatus& aStat);
+	EFSRV_IMPORT_C void NotifyDiskSpaceCancel(TRequestStatus& aStat);
+	EFSRV_IMPORT_C void NotifyDiskSpaceCancel();
+	EFSRV_IMPORT_C TInt DriveList(TDriveList& aList) const;
+	EFSRV_IMPORT_C TInt DriveList(TDriveList& aList, TUint aFlags) const;
+	EFSRV_IMPORT_C TInt Drive(TDriveInfo& anInfo,TInt aDrive=KDefaultDrive) const;
+    EFSRV_IMPORT_C TInt Volume(TVolumeInfo& aVol,TInt aDrive=KDefaultDrive) const;
+    EFSRV_IMPORT_C void Volume(TVolumeInfo& aVol,TInt aDrive, TRequestStatus& aStat) const;
+	EFSRV_IMPORT_C TInt SetVolumeLabel(const TDesC& aName,TInt aDrive=KDefaultDrive);
+	EFSRV_IMPORT_C TInt Subst(TDes& aPath,TInt aDrive=KDefaultDrive) const;
+	EFSRV_IMPORT_C TInt SetSubst(const TDesC& aPath,TInt aDrive=KDefaultDrive);
+	EFSRV_IMPORT_C TInt RealName(const TDesC& aName,TDes& aResult) const;
+    EFSRV_IMPORT_C TInt GetMediaSerialNumber(TMediaSerialNumber& aSerialNum, TInt aDrive);
+	EFSRV_IMPORT_C TInt SessionPath(TDes& aPath) const;
+	EFSRV_IMPORT_C TInt SetSessionPath(const TDesC& aPath);
+	EFSRV_IMPORT_C TInt Parse(const TDesC& aName,TParse& aParse) const;
+	EFSRV_IMPORT_C TInt Parse(const TDesC& aName,const TDesC& aRelated,TParse& aParse) const;
+	EFSRV_IMPORT_C TInt MkDir(const TDesC& aPath);
+	EFSRV_IMPORT_C TInt MkDirAll(const TDesC& aPath);
+	EFSRV_IMPORT_C TInt RmDir(const TDesC& aPath);
+	EFSRV_IMPORT_C TInt GetDir(const TDesC& aName,TUint anEntryAttMask,TUint anEntrySortKey,CDir*& anEntryList) const;
+	EFSRV_IMPORT_C TInt GetDir(const TDesC& aName,TUint anEntryAttMask,TUint anEntrySortKey,CDir*& anEntryList,CDir*& aDirList) const;
+	EFSRV_IMPORT_C TInt GetDir(const TDesC& aName,const TUidType& anEntryUid,TUint anEntrySortKey,CDir*& aFileList) const;
+	EFSRV_IMPORT_C TInt Delete(const TDesC& aName);
+	EFSRV_IMPORT_C TInt Rename(const TDesC& anOldName,const TDesC& aNewName);
+	EFSRV_IMPORT_C TInt Replace(const TDesC& anOldName,const TDesC& aNewName);
+	EFSRV_IMPORT_C TInt Att(const TDesC& aName,TUint& aAttValue) const;
+	EFSRV_IMPORT_C TInt SetAtt(const TDesC& aName,TUint aSetAttMask,TUint aClearAttMask);
+	EFSRV_IMPORT_C TInt Modified(const TDesC& aName,TTime& aTime) const;
+	EFSRV_IMPORT_C TInt SetModified(const TDesC& aName,const TTime& aTime);
+	EFSRV_IMPORT_C TInt Entry(const TDesC& aName,TEntry& anEntry) const;
+	EFSRV_IMPORT_C TInt SetEntry(const TDesC& aName,const TTime& aTime,TUint aSetAttMask,TUint aClearAttMask);
+private:
+	EFSRV_IMPORT_C TInt ReadFileSection_RESERVED(const TDesC& aName,TInt aPos,TDes8& aDes,TInt aLength) const;
+public:
+	EFSRV_IMPORT_C static TBool IsValidDrive(TInt aDrive);
+	EFSRV_IMPORT_C static TInt CharToDrive(TChar aChar,TInt& aDrive);
+	EFSRV_IMPORT_C static TInt DriveToChar(TInt aDrive,TChar& aChar);
+	EFSRV_IMPORT_C static TBool IsRomAddress(TAny* aAny);
+	EFSRV_IMPORT_C static TDriveNumber GetSystemDrive();
+	EFSRV_IMPORT_C static TChar GetSystemDriveChar();
+	EFSRV_IMPORT_C TInt SetSystemDrive(TDriveNumber aSystemDrive);
+	EFSRV_IMPORT_C void ResourceCountMarkStart() const;
+	EFSRV_IMPORT_C void ResourceCountMarkEnd() const;
+	EFSRV_IMPORT_C TInt ResourceCount() const;
+	EFSRV_IMPORT_C TInt IsFileOpen(const TDesC& aFile,TBool& anAnswer) const;
+	EFSRV_IMPORT_C TInt CheckDisk(const TDesC& aDrive) const;
+	EFSRV_IMPORT_C TInt ScanDrive(const TDesC& aDrive) const;
+	EFSRV_IMPORT_C TInt GetShortName(const TDesC& aLongName,TDes& aShortName) const;
+	EFSRV_IMPORT_C TInt GetLongName(const TDesC& aShortName,TDes& aLongName) const;
+	EFSRV_IMPORT_C TBool GetNotifyUser();
+	EFSRV_IMPORT_C void SetNotifyUser(TBool aValue);
+	EFSRV_IMPORT_C TUint8* IsFileInRom(const TDesC& aFileName) const;
+	EFSRV_IMPORT_C TBool IsValidName(const TDesC& anEntryName) const;
+	EFSRV_IMPORT_C TBool IsValidName(const TDesC& aFileName,TText& aBadChar) const;
+	EFSRV_IMPORT_C TInt GetDriveName(TInt aDrive,TDes& aDriveName) const;
+	EFSRV_IMPORT_C TInt SetDriveName(TInt aDrive,const TDesC& aDriveName);
+	EFSRV_IMPORT_C TInt LoaderHeapFunction(TInt aFunction, TAny *aArg1=NULL, TAny *aArg2=NULL);
 	IMPORT_C TInt SetErrorCondition(TInt anError,TInt aCount=0);
-	IMPORT_C TInt SetDebugRegister(TInt aVal);
-	IMPORT_C TInt SetAllocFailure(TInt aAllocNum);
-	IMPORT_C void DebugNotify(TInt aDrive,TUint aNotifyType,TRequestStatus& aStat);
-	IMPORT_C TInt ControlIo(TInt aDrive,TInt aCommand);
-	IMPORT_C TInt ControlIo(TInt aDrive,TInt aCommand,TDes8& aParam1);
-	IMPORT_C TInt ControlIo(TInt aDrive,TInt aCommand,TDes8& aParam1,TDes8& aParam2);
-	IMPORT_C TInt ControlIo(TInt aDrive,TInt aCommand,TAny* aParam1,TAny* aParam2);
-	IMPORT_C TInt LockDrive(TInt aDrv, const TMediaPassword &aOld, const TMediaPassword &aNew, TBool aStr);
-	IMPORT_C TInt UnlockDrive(TInt aDrv, const TMediaPassword &Pswd, TBool aStr);
-	IMPORT_C TInt ClearPassword(TInt aDrv, const TMediaPassword &aPswd);
-	IMPORT_C TInt ErasePassword(TInt aDrv);
-	IMPORT_C TInt SetSessionToPrivate(TInt aDrive);
-	IMPORT_C TInt PrivatePath(TDes& aPath);
-	IMPORT_C TInt CreatePrivatePath(TInt aDrive);	
-	IMPORT_C void StartupInitComplete(TRequestStatus& aStat);
-	IMPORT_C TInt SetLocalDriveMapping(const TDesC8& aMapping);
+	EFSRV_IMPORT_C TInt SetDebugRegister(TInt aVal);
+	EFSRV_IMPORT_C TInt SetAllocFailure(TInt aAllocNum);
+	EFSRV_IMPORT_C void DebugNotify(TInt aDrive,TUint aNotifyType,TRequestStatus& aStat);
+	EFSRV_IMPORT_C TInt ControlIo(TInt aDrive,TInt aCommand);
+	EFSRV_IMPORT_C TInt ControlIo(TInt aDrive,TInt aCommand,TDes8& aParam1);
+	EFSRV_IMPORT_C TInt ControlIo(TInt aDrive,TInt aCommand,TDes8& aParam1,TDes8& aParam2);
+	EFSRV_IMPORT_C TInt ControlIo(TInt aDrive,TInt aCommand,TAny* aParam1,TAny* aParam2);
+	EFSRV_IMPORT_C TInt LockDrive(TInt aDrv, const TMediaPassword &aOld, const TMediaPassword &aNew, TBool aStr);
+	EFSRV_IMPORT_C TInt UnlockDrive(TInt aDrv, const TMediaPassword &Pswd, TBool aStr);
+	EFSRV_IMPORT_C TInt ClearPassword(TInt aDrv, const TMediaPassword &aPswd);
+	EFSRV_IMPORT_C TInt ErasePassword(TInt aDrv);
+	EFSRV_IMPORT_C TInt SetSessionToPrivate(TInt aDrive);
+	EFSRV_IMPORT_C TInt PrivatePath(TDes& aPath);
+	EFSRV_IMPORT_C TInt CreatePrivatePath(TInt aDrive);	
+	EFSRV_IMPORT_C void StartupInitComplete(TRequestStatus& aStat);
+	EFSRV_IMPORT_C TInt SetLocalDriveMapping(const TDesC8& aMapping);
 
-	IMPORT_C TInt FinaliseDrives();
+	EFSRV_IMPORT_C TInt FinaliseDrives();
     
     /** specifies drive finalisation modes */
     enum TFinaliseDrvMode
@@ -1966,38 +2014,89 @@ public:
         EForceUnfinalise///< @internalComponent  mark the drive as "not finalised" can result in KErrAbort if the dive is in inconsistent state.
         };
 
-    IMPORT_C TInt FinaliseDrive(TInt aDriveNo, TFinaliseDrvMode aMode) const;
+    EFSRV_IMPORT_C TInt FinaliseDrive(TInt aDriveNo, TFinaliseDrvMode aMode) const;
 
-	IMPORT_C TInt SwapFileSystem(const TDesC& aOldFileSystemName,const TDesC& aNewFileSystemName,TInt aDrive) const;
-	IMPORT_C TInt ReserveDriveSpace(TInt aDriveNo, TInt aSpace);
-	IMPORT_C TInt GetReserveAccess(TInt aDriveNo);
-	IMPORT_C TInt ReleaseReserveAccess(TInt aDriveNo);
+	EFSRV_IMPORT_C TInt SwapFileSystem(const TDesC& aOldFileSystemName,const TDesC& aNewFileSystemName,TInt aDrive) const;
+	EFSRV_IMPORT_C TInt ReserveDriveSpace(TInt aDriveNo, TInt aSpace);
+	EFSRV_IMPORT_C TInt GetReserveAccess(TInt aDriveNo);
+	EFSRV_IMPORT_C TInt ReleaseReserveAccess(TInt aDriveNo);
 
-	IMPORT_C TInt AddPlugin(const TDesC& aFileName) const;
-	IMPORT_C TInt RemovePlugin(const TDesC& aPluginName) const;
-	IMPORT_C TInt PluginName(TDes& aPluginName,TInt aDrive,TInt aPos);
+	EFSRV_IMPORT_C TInt AddPlugin(const TDesC& aFileName) const;
+	EFSRV_IMPORT_C TInt RemovePlugin(const TDesC& aPluginName) const;
+	EFSRV_IMPORT_C TInt PluginName(TDes& aPluginName,TInt aDrive,TInt aPos);
 
-	IMPORT_C TInt MountPlugin(const TDesC& aPluginName) const;
-	IMPORT_C TInt MountPlugin(const TDesC& aPluginName,TInt aDrive) const;
-	IMPORT_C TInt MountPlugin(const TDesC& aPluginName,TInt aDrive, TInt aPos) const;
+	EFSRV_IMPORT_C TInt MountPlugin(const TDesC& aPluginName) const;
+	EFSRV_IMPORT_C TInt MountPlugin(const TDesC& aPluginName,TInt aDrive) const;
+	EFSRV_IMPORT_C TInt MountPlugin(const TDesC& aPluginName,TInt aDrive, TInt aPos) const;
 	
-	IMPORT_C TInt DismountPlugin(const TDesC& aPluginName) const;
-	IMPORT_C TInt DismountPlugin(const TDesC& aPluginName,TInt aDrive) const;
-	IMPORT_C TInt DismountPlugin(const TDesC& aPluginName,TInt aDrive,TInt aPos) const;
+	EFSRV_IMPORT_C TInt DismountPlugin(const TDesC& aPluginName) const;
+	EFSRV_IMPORT_C TInt DismountPlugin(const TDesC& aPluginName,TInt aDrive) const;
+	EFSRV_IMPORT_C TInt DismountPlugin(const TDesC& aPluginName,TInt aDrive,TInt aPos) const;
 
-	IMPORT_C void NotifyDismount(TInt aDrive, TRequestStatus& aStat, TNotifyDismountMode aMode=EFsDismountRegisterClient) const;
-	IMPORT_C void NotifyDismountCancel(TRequestStatus& aStat) const;
-	IMPORT_C void NotifyDismountCancel() const;
-	IMPORT_C TInt AllowDismount(TInt aDrive) const;
-    IMPORT_C TInt SetStartupConfiguration(TInt aCommand,TAny* aParam1,TAny* aParam2) const;
-	IMPORT_C TInt AddCompositeMount(const TDesC& aFileSystemName,TInt aLocalDriveToMount,TInt aCompositeDrive, TBool aSync) const;
-	IMPORT_C TInt SetNotifyChange(TBool aNotifyChange);
-	IMPORT_C TInt QueryVolumeInfoExt(TInt aDrive, TQueryVolumeInfoExtCmd aCommand, TDes8& aInfo) const;
-	IMPORT_C TInt VolumeIOParam(TInt aDriveNo, TVolumeIOParamInfo& aParamInfo) const;
-	IMPORT_C TInt FileSystemSubType(TInt aDriveNo, TDes& aName) const;
-	IMPORT_C TInt InitialisePropertiesFile(const TPtrC8& aPtr) const;
-
+	EFSRV_IMPORT_C void NotifyDismount(TInt aDrive, TRequestStatus& aStat, TNotifyDismountMode aMode=EFsDismountRegisterClient) const;
+	EFSRV_IMPORT_C void NotifyDismountCancel(TRequestStatus& aStat) const;
+	EFSRV_IMPORT_C void NotifyDismountCancel() const;
+	EFSRV_IMPORT_C TInt AllowDismount(TInt aDrive) const;
+    EFSRV_IMPORT_C TInt SetStartupConfiguration(TInt aCommand,TAny* aParam1,TAny* aParam2) const;
+	EFSRV_IMPORT_C TInt AddCompositeMount(const TDesC& aFileSystemName,TInt aLocalDriveToMount,TInt aCompositeDrive, TBool aSync) const;
+	EFSRV_IMPORT_C TInt SetNotifyChange(TBool aNotifyChange);
+	EFSRV_IMPORT_C TInt QueryVolumeInfoExt(TInt aDrive, TQueryVolumeInfoExtCmd aCommand, TDes8& aInfo) const;
+	EFSRV_IMPORT_C TInt VolumeIOParam(TInt aDriveNo, TVolumeIOParamInfo& aParamInfo) const;
+	EFSRV_IMPORT_C TInt FileSystemSubType(TInt aDriveNo, TDes& aName) const;
+	EFSRV_IMPORT_C TInt InitialisePropertiesFile(const TPtrC8& aPtr) const;
+	
+	IMPORT_C TInt AddProxyDrive(const TDesC& aFileName);
+	IMPORT_C TInt RemoveProxyDrive(const TDesC& aDriveName);
+	
+	template <class T0,class T1> inline TInt MountProxyDrive(const TUint aDrive, const TDesC& aName, T0 a0, T1 a1)
+		{ return(DoMountProxyDrive(TIpcArgs(aDrive, &aName, a0, a1))); };
+	IMPORT_C TInt DismountProxyDrive(const TUint aDrive);
+	
 	TInt Unclamp(const RFileClamp& aHandle);
+	
+	EFSRV_IMPORT_C TInt ReadFileSection(const TDesC& aName,TInt64 aPos,TDes8& aDes,TInt aLength) const;
+	
+    /**
+	This class is used to for returning meaningful error code values to users of RFs::IsValidName(const TDesC& ,TNameValidParam& ) 
+	@see TError
+	*/
+	class TNameValidParam
+		{
+		public:
+			/** Initialises the members of the class. By default iUseSessionPath is set to EFalse, however one could set it to ETrue.*/
+  			inline TNameValidParam(TBool aUseSessionPath = EFalse);
+  				
+ 		/** possible error codes */
+ 		enum TError
+ 			{
+			ErrNone,            ///< no error.
+ 			ErrBadCharacter,    ///< aName contains a bad character; and its position is in iInvalidCharPos.
+ 			ErrBadName,         ///< aName isn't a valid file or directory name.
+ 			ErrNameTooLong      ///< aName length or aName + session path length (see iUseSessionPath) is longer than 256 characters.
+ 			};
+		
+		inline TError ErrorCode() const;
+ 		inline void   UseSessionPath(TBool aUseSessionPath);
+ 		inline TUint  InvalidCharPos() const;
+ 		friend class TFsIsValidName;
+		private:
+ 			TError iError;          ///< the reason why aName is invalid, see TError
+ 			TBool  iUseSessionPath; ///< if ETrue, and if aName isn't fully specified, missing parts will be taken from the session path
+ 			TUint  iInvalidCharPos; ///< may contain invalid character position if error is ErrBadCharacter,else 0.
+ 		};
+	EFSRV_IMPORT_C TBool IsValidName(const TDesC& aName, TNameValidParam& aParam );
+
+    /** Special enumerator values for the SupportedFileSystemName() API */
+    enum 
+        {
+        KRootFileSystem  = 0x00800000,  ///< specifies "root" file system. The result will be the same as for FileSystemName() API call
+        KFirstChildFileSystem = 0       ///< specifies the first child file system number, the second will be KFirstChildFileSystem+1 etc.
+        };
+
+    EFSRV_IMPORT_C TInt SupportedFileSystemName(TDes& aName, TInt aDrive, TInt aFsEnumerator) const;
+
+protected:
+	TInt SendReceive(TInt aFunction,const TIpcArgs& aArgs) const;
 
 private:
 	void GetDirL(const TDesC& aMatchName,TUint anEntryAttMask,TUint anEntrySortKey,CDir*& anEntryList,CDir*& aDirList,RDir& aDir) const;
@@ -2005,15 +2104,80 @@ private:
 	void GetDirL(const TDesC& aMatchName,const TUidType& aUidType,TUint anEntrySortKey,CDir*& anEntryList,RDir& aDir) const;
 	void DoGetDirL(TUint anEntrySortKey,CDir*& anEntryList,RDir& aDir) const;
 	TInt GetOpenFileList(TInt& aSessionNum,TInt& aLocalPos,TThreadId& aThreadId,TEntryArray& anArray) const;
+	
+	IMPORT_C TInt DoMountProxyDrive(const TIpcArgs& ipcArgs);
+	
 	friend class TOpenFileScan;
+	friend class RFsPlugin;
 	};
 
 
+//-------------------------------------------------------------------------------------------------------------------
+
+/** 
+
+    Base class for volume formatting parameters. This class package buffer, TVolFormatParamBuf or
+    packaged buffer of the derived class can be passed to the RFormat::Open() in order to provide
+    file system-specific formatting parameters.
+    Each file system that supports such formatting parameters shall have this class specialisation (e.g. TVolFormatParam_FAT)
+    All classes, derived from this one must have the same size as the base class.  
+    In order to use formatting parameters the format mode shall have ESpecialFormat bit flag set.
+
+
+    @see    RFormat::Open(RFs&,const TDesC&,TUint,TInt& ,const TDesC8& anInfo);
+    @see    TVolFormatParamBuf
+
+    @publishedAll
+    @released
+*/ 
+class TVolFormatParam
+    {
+public:
+    inline TVolFormatParam();
+    inline void Init();
+    
+    inline void SetFileSystemName(const TDesC& aFsName);
+
+    static inline TUint32 CalcFSNameHash(const TDesC& aFsName);
+    inline TUint32 FSNameHash() const;
+
+    inline TBool SomeParamsSet() const;
+
+
+protected:
+   
+    
+    enum {KMaxDataSlots = 64}; ///< the size of data array iData
+
+    inline void SetVal(TUint aIndex, TUint32 aVal);
+    inline TUint32 GetVal(TUint aIndex) const;
+
+
+public:
+    enum {KUId = 0x820116A2}; ///< this value shell be in iUid field to identify this class object
+
+    /** 
+    This class tree UID. Used to distinguish the object of this class from TLDFormatInfo and other possible data structures.
+    For this and derived classes this field must be KUId. This field offset in the class must be 0
+    */
+    const TUint32 iUId;    
+                            
+private:
+    TUint32 iFSysNameHash;          ///< Up-cased file system name hash (crc32) used to designate the file system. 0 means "not set"
+    TBool   iParamsSet : 1;         ///< ETrue if any parameter was set (SetVal() called). Gets reset to EFalse by Init()    
+    TUint32 iData[KMaxDataSlots];   ///< used as a pool for various data. The derived classes are free to use it by SetVal()/GetVal()
+    }; 
+
+__ASSERT_COMPILE(_FOFF(TVolFormatParam, iUId) == 0);
+
+
+/** package buffer for the objects of class TVolFormatParamBuf */
+typedef TPckgBuf<TVolFormatParam> TVolFormatParamBuf;
 
 
 
 
-
+#ifndef SYMBIAN_ENABLE_64_BIT_FILE_SERVER_API
 /**
 @publishedAll
 @released
@@ -2069,66 +2233,154 @@ as binary and byte descriptors are used (TDes8, TDesC8).
 @see TDes8
 @see TDesC8
 */
+#else
+/**
+@publishedAll
+@released
+
+Creates and opens a file, and performs all operations on a single open file.
+
+These include:
+
+- reading from and writing to the file
+
+- seeking to a position within the file
+
+- locking and unlocking within the file
+
+- setting file attributes
+
+Before using any of these services, a connection to a file server session must
+have been made, and the file must be open.
+
+Opening Files:
+
+-  use Open() to open an existing file for reading or writing; an error is
+   returned if it does not already exist.
+   To open an existing file for reading only, use Open() with an access mode of
+   EFileRead, and a share mode of EFileShareReadersOnly.
+
+-  use Create() to create and open a new file for writing; an error is returned
+   if it already exists.
+
+-  use Replace() to open a file for writing, replacing any existing file of
+   the same name if one exists, or creating a new file if one does not exist.
+   Note that if a file exists, its length is reset to zero.
+
+-  use Temp() to create and open a temporary file with a unique name,
+   for writing and reading.
+
+When opening a file, you must specify the file server session to use for
+operations with that file. If you do not close the file explicitly, it is
+closed when the server session associated with it is closed.
+
+Reading and Writing:
+
+There are several variants of both Read() and Write().
+The basic Read(TDes8& aDes) and Write(const TDesC8& aDes) are supplemented
+by variants allowing the descriptor length to be overridden, or the seek
+position of the first byte to be specified, or asynchronous completion,
+or any combination.
+
+Reading transfers data from a file to a descriptor, and writing transfers
+data from a descriptor to a file. In all cases, the file data is treated
+as binary and byte descriptors are used (TDes8, TDesC8).
+
+RFile class supports operations on files of size less than or equal to 2GB - 1.
+If the file size is greater than 2GB - 1 (large file), use of class RFile64 is 
+recommended for following operations:
+	1. Opening a large file
+	2. Creating a file which can grow beyond 2GB - 1 by size
+	3. Creating a temporary file which can grow beyond 2GB - 1 by size
+	4. Replacing an existing file after which it can grow beyond 2GB - 1 by size
+	5. Adopting a large file handle from client
+	6. Adopting a large file handle from server
+	7. Adopting a large file handle from another process
+	8. Read from a position greater than 2GB - 1
+	9. Writing to a file by which the size can grow beyond 2GB - 1
+	10. Seek to a position greater than 2GB - 1
+	11. Setting a size greater than 2GB - 1
+	12. Querying the file size (greater than 2GB - 1)
+	13. Locking and unlocking a position and length that is beyond 2GB - 1
+
+@see TDes8
+@see TDesC8
+
+@see RFile64
+
+*/
+
+#endif
+
+
 class RFile : public RSubSessionBase
 	{
 public:
-	IMPORT_C TInt Open(RFs& aFs,const TDesC& aName,TUint aFileMode);
-	IMPORT_C void Close();
-	IMPORT_C TInt Create(RFs& aFs,const TDesC& aName,TUint aFileMode);
-	IMPORT_C TInt Replace(RFs& aFs,const TDesC& aName,TUint aFileMode);
-	IMPORT_C TInt Temp(RFs& aFs,const TDesC& aPath,TFileName& aName,TUint aFileMode);
-	IMPORT_C TInt Read(TDes8& aDes) const;
-	IMPORT_C void Read(TDes8& aDes,TRequestStatus& aStatus) const;
-	IMPORT_C TInt Read(TDes8& aDes,TInt aLength) const;
-	IMPORT_C void Read(TDes8& aDes,TInt aLength,TRequestStatus& aStatus) const;
-	IMPORT_C TInt Read(TInt aPos,TDes8& aDes) const;
-	IMPORT_C void Read(TInt aPos,TDes8& aDes,TRequestStatus& aStatus) const;
-	IMPORT_C TInt Read(TInt aPos,TDes8& aDes,TInt aLength) const;
-	IMPORT_C void Read(TInt aPos,TDes8& aDes,TInt aLength,TRequestStatus& aStatus) const;
-	IMPORT_C void ReadCancel(TRequestStatus& aStatus) const;
-	IMPORT_C void ReadCancel() const;
-	IMPORT_C TInt Write(const TDesC8& aDes);
-	IMPORT_C void Write(const TDesC8& aDes,TRequestStatus& aStatus);
-	IMPORT_C TInt Write(const TDesC8& aDes,TInt aLength);
-	IMPORT_C void Write(const TDesC8& aDes,TInt aLength,TRequestStatus& aStatus);
-	IMPORT_C TInt Write(TInt aPos,const TDesC8& aDes);
-	IMPORT_C void Write(TInt aPos,const TDesC8& aDes,TRequestStatus& aStatus);
-	IMPORT_C TInt Write(TInt aPos,const TDesC8& aDes,TInt aLength);
-	IMPORT_C void Write(TInt aPos,const TDesC8& aDes,TInt aLength,TRequestStatus& aStatus);
-	IMPORT_C TInt Lock(TInt aPos,TInt aLength) const;
-	IMPORT_C TInt UnLock(TInt aPos,TInt aLength) const;
-	IMPORT_C TInt Seek(TSeek aMode,TInt& aPos) const;
-	IMPORT_C TInt Flush();
-	IMPORT_C void Flush(TRequestStatus& aStatus);
-	IMPORT_C TInt Size(TInt& aSize) const;
-	IMPORT_C TInt SetSize(TInt aSize);
-	IMPORT_C TInt Att(TUint& aAttValue) const;
-	IMPORT_C TInt SetAtt(TUint aSetAttMask,TUint aClearAttMask);
-	IMPORT_C TInt Modified(TTime& aTime) const;
-	IMPORT_C TInt SetModified(const TTime& aTime);
-	IMPORT_C TInt Set(const TTime& aTime,TUint aSetAttMask,TUint aClearAttMask);
-	IMPORT_C TInt ChangeMode(TFileMode aNewMode);
-	IMPORT_C TInt Rename(const TDesC& aNewName);
-	IMPORT_C TInt Drive(TInt &aDriveNumber, TDriveInfo &aDriveInfo) const;
-	IMPORT_C TInt Adopt(RFs& aFs, TInt aHandle);
-	IMPORT_C TInt AdoptFromClient(const RMessage2& aMsg, TInt aFsHandleIndex, TInt aFileHandleIndex);
-	IMPORT_C TInt AdoptFromServer(TInt aFsHandle, TInt aFileHandle);
-	IMPORT_C TInt AdoptFromCreator(TInt aFsIndex, TInt aFileHandleIndex);
-	IMPORT_C TInt Name(TDes& aName) const;
-	IMPORT_C TInt TransferToServer(TIpcArgs& aIpcArgs, TInt aFsHandleIndex, TInt aFileHandleIndex) const;
-	IMPORT_C TInt TransferToClient(const RMessage2& aMsg, TInt aFileHandleIndex) const;
-	IMPORT_C TInt TransferToProcess(RProcess& aProcess, TInt aFsHandleIndex, TInt aFileHandleIndex) const;
-	IMPORT_C TInt Duplicate(const RFile& aFile, TOwnerType aType=EOwnerProcess);
-	IMPORT_C TInt FullName(TDes& aName) const;
-	IMPORT_C TInt BlockMap(SBlockMapInfo& aInfo, TInt64& aStartPos, TInt64 aEndPos=-1, TInt aBlockMapusage=EBlockMapUsagePaging) const;
-//	IMPORT_C TInt Clamp(RFileClamp& aHandle);
+	EFSRV_IMPORT_C TInt Open(RFs& aFs,const TDesC& aName,TUint aFileMode);
+	EFSRV_IMPORT_C void Close();
+	EFSRV_IMPORT_C TInt Create(RFs& aFs,const TDesC& aName,TUint aFileMode);
+	EFSRV_IMPORT_C TInt Replace(RFs& aFs,const TDesC& aName,TUint aFileMode);
+	EFSRV_IMPORT_C TInt Temp(RFs& aFs,const TDesC& aPath,TFileName& aName,TUint aFileMode);
+	EFSRV_IMPORT_C TInt Read(TDes8& aDes) const;
+	EFSRV_IMPORT_C void Read(TDes8& aDes,TRequestStatus& aStatus) const;
+	EFSRV_IMPORT_C TInt Read(TDes8& aDes,TInt aLength) const;
+	EFSRV_IMPORT_C void Read(TDes8& aDes,TInt aLength,TRequestStatus& aStatus) const;
+	EFSRV_IMPORT_C TInt Read(TInt aPos,TDes8& aDes) const;
+	EFSRV_IMPORT_C void Read(TInt aPos,TDes8& aDes,TRequestStatus& aStatus) const;
+	EFSRV_IMPORT_C TInt Read(TInt aPos,TDes8& aDes,TInt aLength) const;
+	EFSRV_IMPORT_C void Read(TInt aPos,TDes8& aDes,TInt aLength,TRequestStatus& aStatus) const;
+	EFSRV_IMPORT_C void ReadCancel(TRequestStatus& aStatus) const;
+	EFSRV_IMPORT_C void ReadCancel() const;
+	EFSRV_IMPORT_C TInt Write(const TDesC8& aDes);
+	EFSRV_IMPORT_C void Write(const TDesC8& aDes,TRequestStatus& aStatus);
+	EFSRV_IMPORT_C TInt Write(const TDesC8& aDes,TInt aLength);
+	EFSRV_IMPORT_C void Write(const TDesC8& aDes,TInt aLength,TRequestStatus& aStatus);
+	EFSRV_IMPORT_C TInt Write(TInt aPos,const TDesC8& aDes);
+	EFSRV_IMPORT_C void Write(TInt aPos,const TDesC8& aDes,TRequestStatus& aStatus);
+	EFSRV_IMPORT_C TInt Write(TInt aPos,const TDesC8& aDes,TInt aLength);
+	EFSRV_IMPORT_C void Write(TInt aPos,const TDesC8& aDes,TInt aLength,TRequestStatus& aStatus);
+	EFSRV_IMPORT_C TInt Lock(TInt aPos,TInt aLength) const;
+	EFSRV_IMPORT_C TInt UnLock(TInt aPos,TInt aLength) const;
+	EFSRV_IMPORT_C TInt Seek(TSeek aMode,TInt& aPos) const;
+	EFSRV_IMPORT_C TInt Flush();
+	EFSRV_IMPORT_C void Flush(TRequestStatus& aStatus);
+	EFSRV_IMPORT_C TInt Size(TInt& aSize) const;
+	EFSRV_IMPORT_C TInt SetSize(TInt aSize);
+	EFSRV_IMPORT_C TInt Att(TUint& aAttValue) const;
+	EFSRV_IMPORT_C TInt SetAtt(TUint aSetAttMask,TUint aClearAttMask);
+	EFSRV_IMPORT_C TInt Modified(TTime& aTime) const;
+	EFSRV_IMPORT_C TInt SetModified(const TTime& aTime);
+	EFSRV_IMPORT_C TInt Set(const TTime& aTime,TUint aSetAttMask,TUint aClearAttMask);
+	EFSRV_IMPORT_C TInt ChangeMode(TFileMode aNewMode);
+	EFSRV_IMPORT_C TInt Rename(const TDesC& aNewName);
+	EFSRV_IMPORT_C TInt Drive(TInt &aDriveNumber, TDriveInfo &aDriveInfo) const;
+	EFSRV_IMPORT_C TInt Adopt(RFs& aFs, TInt aHandle);
+	EFSRV_IMPORT_C TInt AdoptFromClient(const RMessage2& aMsg, TInt aFsHandleIndex, TInt aFileHandleIndex);
+	EFSRV_IMPORT_C TInt AdoptFromServer(TInt aFsHandle, TInt aFileHandle);
+	EFSRV_IMPORT_C TInt AdoptFromCreator(TInt aFsIndex, TInt aFileHandleIndex);
+	EFSRV_IMPORT_C TInt Name(TDes& aName) const;
+	EFSRV_IMPORT_C TInt TransferToServer(TIpcArgs& aIpcArgs, TInt aFsHandleIndex, TInt aFileHandleIndex) const;
+	EFSRV_IMPORT_C TInt TransferToClient(const RMessage2& aMsg, TInt aFileHandleIndex) const;
+	EFSRV_IMPORT_C TInt TransferToProcess(RProcess& aProcess, TInt aFsHandleIndex, TInt aFileHandleIndex) const;
+	EFSRV_IMPORT_C TInt Duplicate(const RFile& aFile, TOwnerType aType=EOwnerProcess);
+	EFSRV_IMPORT_C TInt FullName(TDes& aName) const;
+	EFSRV_IMPORT_C TInt BlockMap(SBlockMapInfo& aInfo, TInt64& aStartPos, TInt64 aEndPos=-1, TInt aBlockMapusage=EBlockMapUsagePaging) const;
 	TInt Clamp(RFileClamp& aHandle);
 
-private:
+protected:
+	// RSubSessionBase overrides
+	TInt CreateSubSession(const RSessionBase& aSession,TInt aFunction,const TIpcArgs& aArgs);
+	void CloseSubSession(TInt aFunction);
+	TInt SendReceive(TInt aFunction,const TIpcArgs& aArgs) const;
+
 	TInt DuplicateHandle(TInt& aSubSessionHandle) const;
+
+	friend class RFilePlugin;
 	};
 
-
+#ifdef SYMBIAN_ENABLE_64_BIT_FILE_SERVER_API
+#include <f32file64.h>
+#endif
 
 class RDir : public RSubSessionBase
 /**
@@ -2162,13 +2414,19 @@ and does not allow entries to be read individually.
 */
 	{
 public:
-	IMPORT_C TInt Open(RFs& aFs,const TDesC& aMatchName,const TUidType& aUidType);
-	IMPORT_C TInt Open(RFs& aFs,const TDesC& aMatchName,TUint anAttMask);
-	IMPORT_C void Close();
-	IMPORT_C TInt Read(TEntryArray& anArray) const;
-	IMPORT_C void Read(TEntryArray& anArray,TRequestStatus& aStatus) const;
-	IMPORT_C TInt Read(TEntry& anEntry) const;
-	IMPORT_C void Read(TPckg<TEntry>& anEntry,TRequestStatus& aStatus) const;
+	EFSRV_IMPORT_C TInt Open(RFs& aFs,const TDesC& aMatchName,const TUidType& aUidType);
+	EFSRV_IMPORT_C TInt Open(RFs& aFs,const TDesC& aMatchName,TUint anAttMask);
+	EFSRV_IMPORT_C void Close();
+	EFSRV_IMPORT_C TInt Read(TEntryArray& anArray) const;
+	EFSRV_IMPORT_C void Read(TEntryArray& anArray,TRequestStatus& aStatus) const;
+	EFSRV_IMPORT_C TInt Read(TEntry& anEntry) const;
+	EFSRV_IMPORT_C void Read(TPckg<TEntry>& anEntry,TRequestStatus& aStatus) const;
+
+private:
+	// RSubSessionBase overrides
+	TInt SendReceive(TInt aFunction,const TIpcArgs& aArgs) const;
+
+	friend class RDirPlugin;
 	};
 
 
@@ -2524,6 +2782,18 @@ these functions.
 
 This class is not intended for user derivation.
 
+Note: 
+
+To support wildcard, CFileMan needs to store the entire directory entry 
+information. Therefore, in a extreme condition, if a directory contains 
+a huge number of files (e.g. more than 15000 files with 10 characters' long file 
+names), user may encounter KErrNoMemory errors. Developers who have a need to handle 
+this rare case should increase the heap size limitation of their applications. 
+
+For more information about heap size configuration, please refer following 
+section in Symbian Developer Library:
+Symbian OS build guide >> Build Tools Reference >> MMP file syntax >> epocheapsize   
+
 @see MFileManObserver
 */
 	{
@@ -2722,7 +2992,7 @@ private:
 	TInt SetupMoveAcrossDrives(TUint aSwitches);
 	TInt SetupTargetDirectory(TBool aOverWrite, TBool& aComplete);
 	TBool SrcTrgDrivesIdentical();
-	TBool SetupDirectoryForMove();
+	TInt SetupDirectoryForMove(TBool& aSrcIsDir);
 private:
 	void DoAttribsL();
 	void DoCopyOrMoveL();
@@ -2730,7 +3000,11 @@ private:
 	void DoRenameL();
 	void DoRmDirL();
 	void DoCopyFromHandleL();
+#ifndef SYMBIAN_ENABLE_64_BIT_FILE_SERVER_API
 	TInt DoCopy(const RFile& aSrcFile, RFile& aDstFile, TInt& aRet);
+#else
+	TInt DoCopy(const RFile64& aSrcFile, RFile64& aDstFile, TInt& aRet);
+#endif
 private:
 	TParse iTrgFile;
 	TInternalAction iAction;
@@ -2738,7 +3012,11 @@ private:
 	TUint iClearMask;
 	TTime iTime;
 	TInt iBytesTransferred;
+#ifndef SYMBIAN_ENABLE_64_BIT_FILE_SERVER_API
 	RFile iSrcFileHandle;
+#else
+	RFile64 iSrcFileHandle;
+#endif
 	TBool iMovingContents;
 	TEntry iTmpEntry;
 	TParse iTmpParse;
@@ -2861,10 +3139,7 @@ class TFileText
 Reads and writes single lines of text to or from a Unicode file.
 */
 	{
-public:
-    /**
-    @internalComponent
-    */
+private:
 	enum TFileState
 		{
 		EStartOfFile,
@@ -2885,7 +3160,11 @@ private:
 	const TText* iNext;
 	const TText* iEnd;
 	TFileState iState;
+#ifndef SYMBIAN_ENABLE_64_BIT_FILE_SERVER_API
 	RFile iFile;
+#else
+	RFile64 iFile;
+#endif
 	TBuf8<0x100> iReadBuf; 
 	};
 
@@ -2898,67 +3177,6 @@ private:
 */
 IMPORT_C TBool FileNamesIdentical(const TDesC& aFileName1,const TDesC& aFileName2);
 
-
-
-/**
-Local drive mapping list - passed as argument to RFs::SetLocalDriveMapping().
-
-@publishedPartner
-@released
-*/
-class TLocalDriveMappingInfo
-	{
-public:
-	enum TDrvMapOperation {EWriteMappingsAndSet=0,EWriteMappingsNoSet=1,ESwapIntMappingAndSet=2};	
-public:
-	TInt iDriveMapping[KMaxLocalDrives];
-	TDrvMapOperation iOperation;
-    };
-typedef TPckgBuf<TLocalDriveMappingInfo> TLocalDriveMappingInfoBuf;
-
-/**
-Client side plugin API.
-
-@publishedPartner
-@released
-*/
-class RPlugin : public RSubSessionBase
-	{
-public:
-	IMPORT_C TInt Open(RFs& aFs, TInt aPos);
-	IMPORT_C void Close();
-protected:
-	IMPORT_C void DoRequest(TInt aReqNo,TRequestStatus& aStatus) const;
-	IMPORT_C void DoRequest(TInt aReqNo,TRequestStatus& aStatus,TDes8& a1) const;
-	IMPORT_C void DoRequest(TInt aReqNo,TRequestStatus& aStatus,TDes8& a1,TDes8& a2) const;
-	IMPORT_C TInt DoControl(TInt aFunction) const;
-	IMPORT_C TInt DoControl(TInt aFunction,TDes8& a1) const;
-	IMPORT_C TInt DoControl(TInt aFunction,TDes8& a1,TDes8& a2) const;
-	IMPORT_C void DoCancel(TUint aReqMask) const;
-	};
-
-/**
-@publishedPartner
-@released
-
-Specifies that a plugin should determine for itself which drives it attaches to.
-
-@see RFs::MountPlugin
-@see RFs::DismountPlugin
-*/
-const TInt KPluginAutoAttach = 0x19;
-
-/**
-@publishedPartner
-@released
-
-Specifies that a plugin should determine its own position in the plugin stack.
-
-@see RFs::MountPlugin
-@see RFs::DismountPlugin
-*/
-const TInt KPluginAutoLocate = 0xC8;
-
 /**
 @publishedAll
 @released
@@ -2967,51 +3185,18 @@ The UID of the File Server process
 */
 const TInt KFileServerUidValue = 0x100039e3;
 
-enum TSessionFlags
-/**
-@internalTechnology
 
-A set of session specific configuration flags.
-*/
-	{
-	/**
-	Notify the user or write failures
-	*/
-	EFsSessionNotifyUser	= KBit0,
-	
-	/**
-	Notify clients registered for change notification
-	*/
-	EFsSessionNotifyChange	= KBit1,
+#include <f32file.inl>
+#ifdef SYMBIAN_ENABLE_64_BIT_FILE_SERVER_API
+#include <f32file64.inl>
+#endif
 
-	/**	
-	Enables all session flags
-	*/
-	EFsSessionFlagsAll		= KSet32,
-	};
+#ifdef SYMBIAN_F32_ENHANCED_CHANGE_NOTIFICATION	
+#include <f32notification.h>
+#endif
 
-/**
-@internalTechnology
-*/
-struct SBlockMapArgs
-	{
-	TInt64 iStartPos;
-	TInt64 iEndPos;
-	};
-	
-	
-/**
-@internalTechnology
+#ifndef SYMBIAN_ENABLE_SPLIT_HEADERS
+#include <f32file_private.h>
+#endif
 
-Validates the mask used to match drive attributes.
-
-@see RFs::DriveList
-@see TFindFile::SetFindMask
-*/	
-TInt ValidateMatchMask( TUint aMask);
-
-
-	
-
-#include "f32file.inl"
 #endif

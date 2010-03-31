@@ -2,16 +2,16 @@
 * Copyright (c) 2009 Nokia Corporation and/or its subsidiary(-ies).
 * All rights reserved.
 * This component and the accompanying materials are made available
-* under the terms of the License "Symbian Foundation License v1.0" to Symbian Foundation members and "Symbian Foundation End User License Agreement v1.0" to non-members
+* under the terms of "Eclipse Public License v1.0"
 * which accompanies this distribution, and is available
-* at the URL "http://www.symbianfoundation.org/legal/licencesv10.html".
+* at the URL "http://www.eclipse.org/legal/epl-v10.html".
 *
 * Initial Contributors:
 * Nokia Corporation - initial contribution.
 *
 * Contributors:
 *
-* Description:
+* Description: 
 *
 */
 
@@ -52,11 +52,16 @@
  * @since 5.0 */
 #define EEikCbaFlagOutlineFont          0x80
 
+/**
+ * Button group semi-transparncy flag. This flag can be set with CBA resource
+ * or by using CEikCba::SetButtonGroupFlags(TInt) method. CBA background using
+ * special skin theme to draw the window background.
+ */
+#define EEikCbaFlagSemiTransparent      0x100
 
 
 // EIKBUTB.HRH
 //
-// Copyright (c) 1997-1999 Symbian Ltd.  All rights reserved.
 //
 
 #define EEikButStaysClear           0x000
@@ -66,7 +71,6 @@
 
 // EIKEDWIN.HRH
 //
-// Copyright (c) 1997-1999 Symbian Ltd.  All rights reserved.
 //
 
 // Introduced in avkon temporarily and deprecated:
@@ -154,6 +158,7 @@ enum TAknEditorNumericKeymap
 #define EAknEditorHiraganaKanjiInputMode        0x80  // Hiragana/Kanji
 #define EAknEditorHiraganaInputMode             0x100 // only Hiragana
 #define EAknEditorHalfWidthTextInputMode        0x200 // half-width Latin alphabet
+#define EAknEditorHangulInputMode				0x400 // Hangul input mode
 
 #define EAknEditorAllInputModes EAknEditorTextInputMode | EAknEditorNumericInputMode | EAknEditorSecretAlphaInputMode | EAknEditorKatakanaInputMode | EAknEditorFullWidthTextInputMode | EAknEditorFullWidthNumericInputMode | EAknEditorFullWidthKatakanaInputMode | EAknEditorHiraganaKanjiInputMode | EAknEditorHalfWidthTextInputMode
 
@@ -203,12 +208,16 @@ enum TAknEditorNumericKeymap
 #define EAknEditorFlagTouchInputModeOpened            0x4000
 #define EAknEditorFlagNumberGrouping                  0x8000
 #define EAknEditorFlagAdaptiveSearch                  0x10000
-
+#define EAknEditorFlagChinesePopup                    0x20000
+#define EAknEditorFlagFnLock                          0x40000
+#define EAknEditorFlagTextCursorVisible               0x80000
+#define EAknEditorFlagSelectionVisible                0x100000
+#define EAknEditorFlagEnablePartialScreen             0x200000
+#define EAknEditorFlagLaunchPenInputAutomatic         0x400000
 // NOTICE! Flag value 0x80000000 is reserved for internal use by FEP.
 
 // EIKLABEL.HRH
 //
-// Copyright (c) 1997-1999 Symbian Ltd.  All rights reserved.
 //
 
 #define EEikLabelAlignHLeft     0x00
@@ -230,7 +239,6 @@ enum EEikLabelStandardFont
     
 // EIKLBBUT.HRH
 //
-// Copyright (c) 1997-1999 Symbian Ltd.  All rights reserved.
 //
 
 #define EEikLabeledButtonShowHotKey     0x01
@@ -239,7 +247,6 @@ enum EEikLabelStandardFont
 
 // EIKLBX.HRH
 //
-// Copyright (c) 1997-1999 Symbian Ltd.  All rights reserved.
 //
 
 #define EEikListBoxMultipleSelection            0x0001
@@ -252,7 +259,6 @@ enum EEikLabelStandardFont
 
 // EIKMENU.HRH
 //
-// Copyright (c) 1997-1999 Symbian Ltd.  All rights reserved.
 //
 
 #define EEikMenuItemDimmed              0x0001
@@ -269,7 +275,7 @@ enum EEikLabelStandardFont
 #define EEikMenuItemScrollBarLeft       0x0200
 #define EEikMenuItemScrollBarArrowHead  0x0400
 
-// remaining flags only used internally
+// following flags only used internally
 #define EEikMenuItemFlagCtrlHK          0x001000
 #define EEikMenuItemFlagShiftCtrlHK     0x002000
 #define EEikMenuTitleIsChangeable       0x004000
@@ -277,10 +283,13 @@ enum EEikLabelStandardFont
 #define EEikMenuTitleRightAlign         0x010000
 //The following value is reserved       0x020000
 #define EEikMenuTitleIconRightAlign     0x040000  //(Added by GT)
+// item specific command flags
+#define EEikMenuItemAction              0x080000
+#define EEikMenuItemSpecific            0x100000
+#define EEikMenuItemSpecificListQuery   0x200000
 
 // EIKTBAR.HRH
 //
-// Copyright (c) 1997-1999 Symbian Ltd.  All rights reserved.
 //
 
 // Toolbar flags
@@ -311,7 +320,6 @@ enum EEikLabelStandardFont
 
 // EIKCMBUT.HRH
 //
-// Copyright (c) 1997-1999 Symbian Ltd.  All rights reserved.
 //
 
 #define EEikCmdButTextRightPictureLeft  0x000
@@ -342,7 +350,6 @@ enum EEikLabelStandardFont
 
 // EIKLBBUT.HRH
 //
-// Copyright (c) 1997-1999 Symbian Ltd.  All rights reserved.
 //
 
 #define EEikLabeledButtonShowHotKey     0x01
@@ -350,7 +357,6 @@ enum EEikLabelStandardFont
 
 // EIKDEF.HRH
 //
-// Copyright (c) 1997-1999 Symbian Ltd.  All rights reserved.
 //
 
 
@@ -405,7 +411,6 @@ enum EEikLabelStandardFont
 
 // EIKCMDS.HRH
 //
-// Copyright (c) 1997-1999 Symbian Ltd.  All rights reserved.
 //
 
 #define EEikCmdCanceled        0
@@ -479,7 +484,6 @@ enum EEikLabelStandardFont
 
 // EIKCTRLS.HRH
 //
-// Copyright (c) 1997-1999 Symbian Ltd.  All rights reserved.
 //
 
 enum TEikStockControls
@@ -558,7 +562,6 @@ enum TEikStockButtonGroupControls
 
 // EIKPRIV.HRH
 //
-// Copyright (c) 1997-1999 Symbian Ltd.  All rights reserved.
 //
 
 #define EEikCidAlertText1       1
@@ -804,7 +807,6 @@ enum TEikStockButtonGroupControls
 #define EEikCidObjectFormatIconicCheckBox   12
 // EIKDIALG.HRH
 //
-// Copyright (c) 1997-1999 Symbian Ltd.  All rights reserved.
 //
  
 #define EEikDialogFlagWait              0x001
@@ -876,7 +878,6 @@ enum TEikStockButtonGroupControls
 
 // EIKSPANE.HRH
 //
-// Copyright (c) 1997-1999 Symbian Ltd.  All rights reserved.
 //
 
 // Status pane server, pane declaration flags
@@ -979,7 +980,6 @@ enum TEikStockButtonGroupControls
 
 // EIKCFDLG.HRH
 //
-// Copyright (c) 1997-1999 Symbian Ltd.  All rights reserved.
 //
  
 #define EEikCidFileNameSel			10
@@ -996,7 +996,6 @@ enum TEikStockButtonGroupControls
 
 // EIKDIAL.HRH
 //
-// Copyright (c) 1997-1999 Symbian Ltd.  All rights reserved.
 //
 
 #define EDialPhoneNumberEdwinWidth 15
@@ -1020,7 +1019,6 @@ enum
 
 // EIKFBROW.HRH
 //
-// Copyright (c) 1997-1999 Symbian Ltd.  All rights reserved.
 //
 
 //#define EEikFileBrowseHideRom				0x0001
@@ -1030,7 +1028,6 @@ enum
 
 // EIKTIME.HRH
 //
-// Copyright (c) 1997-1999 Symbian Ltd.  All rights reserved.
 //
 
 #define KEikTimeMaxYear					2060
@@ -1063,7 +1060,6 @@ enum
 
 // EIKCHLST.HRH
 //
-// Copyright (c) 1997-1999 Symbian Ltd.  All rights reserved.
 //
 /*
 #define EEikChlistArrayOwnedExternally	0x01
@@ -1072,7 +1068,6 @@ enum
 */
 // EIKCAL.HRH
 //
-// Copyright (c) 1997-1999 Symbian Ltd.  All rights reserved.
 //
 /*
 #define EEikCalendarFlagStartMonthIsAlwaysJanuary	0x01
@@ -1080,7 +1075,6 @@ enum
 */
 // EIKCLOCK.HRH
 //
-// Copyright (c) 1997-1999 Symbian Ltd.  All rights reserved.
 //
 /* by H.Domon,K3 19 Apr 2001
 enum
@@ -1124,7 +1118,6 @@ by H.Domon,K3 19 Apr 2001
 */
 // EIKGYSEL.HRH
 //
-// Copyright (c) 1997-1999 Symbian Ltd.  All rights reserved.
 //
 /*
 #define EEikGraySelIncrementalMatching		0x0001
@@ -1136,7 +1129,6 @@ by H.Domon,K3 19 Apr 2001
 */
 // EIKMFNE.HRH
 //
-// Copyright (c) 1997-1999 Symbian Ltd.  All rights reserved.
 //
 
 #define EEikMfneNumberFlagFillWithLeadingZeros			0x1
@@ -1158,7 +1150,6 @@ by H.Domon,K3 19 Apr 2001
 
 // EIKPROGI.HRH
 //
-// Copyright (c) 1997-1999 Symbian Ltd.  All rights reserved.
 //
 
 
@@ -1171,7 +1162,6 @@ enum TEikProgressTextType
 
 // EIKRTED.HRH
 //
-// Copyright (c) 1997-1999 Symbian Ltd.  All rights reserved.
 //
 
 #define EEikRTedShowAllPicturesAsIconic	0x00100000
@@ -1187,7 +1177,6 @@ enum TEikProgressTextType
 
 // EIKSPACE.HRH
 //
-// Copyright (c) 1997-1999 Symbian Ltd.  All rights reserved.
 //
 
 #define EEikSpacerClear			0
@@ -1201,7 +1190,6 @@ enum TEikProgressTextType
 /*
 // EIKWSEL.HRH
 //
-// Copyright (c) 1997-1999 Symbian Ltd.  All rights reserved.
 //
 
 #define EEikWorldSelNoBorder				0x0001
@@ -1211,7 +1199,6 @@ enum TEikProgressTextType
 
 // EIKCFDLG.HRH
 //
-// Copyright (c) 1997-1999 Symbian Ltd.  All rights reserved.
 //
 /* 
 #define EEikCidFileNameSel			10
@@ -1228,7 +1215,6 @@ enum TEikProgressTextType
 */
 // EIKFBROW.HRH
 //
-// Copyright (c) 1997-1999 Symbian Ltd.  All rights reserved.
 //
 /*
 #define EEikFileBrowseHideRom				0x0001
@@ -1354,6 +1340,10 @@ enum TEikCommandOperationTypes
 #define KAknToolbarDsaMode                      0x00000100
 // No background drawing - Requires window transparency
 #define KAknToolbarNoBackground                 0x00000200
+// Toolbar does not use transparence
+#define KAknToolbarFloatingUnTransparent        0x00000400
+// Toolbar semi-tranparent
+#define KAknToolbarSemiTransparent              0x00000800
 //
 // Location editor flags
 //
@@ -1402,54 +1392,6 @@ enum TAknUnitEditorUnits
 // Drawing when application uses Direct screen access 
 #define KAknTbExtensionDsaMode                      0x00000100
 
-#ifdef FF_AVKON_EMOTION_ICON_ENABLED
-/**
- * Smiley Icon ID
- * Used with CSmileyManager (in eikstd/coctlsrc) to enable Smiley feature
- * in editor. With resource, SMILEY_ICON_ITEM 
- */
-enum TAknSmileyIconID
-    {
-    EAknSmileyIconAngry = 0xf880,
-    EAknSmileyIconBigSmile,
-    EAknSmileyIconCry,
-    EAknSmileyIconEvil,
-    EAknSmileyIconEyebrows,
-    EAknSmileyIconHeart,
-    EAknSmileyIconIrritated,
-    EAknSmileyIconKissing,
-    EAknSmileyIconNerd,
-    EAknSmileyIconNeutral,
-    EAknSmileyIconSarcastic,
-    EAknSmileyIconSarcasticMad,
-    EAknSmileyIconSmile,
-    EAknSmileyIconSurprised,
-    EAknSmileyIconTongue,
-    EAknSmileyIconUnhappy,
-    EAknSmileyIconVeryCool,
-    EAknSmileyIconWink,
-    EAknSmileyIconWinkGrin,
-    EAknSmileyIconWondering,
-    EAknSmileyAnimCoffee,
-    EAknSmileyAnimConnive,
-    EAknSmileyAnimDenial,
-    EAknSmileyAnimFlirt,
-    EAknSmileyAnimFrustrated,
-    EAknSmileyAnimGum,
-    EAknSmileyAnimIdea,
-    EAknSmileyAnimInnocent,
-    EAknSmileyAnimLaugh,
-    EAknSmileyAnimParty,
-    EAknSmileyAnimRun,
-    EAknSmileyAnimSilly,
-    EAknSmileyAnimSleep,
-    EAknSmileyAnimSurprised    
-    };
 
-
-#define KAknSmileyStaticIcon   0
-#define KAknSmileyAnimation    1
-
-#endif
     
 #endif

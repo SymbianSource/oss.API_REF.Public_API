@@ -1,101 +1,32 @@
-//    boost asinh.hpp header file
+//  (C) Copyright John Maddock 2005.
+//  Use, modification and distribution are subject to the
+//  Boost Software License, Version 1.0. (See accompanying file
+//  LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 
-//  (C) Copyright Eric Ford & Hubert Holin 2001.
-//  Distributed under the Boost Software License, Version 1.0. (See
-//  accompanying file LICENSE_1_0.txt or copy at
-//  http://www.boost.org/LICENSE_1_0.txt)
+#ifndef BOOST_MATH_COMPLEX_ASINH_INCLUDED
+#define BOOST_MATH_COMPLEX_ASINH_INCLUDED
 
-// See http://www.boost.org for updates, documentation, and revision history.
-
-#ifndef BOOST_ASINH_HPP
-#define BOOST_ASINH_HPP
-
-
-#include <cmath>
-#include <limits>
-#include <string>
-#include <stdexcept>
-
-
-#include <boost/config.hpp>
-
-
-// This is the inverse of the hyperbolic sine function.
-
-namespace boost
-{
-    namespace math
-    {
-#if defined(__GNUC__) && (__GNUC__ < 3)
-        // gcc 2.x ignores function scope using declarations,
-        // put them in the scope of the enclosing namespace instead:
-        
-        using    ::std::abs;
-        using    ::std::sqrt;
-        using    ::std::log;
-        
-        using    ::std::numeric_limits;
+#ifndef BOOST_MATH_COMPLEX_DETAILS_INCLUDED
+#  include <boost/math/complex/details.hpp>
 #endif
-        
-        template<typename T>
-        inline T    asinh(const T x)
-        {
-            using    ::std::abs;
-            using    ::std::sqrt;
-            using    ::std::log;
-            
-            using    ::std::numeric_limits;
-            
-            
-            T const            one = static_cast<T>(1);
-            T const            two = static_cast<T>(2);
-            
-            static T const    taylor_2_bound = sqrt(numeric_limits<T>::epsilon());
-            static T const    taylor_n_bound = sqrt(taylor_2_bound);
-            static T const    upper_taylor_2_bound = one/taylor_2_bound;
-            static T const    upper_taylor_n_bound = one/taylor_n_bound;
-            
-            if        (x >= +taylor_n_bound)
-            {
-                if        (x > upper_taylor_n_bound)
-                {
-                    if        (x > upper_taylor_2_bound)
-                    {
-                        // approximation by laurent series in 1/x at 0+ order from -1 to 0
-                        return( log( x * two) );
-                    }
-                    else
-                    {
-                        // approximation by laurent series in 1/x at 0+ order from -1 to 1
-                        return( log( x*two + (one/(x*two)) ) );
-                    }
-                }
-                else
-                {
-                    return( log( x + sqrt(x*x+one) ) );
-                }
-            }
-            else if    (x <= -taylor_n_bound)
-            {
-                return(-asinh(-x));
-            }
-            else
-            {
-                // approximation by taylor series in x at 0 up to order 2
-                T    result = x;
-                
-                if    (abs(x) >= taylor_2_bound)
-                {
-                    T    x3 = x*x*x;
-                    
-                    // approximation by taylor series in x at 0 up to order 4
-                    result -= x3/static_cast<T>(6);
-                }
-                
-                return(result);
-            }
-        }
-    }
+#ifndef BOOST_MATH_COMPLEX_ASINH_INCLUDED
+#  include <boost/math/complex/asinh.hpp>
+#endif
+
+namespace boost{ namespace math{
+
+template<class T> 
+inline std::complex<T> asinh(const std::complex<T>& x)
+{
+   //
+   // We use asinh(z) = i asin(-i z);
+   // Note that C99 defines this the other way around (which is
+   // to say asin is specified in terms of asinh), this is consistent
+   // with C99 though:
+   //
+   return ::boost::math::detail::mult_i(::boost::math::asin(::boost::math::detail::mult_minus_i(x)));
 }
 
-#endif /* BOOST_ASINH_HPP */
+} } // namespaces
+
+#endif // BOOST_MATH_COMPLEX_ASINH_INCLUDED

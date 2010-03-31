@@ -4,20 +4,27 @@
 #define _STLP_COMPILER "Metrowerk Codewarrior"
 
 // Bring in definition of __MSL__ and related items
-#include <mslGlobals.h>
+#ifndef __SYMBIAN32__
+#include <mslglobals.h>
 #include <ansi_parms.h>
-
+#endif
 //
 //  Compiler features
 //
 
 
 // *** CodeWarrior Compiler Common Features ***
+#ifdef __SYMBIAN32__
+//The following macro is defined so that the vendor's APIs dont get picked. Rather the ones from PIPS are used.
+#  define _STLP_NO_VENDOR_STDLIB_L  1
+#endif // __SYMBAIN32__
 #  if __option(longlong)
 #   define _STLP_LONG_LONG  long long
 #  endif
 
+#ifndef __SYMBIAN32__
 #  define _STLP_USE_UNIX_EMULATION_IO  1
+#endif
 
 #  define _STLP_USE_AUTO_PTR_CONVERSIONS  1
 
@@ -112,7 +119,7 @@
 
 #  endif
 
-
+#ifndef __SYMBIAN32__
 // fixes to native inclusion wrappers.
 # if __MWERKS__ >= 0x2300  // CWPro5 changes paths - dwa 2/28/99
 #  define _STLP_NATIVE_INCLUDE_PATH  ../include
@@ -131,7 +138,7 @@
 #  define _STLP_NATIVE_CPP_RUNTIME_HEADER(header) <Macintosh HD:Codewarrior Pro 4:Metrowerks CodeWarrior:Metrowerks Standard Library:MSL C:MSL Common:Public Includes:##header>
 
 # endif
-
+#endif //if __SYMBIAN32__
 //Following block come from boost intrinsics.hpp file:
 #if defined (__MSL_CPP__) && (__MSL_CPP__ >= 0x8000)
     // Metrowerks compiler is acquiring intrinsic type traits support
@@ -158,4 +165,6 @@
 # elif defined(macintosh)
 #  define _NOTHREADS
 # endif
+#ifndef __SYMBIAN32__
 # define _STLP_DLLEXPORT_NEEDS_PREDECLARATION 1
+#endif // __SYMBIAN32__

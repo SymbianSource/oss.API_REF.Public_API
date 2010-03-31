@@ -2,7 +2,7 @@
 #define __glplatform_h_
 
 /**
-Portions Copyright (c) Symbian Software Ltd 2008.  All rights reserved.
+ portions Copyright (c) 2008 - 2009 Nokia Corporation. All rights reserved.
 @publishedAll
 @released
 */
@@ -63,7 +63,7 @@ extern "C" {
 #       define GL_API __declspec(dllimport)
 #   endif
 #else
-#   if defined (__ARMCC_2_2__)
+#   if (__ARMCC_VERSION >= 220000)
 #   	ifdef __GL_EXPORTS
 #	    	define GL_API __declspec(dllexport)
 #   	else

@@ -1,9 +1,9 @@
 // Copyright (c) 1997-2009 Nokia Corporation and/or its subsidiary(-ies).
 // All rights reserved.
 // This component and the accompanying materials are made available
-// under the terms of the License "Symbian Foundation License v1.0" to Symbian Foundation members and "Symbian Foundation End User License Agreement v1.0" to non-members
+// under the terms of "Eclipse Public License v1.0"
 // which accompanies this distribution, and is available
-// at the URL "http://www.symbianfoundation.org/legal/licencesv10.html".
+// at the URL "http://www.eclipse.org/legal/epl-v10.html".
 //
 // Initial Contributors:
 // Nokia Corporation - initial contribution.
@@ -18,6 +18,10 @@
 
 #include <apparc.h>
 #include <savenotf.h>
+
+#ifndef SYMBIAN_ENABLE_SPLIT_HEADERS
+#include <uikon/eikdefaulticondefs.h>
+#endif
 
 class CEikAppUi;
 class CEikApplication;
@@ -112,13 +116,6 @@ private:
 @released */
 #define iEikApplication ((CEikApplication*)Application())
 
-/** The default size in twips of icons that represent embedded objects.
-
-@publishedPartner
-@released */
-#define KDefaultIconicDoorSize TSize(500,500)
-
-
 /** Gets the file store object which is used to edit the document.
 
 @return A pointer to the file store object which is used to edit the document. */
@@ -126,3 +123,4 @@ inline CStreamStore* CEikDocument::EditStore() const
 	{ return(iEditStore); }
 
 #endif	// __EIKDOC_H__
+

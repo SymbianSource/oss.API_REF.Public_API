@@ -1,10 +1,10 @@
 /*
-* Copyright (c) 2002 Nokia Corporation and/or its subsidiary(-ies).
+* Copyright (c) 2002-2009 Nokia Corporation and/or its subsidiary(-ies).
 * All rights reserved.
 * This component and the accompanying materials are made available
-* under the terms of the License "Symbian Foundation License v1.0" to Symbian Foundation members and "Symbian Foundation End User License Agreement v1.0" to non-members
+* under the terms of "Eclipse Public License v1.0"
 * which accompanies this distribution, and is available
-* at the URL "http://www.symbianfoundation.org/legal/licencesv10.html".
+* at the URL "http://www.eclipse.org/legal/epl-v10.html".
 *
 * Initial Contributors:
 * Nokia Corporation - initial contribution.
@@ -31,7 +31,7 @@
 #include <eikmobs.h>
 
 // for layout support
-#include <aknutils.h>
+#include <AknUtils.h>
 
 // for navipane support (hint text)
 #include <aknnavi.h>
@@ -262,7 +262,33 @@ public:
  * @param  aCaption On return, this should be set to the caption of the target control. 
  */ 
  void GetCaptionForFep(TDes& aCaption) const;
- 
+
+ /**
+ * Calculates and returns setting item content rect.
+ *
+ * @param  aScrollBarUsed  @c ETrue if the setting page content should have
+ *                         scrollbar, @c EFalse otherwise.
+ *
+ * @internal
+ * @since 5.2
+ * @return Setting item content rectangle. 
+ */
+ TRect SettingItemContentRect( TBool aScrollBarUsed );
+
+ /**
+ * Is the setting page drawing the background itself or not (= "transparency")
+ */ 
+ TBool IsBackgroundDrawingEnabled() const;
+
+/**
+* Access method to the Command button array
+*
+* Must be called after full construction, or null reference will be returned.
+*
+* @return CEikButtonGroupContainer* a pointer to the cba owned by the setting page
+*/
+    IMPORT_C CEikButtonGroupContainer* Cba() const ;
+
 protected:
 
 /**
@@ -419,15 +445,6 @@ protected:
 	IMPORT_C TBool Waiting(); 
 
 /**
-* Access method to the Command button array
-*
-* Must be called after full construction, or null reference will be returned.
-*
-* @return CEikButtonGroupContainer* a pointer to the cba owned by the setting page
-*/
-	IMPORT_C CEikButtonGroupContainer* Cba() const ;
-
-/**
  * This is used to access the default resource id for the cba - the one used when 
  * data is valid.
  *
@@ -512,39 +529,41 @@ protected:
  */
 	IMPORT_C virtual void CheckAndSetDataValidity();
 
-/**
- * Method to be called by CAknSettingPage descendents when they have laid themselves out.
- * This tells the base class how big the layout spec rectangle hosting the editor is.  
- * The second rectangle is the size of the area that the base class does not have to 
- * draw to for skins. Usually, this is the area actually inhabited by the editor control.
- *
- * Coordinates are to be given in pixels relative to the main_pane. 
- *
- * @param aFrameRect		Layout rectangle in which to host the editor. 
- * @param aRealEditorRect	Layout rectangle actually occupied by the editor control
- *
- * @since 2.0
- */
-	void SetEditedItemLayoutRect( const TRect& aFrameRect, const TRect& aRealEditorRect);
-
- /**
- * Method to cause this class to construct a control context or type and IID, selected according to
- * the value of enumeration TEditedItemSkinClass, set its coordinate system 
- *
- * This must be called after a call to SetEditedItemLayoutRect has been made on CAknSettingPage.
- * This is becasue this routine must set the control context's origin to the top left of the value 
- * given to SetEditedItemLayoutRect. Since SetEditeItemLayoutRect is to be called in a SizeChanged 
- * method, this means that the this should be called after the SizeChanged in the child class.
-
- * @param	aClass	enumeration specifying which class of editor (according to LAF spec) is being
- * constructed.
- * @param	aParentAbsolute	ETrue if there is an intervening Window between CAknSettingPage's window
- * and any control that is to draw skin items with this component.
- *
- * since 2.0
- * 
- */
-	void CreateEditedItemControlContextL( TEditedItemSkinClass aSkinClass, TBool aParentAbsolute);
+	/**
+     * Sets the outer and inner rectangle for the frame graphics that is drawn
+	 * around the setting item.
+     *
+     * @param  aOuterRect  Frame outer rectangle.
+     * @param  aInnerRect  Frame inner rectangle.
+     *
+     * @since 5.2
+     */
+	void SetEditedItemFrameRects( const TRect& aOuterRect,
+                                  const TRect& aInnerRect );
+	
+	/**
+     * Sets the skin item ID for the frame graphics that is drawn
+     * around the setting item.
+     *
+     * @param  aFrameIID        Skin item ID of the frame graphics.
+     * @param  aFrameCenterIID  Skin item ID of the center piece of the frame
+     *                          graphics
+     *
+     * @since 5.2
+     */
+    void SetEditedItemFrameIID( const TAknsItemID& aFrameIID,
+                                const TAknsItemID& aFrameCenterIID );
+    
+    /**
+     * Sets the rectangle for the editing state indicators.
+     * Should only be called by setting pages that have an editor which
+     * displays the editor indicators as the editor control.
+     *
+     * @param  aRect  Editor indicator rectangle.
+     *
+     * @since 5.2
+     */
+    void SetEditorIndicatorRect( const TRect& aRect );
 
  /**
  * Indicates whether skin system will be able to draw the editor frame and background
@@ -563,6 +582,19 @@ protected:
  */ 
     CAknsFrameBackgroundControlContext* EditedItemControlContext() const;
 
+	/**
+     * Performs base construction and takes possible flags into account.
+     *
+     * @param  aFlags Construction flags
+     *
+     * @since 5.2
+     */
+    void BaseConstructL( TUint aFlags );
+    
+    /** 
+     * Stop current (additional) level on the active scheduler.
+     */ 
+	void StopActiveScheduler();
 
 protected:
  /**
@@ -676,10 +708,6 @@ private:
  * Activate another level on the active scheduler
  */ 
 	void StartActiveScheduler();
- /** 
- * Stop current (additional) level on the active scheduler
- */ 
-	void StopActiveScheduler();
 
 /**
 * Pop the navidecorator. The iNaviPane is used as a flag to show if popping is required to 
@@ -704,10 +732,6 @@ protected:
     */ 
     void SetDrawBackground(const TBool aDrawBackground);    
 
-    /**
-    * Is the setting page drawing the background itself or not (= "transparency")
-    */ 
-    TBool IsBackgroundDrawingEnabled() const;
     /**
     * Set the flag to indicate that if the function CAknSettingPage::StopActiveScheduler called or not
     *@param aStopCalled ETrue means the StopActiveScheduler is called.

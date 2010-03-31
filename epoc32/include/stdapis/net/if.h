@@ -1,6 +1,4 @@
 /*-
- * © Portions copyright (c) 2005-2009 Nokia Corporation.  All rights reserved.
- * © Portions copyright (c) 2007 Symbian Software Ltd. All rights reserved.
  * Copyright (c) 1982, 1986, 1989, 1993
  *	The Regents of the University of California.  All rights reserved.
  *
@@ -28,6 +26,7 @@
  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  *
+ * Portions Copyright (c) 2005-2009 Nokia Corporation and/or its subsidiary(-ies). All rights reserved.
  *	@(#)if.h	8.1 (Berkeley) 6/10/93
  * $FreeBSD: src/sys/net/if.h,v 1.96.2.3 2005/10/07 14:00:05 glebius Exp $
  */
@@ -398,7 +397,7 @@ __END_DECLS
 struct thread;
 
 /* XXX - this should go away soon. */
-#include <net/if_var.h>
+#include <stdapis/net/if_var.h>
 #endif
 
 /*

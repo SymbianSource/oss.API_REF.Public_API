@@ -2,9 +2,9 @@
 * Copyright (c) 2003-2009 Nokia Corporation and/or its subsidiary(-ies).
 * All rights reserved.
 * This component and the accompanying materials are made available
-* under the terms of the License "Symbian Foundation License v1.0" to Symbian Foundation members and "Symbian Foundation End User License Agreement v1.0" to non-members
+* under the terms of "Eclipse Public License v1.0"
 * which accompanies this distribution, and is available
-* at the URL "http://www.symbianfoundation.org/legal/licencesv10.html".
+* at the URL "http://www.eclipse.org/legal/epl-v10.html".
 *
 * Initial Contributors:
 * Nokia Corporation - initial contribution.
@@ -81,11 +81,9 @@ class CSIPManagedProfileRegistry: public CSIPProfileRegistryBase
         IMPORT_C CSIPManagedProfile* CreateL(const TSIPProfileTypeInfo& aType); 
 
         /**
-        * Checks if profile is not used by other applications. 
-        * If no other application is using the profile, profile
-        * can be updated.
+        * Checks if profile is not used by other applications.
         * @param aSIPProfile a SIP profile
-        * @return ETrue if available for update, EFalse otherwise
+        * @return ETrue if its being used by other applications, EFalse otherwise
         * @capability ReadUserData
         */
         IMPORT_C TBool IsInUseL(const CSIPProfile& aSIPProfile) const; 
@@ -97,7 +95,6 @@ class CSIPManagedProfileRegistry: public CSIPProfileRegistryBase
         * If the profile is marked for auto-registration and the profile is 
         * updated the profile will be re-registered.
         * Function leaves on failure.
-        * @pre IsInUse(aSIPProfile)==EFalse
         * @param aSIPProfile a sip profile to save
         * @capability WriteDeviceData
         * @capability NetworkServices

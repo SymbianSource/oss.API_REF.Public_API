@@ -1,9 +1,9 @@
 // Copyright (c) 1997-2009 Nokia Corporation and/or its subsidiary(-ies).
 // All rights reserved.
 // This component and the accompanying materials are made available
-// under the terms of the License "Symbian Foundation License v1.0" to Symbian Foundation members and "Symbian Foundation End User License Agreement v1.0" to non-members
+// under the terms of "Eclipse Public License v1.0"
 // which accompanies this distribution, and is available
-// at the URL "http://www.symbianfoundation.org/legal/licencesv10.html".
+// at the URL "http://www.eclipse.org/legal/epl-v10.html".
 //
 // Initial Contributors:
 // Nokia Corporation - initial contribution.
@@ -57,15 +57,42 @@ class CContactOpenOperation;
 class CDataBaseChangeObserver;
 class CContactConverter;
 
+#ifdef SYMBIAN_ENABLE_SPLIT_HEADERS
+class CContactSynchroniser;
+#endif
+
 // Constants
+
+/** 
+Maximum string length used to separate the fields in the text definition.
+@see TContactTextDefItem
+@publishedAll
+@released
+*/
 const TInt KMaxContactTextSeperator=4;
+/** 
+Constant used during sorting and searching of contacts.
+@publishedAll
+@released
+*/
 const TInt KTextFieldMinimalLength=64;
+/** 
+Maximum number of fields that can be set as filterable fields by licensees.
+@publishedAll
+@released
+*/
 const TInt KMaxCustomFilterableFields=4;
 
+#ifndef SYMBIAN_ENABLE_SPLIT_HEADERS
+
+/** @internalComponent */
 const TInt KMajorVersion=1;
+/** @internalComponent */
 const TInt KMinorVersion=0;
+/** @internalComponent */
 const TInt KBuildNumber=40;
 
+#endif //SYMBIAN_ENABLE_SPLIT_HEADERS
 
 //
 // Classes used for compact
@@ -112,7 +139,8 @@ private:
 
 class CContactActiveBase : public CBase, public MContactUiActive
 /**
-@internalTechnology
+@publishedAll
+@released
 */
 	{
 public:
@@ -123,12 +151,9 @@ public:
 	TInt Step();
 	TInt Error() const;
 	void SetContactDatabase(CContactDatabase* aContactDatabase);
-	void SetFileManager(RCntModel& aCntSvr);
+	void SetFileManagerL(RCntModel& aCntSvr);
 	
 #ifndef __SYMBIAN_CNTMODEL_USE_SQLITE__ 	
-protected:
-	void ConstructL();
-	static TInt CompactCallBack(TAny *aThis);
 protected:
 	MContactUiCompactObserver *iObserver;
 	RCntModel* iCntSvr; 
@@ -162,8 +187,6 @@ public:
     void ConstructL(RDbNamedDatabase /* &aDataBase */) {};
 #endif	
 	};
-
-
 
 
 class TContactTextDefItem
@@ -508,10 +531,11 @@ public:
 	virtual void HandleSortEventL(TInt aContactsSorted, TInt aContactsTotal)=0;
 	};
 
+#ifndef SYMBIAN_ENABLE_SPLIT_HEADERS
 class MConverterCallBack
 /**
 Interface class for providing Intra-Contact Properties during a PBAP specific contacts export.
-@prototype
+@released
 @internalTechnology
 */
 {
@@ -522,13 +546,16 @@ Interface class for providing Intra-Contact Properties during a PBAP specific co
 	*/
 	virtual	void AddIntraContactPropertiesL(const TContactItemId& aContactId, CArrayPtr<CParserProperty>* aPropertyList) = 0;
 };
+#else
+class MConverterCallBack;
+#endif //SYMBIAN_ENABLE_SPLIT_HEADERS
 
 enum TVCardVersion
 /**
 Specifies type of export of contact items.
 PBAP clients should use EPBAPVCard21 and EPBAPVCard30.
-@prototype
-@internalTechnology
+@publishedAll
+@released
 */
 	{
 	EVCardUDEF = -1,
@@ -715,6 +742,8 @@ public:
 		for such use. */
 		EMultiThread
 		};
+		
+#ifndef SYMBIAN_ENABLE_SPLIT_HEADERS
 /**
 @internalComponent
 */
@@ -725,6 +754,7 @@ public:
 		EUsesAllTables,
 		EIdentityTableNotUsed //Not used
 		};
+#endif
 public:
 	IMPORT_C static CContactDatabase* OpenL(TThreadAccess aAccess=ESingleThread);
 	IMPORT_C static CContactDatabase* OpenL(const TDesC& aFileName,TThreadAccess aAccess=ESingleThread);
@@ -987,8 +1017,8 @@ public:
 	static void CleanupLastLockedContact(TAny *aDatabase);
 
 private:
-	CContactConverter& CContactDatabase::ConverterL(const TUid& aFormat);
-	CContactConverter& CContactDatabase::ConverterL(const TUid& aFormat, const TInt64 aContactFieldFilter, MConverterCallBack* aCallback, const TVCardVersion aVersion,const TBool aExportTel);
+	CContactConverter& ConverterL(const TUid& aFormat);
+	CContactConverter& ConverterL(const TUid& aFormat, const TInt64 aContactFieldFilter, MConverterCallBack* aCallback, const TVCardVersion aVersion,const TBool aExportTel);
 	static void CleanupDatabaseRollback(TAny *aDatabase);
 
 	CContactIdArray* SortLC(const CArrayFix<TSortPref>* aSortOrder, const CContactIdArray* aIdArray);
@@ -1059,7 +1089,7 @@ private: // objec construction/destruction
 private:
 	CContactItem* doCreateContactGroupLC(const TDesC& aGroupLabel = KNullDesC);
 	void AddCntToOpenedGroupL(TContactItemId aItemId, CContactItem& aGroup);
-	void ReadTemplateIds();
+	void ReadTemplateIdsL();
 	void AddToTemplateListL(const TContactItemId aNewTemplateId);
 	void RemoveFromTemplateList(const TContactItemId aOldTemplateId);
 	TBool SystemTemplateFieldsValid(const CContactItem& aContact);
@@ -1107,8 +1137,8 @@ private:
 
 	TInt iAsyncActivityCount;
 	CContactSynchroniser* iContactSynchroniser; //a handle to the synchroniser plugin
-	CArrayFix<TSortPref>* iSortOrder; // holds a sort order passed into SortL(), as in cntmodelv1, 
-									  // for delayed deletion to maintain backwards compatibility
+	CArrayFix<TSortPref>* iSortOrder;	// holds a sort order passed into SortL(), as in cntmodelv1, 
+										// for delayed deletion to maintain backwards compatibility
 	};
 
 
@@ -1134,30 +1164,46 @@ private:
 	};
 
 
-/** The UID of the default vCard converter implemented by an ECom plugin. */
+/** The UID of the default vCard converter implemented by an ECom plugin.
+@publishedAll
+@released
+*/
 #define KUidEComCntVCardConverterDefaultImplementation  0x102035F9
 /** The UID of the default vCard converter plugin implementation. This
-implementation is independent of the plugin framework used. */
+implementation is independent of the plugin framework used. 
+@publishedAll
+@released
+*/
 #define KUidVCardConvDefaultImpl 	KUidEComCntVCardConverterDefaultImplementation
 
-/** The UID of the vCard converter ECom plugin interface. */
+#ifndef SYMBIAN_ENABLE_SPLIT_HEADERS
+
+/** The UID of the vCard converter ECom plugin interface. 
+@released
+@internalTechnology
+*/
 const TUid KUidEcomCntVCardConverterInterface = {0x102035F7};
 
-/** The UID of the phone number parser ECom plugin interface. */
+/** The UID of the phone number parser ECom plugin interface. 
+@released
+@internalTechnology
+*/
 const TUid KUidEcomCntPhoneNumberParserInterface = {0x102035FA};
 
 /** The UID of PBAP vCard Converter plugin Implementation.
-@prototype
 @internalTechnology
+@released
 */
 #define KUidPBAPVCardConvImpl 0xA00015C1
+
+#endif //SYMBIAN_ENABLE_SPLIT_HEADERS
 
 class TPluginParameters
 /**
 Class used to pack the extra arguments required for a PBAP conveter,
 PBAP client provides these arguments using overloaded CContactDatabase::ExportSelectedContacts.
-@prototype
-@internalComponent
+@publishedAll
+@released
 */
 {
 public:
@@ -1200,8 +1246,7 @@ class CContactConverter : public CBase
 /** Provides functionality to import and export vCards.
 One or more vCards can be imported from a read stream (the vCards are converted 
 into contact items and added to the database). Also, contact items can be exported as vCards.
-
-@publishedPartner
+@publishedAll
 @released
 */
 	{
@@ -1215,7 +1260,7 @@ class CContactEcomConverter : public CContactConverter
 /**
 It provides Ecom Framework based facilities to resolve and load the appropriate implementations at run-time.
 The framework supplies a default resolver for selecting appropriate implementations.
-@publishedPartner
+@publishedAll
 @released
 */
 	{
@@ -1262,7 +1307,7 @@ inline CContactEcomConverter::~CContactEcomConverter()
 	REComSession::DestroyedImplementation(iDtor_ID_Key);
 	}
 
-
+#ifndef SYMBIAN_ENABLE_SPLIT_HEADERS
 class CContactPhoneNumberParser : public CBase
 /** Provides functionality to extract the real phone number from a contact's phone number field.
 @publishedPartner
@@ -1304,7 +1349,7 @@ inline CContactEcomPhoneNumberParser::~CContactEcomPhoneNumberParser()
 	{
 	REComSession::DestroyedImplementation(iDtor_ID_Key);
 	}
-
+#endif //SYMBIAN_ENABLE_SPLIT_HEADERS
 
 inline TInt CContactDatabase::TemplateCount() const
 /** Gets the number of contact card templates that exist in the database.

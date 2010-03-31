@@ -1,9 +1,9 @@
 // Copyright (c) 1995-2009 Nokia Corporation and/or its subsidiary(-ies).
 // All rights reserved.
 // This component and the accompanying materials are made available
-// under the terms of the License "Symbian Foundation License v1.0" to Symbian Foundation members and "Symbian Foundation End User License Agreement v1.0" to non-members
+// under the terms of the License "Eclipse Public License v1.0"
 // which accompanies this distribution, and is available
-// at the URL "http://www.symbianfoundation.org/legal/licencesv10.html".
+// at the URL "http://www.eclipse.org/legal/epl-v10.html".
 //
 // Initial Contributors:
 // Nokia Corporation - initial contribution.
@@ -101,7 +101,8 @@ enum TEventModifier
 	EModifierPointer3DButton1=0x02000000,/**< 3D pointer device specific modifier (button 1). */
 	EModifierPointer3DButton2=0x04000000,/**< 3D pointer device specific modifier (button 2). */
 	EModifierPointer3DButton3=0x08000000,/**< 3D pointer device specific modifier (button 3). */
-	EAllModifiers=0x0fffffff            /**< A combination of all event modifiers.*/
+	EModifierAdvancedPointerEvent=0x10000000, /**< TPointerEvent is a TAdvancedPointerEvent.*/
+	EAllModifiers=0x1fffffff            /**< A combination of all event modifiers.*/
 	};
 
 
@@ -517,3 +518,4 @@ enum TKeyCode
 	};
 
 #endif
+

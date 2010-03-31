@@ -1,9 +1,9 @@
 // Copyright (c) 2002-2009 Nokia Corporation and/or its subsidiary(-ies).
 // All rights reserved.
 // This component and the accompanying materials are made available
-// under the terms of the License "Symbian Foundation License v1.0" to Symbian Foundation members and "Symbian Foundation End User License Agreement v1.0" to non-members
+// under the terms of "Eclipse Public License v1.0"
 // which accompanies this distribution, and is available
-// at the URL "http://www.symbianfoundation.org/legal/licencesv10.html".
+// at the URL "http://www.eclipse.org/legal/epl-v10.html".
 //
 // Initial Contributors:
 // Nokia Corporation - initial contribution.
@@ -117,7 +117,9 @@ public:
 
 
 	~CVideoRecorderUtility();
-	IMPORT_C static CVideoRecorderUtility* NewL(MVideoRecorderUtilityObserver& aObserver,TInt aPriority=EMdaPriorityNormal,TMdaPriorityPreference aPref=EMdaPriorityPreferenceTimeAndQuality);
+	IMPORT_C static CVideoRecorderUtility* NewL(MVideoRecorderUtilityObserver& aObserver,
+												TInt aPriority=EMdaPriorityNormal,
+												TInt aPref=EMdaPriorityPreferenceTimeAndQuality);
 	IMPORT_C void OpenFileL(const TDesC& aFileName,
 							TInt aCameraHandle,
 							TUid aControllerUid,
@@ -148,7 +150,7 @@ public:
     IMPORT_C void Record();
     IMPORT_C TInt Stop();
     IMPORT_C void PauseL();
-    IMPORT_C void SetPriorityL(TInt aPriority, TMdaPriorityPreference aPref);
+    IMPORT_C void SetPriorityL(TInt aPriority, TInt aPref);
     IMPORT_C void GetPriorityL(TInt& aPriority, TMdaPriorityPreference& aPref) const;
     IMPORT_C void SetVideoFrameRateL(TReal32 aFrameRate);
     IMPORT_C TReal32 VideoFrameRateL() const;
@@ -191,36 +193,13 @@ public:
     IMPORT_C void SetAudioSampleRateL(const TUint aSampleRate);    
     IMPORT_C TUint AudioSampleRateL() const;
     IMPORT_C void GetSupportedAudioSampleRatesL(RArray<TUint> &aSampleRates) const;
-
-    // SetVideoEnabledL() is publishedPartner and prototype as it is not yet used by licensees,
-    // and there is a possibility that it may change on licensee request for a short period.
-    // It will eventually be moved to publishedAll and released.
     IMPORT_C void SetVideoEnabledL(TBool aEnabled);
-
-    // VideoEnabledL() is publishedPartner and prototype as it is not yet used by licensees,
-    // and there is a possibility that it may change on licensee request for a short period.
-    // It will eventually be moved to publishedAll and released.
     IMPORT_C TBool VideoEnabledL() const;
-
-    // SetVideoQualityL() is publishedPartner and prototype as it is not yet used by licensees,
-    // and there is a possibility that it may change on licensee request for a short period.
-    // It will eventually be moved to publishedAll and released.
     IMPORT_C void SetVideoQualityL(TInt aQuality);
-
-    // VideoQualityL() is publishedPartner and prototype as it is not yet used by licensees,
-    // and there is a possibility that it may change on licensee request for a short period.
-    // It will eventually be moved to publishedAll and released.
     IMPORT_C TInt VideoQualityL() const;
-
-    // SetVideoFrameRateFixedL() is publishedPartner and prototype as it is not yet used by licensees,
-    // and there is a possibility that it may change on licensee request for a short period.
-    // It will eventually be moved to publishedAll and released.
     IMPORT_C void SetVideoFrameRateFixedL(TBool aFixedFrameRate);
-
-    // VideoFrameRateFixedL() is publishedPartner and prototype as it is not yet used by licensees,
-    // and there is a possibility that it may change on licensee request for a short period.
-    // It will eventually be moved to publishedAll and released.
     IMPORT_C TBool VideoFrameRateFixedL() const;
+
 private:
 	enum TMMFVideoRecorderState
 		{

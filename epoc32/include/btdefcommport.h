@@ -1,9 +1,9 @@
 // Copyright (c) 1999-2009 Nokia Corporation and/or its subsidiary(-ies).
 // All rights reserved.
 // This component and the accompanying materials are made available
-// under the terms of the License "Symbian Foundation License v1.0" to Symbian Foundation members and "Symbian Foundation End User License Agreement v1.0" to non-members
+// under the terms of "Eclipse Public License v1.0"
 // which accompanies this distribution, and is available
-// at the URL "http://www.symbianfoundation.org/legal/licencesv10.html".
+// at the URL "http://www.eclipse.org/legal/epl-v10.html".
 //
 // Initial Contributors:
 // Nokia Corporation - initial contribution.
@@ -70,20 +70,20 @@ This info can then be saved by the registry and retrieved when needed.
 public:
 	IMPORT_C TBTCommPortSettings(const TDesC& aName, TUUID aUUID,TUint32 aBTCommPort, TUint8 aSecurityLevel, TBTDevAddr aBDAddr);
 	IMPORT_C TBTCommPortSettings();
-	IMPORT_C const TDesC& Name() const;	///< Returns the name of the service.
-	IMPORT_C TUUID UUID() const;			///< Returns the unique id of the service.
-	IMPORT_C TBTDevAddr BDAddr() const;		///< Returns the address of the default device associated with the service.
+	IMPORT_C const TDesC& Name() const;	//< Returns the name of the service.
+	IMPORT_C TUUID UUID() const;			//< Returns the unique id of the service.
+	IMPORT_C TBTDevAddr BDAddr() const;		//< Returns the address of the default device associated with the service.
 	IMPORT_C TUint32 Port() const;
 	IMPORT_C TBool IsSecuritySet() const;
 	IMPORT_C TBool IsEncryptionSet() const;
 	IMPORT_C TBool IsAuthenticationOnlySet() const;
-	IMPORT_C void SetName(const TDesC& aName);	///< Sets the name of the service.
-	IMPORT_C void SetUUID(TUUID aUUID);			///< Sets the unique id of the service.
+	IMPORT_C void SetName(const TDesC& aName);	//< Sets the name of the service.
+	IMPORT_C void SetUUID(TUUID aUUID);			//< Sets the unique id of the service.
 	IMPORT_C void SetPort(TUint32 aBTCommPort);
 	IMPORT_C void SetAuthentication();
 	IMPORT_C void SetAuthenticationAndEncryption(); // enforces authentication as well
 	IMPORT_C void SetNoSecurity(); // resets the above two
-	IMPORT_C void SetBTAddr(TBTDevAddr aBDAddr);	///< Sets the address of the default device associated with the service.
+	IMPORT_C void SetBTAddr(TBTDevAddr aBDAddr);	//< Sets the address of the default device associated with the service.
 
 	IMPORT_C TUint8 SecurityLevel() const;
 	IMPORT_C void SetSecurityLevel(TUint8 aLevel);

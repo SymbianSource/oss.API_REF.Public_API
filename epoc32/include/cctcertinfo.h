@@ -17,11 +17,10 @@
 */
 
 
-
-
 /**
  @file 
- @internalTechnology
+ @publishedAll
+ @released
 */
  
 #ifndef __CCTCERTINFO_H__
@@ -35,6 +34,8 @@
 #include <ct/mcttoken.h>
 #include <ct/mcttokenobject.h>
 
+#ifndef SYMBIAN_ENABLE_SPLIT_HEADERS
+
 /** Mask constants used for serializing iDeletable and iFormat attributes 
 */
 const TUint KReadOnlyFlagMask = 128;
@@ -43,13 +44,14 @@ const TUint KFormatMask = 127;
 /** The UID of a CertInfo MCTTokenObject. */
 const TInt KCTObjectCertInfo = 0x101F50E6;
 
+#endif
+
 /** The maximum length of a certificate label. */
 const TUint32 KMaxCertLabelLength = 64;
 
 /** Defines a modifiable buffer descriptor to contain a human-readable certificate label. 
 *
-* @publishedAll
-* @released */
+*/
 typedef TBuf<KMaxCertLabelLength> TCertLabel;
 
 /**
@@ -58,7 +60,6 @@ typedef TBuf<KMaxCertLabelLength> TCertLabel;
  * 
  * Note that for backward compatibility reasons, the issuer hash is not serialised.
  *
- * @internalTechnology
  */
 class MCertInfo
 	{
@@ -129,8 +130,6 @@ class MCertInfo
  * Note that these objects are normally constructed by certificate stores, not 
  * by clients. 
  *
- * @publishedAll
- * @released
  */
 class CCTCertInfo : protected CBase, public MCTTokenObject, public MCertInfo
 	{
@@ -138,8 +137,6 @@ public:
 	/** Construction -- Note that these objects are normally constructed by certificate stores, not by clients. */
 
 	/** 
-	* @publishedPartner
-	* @released
 	*
 	* Creates the certificate information object by copying from an existing object.
 	* 
@@ -149,8 +146,6 @@ public:
 	IMPORT_C static CCTCertInfo* NewL(const CCTCertInfo& aCertInfo);
 
 	/** 
-	* @publishedPartner
-	* @released
 	*
 	* Creates the certificate information object by copying from an existing object, 
 	* and puts a pointer to the new object onto the cleanup stack.
@@ -161,8 +156,6 @@ public:
 	IMPORT_C static CCTCertInfo* NewLC(const CCTCertInfo& aCertInfo);
 
 	/** 
-	* @publishedPartner
-	* @released
 	*
 	* Creates the certificate information object from its constituent parts.
 	* 
@@ -185,8 +178,6 @@ public:
 									  const TDesC8* aIssuerHash = NULL);
 
 	/** 
-	* @publishedPartner
-	* @released
 	*
 	* Creates the certificate information object from its constituent parts.	
 	* 
@@ -206,8 +197,6 @@ public:
 		MCTToken& aToken, TInt aCertificateId);
 
 	/** 
-	* @publishedPartner
-	* @released
 	* 
 	* Creates the certificate information object from its constituent parts, 
 	* and puts a pointer to the new object onto the cleanup stack.
@@ -231,8 +220,6 @@ public:
 									   const TDesC8* aIssuerHash = NULL);
 
 	/**
-	* @publishedPartner
-	* @released
 	*
 	* Creates the certificate information object from its constituent parts, and puts 
 	* a pointer to the new object onto the cleanup stack.
@@ -253,8 +240,6 @@ public:
 		MCTToken& aToken, TInt aCertificateId);
 
 	/** 
-	* @publishedPartner
-	* @released
 	* 
 	* Creates the certificate information object by internalising a previously externalised 
 	* one.
@@ -268,8 +253,6 @@ public:
 	IMPORT_C static CCTCertInfo* NewL(RReadStream& aStream, MCTToken& aToken);
 
 	/** 
-	* @publishedPartner
-	* @released
 	* 
 	* Creates the certificate information object, by internalising a previously externalised 
 	* one, and puts a pointer to the new object onto the cleanup stack.	

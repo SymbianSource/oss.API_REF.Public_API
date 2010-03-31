@@ -1,20 +1,20 @@
 /*
-* Copyright (c) 2002-2007 Nokia Corporation and/or its subsidiary(-ies). 
+* Copyright (c) 2006-2009 Nokia Corporation and/or its subsidiary(-ies).
 * All rights reserved.
 * This component and the accompanying materials are made available
-* under the terms of the License "Symbian Foundation License v1.0" to Symbian Foundation members and "Symbian Foundation End User License Agreement v1.0" to non-members
+* under the terms of "Eclipse Public License v1.0"
 * which accompanies this distribution, and is available
-* at the URL "http://www.symbianfoundation.org/legal/licencesv10.html".
+* at the URL "http://www.eclipse.org/legal/epl-v10.html".
 *
 * Initial Contributors:
 * Nokia Corporation - initial contribution.
 *
 * Contributors:
 *
-* Description:  This file contains the header of the 
-*                CHWRMVibra class.
+* Description:
 *
 */
+
 
 
 #ifndef HWRMVIBRA_H
@@ -28,27 +28,42 @@
 /**
 * Minimum allowed intensity setting for vibra. When intensity is negative, 
 * the vibra motor rotates in the negative direction.
+
+*
+* @publishedAll
+* @released
 */
 const TInt KHWRMVibraMinIntensity = -100;
 
 /**
 * Minimum allowed intensity setting for vibra pulse.
+*
+* @publishedAll
+* @released
 */
 const TInt KHWRMVibraMinPulseIntensity = 1;
+
 
 /**
 * Maximum allowed intensity setting for vibra. When intensity is positive, 
 * the vibra motor rotates in the positive direction. Value 0 effectively 
 * stops the vibra.
+
+* @publishedAll
+* @released
 */
 const TInt KHWRMVibraMaxIntensity = 100;
 
 /**
 * Maximum allowed duration value in milliseconds. Maximum vibrating time 
 * supported by device is declared in KVibraCtrlMaxTime cenrep-key.
+
 *
 * Note that duration probably has device specific
 * maximum duration that is much lower.
+*
+* @publishedAll
+* @released
 */
 const TInt KHWRMVibraMaxDuration = (KMaxTInt / 1000) - 1;
 
@@ -56,14 +71,15 @@ const TInt KHWRMVibraMaxDuration = (KMaxTInt / 1000) - 1;
 * KHWRMVibraInfiniteDuration specifies, that vibrating should continue maximum 
 * vibrating time supported by device if vibrating is not explicitly stopped.
 *
+*
+* @publishedAll
+* @released
 */
 const TInt KHWRMVibraInfiniteDuration = 0;
 
-// FORWARD DECLARATIONS
+
 class MHWRMVibraObserver;
 class MHWRMVibraFeedbackObserver;
-
-// CLASS DECLARATIONS
 
 /**
 * The class used to control the device vibra.
@@ -73,19 +89,17 @@ class MHWRMVibraFeedbackObserver;
 * of the vibration feature in the user profile and the current status of the vibra. 
 *
 * The type of HW Resource Manager Vibra API is a synchronous method call meaning 
-* the method call will block the client application. However, e.g. StartVibraL methods do 
-* return right after device vibration has successfully been started. Callback is intended only
-* for observing vibra and feedback on/off changes. The API is meant for all 
+* the method call will block the client application. The API is meant for all 
 * applications which need to control the device vibra.
 *
-* The API consist of the classes CHWRMVibra, MHWRMVibraObserver and MHWRMVibraFeedbackObserver. 
-* If the client requires up-to-date status information, it should also provide callback pointer
-* of the MHWRMVibraObserver implementing class for the NewL-method and explicitly set feedback observer.
+* The API consist of the classes CHWRMVibra and MHWRMVibraObserver. If the client
+* requires up-to-date status information, it should also provide callback pointer
+* of the MHWRMVibraObserver implementing class for the NewL-method.
 *
 * Usage:
 *
 * @code
-* #include <HWRMVibra.h>  // link against HWRMVibraClient.lib
+* #include <hwrmvibra.h> 
 *
 * // A CHWRMVibra instance can be created by using NewL() or NewLC() methods. 
 * // Up-to-date status information not required, no callbacks.
@@ -99,8 +113,8 @@ class MHWRMVibraFeedbackObserver;
 * delete vibra;
 * @endcode
 *
-*  @lib HWRMVIBRACLIENT.DLL
-*  @since S60 3.0
+* @publishedAll
+* @released
 */
 class CHWRMVibra : public CBase
     {
@@ -110,9 +124,18 @@ class CHWRMVibra : public CBase
         */
         enum TVibraModeState 
             {
-            EVibraModeUnknown = 0, ///< Not initialized yet or there is an error condion.
-            EVibraModeON,          ///< Vibration setting in the user profile is on.
-            EVibraModeOFF          ///< Vibration setting in the user profile is off.
+            /**
+            Not initialized yet or there is an error condion.
+            */
+            EVibraModeUnknown = 0, 
+            /**
+            Vibration setting in the user profile is on.
+            */
+            EVibraModeON,          
+            /**
+            Vibration setting in the user profile is off.
+            */
+            EVibraModeOFF        
             };
 
         /**
@@ -120,14 +143,23 @@ class CHWRMVibra : public CBase
         */
         enum TVibraStatus 
             {
-            EVibraStatusUnknown = 0, ///< Vibra is not initialized yet or status is uncertain 
-                                     ///< because of an error condition.
-            EVibraStatusNotAllowed,  ///< Vibra is set off in the user profile or some
-                                     ///< application is specifically blocking vibra.
-            EVibraStatusStopped,     ///< Vibra is stopped.
-            EVibraStatusOn           ///< Vibra is on.
+            /**
+            Vibra is not initialized yet or status is uncertain because of an error condition.
+            */
+            EVibraStatusUnknown = 0, 
+            /**
+            Vibra is set off in the user profile or some application is specifically blocking vibra.
+            */ 
+            EVibraStatusNotAllowed,  
+            /**
+            Vibra is stopped.
+            */            
+            EVibraStatusStopped,     
+            /**
+            Vibra is on.
+            */
+            EVibraStatusOn          
             };
-            
         /**
         * Tactile feedback vibration setting in the user profile.
         */
@@ -136,10 +168,8 @@ class CHWRMVibra : public CBase
             EVibraFeedbackModeUnknown = 0, ///< Not initialized yet or there is an error condion.
             EVibraFeedbackModeON,          ///< Feedback vibration setting in the user profile is on.
             EVibraFeedbackModeOFF          ///< Feedback vibration setting in the user profile is off.
-            };
-
-    public:  // Constructors
-        
+            };            
+    public:         
         /**
         * Two-phased constructor.
         *
@@ -190,13 +220,11 @@ class CHWRMVibra : public CBase
 
     	/**
     	* Reserves vibration feature exclusively for this client.
-    	* A higher priority (not process or thread priority, but the priority defined
-    	* in the internal vibra policy of the HW Resource Manager) client may cause 
-    	* lower priority client reservation to be temporarily suspended. Commands 
-    	* can still be issued in suspended state, but they will not be acted upon 
-    	* unless suspension is lifted within specified duration.
-    	* The suspended client will not get any notification about suspension and
-    	* neither from resumption of reservation.
+    	* A higher priority client may cause lower priority client reservation
+    	* to be temporarily suspended. Commands can still be issued in suspended 
+    	* state, but they will not be acted upon unless suspension is lifted
+    	* within specified duration.
+    	* The suspended client will not get any notification about suspension.
     	* If vibra is already reserved by a higher or equal priority application, 
     	* reserving will still succeed, but reservation is immediately suspended.
     	*
@@ -212,13 +240,11 @@ class CHWRMVibra : public CBase
     	
     	/**
     	* Reserves vibration feature exclusively for this client.
-    	* A higher priority (not process or thread priority, but the priority defined
-    	* in the internal vibra policy of the HW Resource Manager) client may cause 
-    	* lower priority client reservation to be temporarily suspended. Commands 
-    	* can still be issued in suspended state, but they will not be acted upon 
-    	* unless suspension is lifted within specified duration.
-    	* The suspended client will not get any notification about suspension and
-    	* neither from resumption of reservation.
+    	* A higher priority client may cause lower priority client reservation
+    	* to be temporarily suspended. Commands can still be issued in suspended 
+    	* state, but they will not be acted upon unless suspension is lifted
+    	* within specified duration.
+    	* The suspended client will not get any notification about suspension.
     	* If vibra is already reserved by a higher or equal priority application, 
     	* reserving will still succeed, but reservation is immediately suspended.
     	*
@@ -246,7 +272,7 @@ class CHWRMVibra : public CBase
         *                        ETrue. A client is considered trusted if it has nonstandard
         *                        priority defined in the internal vibra policy of the 
         *                        HW Resource Manager. A client can be defined trusted
-        *                        only by S60 or a product.
+        *                        only by a product.
     	*
     	* @leave KErrAccessDenied Parameter aForceNoCCoeEnv is ETrue and client is not
     	*                         trusted.
@@ -285,10 +311,10 @@ class CHWRMVibra : public CBase
         *       the duration parameter is greater than the limit.
         *
         * @param aDuration Duration of the vibration measured in milliseconds. 
-        *                  A value of KHWRMVibraInfiniteDuration specifies that 
-        *                  the vibration should continue indefinetely and should 
-        *                  be stopped with a call to StopVibraL. Duration 
-        *                  usually has device specific maximum value.
+        *                  A value of 0 specifies that the vibration should
+        *                  continue indefinetely and should be stopped with a 
+        *                  call to StopVibraL. Duration can have maximum value
+        *                  of KHWRMVibraMaxDuration.
         *
         * @leave KErrArgument Duration is invalid.
         * @leave KErrAccessDenied Vibration setting in the user profile is not set.
@@ -324,12 +350,11 @@ class CHWRMVibra : public CBase
         *       the duration parameter is greater than the limit.
         *
         * @param aDuration Duration of the vibration measured in milliseconds. 
-        *                  A value of KHWRMVibraInfiniteDuration specifies that 
-        *                  the vibration should continue indefinetely and should 
-        *                  be stopped with a call to StopVibraL. Duration 
-        *                  usually has device specific maximum value.
-        * @param aIntensity Intensity of the vibra in decimal is KHWRMVibraMinIntensity
-        *                   to KHWRMVibraMaxIntensity,
+        *                  A value of 0 specifies that the vibration should
+        *                  continue indefinitly and should be stopped with a 
+        *                  call to StopVibraL.  Duration can have maximum value
+        *                  of KHWRMVibraMaxDuration.
+        * @param aIntensity Intensity of the vibra in decimal is -100 to 100,
         *                   which shows the percentage of the vibra motor full
         *                   rotation speed. When intensity is negative, 
         *                   the vibra motor rotates in the negative direction.
@@ -507,9 +532,9 @@ class CHWRMVibra : public CBase
         *                   NOTE: The device might have hardware-imposed limits
         *                         on supported vibra intensity values, so actual
         *                         effect might vary between different hardware.
-        *
         * @leave KErrNotSupported The device doesn't support user-defined 
         *                         vibra intensity.
+        *
         * @leave KErrArgument One of the parameters is out of range.
         * @leave KErrAccessDenied Vibration setting in the user profile is not set
         *                         or client is not privileged to use pulse feature. 
@@ -561,7 +586,7 @@ class CHWRMVibra : public CBase
 *
 * @code 
 * // INCLUDES
-* #include <HWRMVibra.h> // Link against HWRMVibraClient.lib.
+* #include <hwrmvibra.h> // Link against HWRMVibraClient.lib.
 *
 * class CTest : public CBase, 
 *               public MHWRMVibraObserver    
@@ -608,7 +633,8 @@ class CHWRMVibra : public CBase
 *    }
 * @endcode
 *
-* @since S60 3.0
+* @publishedAll
+* @released
 */
 class MHWRMVibraObserver
     {    
@@ -634,72 +660,9 @@ class MHWRMVibraObserver
 	};
 
 /**
-* A callback interface for tactile feedback vibra mode reporting.
 *
-* If the client requires up-to-date status information, the client needs 
-* to derive a class from the MHWRMVibraFeedbackObserver interface and implement 
-* the VibraFeedbackModeChanged() method. In order to register for callback, client
-* needs to call SetFeedbackObserver-method.
-* 
-* A callback object header example:
-*
-* @code 
-* // INCLUDES
-* #include <HWRMVibra.h> // Link against HWRMVibraClient.lib.
-*
-* class CTest : public CBase, 
-*               public MHWRMVibraFeedbackObserver    
-*    {
-*    public:
-*        CTest();
-*        ~CTest();
-*                       
-*        void ConstructL();
-*        static CTest* NewL();
-*                
-*        // from MHWRMVibraFeedbackObserver
-*        virtual void VibraFeedbackModeChanged(CHWRMVibra::TVibraFeedbackModeState aMode);
-*
-*    private:
-*        CHWRMVibra* iVibra;
-*    };
-* @endcode
-*
-* A callback method implementation example:
-*
-* @code
-* 
-* #include <HWRMVibra.h>  // link against HWRMVibraClient.lib
-*
-* // A CHWRMVibra instance can be created by using NewL() or NewLC() methods. 
-* CHWRMVibra* vibra = CHWRMVibra::NewL();
-*
-* // Request notification of feedback setting change
-* vibra->SetFeedbackObserver(this); 
-*
-* // To clean up, delete the created object:
-* delete vibra;
-* 
-* void CTest::VibraFeedbackModeChanged(CHWRMVibra::TVibraFeedbackModeState aMode)
-*    {
-*    switch ( aMode )
-*        {
-*        case CHWRMVibra::EVibraFeedbackModeUnknown:
-*            RDebug::Print(_L("### Feedback vibration mode : EVibraFeedbackModeUnknown"));
-*            break;
-*        case CHWRMVibra::EVibraFeedbackModeON:
-*            RDebug::Print(_L("### Feedback vibration mode : EVibraFeedbackModeON"));
-*            break;
-*        case CHWRMVibra::EVibraFeedbackModeOFF:
-*            RDebug::Print(_L("### Feedback vibration mode : EVibraFeedbackModeOFF"));
-*            break;
-*        default:
-*            break;
-*        }
-*    }
-* @endcode
-*
-* @since S60 5.0
+* @publishedAll
+* @released
 */
 class MHWRMVibraFeedbackObserver
     {    

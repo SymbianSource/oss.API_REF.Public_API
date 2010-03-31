@@ -1,9 +1,9 @@
 // Copyright (c) 1998-2009 Nokia Corporation and/or its subsidiary(-ies).
 // All rights reserved.
 // This component and the accompanying materials are made available
-// under the terms of the License "Symbian Foundation License v1.0" to Symbian Foundation members and "Symbian Foundation End User License Agreement v1.0" to non-members
+// under the terms of "Eclipse Public License v1.0"
 // which accompanies this distribution, and is available
-// at the URL "http://www.symbianfoundation.org/legal/licencesv10.html".
+// at the URL "http://www.eclipse.org/legal/epl-v10.html".
 //
 // Initial Contributors:
 // Nokia Corporation - initial contribution.
@@ -12,8 +12,6 @@
 //
 // Description:
 //
-
-
 
 /**
  @file
@@ -54,16 +52,37 @@ const TMsvPartList KMsvMessagePartDate			= 0x00000010;
 
 const TMsvPartList KMsvMessagePartAttachments	= 0x00000020;
 
-// find attributes
 //Flag to specify case-sensitive search. 
-
 const TMsvPartList KMsvFindCaseSensitive		= 0x80000000;
-// Flag to specify search for whole words. 
 
+// Flag to specify search for whole words. 
 const TMsvPartList KMsvFindWholeWord			= 0x40000000;
 
-// Maximum length (in characters) of find text. 
 
+// Maximum length (in characters) of find text. 
 const TInt KMsvMaxFindTextLength = 500;
 
-#endif
+// These constants are used to do advance search in the message store
+// The old implementation does not make use of these constants
+// A search operation performed using these constants wont give any results
+
+// Message Part To
+const TMsvPartList KMsvMessagePartTo            = 0x00000040;
+
+// Message Part From
+const TMsvPartList KMsvMessagePartFrom          = 0x00000080;
+
+//Message Part Cc
+const TMsvPartList KMsvMessagePartCc            = 0x00000100;
+
+//Message Part Bcc
+const TMsvPartList KMsvMessagePartBcc           = 0x00000200;
+
+//Message Part Subject
+const TMsvPartList KMsvMessagePartSubject       = 0x00000400;
+
+// Flag to specify wild card characters
+const TMsvPartList KMsvFindUsingWildCard		= 0x00000800;
+
+
+#endif  // mtmdef#

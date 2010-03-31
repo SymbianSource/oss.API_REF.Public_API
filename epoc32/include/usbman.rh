@@ -1,0 +1,133 @@
+/*
+* Copyright (c) 2003-2009 Nokia Corporation and/or its subsidiary(-ies).
+* All rights reserved.
+* This component and the accompanying materials are made available
+* under the terms of "Eclipse Public License v1.0"
+* which accompanies this distribution, and is available
+* at the URL "http://www.eclipse.org/legal/epl-v10.html".
+*
+* Initial Contributors:
+* Nokia Corporation - initial contribution.
+*
+* Contributors:
+*
+* Description:
+* Resource header for usbman configuration.
+*
+*/
+
+/**
+ @file
+ @publishedPartner
+ @released
+*/
+
+STRUCT usb_configuration
+	{
+	/** 
+		vendorId is the 16-bit number that is assigned by USB-ORG.
+	 */
+	WORD	vendorId		= 0x0e22;
+
+	/** 
+		productId is a 16-bit number that is assigned by the licensee to 
+		uniquely identify this particular type of device.
+	 */
+	WORD	productId		= 0x000b;
+
+	/** 
+		bcdDevice may be optionally used during enumeration, this depends on 
+		the licensee's policy regarding device upgrades (new versions of a 
+		device may require to use new host driver files)
+	 */
+	WORD	bcdDevice		= 0x0000;
+
+	/** 
+		manufacturerString is displayed on the Windows screen during first 
+		enumeration of the device, and should identify the same company that 
+		owns the USB vendorId given above
+	 */
+	LTEXT	manufacturer	= "Symbian Ltd.";
+
+	/** 
+		productString is displayed on the Windows screen during first 
+		enumeration of the device, and should identify the same device that is 
+		implied by the productId given above
+	 */
+	LTEXT	product			= "Symbian OS";
+	}
+
+STRUCT PERSONALITY
+	{
+	/** 	Class code (assigned by the USB-IF). If this field is set to zero, each interface within 
+		a configuration specifies its own class information and the various interfaces operate independently. 
+
+		If this field is set to a value between 1 and FEH, the device supports different class
+		specifications on different interfaces and the interfaces may not operate independently.
+		This value identifies the class definition used for the aggregate interfaces.
+
+		If this field is set to FFH, the device class is vendor-specific. */
+	BYTE	bDeviceClass;
+
+	/** 	Subclass code (assigned by the USB-IF). These codes are qualified by the value of the bDeviceClass field.
+		If the bDeviceClass field is set to zero, this field must also be set to zero.
+		If the bDeviceClass field is not set to FFH, all values are reserved for assignment by the USB-IF. */
+	BYTE	bDeviceSubClass;
+
+	/**	Protocol code (assigned by the USB-IF). These codes are qualified by the value of the bDeviceClass and the
+		bDeviceSubClass fields. If a device supports class-specific protocols on a device basis as opposed to an 
+		interface basis, this code identifies the protocols that the device uses as defined by the specification of the device class.
+		If this field is set to zero, the device does not use class-specific protocols on a device basis. However, it may use 
+		classspecific protocols on an interface basis.
+		If this field is set to FFH, the device uses a vendor-specific protocol on a device basis. */
+	BYTE 	protocol;
+
+	/**	Number of possible configurations */
+	BYTE	numConfigurations;
+
+	/** vendorId is the 16-bit number that is assigned by USB-ORG. */
+	WORD 	vendorId;
+
+	/** productId is a 16-bit number that is assigned by the licensee to 
+	uniquely identify this particular personality as type of device . */
+	WORD 	productId;
+
+	/** 	bcdDevice may be optionally used during enumeration, this depends on 
+		the licensee's policy regarding device upgrades */
+	WORD 	bcdDevice;
+
+	/** 	manufacturerString is displayed on the Windows screen during first 
+		enumeration of the device, and should identify the same company that 
+		owns the USB vendorId given above */
+	LTEXT 	manufacturer;
+	
+	/** 	productString is displayed on the Windows screen during first 
+		enumeration of the device, and should identify the same device that is 
+		implied by the productId given above */
+	LTEXT 	product;
+
+	/**	personality id - UID which identified this personality */
+	WORD 	id;					 
+	
+	/**	list of Class Controllers UIDs associated with this personality.
+		UIDs shoud be provided as list of hexadecimal numbers separated by space or comma.
+		Note Do not provide leading 0x or any trailing characters!
+		Example "1Abc3422, 12345678  FE43bc33"
+		Incorrect example "1abc3422, 0x12345678," */
+	LTEXT	class_uids;			
+	
+	/** 	free text description of this personality. */
+	LTEXT 	description;
+
+	/**     free text detailed description of this personality. */
+	LTEXT   detailedDescription;
+
+	/**	personality property - the property of this personality */
+	LONG 	property;					 
+
+	}
+	
+STRUCT PERSONALITY_ARRAY
+	{
+	STRUCT	personalities[];	// STRUCT PERSONALITY
+	}	 

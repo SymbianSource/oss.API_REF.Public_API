@@ -16,11 +16,10 @@
 */
 
 
-
-
 /**
  @file 
- @internalAll 
+ @publishedAll
+ @released
 */
 
 #ifndef __WTLSCERT_H__
@@ -41,10 +40,6 @@ class CDSAParameters;
 
 const TInt KWTLSCertMaxDataElements = 6;
 
-/**
- * @publishedAll
- * @released
- */
 class CWTLSRSASignatureResult : public CRSASignatureResult
 	{
 public:
@@ -55,10 +50,6 @@ private:
 	void ConstructL(const CAlgorithmIdentifier& aDigestAlgorithm, const TDesC8& aDigest);
 	};
 
-/**
- * @publishedAll
- * @released
- */
 class TWTLSKeyFactory : public TKeyFactory
 	{
 public:
@@ -70,10 +61,6 @@ public:
 	virtual CDSAPublicKey* DSAPublicKeyL(const TDesC8& aParamsEncoding, const TDesC8& aEncoding) const;
 	};
 
-/**
- * @publishedAll
- * @released
- */
 class CWTLSValidityPeriod : public CValidityPeriod
 	{
 public:
@@ -86,10 +73,6 @@ private:
 	void ConstructL(const TDesC8& aBinaryData, TInt& aPos);
 	};
 
-/**
- * @publishedAll
- * @released
- */
 class CWTLSAlgorithmIdentifier : public CAlgorithmIdentifier
 	{
 public:
@@ -102,10 +85,6 @@ private:
 	void ConstructL(const TDesC8& aBinaryData, TInt& aPos);
 	};
 
-/**
- * @publishedAll
- * @released
- */
 class CWTLSSigningAlgorithmIdentifier : public CSigningAlgorithmIdentifier
 	{
 public:
@@ -118,10 +97,6 @@ private:
 	void ConstructL(const TDesC8& aBinaryData, TInt& aPos);
 	};
 
-/**
- * @publishedAll
- * @released
- */
 class CWTLSSubjectPublicKeyInfo : public CSubjectPublicKeyInfo
 	{
 public:
@@ -137,10 +112,6 @@ private:
 _LIT(KWTLSTCAType, " T");
 _LIT(KWTLSTCAValue, "ca");
 
-/**
- * @publishedAll
- * @released
- */
 class CWTLSCertificate : public CCertificate
 	{
 public:

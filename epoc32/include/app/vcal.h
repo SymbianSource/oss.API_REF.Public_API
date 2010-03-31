@@ -1,9 +1,9 @@
 // Copyright (c) 1997-2009 Nokia Corporation and/or its subsidiary(-ies).
 // All rights reserved.
 // This component and the accompanying materials are made available
-// under the terms of the License "Symbian Foundation License v1.0" to Symbian Foundation members and "Symbian Foundation End User License Agreement v1.0" to non-members
+// under the terms of "Eclipse Public License v1.0"
 // which accompanies this distribution, and is available
-// at the URL "http://www.symbianfoundation.org/legal/licencesv10.html".
+// at the URL "http://www.eclipse.org/legal/epl-v10.html".
 //
 // Initial Contributors:
 // Nokia Corporation - initial contribution.
@@ -24,7 +24,12 @@
 #include <vrecur.h>
 #endif
 
+
+/** This constant is for internal use only.
+@internalTechnology
+*/
 _LIT(KVersitTokenVCalVersionNo, "1.0");
+
 
 //
 // CParserVCal
@@ -101,8 +106,8 @@ public:
 	IMPORT_C static CVersitAlarm* NewL(TVersitDateTime* aRunTime, TTime* aSnoozeTime, TInt aRepeatCount, const TDesC& aAudioContent, const TDesC& aNote);
 	IMPORT_C ~CVersitAlarm();
 private:
-	CVersitAlarm(TVersitDateTime* aRunTime, TTime* aSnoozeTime, TInt aRepeatCount);
-	void ConstructL(const TDesC& aAudioContent, const TDesC& aNote);
+	CVersitAlarm(TInt aRepeatCount);
+	void ConstructL(const TDesC& aAudioContent, const TDesC& aNote, TVersitDateTime* aRunTime, TTime* aSnoozeTime);
 public:	
 	/** The date/time for the alarm. */
 	TVersitDateTime* iRunTime;
@@ -130,7 +135,7 @@ An object of this class is owned by the CParserPropertyValueAlarm class.
 This class supports the following types of alarm:
 - X-EPOCALARM 
 
-@publishedPartner
+@publishedAll
 @released
 */
 	{

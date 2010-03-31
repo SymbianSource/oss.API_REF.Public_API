@@ -1,9 +1,9 @@
 // Copyright (c) 1995-2009 Nokia Corporation and/or its subsidiary(-ies).
 // All rights reserved.
 // This component and the accompanying materials are made available
-// under the terms of the License "Symbian Foundation License v1.0" to Symbian Foundation members and "Symbian Foundation End User License Agreement v1.0" to non-members
+// under the terms of the License "Eclipse Public License v1.0"
 // which accompanies this distribution, and is available
-// at the URL "http://www.symbianfoundation.org/legal/licencesv10.html".
+// at the URL "http://www.eclipse.org/legal/epl-v10.html".
 //
 // Initial Contributors:
 // Nokia Corporation - initial contribution.
@@ -13,6 +13,9 @@
 // Description:
 // hal\inc\hal.h
 // 
+// WARNING: This file contains some APIs which are internal and are subject
+//          to change without notice. Such APIs should therefore not be used
+//          outside the Kernel and Hardware Services package.
 //
 
 #ifndef __HAL_H__

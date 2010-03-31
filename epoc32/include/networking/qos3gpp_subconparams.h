@@ -1,9 +1,9 @@
 // Copyright (c) 2005-2009 Nokia Corporation and/or its subsidiary(-ies).
 // All rights reserved.
 // This component and the accompanying materials are made available
-// under the terms of the License "Symbian Foundation License v1.0" to Symbian Foundation members and "Symbian Foundation End User License Agreement v1.0" to non-members
+// under the terms of "Eclipse Public License v1.0"
 // which accompanies this distribution, and is available
-// at the URL "http://www.symbianfoundation.org/legal/licencesv10.html".
+// at the URL "http://www.eclipse.org/legal/epl-v10.html".
 //
 // Initial Contributors:
 // Nokia Corporation - initial contribution.
@@ -15,11 +15,10 @@
 // 
 //
 
-
-
 /**
  @file
  @publishedAll
+ @released
 */
 
 
@@ -29,7 +28,13 @@
 #include <es_sock.h>
 #include <comms-infras/metadata.h>
 #include <comms-infras/metatype.h>
+
+#ifndef SYMBIAN_ENABLE_SPLIT_HEADERS
 #include <etelqos.h>
+#else
+#include <eteldefaultqos.h>
+#endif
+#include <comms-infras/es_parameterfamily.h>
 
 const TInt KSubCon3GPPExtParamsFactoryUid = 0x1020D460;
 const TInt KSubConQosR99ParamsType = 1;
@@ -63,6 +68,7 @@ public:
 		};
 public:
 	inline static CSubConQosR99ParamSet* NewL(CSubConParameterFamily& aFamily, CSubConParameterFamily::TParameterSetType aType);
+	inline static CSubConQosR99ParamSet* NewL(RParameterFamily& aFamily, RParameterFamily::TParameterSetType aType);
 	inline static CSubConQosR99ParamSet* NewL();
 
 	inline CSubConQosR99ParamSet();
@@ -117,6 +123,7 @@ protected:
 #ifdef SYMBIAN_NETWORKING_UMTSR5  
 
 /** Extension QoS Parameter Set for UMTS Release 5 */
+
 class CSubConImsExtParamSet : public CSubConExtensionParameterSet
 	{
 public:
@@ -127,6 +134,7 @@ public:
 		};
 public:
 	inline static CSubConImsExtParamSet* NewL(CSubConParameterFamily& aFamily,CSubConParameterFamily::TParameterSetType aType);
+	inline static CSubConImsExtParamSet* NewL(RParameterFamily& aFamily,RParameterFamily::TParameterSetType aType);
 	inline static CSubConImsExtParamSet* NewL();
 	inline CSubConImsExtParamSet();
 	
@@ -152,6 +160,7 @@ public:
 	
 public:
 	inline static CSubConQosR5ParamSet* NewL(CSubConParameterFamily& aFamily,CSubConParameterFamily::TParameterSetType aType);
+	inline static CSubConQosR5ParamSet* NewL(RParameterFamily& aFamily,RParameterFamily::TParameterSetType aType);
 	inline static CSubConQosR5ParamSet* NewL();
 	inline CSubConQosR5ParamSet();
 
@@ -215,6 +224,7 @@ public:
 
 public:
 	inline static CSubConSBLPR5ExtensionParamSet* NewL(CSubConParameterFamily& aFamily, CSubConParameterFamily::TParameterSetType aType);
+	inline static CSubConSBLPR5ExtensionParamSet* NewL(RParameterFamily& aFamily, RParameterFamily::TParameterSetType aType);
 	inline static CSubConSBLPR5ExtensionParamSet* NewL();
 
 	/**	Media Authorization Token setter and getter functions. */
@@ -242,16 +252,9 @@ protected:
 	RFlowIdentifiers	iFlowIds;
 	};
 
-/** Factory used to create instances of IP SubConnection Parameters.
-
-@internalComponent
-@released Since 9.3
-*/
-class CSubCon3GPPExtParamsFactory : public CBase
-	{
-public:
-	static CSubConExtensionParameterSet* NewL(TAny* aConstructionParameters);
-	};
+#ifndef SYMBIAN_ENABLE_SPLIT_HEADERS
+#include <networking/qos3GPP_subconparams_factory.h>
+#endif
 
 #include <networking/qos3gpp_subconparams.inl>
 

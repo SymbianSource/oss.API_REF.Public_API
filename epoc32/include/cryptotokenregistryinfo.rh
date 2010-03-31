@@ -15,8 +15,13 @@
 *
 */
 
+/**
+ @file
+ @publishedAll
+ @released
+*/
 
-#include "registryinfo.rh"
+#include <ecom/registryinfo.rh>
 #include "ct/interfaceuid.hrh"
 
 // Some defines of useful values for attributes to simplify

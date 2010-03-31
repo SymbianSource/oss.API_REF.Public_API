@@ -1,0 +1,42 @@
+/*
+* Copyright (c) 2005-2007 Nokia Corporation and/or its subsidiary(-ies).
+* All rights reserved.
+* This component and the accompanying materials are made available
+* under the terms of "Eclipse Public License v1.0"
+* which accompanies this distribution, and is available
+* at the URL "http://www.eclipse.org/legal/epl-v10.html".
+*
+* Initial Contributors:
+* Nokia Corporation - initial contribution.
+*
+* Contributors:
+*
+* Description:  Phonebook 2 icon id resource structure definition.
+*
+*/
+
+
+#ifndef PBK2ICONID_RH
+#define PBK2ICONID_RH
+
+//  INCLUDES
+#include <Pbk2IconId.hrh>
+
+/**
+ * Phonebook 2 icon id.
+ */
+STRUCT PHONEBOOK2_ICON_ID
+    {
+    /// The UID that specifies whose icon this is. It is used to identify
+    // icons from different components that are used in the same data
+    // structure. The UID could be e.g a Phonebook 2 UID for application
+    // defined icons and an ECom implementation UID for UI extension icons.
+    LONG ownerUid = KPbk2NullIconIdOwnerUid;
+
+    /// The id of the icon inside the component.
+    BYTE id = EPbk2NullIconId;
+    }
+
+#endif // PBK2ICONID_RH
+
+// End of File

@@ -1,9 +1,9 @@
 // Copyright (c) 1995-2009 Nokia Corporation and/or its subsidiary(-ies).
 // All rights reserved.
 // This component and the accompanying materials are made available
-// under the terms of the License "Symbian Foundation License v1.0" to Symbian Foundation members and "Symbian Foundation End User License Agreement v1.0" to non-members
+// under the terms of the License "Eclipse Public License v1.0"
 // which accompanies this distribution, and is available
-// at the URL "http://www.symbianfoundation.org/legal/licencesv10.html".
+// at the URL "http://www.eclipse.org/legal/epl-v10.html".
 //
 // Initial Contributors:
 // Nokia Corporation - initial contribution.
@@ -22,10 +22,6 @@
 @internalComponent
 */
 const TUint KMaskDesLength16=0xfffffff;
-/**
-@internalComponent
-*/
-const TInt KShiftDesType16=28;
 
 class TBufCBase16;
 class TDes16;
@@ -712,5 +708,9 @@ public:
     */
 	__TText iBuf[__Align16(S)];
 	};
+
+#ifndef SYMBIAN_ENABLE_SPLIT_HEADERS
+#include <e32des16_private.h>
+#endif
 
 #endif

@@ -2,9 +2,9 @@
 * Copyright (c) 2002-2007 Nokia Corporation and/or its subsidiary(-ies).
 * All rights reserved.
 * This component and the accompanying materials are made available
-* under the terms of the License "Symbian Foundation License v1.0" to Symbian Foundation members and "Symbian Foundation End User License Agreement v1.0" to non-members
+* under the terms of "Eclipse Public License v1.0"
 * which accompanies this distribution, and is available
-* at the URL "http://www.symbianfoundation.org/legal/licencesv10.html".
+* at the URL "http://www.eclipse.org/legal/epl-v10.html".
 *
 * Initial Contributors:
 * Nokia Corporation - initial contribution.
@@ -30,7 +30,7 @@
 //  INCLUDES
 #include <e32std.h>
 #include <AknsItemID.h>
-#include <AknsConstants.hrh>
+#include <aknsconstants.hrh>
 
 // CONSTANTS
 
@@ -1475,7 +1475,17 @@ enum TAknsQsnTextColorsIndex
     //Text#77  Teleport Taskswapper texts #4b5879
     EAknsCIQsnTextColorsCG77   = 76,
     //Text#78  Main area, Focused items without highlight. #9c3958
-    EAknsCIQsnTextColorsCG78   = 77
+    EAknsCIQsnTextColorsCG78   = 77,
+    //Text#79  Form input field, Items highlight. #9c3958
+    EAknsCIQsnTextColorsCG79   = 78,
+    //Text#80  AVKON Buttons, AVKON Button default texts. #4b5879
+    EAknsCIQsnTextColorsCG80   = 79,
+    //Text#81  Email, Email header texts. #4b5879
+    EAknsCIQsnTextColorsCG81   = 80,
+    //Text#82  Call handling, Answer-button text. #ffffff
+    EAknsCIQsnTextColorsCG82   = 81,
+    //Text#83  Call handling, Reject-button text. #ffffff
+    EAknsCIQsnTextColorsCG83   = 82
     };
 
 /**
@@ -1520,7 +1530,9 @@ enum TAknsQsnLineColorsIndex
     // line #13 Calculator line color #35
     EAknsCIQsnLineColorsCG13   = 12,
     //line #14	HWR pop-up window	Guideline	#120
-    EAknsCIQsnLineColorsCG14   = 13
+    EAknsCIQsnLineColorsCG14   = 13,
+    //line #15	lists	Separator line for touch items	#333333
+    EAknsCIQsnLineColorsCG15   = 14
     };
 
 /**
@@ -1577,7 +1589,11 @@ enum TAknsQsnOtherColorsIndex
     // Other #19 Main pane	Screen dimming colour #6c8eB7
     EAknsCIQsnOtherColorsCG19   = 18,
     // Other #20 Hand Writing Recognition	Hand Writing trace text colour #ffffff
-    EAknsCIQsnOtherColorsCG20   = 19
+    EAknsCIQsnOtherColorsCG20   = 19,
+    // Other #21 Main pane, Coverflow gradient colour. #f0f7f7
+    EAknsCIQsnOtherColorsCG21   = 20,
+    // Other #22 Email, Email header background. #f2f6f6
+    EAknsCIQsnOtherColorsCG22   = 21
     };
 
 /**
@@ -3015,6 +3031,9 @@ static const TAknsItemID KAknsIIDQgnNoteFaxpcAnim =
 static const TAknsItemID KAknsIIDQgnGrafBarWaitAnim =
     { EAknsMajorAvkon, EAknsMinorQgnGrafBarWaitAnim };
 
+static const TAknsItemID KAknsIIDQgnGrafFpsSwipeAnim =
+    { EAknsMajorAvkon, EAknsMinorQgnGrafFpsSwipeAnim };
+
 // Browser animations
 
 static const TAknsItemID KAknsIIDQgnMenuWmlAnim =
@@ -3899,6 +3918,8 @@ static const TAknsItemID KAknsIIDPropertyMorphingTime =
 static const TAknsItemID KAknsIIDPropertyNoteSlidingMode =
     { EAknsMajorProperty, EAknsMinorPropertyNoteSlidingMode };
 
+static const TAknsItemID KAknsIIDPropertyAnimBgParam =
+    { EAknsMajorProperty, EAknsMinorPropertyAnimBgParam };
 
 // ----------------------------------------------------------------------------
 // EAknsMajorGeneric item IDs
@@ -16660,11 +16681,11 @@ static const TAknsItemID KAknsIIDQsnFrCmailListCornerBl =
 static const TAknsItemID KAknsIIDQsnFrCmailListCornerBr =
     { EAknsMajorSkin, EAknsMinorQsnFrCmailListCornerBr};   
    
-static const TAknsItemID KAknsIIDQsnFrCmailListSideTop =
-    { EAknsMajorSkin, EAknsMinorQsnFrCmailListSideTop};   
+static const TAknsItemID KAknsIIDQsnFrCmailListSideT =
+    { EAknsMajorSkin, EAknsMinorQsnFrCmailListSideT};   
     
-static const TAknsItemID KAknsIIDQsnFrCmailListSideBottom =
-    { EAknsMajorSkin, EAknsMinorQsnFrCmailListSideBottom}; 
+static const TAknsItemID KAknsIIDQsnFrCmailListSideB =
+    { EAknsMajorSkin, EAknsMinorQsnFrCmailListSideB}; 
 
 static const TAknsItemID KAknsIIDQsnFrCmailListSideL =
     { EAknsMajorSkin, EAknsMinorQsnFrCmailListSideL};  
@@ -16756,11 +16777,11 @@ static const TAknsItemID KAknsIIDQsnFrTitleDividerCornerBl =
 static const TAknsItemID KAknsIIDQsnFrTitleDividerCornerBr =
     { EAknsMajorSkin, EAknsMinorQsnFrTitleDividerCornerBr};   
    
-static const TAknsItemID KAknsIIDQsnFrTitleDividerSideTop =
-    { EAknsMajorSkin, EAknsMinorQsnFrTitleDividerSideTop};   
+static const TAknsItemID KAknsIIDQsnFrTitleDividerSideT =
+    { EAknsMajorSkin, EAknsMinorQsnFrTitleDividerSideT};   
     
-static const TAknsItemID KAknsIIDQsnFrTitleDividerSideBottom =
-    { EAknsMajorSkin, EAknsMinorQsnFrTitleDividerSideBottom}; 
+static const TAknsItemID KAknsIIDQsnFrTitleDividerSideB =
+    { EAknsMajorSkin, EAknsMinorQsnFrTitleDividerSideB}; 
 
 static const TAknsItemID KAknsIIDQsnFrTitleDividerSideL =
     { EAknsMajorSkin, EAknsMinorQsnFrTitleDividerSideL};  
@@ -16770,6 +16791,582 @@ static const TAknsItemID KAknsIIDQsnFrTitleDividerSideR =
 
 static const TAknsItemID KAknsIIDQsnFrTitleDividerCenter =
     { EAknsMajorSkin, EAknsMinorQsnFrTitleDividerCenter}; 
+    
+    
+    // Qgn Home Contact Mask
+static const TAknsItemID KAknsIIDQgnHomeContactMask =
+    { EAknsMajorSkin, EAknsMinorQgnHomeContactMask};
+
+static const TAknsItemID KAknsIIDQgnHomeContactMaskTl =
+    { EAknsMajorSkin, EAknsMinorQgnHomeContactMaskTl};
+    
+static const TAknsItemID KAknsIIDQgnHomeContactMaskTr =
+    { EAknsMajorSkin, EAknsMinorQgnHomeContactMaskTr};
+    
+static const TAknsItemID KAknsIIDQgnHomeContactMaskBl =
+    { EAknsMajorSkin, EAknsMinorQgnHomeContactMaskBl};
+    
+static const TAknsItemID KAknsIIDQgnHomeContactMaskBr =
+    { EAknsMajorSkin, EAknsMinorQgnHomeContactMaskBr};   
+   
+static const TAknsItemID KAknsIIDQgnHomeContactMaskT =
+    { EAknsMajorSkin, EAknsMinorQgnHomeContactMaskT};   
+    
+static const TAknsItemID KAknsIIDQgnHomeContactMaskB =
+    { EAknsMajorSkin, EAknsMinorQgnHomeContactMaskB}; 
+
+static const TAknsItemID KAknsIIDQgnHomeContactMaskL =
+    { EAknsMajorSkin, EAknsMinorQgnHomeContactMaskL};  
+
+static const TAknsItemID KAknsIIDQgnHomeContactMaskR =
+    { EAknsMajorSkin, EAknsMinorQgnHomeContactMaskR};  
+
+static const TAknsItemID KAknsIIDQgnHomeContactMaskCenter =
+    { EAknsMajorSkin, EAknsMinorQgnHomeContactMaskCenter}; 
+    
+    
+    // Qgn Home Wm Button
+static const TAknsItemID KAknsIIDQgnHomeWmButton =
+    { EAknsMajorSkin, EAknsMinorQgnHomeWmButton};
+
+static const TAknsItemID KAknsIIDQgnHomeWmButtonTl =
+    { EAknsMajorSkin, EAknsMinorQgnHomeWmButtonTl};
+    
+static const TAknsItemID KAknsIIDQgnHomeWmButtonTr =
+    { EAknsMajorSkin, EAknsMinorQgnHomeWmButtonTr};
+    
+static const TAknsItemID KAknsIIDQgnHomeWmButtonBl =
+    { EAknsMajorSkin, EAknsMinorQgnHomeWmButtonBl};
+    
+static const TAknsItemID KAknsIIDQgnHomeWmButtonBr =
+    { EAknsMajorSkin, EAknsMinorQgnHomeWmButtonBr};   
+   
+static const TAknsItemID KAknsIIDQgnHomeWmButtonT =
+    { EAknsMajorSkin, EAknsMinorQgnHomeWmButtonT};   
+    
+static const TAknsItemID KAknsIIDQgnHomeWmButtonB =
+    { EAknsMajorSkin, EAknsMinorQgnHomeWmButtonB}; 
+
+static const TAknsItemID KAknsIIDQgnHomeWmButtonL =
+    { EAknsMajorSkin, EAknsMinorQgnHomeWmButtonL};  
+
+static const TAknsItemID KAknsIIDQgnHomeWmButtonR =
+    { EAknsMajorSkin, EAknsMinorQgnHomeWmButtonR};  
+
+static const TAknsItemID KAknsIIDQgnHomeWmButtonCenter =
+    { EAknsMajorSkin, EAknsMinorQgnHomeWmButtonCenter}; 
+    
+    
+    // Qsn Fr Button Highlight Answer
+static const TAknsItemID KAknsIIDQsnFrButtonHighlightAnswer =
+    { EAknsMajorSkin, EAknsMinorQsnFrButtonHighlightAnswer};
+
+static const TAknsItemID KAknsIIDQsnFrButtonHighlightAnswerTl =
+    { EAknsMajorSkin, EAknsMinorQsnFrButtonHighlightAnswerTl};
+    
+static const TAknsItemID KAknsIIDQsnFrButtonHighlightAnswerTr =
+    { EAknsMajorSkin, EAknsMinorQsnFrButtonHighlightAnswerTr};
+    
+static const TAknsItemID KAknsIIDQsnFrButtonHighlightAnswerBl =
+    { EAknsMajorSkin, EAknsMinorQsnFrButtonHighlightAnswerBl};
+    
+static const TAknsItemID KAknsIIDQsnFrButtonHighlightAnswerBr =
+    { EAknsMajorSkin, EAknsMinorQsnFrButtonHighlightAnswerBr};   
+   
+static const TAknsItemID KAknsIIDQsnFrButtonHighlightAnswerT =
+    { EAknsMajorSkin, EAknsMinorQsnFrButtonHighlightAnswerT};   
+    
+static const TAknsItemID KAknsIIDQsnFrButtonHighlightAnswerB =
+    { EAknsMajorSkin, EAknsMinorQsnFrButtonHighlightAnswerB}; 
+
+static const TAknsItemID KAknsIIDQsnFrButtonHighlightAnswerL =
+    { EAknsMajorSkin, EAknsMinorQsnFrButtonHighlightAnswerL};  
+
+static const TAknsItemID KAknsIIDQsnFrButtonHighlightAnswerR =
+    { EAknsMajorSkin, EAknsMinorQsnFrButtonHighlightAnswerR};  
+
+static const TAknsItemID KAknsIIDQsnFrButtonHighlightAnswerCenter =
+    { EAknsMajorSkin, EAknsMinorQsnFrButtonHighlightAnswerCenter}; 
+    
+    
+    // Qsn Fr Button Highlight Hold
+static const TAknsItemID KAknsIIDQsnFrButtonHighlightHold =
+    { EAknsMajorSkin, EAknsMinorQsnFrButtonHighlightHold};
+
+static const TAknsItemID KAknsIIDQsnFrButtonHighlightHoldTl =
+    { EAknsMajorSkin, EAknsMinorQsnFrButtonHighlightHoldTl};
+    
+static const TAknsItemID KAknsIIDQsnFrButtonHighlightHoldTr =
+    { EAknsMajorSkin, EAknsMinorQsnFrButtonHighlightHoldTr};
+    
+static const TAknsItemID KAknsIIDQsnFrButtonHighlightHoldBl =
+    { EAknsMajorSkin, EAknsMinorQsnFrButtonHighlightHoldBl};
+    
+static const TAknsItemID KAknsIIDQsnFrButtonHighlightHoldBr =
+    { EAknsMajorSkin, EAknsMinorQsnFrButtonHighlightHoldBr};   
+   
+static const TAknsItemID KAknsIIDQsnFrButtonHighlightHoldT =
+    { EAknsMajorSkin, EAknsMinorQsnFrButtonHighlightHoldT};   
+    
+static const TAknsItemID KAknsIIDQsnFrButtonHighlightHoldB =
+    { EAknsMajorSkin, EAknsMinorQsnFrButtonHighlightHoldB}; 
+
+static const TAknsItemID KAknsIIDQsnFrButtonHighlightHoldL =
+    { EAknsMajorSkin, EAknsMinorQsnFrButtonHighlightHoldL};  
+
+static const TAknsItemID KAknsIIDQsnFrButtonHighlightHoldR =
+    { EAknsMajorSkin, EAknsMinorQsnFrButtonHighlightHoldR};  
+
+static const TAknsItemID KAknsIIDQsnFrButtonHighlightHoldCenter =
+    { EAknsMajorSkin, EAknsMinorQsnFrButtonHighlightHoldCenter}; 
+    
+    
+    // Qsn Fr Button Highlight Reject
+static const TAknsItemID KAknsIIDQsnFrButtonHighlightReject =
+    { EAknsMajorSkin, EAknsMinorQsnFrButtonHighlightReject};
+
+static const TAknsItemID KAknsIIDQsnFrButtonHighlightRejectTl =
+    { EAknsMajorSkin, EAknsMinorQsnFrButtonHighlightRejectTl};
+    
+static const TAknsItemID KAknsIIDQsnFrButtonHighlightRejectTr =
+    { EAknsMajorSkin, EAknsMinorQsnFrButtonHighlightRejectTr};
+    
+static const TAknsItemID KAknsIIDQsnFrButtonHighlightRejectBl =
+    { EAknsMajorSkin, EAknsMinorQsnFrButtonHighlightRejectBl};
+    
+static const TAknsItemID KAknsIIDQsnFrButtonHighlightRejectBr =
+    { EAknsMajorSkin, EAknsMinorQsnFrButtonHighlightRejectBr};   
+   
+static const TAknsItemID KAknsIIDQsnFrButtonHighlightRejectT =
+    { EAknsMajorSkin, EAknsMinorQsnFrButtonHighlightRejectT};   
+    
+static const TAknsItemID KAknsIIDQsnFrButtonHighlightRejectB =
+    { EAknsMajorSkin, EAknsMinorQsnFrButtonHighlightRejectB}; 
+
+static const TAknsItemID KAknsIIDQsnFrButtonHighlightRejectL =
+    { EAknsMajorSkin, EAknsMinorQsnFrButtonHighlightRejectL};  
+
+static const TAknsItemID KAknsIIDQsnFrButtonHighlightRejectR =
+    { EAknsMajorSkin, EAknsMinorQsnFrButtonHighlightRejectR};  
+
+static const TAknsItemID KAknsIIDQsnFrButtonHighlightRejectCenter =
+    { EAknsMajorSkin, EAknsMinorQsnFrButtonHighlightRejectCenter}; 
+    
+    
+    // Qsn Fr Button Inactive Answer
+static const TAknsItemID KAknsIIDQsnFrButtonInactiveAnswer =
+    { EAknsMajorSkin, EAknsMinorQsnFrButtonInactiveAnswer};
+
+static const TAknsItemID KAknsIIDQsnFrButtonInactiveAnswerTl =
+    { EAknsMajorSkin, EAknsMinorQsnFrButtonInactiveAnswerTl};
+    
+static const TAknsItemID KAknsIIDQsnFrButtonInactiveAnswerTr =
+    { EAknsMajorSkin, EAknsMinorQsnFrButtonInactiveAnswerTr};
+    
+static const TAknsItemID KAknsIIDQsnFrButtonInactiveAnswerBl =
+    { EAknsMajorSkin, EAknsMinorQsnFrButtonInactiveAnswerBl};
+    
+static const TAknsItemID KAknsIIDQsnFrButtonInactiveAnswerBr =
+    { EAknsMajorSkin, EAknsMinorQsnFrButtonInactiveAnswerBr};   
+   
+static const TAknsItemID KAknsIIDQsnFrButtonInactiveAnswerT =
+    { EAknsMajorSkin, EAknsMinorQsnFrButtonInactiveAnswerT};   
+    
+static const TAknsItemID KAknsIIDQsnFrButtonInactiveAnswerB =
+    { EAknsMajorSkin, EAknsMinorQsnFrButtonInactiveAnswerB}; 
+
+static const TAknsItemID KAknsIIDQsnFrButtonInactiveAnswerL =
+    { EAknsMajorSkin, EAknsMinorQsnFrButtonInactiveAnswerL};  
+
+static const TAknsItemID KAknsIIDQsnFrButtonInactiveAnswerR =
+    { EAknsMajorSkin, EAknsMinorQsnFrButtonInactiveAnswerR};  
+
+static const TAknsItemID KAknsIIDQsnFrButtonInactiveAnswerCenter =
+    { EAknsMajorSkin, EAknsMinorQsnFrButtonInactiveAnswerCenter}; 
+    
+    
+    // Qsn Fr Button Inactive Hold
+static const TAknsItemID KAknsIIDQsnFrButtonInactiveHold =
+    { EAknsMajorSkin, EAknsMinorQsnFrButtonInactiveHold};
+
+static const TAknsItemID KAknsIIDQsnFrButtonInactiveHoldTl =
+    { EAknsMajorSkin, EAknsMinorQsnFrButtonInactiveHoldTl};
+    
+static const TAknsItemID KAknsIIDQsnFrButtonInactiveHoldTr =
+    { EAknsMajorSkin, EAknsMinorQsnFrButtonInactiveHoldTr};
+    
+static const TAknsItemID KAknsIIDQsnFrButtonInactiveHoldBl =
+    { EAknsMajorSkin, EAknsMinorQsnFrButtonInactiveHoldBl};
+    
+static const TAknsItemID KAknsIIDQsnFrButtonInactiveHoldBr =
+    { EAknsMajorSkin, EAknsMinorQsnFrButtonInactiveHoldBr};   
+   
+static const TAknsItemID KAknsIIDQsnFrButtonInactiveHoldT =
+    { EAknsMajorSkin, EAknsMinorQsnFrButtonInactiveHoldT};   
+    
+static const TAknsItemID KAknsIIDQsnFrButtonInactiveHoldB =
+    { EAknsMajorSkin, EAknsMinorQsnFrButtonInactiveHoldB}; 
+
+static const TAknsItemID KAknsIIDQsnFrButtonInactiveHoldL =
+    { EAknsMajorSkin, EAknsMinorQsnFrButtonInactiveHoldL};  
+
+static const TAknsItemID KAknsIIDQsnFrButtonInactiveHoldR =
+    { EAknsMajorSkin, EAknsMinorQsnFrButtonInactiveHoldR};  
+
+static const TAknsItemID KAknsIIDQsnFrButtonInactiveHoldCenter =
+    { EAknsMajorSkin, EAknsMinorQsnFrButtonInactiveHoldCenter}; 
+    
+    
+    // Qsn Fr Button Inactive Reject
+static const TAknsItemID KAknsIIDQsnFrButtonInactiveReject =
+    { EAknsMajorSkin, EAknsMinorQsnFrButtonInactiveReject};
+
+static const TAknsItemID KAknsIIDQsnFrButtonInactiveRejectTl =
+    { EAknsMajorSkin, EAknsMinorQsnFrButtonInactiveRejectTl};
+    
+static const TAknsItemID KAknsIIDQsnFrButtonInactiveRejectTr =
+    { EAknsMajorSkin, EAknsMinorQsnFrButtonInactiveRejectTr};
+    
+static const TAknsItemID KAknsIIDQsnFrButtonInactiveRejectBl =
+    { EAknsMajorSkin, EAknsMinorQsnFrButtonInactiveRejectBl};
+    
+static const TAknsItemID KAknsIIDQsnFrButtonInactiveRejectBr =
+    { EAknsMajorSkin, EAknsMinorQsnFrButtonInactiveRejectBr};   
+   
+static const TAknsItemID KAknsIIDQsnFrButtonInactiveRejectT =
+    { EAknsMajorSkin, EAknsMinorQsnFrButtonInactiveRejectT};   
+    
+static const TAknsItemID KAknsIIDQsnFrButtonInactiveRejectB =
+    { EAknsMajorSkin, EAknsMinorQsnFrButtonInactiveRejectB}; 
+
+static const TAknsItemID KAknsIIDQsnFrButtonInactiveRejectL =
+    { EAknsMajorSkin, EAknsMinorQsnFrButtonInactiveRejectL};  
+
+static const TAknsItemID KAknsIIDQsnFrButtonInactiveRejectR =
+    { EAknsMajorSkin, EAknsMinorQsnFrButtonInactiveRejectR};  
+
+static const TAknsItemID KAknsIIDQsnFrButtonInactiveRejectCenter =
+    { EAknsMajorSkin, EAknsMinorQsnFrButtonInactiveRejectCenter}; 
+    
+    
+    // Qsn Fr Button Normal Answer
+static const TAknsItemID KAknsIIDQsnFrButtonNormalAnswer =
+    { EAknsMajorSkin, EAknsMinorQsnFrButtonNormalAnswer};
+
+static const TAknsItemID KAknsIIDQsnFrButtonNormalAnswerTl =
+    { EAknsMajorSkin, EAknsMinorQsnFrButtonNormalAnswerTl};
+    
+static const TAknsItemID KAknsIIDQsnFrButtonNormalAnswerTr =
+    { EAknsMajorSkin, EAknsMinorQsnFrButtonNormalAnswerTr};
+    
+static const TAknsItemID KAknsIIDQsnFrButtonNormalAnswerBl =
+    { EAknsMajorSkin, EAknsMinorQsnFrButtonNormalAnswerBl};
+    
+static const TAknsItemID KAknsIIDQsnFrButtonNormalAnswerBr =
+    { EAknsMajorSkin, EAknsMinorQsnFrButtonNormalAnswerBr};   
+   
+static const TAknsItemID KAknsIIDQsnFrButtonNormalAnswerT =
+    { EAknsMajorSkin, EAknsMinorQsnFrButtonNormalAnswerT};   
+    
+static const TAknsItemID KAknsIIDQsnFrButtonNormalAnswerB =
+    { EAknsMajorSkin, EAknsMinorQsnFrButtonNormalAnswerB}; 
+
+static const TAknsItemID KAknsIIDQsnFrButtonNormalAnswerL =
+    { EAknsMajorSkin, EAknsMinorQsnFrButtonNormalAnswerL};  
+
+static const TAknsItemID KAknsIIDQsnFrButtonNormalAnswerR =
+    { EAknsMajorSkin, EAknsMinorQsnFrButtonNormalAnswerR};  
+
+static const TAknsItemID KAknsIIDQsnFrButtonNormalAnswerCenter =
+    { EAknsMajorSkin, EAknsMinorQsnFrButtonNormalAnswerCenter}; 
+    
+    
+    // Qsn Fr Button Normal Hold
+static const TAknsItemID KAknsIIDQsnFrButtonNormalHold =
+    { EAknsMajorSkin, EAknsMinorQsnFrButtonNormalHold};
+
+static const TAknsItemID KAknsIIDQsnFrButtonNormalHoldTl =
+    { EAknsMajorSkin, EAknsMinorQsnFrButtonNormalHoldTl};
+    
+static const TAknsItemID KAknsIIDQsnFrButtonNormalHoldTr =
+    { EAknsMajorSkin, EAknsMinorQsnFrButtonNormalHoldTr};
+    
+static const TAknsItemID KAknsIIDQsnFrButtonNormalHoldBl =
+    { EAknsMajorSkin, EAknsMinorQsnFrButtonNormalHoldBl};
+    
+static const TAknsItemID KAknsIIDQsnFrButtonNormalHoldBr =
+    { EAknsMajorSkin, EAknsMinorQsnFrButtonNormalHoldBr};   
+   
+static const TAknsItemID KAknsIIDQsnFrButtonNormalHoldT =
+    { EAknsMajorSkin, EAknsMinorQsnFrButtonNormalHoldT};   
+    
+static const TAknsItemID KAknsIIDQsnFrButtonNormalHoldB =
+    { EAknsMajorSkin, EAknsMinorQsnFrButtonNormalHoldB}; 
+
+static const TAknsItemID KAknsIIDQsnFrButtonNormalHoldL =
+    { EAknsMajorSkin, EAknsMinorQsnFrButtonNormalHoldL};  
+
+static const TAknsItemID KAknsIIDQsnFrButtonNormalHoldR =
+    { EAknsMajorSkin, EAknsMinorQsnFrButtonNormalHoldR};  
+
+static const TAknsItemID KAknsIIDQsnFrButtonNormalHoldCenter =
+    { EAknsMajorSkin, EAknsMinorQsnFrButtonNormalHoldCenter}; 
+    
+    
+    // Qsn Fr Button Normal Reject
+static const TAknsItemID KAknsIIDQsnFrButtonNormalReject =
+    { EAknsMajorSkin, EAknsMinorQsnFrButtonNormalReject};
+
+static const TAknsItemID KAknsIIDQsnFrButtonNormalRejectTl =
+    { EAknsMajorSkin, EAknsMinorQsnFrButtonNormalRejectTl};
+    
+static const TAknsItemID KAknsIIDQsnFrButtonNormalRejectTr =
+    { EAknsMajorSkin, EAknsMinorQsnFrButtonNormalRejectTr};
+    
+static const TAknsItemID KAknsIIDQsnFrButtonNormalRejectBl =
+    { EAknsMajorSkin, EAknsMinorQsnFrButtonNormalRejectBl};
+    
+static const TAknsItemID KAknsIIDQsnFrButtonNormalRejectBr =
+    { EAknsMajorSkin, EAknsMinorQsnFrButtonNormalRejectBr};   
+   
+static const TAknsItemID KAknsIIDQsnFrButtonNormalRejectT =
+    { EAknsMajorSkin, EAknsMinorQsnFrButtonNormalRejectT};   
+    
+static const TAknsItemID KAknsIIDQsnFrButtonNormalRejectB =
+    { EAknsMajorSkin, EAknsMinorQsnFrButtonNormalRejectB}; 
+
+static const TAknsItemID KAknsIIDQsnFrButtonNormalRejectL =
+    { EAknsMajorSkin, EAknsMinorQsnFrButtonNormalRejectL};  
+
+static const TAknsItemID KAknsIIDQsnFrButtonNormalRejectR =
+    { EAknsMajorSkin, EAknsMinorQsnFrButtonNormalRejectR};  
+
+static const TAknsItemID KAknsIIDQsnFrButtonNormalRejectCenter =
+    { EAknsMajorSkin, EAknsMinorQsnFrButtonNormalRejectCenter}; 
+    
+    
+    // Qsn Fr Button Pressed Answer
+static const TAknsItemID KAknsIIDQsnFrButtonPressedAnswer =
+    { EAknsMajorSkin, EAknsMinorQsnFrButtonPressedAnswer};
+
+static const TAknsItemID KAknsIIDQsnFrButtonPressedAnswerTl =
+    { EAknsMajorSkin, EAknsMinorQsnFrButtonPressedAnswerTl};
+    
+static const TAknsItemID KAknsIIDQsnFrButtonPressedAnswerTr =
+    { EAknsMajorSkin, EAknsMinorQsnFrButtonPressedAnswerTr};
+    
+static const TAknsItemID KAknsIIDQsnFrButtonPressedAnswerBl =
+    { EAknsMajorSkin, EAknsMinorQsnFrButtonPressedAnswerBl};
+    
+static const TAknsItemID KAknsIIDQsnFrButtonPressedAnswerBr =
+    { EAknsMajorSkin, EAknsMinorQsnFrButtonPressedAnswerBr};   
+   
+static const TAknsItemID KAknsIIDQsnFrButtonPressedAnswerT =
+    { EAknsMajorSkin, EAknsMinorQsnFrButtonPressedAnswerT};   
+    
+static const TAknsItemID KAknsIIDQsnFrButtonPressedAnswerB =
+    { EAknsMajorSkin, EAknsMinorQsnFrButtonPressedAnswerB}; 
+
+static const TAknsItemID KAknsIIDQsnFrButtonPressedAnswerL =
+    { EAknsMajorSkin, EAknsMinorQsnFrButtonPressedAnswerL};  
+
+static const TAknsItemID KAknsIIDQsnFrButtonPressedAnswerR =
+    { EAknsMajorSkin, EAknsMinorQsnFrButtonPressedAnswerR};  
+
+static const TAknsItemID KAknsIIDQsnFrButtonPressedAnswerCenter =
+    { EAknsMajorSkin, EAknsMinorQsnFrButtonPressedAnswerCenter}; 
+    
+    
+    // Qsn Fr Button Pressed Hold
+static const TAknsItemID KAknsIIDQsnFrButtonPressedHold =
+    { EAknsMajorSkin, EAknsMinorQsnFrButtonPressedHold};
+
+static const TAknsItemID KAknsIIDQsnFrButtonPressedHoldTl =
+    { EAknsMajorSkin, EAknsMinorQsnFrButtonPressedHoldTl};
+    
+static const TAknsItemID KAknsIIDQsnFrButtonPressedHoldTr =
+    { EAknsMajorSkin, EAknsMinorQsnFrButtonPressedHoldTr};
+    
+static const TAknsItemID KAknsIIDQsnFrButtonPressedHoldBl =
+    { EAknsMajorSkin, EAknsMinorQsnFrButtonPressedHoldBl};
+    
+static const TAknsItemID KAknsIIDQsnFrButtonPressedHoldBr =
+    { EAknsMajorSkin, EAknsMinorQsnFrButtonPressedHoldBr};   
+   
+static const TAknsItemID KAknsIIDQsnFrButtonPressedHoldT =
+    { EAknsMajorSkin, EAknsMinorQsnFrButtonPressedHoldT};   
+    
+static const TAknsItemID KAknsIIDQsnFrButtonPressedHoldB =
+    { EAknsMajorSkin, EAknsMinorQsnFrButtonPressedHoldB}; 
+
+static const TAknsItemID KAknsIIDQsnFrButtonPressedHoldL =
+    { EAknsMajorSkin, EAknsMinorQsnFrButtonPressedHoldL};  
+
+static const TAknsItemID KAknsIIDQsnFrButtonPressedHoldR =
+    { EAknsMajorSkin, EAknsMinorQsnFrButtonPressedHoldR};  
+
+static const TAknsItemID KAknsIIDQsnFrButtonPressedHoldCenter =
+    { EAknsMajorSkin, EAknsMinorQsnFrButtonPressedHoldCenter}; 
+    
+    
+    // Qsn Fr Button Pressed Reject
+static const TAknsItemID KAknsIIDQsnFrButtonPressedReject =
+    { EAknsMajorSkin, EAknsMinorQsnFrButtonPressedReject};
+
+static const TAknsItemID KAknsIIDQsnFrButtonPressedRejectTl =
+    { EAknsMajorSkin, EAknsMinorQsnFrButtonPressedRejectTl};
+    
+static const TAknsItemID KAknsIIDQsnFrButtonPressedRejectTr =
+    { EAknsMajorSkin, EAknsMinorQsnFrButtonPressedRejectTr};
+    
+static const TAknsItemID KAknsIIDQsnFrButtonPressedRejectBl =
+    { EAknsMajorSkin, EAknsMinorQsnFrButtonPressedRejectBl};
+    
+static const TAknsItemID KAknsIIDQsnFrButtonPressedRejectBr =
+    { EAknsMajorSkin, EAknsMinorQsnFrButtonPressedRejectBr};   
+   
+static const TAknsItemID KAknsIIDQsnFrButtonPressedRejectT =
+    { EAknsMajorSkin, EAknsMinorQsnFrButtonPressedRejectT};   
+    
+static const TAknsItemID KAknsIIDQsnFrButtonPressedRejectB =
+    { EAknsMajorSkin, EAknsMinorQsnFrButtonPressedRejectB}; 
+
+static const TAknsItemID KAknsIIDQsnFrButtonPressedRejectL =
+    { EAknsMajorSkin, EAknsMinorQsnFrButtonPressedRejectL};  
+
+static const TAknsItemID KAknsIIDQsnFrButtonPressedRejectR =
+    { EAknsMajorSkin, EAknsMinorQsnFrButtonPressedRejectR};  
+
+static const TAknsItemID KAknsIIDQsnFrButtonPressedRejectCenter =
+    { EAknsMajorSkin, EAknsMinorQsnFrButtonPressedRejectCenter}; 
+    
+    
+    // Qsn Fr Keypad Button Inactive
+static const TAknsItemID KAknsIIDQsnFrKeypadButtonFrInactive =
+    { EAknsMajorSkin, EAknsMinorQsnFrKeypadButtonInactive};
+
+static const TAknsItemID KAknsIIDQsnFrKeypadButtonInactiveTl =
+    { EAknsMajorSkin, EAknsMinorQsnFrKeypadButtonInactiveTl};
+    
+static const TAknsItemID KAknsIIDQsnFrKeypadButtonInactiveTr =
+    { EAknsMajorSkin, EAknsMinorQsnFrKeypadButtonInactiveTr};
+    
+static const TAknsItemID KAknsIIDQsnFrKeypadButtonInactiveBl =
+    { EAknsMajorSkin, EAknsMinorQsnFrKeypadButtonInactiveBl};
+    
+static const TAknsItemID KAknsIIDQsnFrKeypadButtonInactiveBr =
+    { EAknsMajorSkin, EAknsMinorQsnFrKeypadButtonInactiveBr};   
+   
+static const TAknsItemID KAknsIIDQsnFrKeypadButtonInactiveT =
+    { EAknsMajorSkin, EAknsMinorQsnFrKeypadButtonInactiveT};   
+    
+static const TAknsItemID KAknsIIDQsnFrKeypadButtonInactiveB =
+    { EAknsMajorSkin, EAknsMinorQsnFrKeypadButtonInactiveB}; 
+
+static const TAknsItemID KAknsIIDQsnFrKeypadButtonInactiveL =
+    { EAknsMajorSkin, EAknsMinorQsnFrKeypadButtonInactiveL};  
+
+static const TAknsItemID KAknsIIDQsnFrKeypadButtonInactiveR =
+    { EAknsMajorSkin, EAknsMinorQsnFrKeypadButtonInactiveR};  
+
+static const TAknsItemID KAknsIIDQsnFrKeypadButtonInactiveCenter =
+    { EAknsMajorSkin, EAknsMinorQsnFrKeypadButtonInactiveCenter}; 
+    
+    
+    // Qsn Fr Keypad Button Normal
+static const TAknsItemID KAknsIIDQsnFrKeypadButtonFrNormal =
+    { EAknsMajorSkin, EAknsMinorQsnFrKeypadButtonNormal};
+
+static const TAknsItemID KAknsIIDQsnFrKeypadButtonNormalTl =
+    { EAknsMajorSkin, EAknsMinorQsnFrKeypadButtonNormalTl};
+    
+static const TAknsItemID KAknsIIDQsnFrKeypadButtonNormalTr =
+    { EAknsMajorSkin, EAknsMinorQsnFrKeypadButtonNormalTr};
+    
+static const TAknsItemID KAknsIIDQsnFrKeypadButtonNormalBl =
+    { EAknsMajorSkin, EAknsMinorQsnFrKeypadButtonNormalBl};
+    
+static const TAknsItemID KAknsIIDQsnFrKeypadButtonNormalBr =
+    { EAknsMajorSkin, EAknsMinorQsnFrKeypadButtonNormalBr};   
+   
+static const TAknsItemID KAknsIIDQsnFrKeypadButtonNormalT =
+    { EAknsMajorSkin, EAknsMinorQsnFrKeypadButtonNormalT};   
+    
+static const TAknsItemID KAknsIIDQsnFrKeypadButtonNormalB =
+    { EAknsMajorSkin, EAknsMinorQsnFrKeypadButtonNormalB}; 
+
+static const TAknsItemID KAknsIIDQsnFrKeypadButtonNormalL =
+    { EAknsMajorSkin, EAknsMinorQsnFrKeypadButtonNormalL};  
+
+static const TAknsItemID KAknsIIDQsnFrKeypadButtonNormalR =
+    { EAknsMajorSkin, EAknsMinorQsnFrKeypadButtonNormalR};  
+
+static const TAknsItemID KAknsIIDQsnFrKeypadButtonNormalCenter =
+    { EAknsMajorSkin, EAknsMinorQsnFrKeypadButtonNormalCenter}; 
+    
+    
+    // Qsn Fr Keypad Button Pressed
+static const TAknsItemID KAknsIIDQsnFrKeypadButtonFrPressed =
+    { EAknsMajorSkin, EAknsMinorQsnFrKeypadButtonPressed};
+
+static const TAknsItemID KAknsIIDQsnFrKeypadButtonPressedTl =
+    { EAknsMajorSkin, EAknsMinorQsnFrKeypadButtonPressedTl};
+    
+static const TAknsItemID KAknsIIDQsnFrKeypadButtonPressedTr =
+    { EAknsMajorSkin, EAknsMinorQsnFrKeypadButtonPressedTr};
+    
+static const TAknsItemID KAknsIIDQsnFrKeypadButtonPressedBl =
+    { EAknsMajorSkin, EAknsMinorQsnFrKeypadButtonPressedBl};
+    
+static const TAknsItemID KAknsIIDQsnFrKeypadButtonPressedBr =
+    { EAknsMajorSkin, EAknsMinorQsnFrKeypadButtonPressedBr};   
+   
+static const TAknsItemID KAknsIIDQsnFrKeypadButtonPressedT =
+    { EAknsMajorSkin, EAknsMinorQsnFrKeypadButtonPressedT};   
+    
+static const TAknsItemID KAknsIIDQsnFrKeypadButtonPressedB =
+    { EAknsMajorSkin, EAknsMinorQsnFrKeypadButtonPressedB}; 
+
+static const TAknsItemID KAknsIIDQsnFrKeypadButtonPressedL =
+    { EAknsMajorSkin, EAknsMinorQsnFrKeypadButtonPressedL};  
+
+static const TAknsItemID KAknsIIDQsnFrKeypadButtonPressedR =
+    { EAknsMajorSkin, EAknsMinorQsnFrKeypadButtonPressedR};  
+
+static const TAknsItemID KAknsIIDQsnFrKeypadButtonPressedCenter =
+    { EAknsMajorSkin, EAknsMinorQsnFrKeypadButtonPressedCenter}; 
+    
+    
+    // Qgn Home Wm Button Pressed
+static const TAknsItemID KAknsIIDQgnHomeWmButtonPressed =
+    { EAknsMajorSkin, EAknsMinorQgnHomeWmButtonPressed};
+
+static const TAknsItemID KAknsIIDQgnHomeWmButtonPressedTl =
+    { EAknsMajorSkin, EAknsMinorQgnHomeWmButtonPressedTl};
+    
+static const TAknsItemID KAknsIIDQgnHomeWmButtonPressedTr =
+    { EAknsMajorSkin, EAknsMinorQgnHomeWmButtonPressedTr};
+    
+static const TAknsItemID KAknsIIDQgnHomeWmButtonPressedBl =
+    { EAknsMajorSkin, EAknsMinorQgnHomeWmButtonPressedBl};
+    
+static const TAknsItemID KAknsIIDQgnHomeWmButtonPressedBr =
+    { EAknsMajorSkin, EAknsMinorQgnHomeWmButtonPressedBr};   
+   
+static const TAknsItemID KAknsIIDQgnHomeWmButtonPressedT =
+    { EAknsMajorSkin, EAknsMinorQgnHomeWmButtonPressedT};   
+    
+static const TAknsItemID KAknsIIDQgnHomeWmButtonPressedB =
+    { EAknsMajorSkin, EAknsMinorQgnHomeWmButtonPressedB}; 
+
+static const TAknsItemID KAknsIIDQgnHomeWmButtonPressedL =
+    { EAknsMajorSkin, EAknsMinorQgnHomeWmButtonPressedL};  
+
+static const TAknsItemID KAknsIIDQgnHomeWmButtonPressedR =
+    { EAknsMajorSkin, EAknsMinorQgnHomeWmButtonPressedR};  
+
+static const TAknsItemID KAknsIIDQgnHomeWmButtonPressedCenter =
+    { EAknsMajorSkin, EAknsMinorQgnHomeWmButtonPressedCenter}; 
     
     
 
@@ -19730,6 +20327,1584 @@ static const TAknsItemID KAknsIIDQgnMenuGroupEmail =
 
 static const TAknsItemID KAknsIIDQgnStatCaseHybrid =
     { EAknsMajorGeneric, EAknsMinorGenericQgnStatCaseHybrid };
+
+static const TAknsItemID KAknsIIDQgnGrafStartupProto =
+    { EAknsMajorGeneric, EAknsMinorGenericQgnGrafStartupProto };
+
+static const TAknsItemID KAknsIIDQgnPropContPerson =
+    { EAknsMajorGeneric, EAknsMinorGenericQgnPropContPerson };
+
+static const TAknsItemID KAknsIIDQgnPropEmailLog =
+    { EAknsMajorGeneric, EAknsMinorGenericQgnPropEmailLog };
+
+static const TAknsItemID KAknsIIDQgnPropFolderOpenSub =
+    { EAknsMajorGeneric, EAknsMinorGenericQgnPropFolderOpenSub };
+
+static const TAknsItemID KAknsIIDQgnPropLocOnMap =
+    { EAknsMajorGeneric, EAknsMinorGenericQgnPropLocOnMap };
+
+static const TAknsItemID KAknsIIDQgnPropMsgLog =
+    { EAknsMajorGeneric, EAknsMinorGenericQgnPropMsgLog };
+
+static const TAknsItemID KAknsIIDQgnPropOutgEmail =
+    { EAknsMajorGeneric, EAknsMinorGenericQgnPropOutgEmail };
+
+static const TAknsItemID KAknsIIDQgnPropOutgMsg =
+    { EAknsMajorGeneric, EAknsMinorGenericQgnPropOutgMsg };
+
+static const TAknsItemID KAknsIIDQgnPropOutgPhoto =
+    { EAknsMajorGeneric, EAknsMinorGenericQgnPropOutgPhoto };
+
+static const TAknsItemID KAknsIIDQgnPropPhotosNearYou =
+    { EAknsMajorGeneric, EAknsMinorGenericQgnPropPhotosNearYou };
+
+static const TAknsItemID KAknsIIDQgnPropPluginsAv =
+    { EAknsMajorGeneric, EAknsMinorGenericQgnPropPluginsAv };
+
+static const TAknsItemID KAknsIIDQgnPropSearch =
+    { EAknsMajorGeneric, EAknsMinorGenericQgnPropSearch };
+
+static const TAknsItemID KAknsIIDQgnPropSendBirthday =
+    { EAknsMajorGeneric, EAknsMinorGenericQgnPropSendBirthday };
+
+static const TAknsItemID KAknsIIDQgnPropSendNowpl =
+    { EAknsMajorGeneric, EAknsMinorGenericQgnPropSendNowpl };
+
+static const TAknsItemID KAknsIIDQgnPropSendNowwatTv =
+    { EAknsMajorGeneric, EAknsMinorGenericQgnPropSendNowwatTv };
+
+static const TAknsItemID KAknsIIDQgnPropSendNowwatVideo =
+    { EAknsMajorGeneric, EAknsMinorGenericQgnPropSendNowwatVideo };
+
+static const TAknsItemID KAknsIIDQgnPropThisdayMsg =
+    { EAknsMajorGeneric, EAknsMinorGenericQgnPropThisdayMsg };
+
+static const TAknsItemID KAknsIIDQgnPropThisdayPhotos =
+    { EAknsMajorGeneric, EAknsMinorGenericQgnPropThisdayPhotos };
+
+static const TAknsItemID KAknsIIDQgnPropSetAppsNfcOff =
+    { EAknsMajorGeneric, EAknsMinorGenericQgnPropSetAppsNfcOff };
+
+static const TAknsItemID KAknsIIDQgnPropSetAppsNfcOn =
+    { EAknsMajorGeneric, EAknsMinorGenericQgnPropSetAppsNfcOn };
+
+static const TAknsItemID KAknsIIDQgnGrafScreencalibUnfocus =
+    { EAknsMajorGeneric, EAknsMinorGenericQgnGrafScreencalibUnfocus };
+
+static const TAknsItemID KAknsIIDQgnIndiCam4Quality6mpHigh =
+    { EAknsMajorGeneric, EAknsMinorGenericQgnIndiCam4Quality6mpHigh };
+
+static const TAknsItemID KAknsIIDQgnIndiCam4Quality9mpHigh =
+    { EAknsMajorGeneric, EAknsMinorGenericQgnIndiCam4Quality9mpHigh };
+
+static const TAknsItemID KAknsIIDQgnIndiInputCaseSymbol =
+    { EAknsMajorGeneric, EAknsMinorGenericQgnIndiInputCaseSymbol };
+
+static const TAknsItemID KAknsIIDQgnIndiInputConvertToEnglish =
+    { EAknsMajorGeneric, EAknsMinorGenericQgnIndiInputConvertToEnglish };
+
+static const TAknsItemID KAknsIIDQgnIndiInputConvertToKorean =
+    { EAknsMajorGeneric, EAknsMinorGenericQgnIndiInputConvertToKorean };
+
+static const TAknsItemID KAknsIIDQgnPropMpVideoFeeds =
+    { EAknsMajorGeneric, EAknsMinorGenericQgnPropMpVideoFeeds };
+
+static const TAknsItemID KAknsIIDQgnPropServiceUnknownAvatar =
+    { EAknsMajorGeneric, EAknsMinorGenericQgnPropServiceUnknownAvatar };
+
+static const TAknsItemID KAknsIIDQgnPropUsbModem =
+    { EAknsMajorGeneric, EAknsMinorGenericQgnPropUsbModem };
+
+static const TAknsItemID KAknsIIDQgnPropUsbMtp =
+    { EAknsMajorGeneric, EAknsMinorGenericQgnPropUsbMtp };
+
+static const TAknsItemID KAknsIIDQgnPropUsbPcsuite =
+    { EAknsMajorGeneric, EAknsMinorGenericQgnPropUsbPcsuite };
+
+static const TAknsItemID KAknsIIDQgnPropUsbPrint =
+    { EAknsMajorGeneric, EAknsMinorGenericQgnPropUsbPrint };
+
+static const TAknsItemID KAknsIIDQgnIndiInputSctNext =
+    { EAknsMajorGeneric, EAknsMinorGenericQgnIndiInputSctNext };
+
+static const TAknsItemID KAknsIIDQgnIndiInputSctPrev =
+    { EAknsMajorGeneric, EAknsMinorGenericQgnIndiInputSctPrev };
+
+static const TAknsItemID KAknsIIDQgnGrafScreencalibDot =
+    { EAknsMajorGeneric, EAknsMinorGenericQgnGrafScreencalibDot };
+
+static const TAknsItemID KAknsIIDQgnStatServtabUni =
+    { EAknsMajorGeneric, EAknsMinorGenericQgnStatServtabUni };
+
+static const TAknsItemID KAknsIIDQsnBigclockAnalogueFace =
+    { EAknsMajorGeneric, EAknsMinorGenericQsnBigclockAnalogueFace };
+
+static const TAknsItemID KAknsIIDQsnBigclockAnaloguePointerHours =
+    { EAknsMajorGeneric, EAknsMinorGenericQsnBigclockAnaloguePointerHours };
+
+static const TAknsItemID KAknsIIDQsnBigclockAnaloguePointerMinutes =
+    { EAknsMajorGeneric, EAknsMinorGenericQsnBigclockAnaloguePointerMinutes };
+
+static const TAknsItemID KAknsIIDQsnBigclockAnaloguePointerSeconds =
+    { EAknsMajorGeneric, EAknsMinorGenericQsnBigclockAnaloguePointerSeconds };
+
+static const TAknsItemID KAknsIIDQsnBigclockDateBackgroundCenter =
+    { EAknsMajorGeneric, EAknsMinorGenericQsnBigclockDateBackgroundCenter };
+
+static const TAknsItemID KAknsIIDQsnBigclockDateBackgroundLeft =
+    { EAknsMajorGeneric, EAknsMinorGenericQsnBigclockDateBackgroundLeft };
+
+static const TAknsItemID KAknsIIDQsnBigclockDateBackgroundRight =
+    { EAknsMajorGeneric, EAknsMinorGenericQsnBigclockDateBackgroundRight };
+
+static const TAknsItemID KAknsIIDQgnIndiImageFavourite =
+    { EAknsMajorGeneric, EAknsMinorGenericQgnIndiImageFavourite };
+
+static const TAknsItemID KAknsIIDQgnIndiImageFavouriteInactive =
+    { EAknsMajorGeneric, EAknsMinorGenericQgnIndiImageFavouriteInactive };
+
+static const TAknsItemID KAknsIIDQgnIndiImageLocation =
+    { EAknsMajorGeneric, EAknsMinorGenericQgnIndiImageLocation };
+
+static const TAknsItemID KAknsIIDQgnIndiTbEmailAccept =
+    { EAknsMajorGeneric, EAknsMinorGenericQgnIndiTbEmailAccept };
+
+static const TAknsItemID KAknsIIDQgnIndiTbEmailDecline =
+    { EAknsMajorGeneric, EAknsMinorGenericQgnIndiTbEmailDecline };
+
+static const TAknsItemID KAknsIIDQgnIndiTbEmailTentative =
+    { EAknsMajorGeneric, EAknsMinorGenericQgnIndiTbEmailTentative };
+
+static const TAknsItemID KAknsIIDQgnPropCameraLarge =
+    { EAknsMajorGeneric, EAknsMinorGenericQgnPropCameraLarge };
+
+static const TAknsItemID KAknsIIDQgnPropShareonlineLarge =
+    { EAknsMajorGeneric, EAknsMinorGenericQgnPropShareonlineLarge };
+
+static const TAknsItemID KAknsIIDQgnHomeContactMaskC =
+    { EAknsMajorGeneric, EAknsMinorGenericQgnHomeContactMaskC };
+
+static const TAknsItemID KAknsIIDQgnHomeContactMaskCl =
+    { EAknsMajorGeneric, EAknsMinorGenericQgnHomeContactMaskCl };
+
+static const TAknsItemID KAknsIIDQgnHomeContactMaskCr =
+    { EAknsMajorGeneric, EAknsMinorGenericQgnHomeContactMaskCr };
+
+static const TAknsItemID KAknsIIDQgnIndiModeAskAutomatedAdd =
+    { EAknsMajorGeneric, EAknsMinorGenericQgnIndiModeAskAutomatedAdd };
+
+static const TAknsItemID KAknsIIDQgnIndiModeAutomatedAdd =
+    { EAknsMajorGeneric, EAknsMinorGenericQgnIndiModeAutomatedAdd };
+
+static const TAknsItemID KAknsIIDQgnIndiTbLoc =
+    { EAknsMajorGeneric, EAknsMinorGenericQgnIndiTbLoc };
+
+static const TAknsItemID KAknsIIDQgnIndiTbMap =
+    { EAknsMajorGeneric, EAknsMinorGenericQgnIndiTbMap };
+
+static const TAknsItemID KAknsIIDQgnMenuContactbar =
+    { EAknsMajorGeneric, EAknsMinorGenericQgnMenuContactbar };
+
+static const TAknsItemID KAknsIIDQgnMenuOviStore =
+    { EAknsMajorGeneric, EAknsMinorGenericQgnMenuOviStore };
+
+static const TAknsItemID KAknsIIDQgnMenuStoresfolder =
+    { EAknsMajorGeneric, EAknsMinorGenericQgnMenuStoresfolder };
+
+static const TAknsItemID KAknsIIDQgnPropHfvuiUni =
+    { EAknsMajorGeneric, EAknsMinorGenericQgnPropHfvuiUni };
+
+static const TAknsItemID KAknsIIDQgnPropSelMap =
+    { EAknsMajorGeneric, EAknsMinorGenericQgnPropSelMap };
+
+static const TAknsItemID KAknsIIDQgnHomeEditBg =
+    { EAknsMajorGeneric, EAknsMinorGenericQgnHomeEditBg };
+
+static const TAknsItemID KAknsIIDQgnPropImFriendRequestOffline =
+    { EAknsMajorGeneric, EAknsMinorGenericQgnPropImFriendRequestOffline };
+
+static const TAknsItemID KAknsIIDQgnIndiNaviFollowUp =
+    { EAknsMajorGeneric, EAknsMinorGenericQgnIndiNaviFollowUp };
+
+static const TAknsItemID KAknsIIDQgnIndiNaviFollowUpComplete =
+    { EAknsMajorGeneric, EAknsMinorGenericQgnIndiNaviFollowUpComplete };
+
+static const TAknsItemID KAknsIIDQgnIndiSmileyCoffee =
+    { EAknsMajorGeneric, EAknsMinorGenericQgnIndiSmileyCoffee };
+
+static const TAknsItemID KAknsIIDQgnIndiSmileyConnive =
+    { EAknsMajorGeneric, EAknsMinorGenericQgnIndiSmileyConnive };
+
+static const TAknsItemID KAknsIIDQgnIndiSmileyDenial =
+    { EAknsMajorGeneric, EAknsMinorGenericQgnIndiSmileyDenial };
+
+static const TAknsItemID KAknsIIDQgnIndiSmileyFlirt =
+    { EAknsMajorGeneric, EAknsMinorGenericQgnIndiSmileyFlirt };
+
+static const TAknsItemID KAknsIIDQgnIndiSmileyFrustrated =
+    { EAknsMajorGeneric, EAknsMinorGenericQgnIndiSmileyFrustrated };
+
+static const TAknsItemID KAknsIIDQgnIndiSmileyGum =
+    { EAknsMajorGeneric, EAknsMinorGenericQgnIndiSmileyGum };
+
+static const TAknsItemID KAknsIIDQgnIndiSmileyIdea =
+    { EAknsMajorGeneric, EAknsMinorGenericQgnIndiSmileyIdea };
+
+static const TAknsItemID KAknsIIDQgnIndiSmileyInnocent =
+    { EAknsMajorGeneric, EAknsMinorGenericQgnIndiSmileyInnocent };
+
+static const TAknsItemID KAknsIIDQgnIndiSmileyLaugh =
+    { EAknsMajorGeneric, EAknsMinorGenericQgnIndiSmileyLaugh };
+
+static const TAknsItemID KAknsIIDQgnIndiSmileyParty =
+    { EAknsMajorGeneric, EAknsMinorGenericQgnIndiSmileyParty };
+
+static const TAknsItemID KAknsIIDQgnIndiSmileyRun =
+    { EAknsMajorGeneric, EAknsMinorGenericQgnIndiSmileyRun };
+
+static const TAknsItemID KAknsIIDQgnIndiSmileySilly =
+    { EAknsMajorGeneric, EAknsMinorGenericQgnIndiSmileySilly };
+
+static const TAknsItemID KAknsIIDQgnIndiSmileySleep =
+    { EAknsMajorGeneric, EAknsMinorGenericQgnIndiSmileySleep };
+
+static const TAknsItemID KAknsIIDQgnIndiSmileySurprised =
+    { EAknsMajorGeneric, EAknsMinorGenericQgnIndiSmileySurprised };
+
+static const TAknsItemID KAknsIIDQgnIndiTbCollapseAll =
+    { EAknsMajorGeneric, EAknsMinorGenericQgnIndiTbCollapseAll };
+
+static const TAknsItemID KAknsIIDQgnIndiTbExpandAll =
+    { EAknsMajorGeneric, EAknsMinorGenericQgnIndiTbExpandAll };
+
+static const TAknsItemID KAknsIIDQgnIndiTbFolderSettings =
+    { EAknsMajorGeneric, EAknsMinorGenericQgnIndiTbFolderSettings };
+
+static const TAknsItemID KAknsIIDQgnIndiSignalUmaAttach =
+    { EAknsMajorGeneric, EAknsMinorGenericQgnIndiSignalUmaAttach };
+
+static const TAknsItemID KAknsIIDQgnIndiSignalUmaContext =
+    { EAknsMajorGeneric, EAknsMinorGenericQgnIndiSignalUmaContext };
+
+static const TAknsItemID KAknsIIDQgnIndiSignalUmaIcon =
+    { EAknsMajorGeneric, EAknsMinorGenericQgnIndiSignalUmaIcon };
+
+static const TAknsItemID KAknsIIDQgnIndiSignalUmaMultipdp =
+    { EAknsMajorGeneric, EAknsMinorGenericQgnIndiSignalUmaMultipdp };
+
+static const TAknsItemID KAknsIIDQgnIndiSignalUmaNoservice =
+    { EAknsMajorGeneric, EAknsMinorGenericQgnIndiSignalUmaNoservice };
+
+static const TAknsItemID KAknsIIDQgnIndiSignalUmaSuspended =
+    { EAknsMajorGeneric, EAknsMinorGenericQgnIndiSignalUmaSuspended };
+
+static const TAknsItemID KAknsIIDQgnIndiTbEmailExtend =
+    { EAknsMajorGeneric, EAknsMinorGenericQgnIndiTbEmailExtend };
+
+static const TAknsItemID KAknsIIDQgnIndiTbEmailReplyAll =
+    { EAknsMajorGeneric, EAknsMinorGenericQgnIndiTbEmailReplyAll };
+
+static const TAknsItemID KAknsIIDQgnStatDebug =
+    { EAknsMajorGeneric, EAknsMinorGenericQgnStatDebug };
+
+static const TAknsItemID KAknsIIDQgnIndiCaleTbChangeview =
+    { EAknsMajorGeneric, EAknsMinorGenericQgnIndiCaleTbChangeview };
+
+static const TAknsItemID KAknsIIDQgnIndiCaleTbHide =
+    { EAknsMajorGeneric, EAknsMinorGenericQgnIndiCaleTbHide };
+
+static const TAknsItemID KAknsIIDQgnIndiCaleTbNew =
+    { EAknsMajorGeneric, EAknsMinorGenericQgnIndiCaleTbNew };
+
+static const TAknsItemID KAknsIIDQgnIndiCaleTbToday =
+    { EAknsMajorGeneric, EAknsMinorGenericQgnIndiCaleTbToday };
+
+static const TAknsItemID KAknsIIDQgnIndiCaleTbUnhide =
+    { EAknsMajorGeneric, EAknsMinorGenericQgnIndiCaleTbUnhide };
+
+static const TAknsItemID KAknsIIDQgnIndiFsqCursorDown =
+    { EAknsMajorGeneric, EAknsMinorGenericQgnIndiFsqCursorDown };
+
+static const TAknsItemID KAknsIIDQgnIndiFsqCursorUp =
+    { EAknsMajorGeneric, EAknsMinorGenericQgnIndiFsqCursorUp };
+
+static const TAknsItemID KAknsIIDQgnIndiSharedAdd =
+    { EAknsMajorGeneric, EAknsMinorGenericQgnIndiSharedAdd };
+
+static const TAknsItemID KAknsIIDQgnIndiSyncOffAdd =
+    { EAknsMajorGeneric, EAknsMinorGenericQgnIndiSyncOffAdd };
+
+static const TAknsItemID KAknsIIDQgnIndiSyncOnAdd =
+    { EAknsMajorGeneric, EAknsMinorGenericQgnIndiSyncOnAdd };
+
+static const TAknsItemID KAknsIIDQgnIndiCmailArrowDown =
+    { EAknsMajorGeneric, EAknsMinorGenericQgnIndiCmailArrowDown };
+
+static const TAknsItemID KAknsIIDQgnIndiExitFs =
+    { EAknsMajorGeneric, EAknsMinorGenericQgnIndiExitFs };
+
+static const TAknsItemID KAknsIIDQgnHomeEditMode =
+    { EAknsMajorGeneric, EAknsMinorGenericQgnHomeEditMode };
+
+static const TAknsItemID KAknsIIDQgnIndiCam4TbSave =
+    { EAknsMajorGeneric, EAknsMinorGenericQgnIndiCam4TbSave };
+
+static const TAknsItemID KAknsIIDQgnIndiCam4TbUse =
+    { EAknsMajorGeneric, EAknsMinorGenericQgnIndiCam4TbUse };
+
+static const TAknsItemID KAknsIIDQgnIndiCmailHeaderCollapse =
+    { EAknsMajorGeneric, EAknsMinorGenericQgnIndiCmailHeaderCollapse };
+
+static const TAknsItemID KAknsIIDQgnIndiCmailHeaderExpand =
+    { EAknsMajorGeneric, EAknsMinorGenericQgnIndiCmailHeaderExpand };
+
+static const TAknsItemID KAknsIIDQgnIndiMusicAlbumCover =
+    { EAknsMajorGeneric, EAknsMinorGenericQgnIndiMusicAlbumCover };
+
+static const TAknsItemID KAknsIIDQgnIndiMusicAlbumShuffle =
+    { EAknsMajorGeneric, EAknsMinorGenericQgnIndiMusicAlbumShuffle };
+
+static const TAknsItemID KAknsIIDQgnIndiSmileyAnimCoffeeStatic =
+    { EAknsMajorGeneric, EAknsMinorGenericQgnIndiSmileyAnimCoffeeStatic };
+
+static const TAknsItemID KAknsIIDQgnIndiSmileyAnimConniveStatic =
+    { EAknsMajorGeneric, EAknsMinorGenericQgnIndiSmileyAnimConniveStatic };
+
+static const TAknsItemID KAknsIIDQgnIndiSmileyAnimDenialStatic =
+    { EAknsMajorGeneric, EAknsMinorGenericQgnIndiSmileyAnimDenialStatic };
+
+static const TAknsItemID KAknsIIDQgnIndiSmileyAnimFlirtStatic =
+    { EAknsMajorGeneric, EAknsMinorGenericQgnIndiSmileyAnimFlirtStatic };
+
+static const TAknsItemID KAknsIIDQgnIndiSmileyAnimFrustratedStatic =
+    { EAknsMajorGeneric, EAknsMinorGenericQgnIndiSmileyAnimFrustratedStatic };
+
+static const TAknsItemID KAknsIIDQgnIndiSmileyAnimGumStatic =
+    { EAknsMajorGeneric, EAknsMinorGenericQgnIndiSmileyAnimGumStatic };
+
+static const TAknsItemID KAknsIIDQgnIndiSmileyAnimIdeaStatic =
+    { EAknsMajorGeneric, EAknsMinorGenericQgnIndiSmileyAnimIdeaStatic };
+
+static const TAknsItemID KAknsIIDQgnIndiSmileyAnimInnocentStatic =
+    { EAknsMajorGeneric, EAknsMinorGenericQgnIndiSmileyAnimInnocentStatic };
+
+static const TAknsItemID KAknsIIDQgnIndiSmileyAnimLaughStatic =
+    { EAknsMajorGeneric, EAknsMinorGenericQgnIndiSmileyAnimLaughStatic };
+
+static const TAknsItemID KAknsIIDQgnIndiSmileyAnimPartyStatic =
+    { EAknsMajorGeneric, EAknsMinorGenericQgnIndiSmileyAnimPartyStatic };
+
+static const TAknsItemID KAknsIIDQgnIndiSmileyAnimRunStatic =
+    { EAknsMajorGeneric, EAknsMinorGenericQgnIndiSmileyAnimRunStatic };
+
+static const TAknsItemID KAknsIIDQgnIndiSmileyAnimSillyStatic =
+    { EAknsMajorGeneric, EAknsMinorGenericQgnIndiSmileyAnimSillyStatic };
+
+static const TAknsItemID KAknsIIDQgnIndiSmileyAnimSleepStatic =
+    { EAknsMajorGeneric, EAknsMinorGenericQgnIndiSmileyAnimSleepStatic };
+
+static const TAknsItemID KAknsIIDQgnIndiSmileyAnimSurprisedStatic =
+    { EAknsMajorGeneric, EAknsMinorGenericQgnIndiSmileyAnimSurprisedStatic };
+
+static const TAknsItemID KAknsIIDQgnIndiVideoAc3Branding =
+    { EAknsMajorGeneric, EAknsMinorGenericQgnIndiVideoAc3Branding };
+
+static const TAknsItemID KAknsIIDQgnIndiVideoDolby =
+    { EAknsMajorGeneric, EAknsMinorGenericQgnIndiVideoDolby };
+
+static const TAknsItemID KAknsIIDQgnIndiWmAdd =
+    { EAknsMajorGeneric, EAknsMinorGenericQgnIndiWmAdd };
+
+static const TAknsItemID KAknsIIDQgnLgalBg =
+    { EAknsMajorGeneric, EAknsMinorGenericQgnLgalBg };
+
+static const TAknsItemID KAknsIIDQgnLgalFav1 =
+    { EAknsMajorGeneric, EAknsMinorGenericQgnLgalFav1 };
+
+static const TAknsItemID KAknsIIDQgnLgalFav2 =
+    { EAknsMajorGeneric, EAknsMinorGenericQgnLgalFav2 };
+
+static const TAknsItemID KAknsIIDQgnMenuHswidget =
+    { EAknsMajorGeneric, EAknsMinorGenericQgnMenuHswidget };
+
+static const TAknsItemID KAknsIIDQgnPropCpConnSettings =
+    { EAknsMajorGeneric, EAknsMinorGenericQgnPropCpConnSettings };
+
+static const TAknsItemID KAknsIIDQgnPropPhotoAlbumLarge =
+    { EAknsMajorGeneric, EAknsMinorGenericQgnPropPhotoAlbumLarge };
+
+static const TAknsItemID KAknsIIDQgnPropPhotoAllLarge =
+    { EAknsMajorGeneric, EAknsMinorGenericQgnPropPhotoAllLarge };
+
+static const TAknsItemID KAknsIIDQgnPropPhotoCalendarLarge =
+    { EAknsMajorGeneric, EAknsMinorGenericQgnPropPhotoCalendarLarge };
+
+static const TAknsItemID KAknsIIDQgnPropPhotoLocLarge =
+    { EAknsMajorGeneric, EAknsMinorGenericQgnPropPhotoLocLarge };
+
+static const TAknsItemID KAknsIIDQgnPropPhotoTagLarge =
+    { EAknsMajorGeneric, EAknsMinorGenericQgnPropPhotoTagLarge };
+
+static const TAknsItemID KAknsIIDQgnHomePage11 =
+    { EAknsMajorGeneric, EAknsMinorGenericQgnHomePage11 };
+
+static const TAknsItemID KAknsIIDQgnHomePage21 =
+    { EAknsMajorGeneric, EAknsMinorGenericQgnHomePage21 };
+
+static const TAknsItemID KAknsIIDQgnHomePage22 =
+    { EAknsMajorGeneric, EAknsMinorGenericQgnHomePage22 };
+
+static const TAknsItemID KAknsIIDQgnHomePage31 =
+    { EAknsMajorGeneric, EAknsMinorGenericQgnHomePage31 };
+
+static const TAknsItemID KAknsIIDQgnHomePage32 =
+    { EAknsMajorGeneric, EAknsMinorGenericQgnHomePage32 };
+
+static const TAknsItemID KAknsIIDQgnHomePage33 =
+    { EAknsMajorGeneric, EAknsMinorGenericQgnHomePage33 };
+
+static const TAknsItemID KAknsIIDQgnHomePage41 =
+    { EAknsMajorGeneric, EAknsMinorGenericQgnHomePage41 };
+
+static const TAknsItemID KAknsIIDQgnHomePage42 =
+    { EAknsMajorGeneric, EAknsMinorGenericQgnHomePage42 };
+
+static const TAknsItemID KAknsIIDQgnHomePage43 =
+    { EAknsMajorGeneric, EAknsMinorGenericQgnHomePage43 };
+
+static const TAknsItemID KAknsIIDQgnHomePage44 =
+    { EAknsMajorGeneric, EAknsMinorGenericQgnHomePage44 };
+
+static const TAknsItemID KAknsIIDQgnHomePage51 =
+    { EAknsMajorGeneric, EAknsMinorGenericQgnHomePage51 };
+
+static const TAknsItemID KAknsIIDQgnHomePage52 =
+    { EAknsMajorGeneric, EAknsMinorGenericQgnHomePage52 };
+
+static const TAknsItemID KAknsIIDQgnHomePage53 =
+    { EAknsMajorGeneric, EAknsMinorGenericQgnHomePage53 };
+
+static const TAknsItemID KAknsIIDQgnHomePage54 =
+    { EAknsMajorGeneric, EAknsMinorGenericQgnHomePage54 };
+
+static const TAknsItemID KAknsIIDQgnHomePage55 =
+    { EAknsMajorGeneric, EAknsMinorGenericQgnHomePage55 };
+
+static const TAknsItemID KAknsIIDQgnHomePage61 =
+    { EAknsMajorGeneric, EAknsMinorGenericQgnHomePage61 };
+
+static const TAknsItemID KAknsIIDQgnHomePage62 =
+    { EAknsMajorGeneric, EAknsMinorGenericQgnHomePage62 };
+
+static const TAknsItemID KAknsIIDQgnHomePage63 =
+    { EAknsMajorGeneric, EAknsMinorGenericQgnHomePage63 };
+
+static const TAknsItemID KAknsIIDQgnHomePage64 =
+    { EAknsMajorGeneric, EAknsMinorGenericQgnHomePage64 };
+
+static const TAknsItemID KAknsIIDQgnHomePage65 =
+    { EAknsMajorGeneric, EAknsMinorGenericQgnHomePage65 };
+
+static const TAknsItemID KAknsIIDQgnHomePage66 =
+    { EAknsMajorGeneric, EAknsMinorGenericQgnHomePage66 };
+
+static const TAknsItemID KAknsIIDQgnPropCpDevenc =
+    { EAknsMajorGeneric, EAknsMinorGenericQgnPropCpDevenc };
+
+static const TAknsItemID KAknsIIDQgnIndiCmailArrowNext =
+    { EAknsMajorGeneric, EAknsMinorGenericQgnIndiCmailArrowNext };
+
+static const TAknsItemID KAknsIIDQgnIndiCmailArrowPrevious =
+    { EAknsMajorGeneric, EAknsMinorGenericQgnIndiCmailArrowPrevious };
+
+static const TAknsItemID KAknsIIDQgnIndiCmailOutboxMsg =
+    { EAknsMajorGeneric, EAknsMinorGenericQgnIndiCmailOutboxMsg };
+
+static const TAknsItemID KAknsIIDQgnIndiCmailUnseenMsg =
+    { EAknsMajorGeneric, EAknsMinorGenericQgnIndiCmailUnseenMsg };
+
+static const TAknsItemID KAknsIIDQgnIndiHomeFriendEvent =
+    { EAknsMajorGeneric, EAknsMinorGenericQgnIndiHomeFriendEvent };
+
+static const TAknsItemID KAknsIIDQgnIndiManyItemsAdd =
+    { EAknsMajorGeneric, EAknsMinorGenericQgnIndiManyItemsAdd };
+
+static const TAknsItemID KAknsIIDQgnMenuHswidgetContacts =
+    { EAknsMajorGeneric, EAknsMinorGenericQgnMenuHswidgetContacts };
+
+static const TAknsItemID KAknsIIDQgnMenuHswidgetOneContact =
+    { EAknsMajorGeneric, EAknsMinorGenericQgnMenuHswidgetOneContact };
+
+static const TAknsItemID KAknsIIDQgnMenuLogOut =
+    { EAknsMajorGeneric, EAknsMinorGenericQgnMenuLogOut };
+
+static const TAknsItemID KAknsIIDQgnPropEmailSortAttachAsc =
+    { EAknsMajorGeneric, EAknsMinorGenericQgnPropEmailSortAttachAsc };
+
+static const TAknsItemID KAknsIIDQgnPropEmailSortAttachDesc =
+    { EAknsMajorGeneric, EAknsMinorGenericQgnPropEmailSortAttachDesc };
+
+static const TAknsItemID KAknsIIDQgnPropEmailSortDateAsc =
+    { EAknsMajorGeneric, EAknsMinorGenericQgnPropEmailSortDateAsc };
+
+static const TAknsItemID KAknsIIDQgnPropEmailSortDateDesc =
+    { EAknsMajorGeneric, EAknsMinorGenericQgnPropEmailSortDateDesc };
+
+static const TAknsItemID KAknsIIDQgnPropEmailSortFollowAsc =
+    { EAknsMajorGeneric, EAknsMinorGenericQgnPropEmailSortFollowAsc };
+
+static const TAknsItemID KAknsIIDQgnPropEmailSortFollowDesc =
+    { EAknsMajorGeneric, EAknsMinorGenericQgnPropEmailSortFollowDesc };
+
+static const TAknsItemID KAknsIIDQgnPropEmailSortPriorityAsc =
+    { EAknsMajorGeneric, EAknsMinorGenericQgnPropEmailSortPriorityAsc };
+
+static const TAknsItemID KAknsIIDQgnPropEmailSortPriorityDesc =
+    { EAknsMajorGeneric, EAknsMinorGenericQgnPropEmailSortPriorityDesc };
+
+static const TAknsItemID KAknsIIDQgnPropEmailSortSenderAsc =
+    { EAknsMajorGeneric, EAknsMinorGenericQgnPropEmailSortSenderAsc };
+
+static const TAknsItemID KAknsIIDQgnPropEmailSortSenderDesc =
+    { EAknsMajorGeneric, EAknsMinorGenericQgnPropEmailSortSenderDesc };
+
+static const TAknsItemID KAknsIIDQgnPropEmailSortSizeAsc =
+    { EAknsMajorGeneric, EAknsMinorGenericQgnPropEmailSortSizeAsc };
+
+static const TAknsItemID KAknsIIDQgnPropEmailSortSizeDesc =
+    { EAknsMajorGeneric, EAknsMinorGenericQgnPropEmailSortSizeDesc };
+
+static const TAknsItemID KAknsIIDQgnPropEmailSortSubjectAsc =
+    { EAknsMajorGeneric, EAknsMinorGenericQgnPropEmailSortSubjectAsc };
+
+static const TAknsItemID KAknsIIDQgnPropEmailSortSubjectDesc =
+    { EAknsMajorGeneric, EAknsMinorGenericQgnPropEmailSortSubjectDesc };
+
+static const TAknsItemID KAknsIIDQgnPropEmailSortUnreadAsc =
+    { EAknsMajorGeneric, EAknsMinorGenericQgnPropEmailSortUnreadAsc };
+
+static const TAknsItemID KAknsIIDQgnPropEmailSortUnreadDesc =
+    { EAknsMajorGeneric, EAknsMinorGenericQgnPropEmailSortUnreadDesc };
+
+static const TAknsItemID KAknsIIDQgnPropHomeNophotoFriend =
+    { EAknsMajorGeneric, EAknsMinorGenericQgnPropHomeNophotoFriend };
+
+static const TAknsItemID KAknsIIDQgnPropHomeRemoveFriend =
+    { EAknsMajorGeneric, EAknsMinorGenericQgnPropHomeRemoveFriend };
+
+static const TAknsItemID KAknsIIDQgnPropLmLocfromapps =
+    { EAknsMajorGeneric, EAknsMinorGenericQgnPropLmLocfromapps };
+
+static const TAknsItemID KAknsIIDQgnPropLmRecentloc =
+    { EAknsMajorGeneric, EAknsMinorGenericQgnPropLmRecentloc };
+
+static const TAknsItemID KAknsIIDQgnPropLogMailSent =
+    { EAknsMajorGeneric, EAknsMinorGenericQgnPropLogMailSent };
+
+static const TAknsItemID KAknsIIDQgnPropLogSmsSent =
+    { EAknsMajorGeneric, EAknsMinorGenericQgnPropLogSmsSent };
+
+static const TAknsItemID KAknsIIDQgnStatVisualVmUni =
+    { EAknsMajorGeneric, EAknsMinorGenericQgnStatVisualVmUni };
+
+static const TAknsItemID KAknsIIDQgnMenuN9720swu =
+    { EAknsMajorGeneric, EAknsMinorGenericQgnMenuN9720swu };
+
+static const TAknsItemID KAknsIIDQgnGrafFpsBarFrame =
+    { EAknsMajorGeneric, EAknsMinorGenericQgnGrafFpsBarFrame };
+
+static const TAknsItemID KAknsIIDQgnGrafFpsBarProgress =
+    { EAknsMajorGeneric, EAknsMinorGenericQgnGrafFpsBarProgress };
+
+static const TAknsItemID KAknsIIDQgnGrafFpsNotAdequate =
+    { EAknsMajorGeneric, EAknsMinorGenericQgnGrafFpsNotAdequate };
+
+static const TAknsItemID KAknsIIDQgnGrafFpsNotRecognized =
+    { EAknsMajorGeneric, EAknsMinorGenericQgnGrafFpsNotRecognized };
+
+static const TAknsItemID KAknsIIDQgnGrafFpsPrintOk =
+    { EAknsMajorGeneric, EAknsMinorGenericQgnGrafFpsPrintOk };
+
+static const TAknsItemID KAknsIIDQgnIndiAdaptSearchBackspace1 =
+    { EAknsMajorGeneric, EAknsMinorGenericQgnIndiAdaptSearchBackspace1 };
+
+static const TAknsItemID KAknsIIDQgnIndiButtonAnswerWhite =
+    { EAknsMajorGeneric, EAknsMinorGenericQgnIndiButtonAnswerWhite };
+
+static const TAknsItemID KAknsIIDQgnIndiButtonLogdialerWhite =
+    { EAknsMajorGeneric, EAknsMinorGenericQgnIndiButtonLogdialerWhite };
+
+static const TAknsItemID KAknsIIDQgnIndiInputBackspace1 =
+    { EAknsMajorGeneric, EAknsMinorGenericQgnIndiInputBackspace1 };
+
+static const TAknsItemID KAknsIIDQgnIndiItutBackspace1 =
+    { EAknsMajorGeneric, EAknsMinorGenericQgnIndiItutBackspace1 };
+
+static const TAknsItemID KAknsIIDQgnIndiModeNotAutomatedAdd =
+    { EAknsMajorGeneric, EAknsMinorGenericQgnIndiModeNotAutomatedAdd };
+
+static const TAknsItemID KAknsIIDQgnIndiMusicshopTbAccount =
+    { EAknsMajorGeneric, EAknsMinorGenericQgnIndiMusicshopTbAccount };
+
+static const TAknsItemID KAknsIIDQgnIndiMusicshopTbHome =
+    { EAknsMajorGeneric, EAknsMinorGenericQgnIndiMusicshopTbHome };
+
+static const TAknsItemID KAknsIIDQgnIndiMusicshopTbSearch =
+    { EAknsMajorGeneric, EAknsMinorGenericQgnIndiMusicshopTbSearch };
+
+static const TAknsItemID KAknsIIDQgnIndiRadioTbGotoweb =
+    { EAknsMajorGeneric, EAknsMinorGenericQgnIndiRadioTbGotoweb };
+
+static const TAknsItemID KAknsIIDQgnIndiRadioTbList =
+    { EAknsMajorGeneric, EAknsMinorGenericQgnIndiRadioTbList };
+
+static const TAknsItemID KAknsIIDQgnIndiRadioTbManualtune =
+    { EAknsMajorGeneric, EAknsMinorGenericQgnIndiRadioTbManualtune };
+
+static const TAknsItemID KAknsIIDQgnIndiRadioTbMshop =
+    { EAknsMajorGeneric, EAknsMinorGenericQgnIndiRadioTbMshop };
+
+static const TAknsItemID KAknsIIDQgnIndiRadioTbSongrecogn =
+    { EAknsMajorGeneric, EAknsMinorGenericQgnIndiRadioTbSongrecogn };
+
+static const TAknsItemID KAknsIIDQgnMenuHswidgetClockProfiles =
+    { EAknsMajorGeneric, EAknsMinorGenericQgnMenuHswidgetClockProfiles };
+
+static const TAknsItemID KAknsIIDQgnMenuHswidgetShortcuts =
+    { EAknsMajorGeneric, EAknsMinorGenericQgnMenuHswidgetShortcuts };
+
+static const TAknsItemID KAknsIIDQgnNoteFpsNotAdequate =
+    { EAknsMajorGeneric, EAknsMinorGenericQgnNoteFpsNotAdequate };
+
+static const TAknsItemID KAknsIIDQgnNoteFpsNotRecognized =
+    { EAknsMajorGeneric, EAknsMinorGenericQgnNoteFpsNotRecognized };
+
+static const TAknsItemID KAknsIIDQgnNoteFpsPrintOk =
+    { EAknsMajorGeneric, EAknsMinorGenericQgnNoteFpsPrintOk };
+
+static const TAknsItemID KAknsIIDQgnNoteRadioJackmini =
+    { EAknsMajorGeneric, EAknsMinorGenericQgnNoteRadioJackmini };
+
+static const TAknsItemID KAknsIIDQgnPropSetAppsFps =
+    { EAknsMajorGeneric, EAknsMinorGenericQgnPropSetAppsFps };
+
+static const TAknsItemID KAknsIIDQgnIndiTbFollowUp =
+    { EAknsMajorGeneric, EAknsMinorGenericQgnIndiTbFollowUp };
+
+static const TAknsItemID KAknsIIDQgnIndiTbFollowUpSelected =
+    { EAknsMajorGeneric, EAknsMinorGenericQgnIndiTbFollowUpSelected };
+
+static const TAknsItemID KAknsIIDQgnIndiTbHideBcc =
+    { EAknsMajorGeneric, EAknsMinorGenericQgnIndiTbHideBcc };
+
+static const TAknsItemID KAknsIIDQgnIndiTbHideCc =
+    { EAknsMajorGeneric, EAknsMinorGenericQgnIndiTbHideCc };
+
+static const TAknsItemID KAknsIIDQgnIndiTbHighPriority =
+    { EAknsMajorGeneric, EAknsMinorGenericQgnIndiTbHighPriority };
+
+static const TAknsItemID KAknsIIDQgnIndiTbHighPrioritySelected =
+    { EAknsMajorGeneric, EAknsMinorGenericQgnIndiTbHighPrioritySelected };
+
+static const TAknsItemID KAknsIIDQgnIndiTbLowPriority =
+    { EAknsMajorGeneric, EAknsMinorGenericQgnIndiTbLowPriority };
+
+static const TAknsItemID KAknsIIDQgnIndiTbLowPrioritySelected =
+    { EAknsMajorGeneric, EAknsMinorGenericQgnIndiTbLowPrioritySelected };
+
+static const TAknsItemID KAknsIIDQgnIndiTbShowBcc =
+    { EAknsMajorGeneric, EAknsMinorGenericQgnIndiTbShowBcc };
+
+static const TAknsItemID KAknsIIDQgnIndiTbShowCc =
+    { EAknsMajorGeneric, EAknsMinorGenericQgnIndiTbShowCc };
+
+static const TAknsItemID KAknsIIDQgnNoteDevicelockSwipe =
+    { EAknsMajorGeneric, EAknsMinorGenericQgnNoteDevicelockSwipe };
+
+static const TAknsItemID KAknsIIDQgnGrafFepCharButton =
+    { EAknsMajorGeneric, EAknsMinorGenericQgnGrafFepCharButton };
+
+static const TAknsItemID KAknsIIDQgnIndiBigclockCalendar =
+    { EAknsMajorGeneric, EAknsMinorGenericQgnIndiBigclockCalendar };
+
+static const TAknsItemID KAknsIIDQgnIndiBigclockCalls =
+    { EAknsMajorGeneric, EAknsMinorGenericQgnIndiBigclockCalls };
+
+static const TAknsItemID KAknsIIDQgnIndiBigclockEmail =
+    { EAknsMajorGeneric, EAknsMinorGenericQgnIndiBigclockEmail };
+
+static const TAknsItemID KAknsIIDQgnIndiBigclockMail =
+    { EAknsMajorGeneric, EAknsMinorGenericQgnIndiBigclockMail };
+
+static const TAknsItemID KAknsIIDQgnIndiBigclockVoicemail =
+    { EAknsMajorGeneric, EAknsMinorGenericQgnIndiBigclockVoicemail };
+
+static const TAknsItemID KAknsIIDQgnIndiBigclockVoicemailStar =
+    { EAknsMajorGeneric, EAknsMinorGenericQgnIndiBigclockVoicemailStar };
+
+static const TAknsItemID KAknsIIDQgnIndiBrowserTbExit =
+    { EAknsMajorGeneric, EAknsMinorGenericQgnIndiBrowserTbExit };
+
+static const TAknsItemID KAknsIIDQgnIndiFepButtonCaseKoreanSymbol =
+    { EAknsMajorGeneric, EAknsMinorGenericQgnIndiFepButtonCaseKoreanSymbol };
+
+static const TAknsItemID KAknsIIDQgnIndiInputCaseTextEnglishKorean =
+    { EAknsMajorGeneric, EAknsMinorGenericQgnIndiInputCaseTextEnglishKorean };
+
+static const TAknsItemID KAknsIIDQgnIndiInputCaseTextKoreanEnglish =
+    { EAknsMajorGeneric, EAknsMinorGenericQgnIndiInputCaseTextKoreanEnglish };
+
+static const TAknsItemID KAknsIIDQgnIndiInputTableDown =
+    { EAknsMajorGeneric, EAknsMinorGenericQgnIndiInputTableDown };
+
+static const TAknsItemID KAknsIIDQgnIndiInputTableUp =
+    { EAknsMajorGeneric, EAknsMinorGenericQgnIndiInputTableUp };
+
+static const TAknsItemID KAknsIIDQgnPropPbAddTop =
+    { EAknsMajorGeneric, EAknsMinorGenericQgnPropPbAddTop };
+
+static const TAknsItemID KAknsIIDQgnPropPbThumpMycard =
+    { EAknsMajorGeneric, EAknsMinorGenericQgnPropPbThumpMycard };
+
+static const TAknsItemID KAknsIIDQsnBigclockScreensaverAnalogueFace =
+    { EAknsMajorGeneric, EAknsMinorGenericQsnBigclockScreensaverAnalogueFace };
+
+static const TAknsItemID KAknsIIDQsnBigclockScreensaverAnaloguePointerHours =
+    { EAknsMajorGeneric, EAknsMinorGenericQsnBigclockScreensaverAnaloguePointerHours };
+
+static const TAknsItemID KAknsIIDQsnBigclockScreensaverAnaloguePointerMinutes =
+    { EAknsMajorGeneric, EAknsMinorGenericQsnBigclockScreensaverAnaloguePointerMinutes };
+
+static const TAknsItemID KAknsIIDQsnBigclockScreensaverAnaloguePointerSeconds =
+    { EAknsMajorGeneric, EAknsMinorGenericQsnBigclockScreensaverAnaloguePointerSeconds };
+
+static const TAknsItemID KAknsIIDQgnHomeContactnameBg =
+    { EAknsMajorGeneric, EAknsMinorGenericQgnHomeContactnameBg };
+
+static const TAknsItemID KAknsIIDQgnIndiBigclockIm =
+    { EAknsMajorGeneric, EAknsMinorGenericQgnIndiBigclockIm };
+
+static const TAknsItemID KAknsIIDQgnMenuActivenotesLinkToCallView =
+    { EAknsMajorGeneric, EAknsMinorGenericQgnMenuActivenotesLinkToCallView };
+
+static const TAknsItemID KAknsIIDQgnMenuEzynotes =
+    { EAknsMajorGeneric, EAknsMinorGenericQgnMenuEzynotes };
+
+static const TAknsItemID KAknsIIDQgnMenuSetwizLst =
+    { EAknsMajorGeneric, EAknsMinorGenericQgnMenuSetwizLst };
+
+static const TAknsItemID KAknsIIDQgnMenuShortcutUnavailable =
+    { EAknsMajorGeneric, EAknsMinorGenericQgnMenuShortcutUnavailable };
+
+static const TAknsItemID KAknsIIDQgnMenuSmartpromoui =
+    { EAknsMajorGeneric, EAknsMinorGenericQgnMenuSmartpromoui };
+
+static const TAknsItemID KAknsIIDQgnMenuWelcome2Lst =
+    { EAknsMajorGeneric, EAknsMinorGenericQgnMenuWelcome2Lst };
+
+static const TAknsItemID KAknsIIDQgnMenuWelcomCxt =
+    { EAknsMajorGeneric, EAknsMinorGenericQgnMenuWelcomCxt };
+
+static const TAknsItemID KAknsIIDQsnBigclockScreensaverDateBackgroundCenter =
+    { EAknsMajorGeneric, EAknsMinorGenericQsnBigclockScreensaverDateBackgroundCenter };
+
+static const TAknsItemID KAknsIIDQsnBigclockScreensaverDateBackgroundLeft =
+    { EAknsMajorGeneric, EAknsMinorGenericQsnBigclockScreensaverDateBackgroundLeft };
+
+static const TAknsItemID KAknsIIDQsnBigclockScreensaverDateBackgroundRight =
+    { EAknsMajorGeneric, EAknsMinorGenericQsnBigclockScreensaverDateBackgroundRight };
+
+static const TAknsItemID KAknsIIDQgnHomeEmailLogos =
+    { EAknsMajorGeneric, EAknsMinorGenericQgnHomeEmailLogos };
+
+static const TAknsItemID KAknsIIDQgnIndiMessageAdd =
+    { EAknsMajorGeneric, EAknsMinorGenericQgnIndiMessageAdd };
+
+static const TAknsItemID KAknsIIDQgnStatJointImUni =
+    { EAknsMajorGeneric, EAknsMinorGenericQgnStatJointImUni };
+
+static const TAknsItemID KAknsIIDQgnVraIcon =
+    { EAknsMajorGeneric, EAknsMinorGenericQgnVraIcon };
+
+static const TAknsItemID KAknsIIDQgnActivenotesFolder =
+    { EAknsMajorGeneric, EAknsMinorGenericQgnActivenotesFolder };
+
+static const TAknsItemID KAknsIIDQgnActivenotesNote =
+    { EAknsMajorGeneric, EAknsMinorGenericQgnActivenotesNote };
+
+static const TAknsItemID KAknsIIDQgnGrafNotifBg =
+    { EAknsMajorGeneric, EAknsMinorGenericQgnGrafNotifBg };
+
+static const TAknsItemID KAknsIIDQgnIconAppCake =
+    { EAknsMajorGeneric, EAknsMinorGenericQgnIconAppCake };
+
+static const TAknsItemID KAknsIIDQgnIndiActivenotesButtonNewGrid =
+    { EAknsMajorGeneric, EAknsMinorGenericQgnIndiActivenotesButtonNewGrid };
+
+static const TAknsItemID KAknsIIDQgnIndiActivenotesButtonNewList =
+    { EAknsMajorGeneric, EAknsMinorGenericQgnIndiActivenotesButtonNewList };
+
+static const TAknsItemID KAknsIIDQgnIndiActivenotesPlay =
+    { EAknsMajorGeneric, EAknsMinorGenericQgnIndiActivenotesPlay };
+
+static const TAknsItemID KAknsIIDQgnIndiActivenotesRec =
+    { EAknsMajorGeneric, EAknsMinorGenericQgnIndiActivenotesRec };
+
+static const TAknsItemID KAknsIIDQgnIndiEzynoteButtonNew =
+    { EAknsMajorGeneric, EAknsMinorGenericQgnIndiEzynoteButtonNew };
+
+static const TAknsItemID KAknsIIDQgnIndiEzynoteButtonNewInactive =
+    { EAknsMajorGeneric, EAknsMinorGenericQgnIndiEzynoteButtonNewInactive };
+
+static const TAknsItemID KAknsIIDQgnIndiEzynoteButtonNewList =
+    { EAknsMajorGeneric, EAknsMinorGenericQgnIndiEzynoteButtonNewList };
+
+static const TAknsItemID KAknsIIDQgnIndiEzynoteButtonNewPressed =
+    { EAknsMajorGeneric, EAknsMinorGenericQgnIndiEzynoteButtonNewPressed };
+
+static const TAknsItemID KAknsIIDQgnIndiHomePlasma =
+    { EAknsMajorGeneric, EAknsMinorGenericQgnIndiHomePlasma };
+
+static const TAknsItemID KAknsIIDQgnIndiHomePlasmaCharging =
+    { EAknsMajorGeneric, EAknsMinorGenericQgnIndiHomePlasmaCharging };
+
+static const TAknsItemID KAknsIIDQgnIndiMsgboardArrowLeft =
+    { EAknsMajorGeneric, EAknsMinorGenericQgnIndiMsgboardArrowLeft };
+
+static const TAknsItemID KAknsIIDQgnIndiMsgboardArrowRight =
+    { EAknsMajorGeneric, EAknsMinorGenericQgnIndiMsgboardArrowRight };
+
+static const TAknsItemID KAknsIIDQgnIndiPlasmaBatteryCharging =
+    { EAknsMajorGeneric, EAknsMinorGenericQgnIndiPlasmaBatteryCharging };
+
+static const TAknsItemID KAknsIIDQgnIndiTbModesAddCurrentLoc =
+    { EAknsMajorGeneric, EAknsMinorGenericQgnIndiTbModesAddCurrentLoc };
+
+static const TAknsItemID KAknsIIDQgnIndiTbModesAddMyLoc =
+    { EAknsMajorGeneric, EAknsMinorGenericQgnIndiTbModesAddMyLoc };
+
+static const TAknsItemID KAknsIIDQgnIndiTbModesSelectMap =
+    { EAknsMajorGeneric, EAknsMinorGenericQgnIndiTbModesSelectMap };
+
+static const TAknsItemID KAknsIIDQgnIndiTbMsgboardCreateMsg =
+    { EAknsMajorGeneric, EAknsMinorGenericQgnIndiTbMsgboardCreateMsg };
+
+static const TAknsItemID KAknsIIDQgnIndiTbMsgboardDelete =
+    { EAknsMajorGeneric, EAknsMinorGenericQgnIndiTbMsgboardDelete };
+
+static const TAknsItemID KAknsIIDQgnIndiTbMsgboardDetails =
+    { EAknsMajorGeneric, EAknsMinorGenericQgnIndiTbMsgboardDetails };
+
+static const TAknsItemID KAknsIIDQgnIndiTbMsgboardReply =
+    { EAknsMajorGeneric, EAknsMinorGenericQgnIndiTbMsgboardReply };
+
+static const TAknsItemID KAknsIIDQgnIndiTbMsgboardReplyGroup =
+    { EAknsMajorGeneric, EAknsMinorGenericQgnIndiTbMsgboardReplyGroup };
+
+static const TAknsItemID KAknsIIDQgnIndiTbMsgboardSend =
+    { EAknsMajorGeneric, EAknsMinorGenericQgnIndiTbMsgboardSend };
+
+static const TAknsItemID KAknsIIDQgnIndiTpActivenotesNewFolder =
+    { EAknsMajorGeneric, EAknsMinorGenericQgnIndiTpActivenotesNewFolder };
+
+static const TAknsItemID KAknsIIDQgnIndiTpActivenotesNewNote =
+    { EAknsMajorGeneric, EAknsMinorGenericQgnIndiTpActivenotesNewNote };
+
+static const TAknsItemID KAknsIIDQgnIndiVrRec =
+    { EAknsMajorGeneric, EAknsMinorGenericQgnIndiVrRec };
+
+static const TAknsItemID KAknsIIDQgnLanguageIcon =
+    { EAknsMajorGeneric, EAknsMinorGenericQgnLanguageIcon };
+
+static const TAknsItemID KAknsIIDQgnListAnimChicken =
+    { EAknsMajorGeneric, EAknsMinorGenericQgnListAnimChicken };
+
+static const TAknsItemID KAknsIIDQgnListAnimChickenBw =
+    { EAknsMajorGeneric, EAknsMinorGenericQgnListAnimChickenBw };
+
+static const TAknsItemID KAknsIIDQgnListAnimCow =
+    { EAknsMajorGeneric, EAknsMinorGenericQgnListAnimCow };
+
+static const TAknsItemID KAknsIIDQgnListAnimCowBw =
+    { EAknsMajorGeneric, EAknsMinorGenericQgnListAnimCowBw };
+
+static const TAknsItemID KAknsIIDQgnListAnimDog =
+    { EAknsMajorGeneric, EAknsMinorGenericQgnListAnimDog };
+
+static const TAknsItemID KAknsIIDQgnListAnimDogBw =
+    { EAknsMajorGeneric, EAknsMinorGenericQgnListAnimDogBw };
+
+static const TAknsItemID KAknsIIDQgnListAnimDragon =
+    { EAknsMajorGeneric, EAknsMinorGenericQgnListAnimDragon };
+
+static const TAknsItemID KAknsIIDQgnListAnimDragonBw =
+    { EAknsMajorGeneric, EAknsMinorGenericQgnListAnimDragonBw };
+
+static const TAknsItemID KAknsIIDQgnListAnimHorse =
+    { EAknsMajorGeneric, EAknsMinorGenericQgnListAnimHorse };
+
+static const TAknsItemID KAknsIIDQgnListAnimHorseBw =
+    { EAknsMajorGeneric, EAknsMinorGenericQgnListAnimHorseBw };
+
+static const TAknsItemID KAknsIIDQgnListAnimMonkey =
+    { EAknsMajorGeneric, EAknsMinorGenericQgnListAnimMonkey };
+
+static const TAknsItemID KAknsIIDQgnListAnimMonkeyBw =
+    { EAknsMajorGeneric, EAknsMinorGenericQgnListAnimMonkeyBw };
+
+static const TAknsItemID KAknsIIDQgnListAnimMouse =
+    { EAknsMajorGeneric, EAknsMinorGenericQgnListAnimMouse };
+
+static const TAknsItemID KAknsIIDQgnListAnimMouseBw =
+    { EAknsMajorGeneric, EAknsMinorGenericQgnListAnimMouseBw };
+
+static const TAknsItemID KAknsIIDQgnListAnimPig =
+    { EAknsMajorGeneric, EAknsMinorGenericQgnListAnimPig };
+
+static const TAknsItemID KAknsIIDQgnListAnimPigBw =
+    { EAknsMajorGeneric, EAknsMinorGenericQgnListAnimPigBw };
+
+static const TAknsItemID KAknsIIDQgnListAnimRabbit =
+    { EAknsMajorGeneric, EAknsMinorGenericQgnListAnimRabbit };
+
+static const TAknsItemID KAknsIIDQgnListAnimRabbitBw =
+    { EAknsMajorGeneric, EAknsMinorGenericQgnListAnimRabbitBw };
+
+static const TAknsItemID KAknsIIDQgnListAnimSheep =
+    { EAknsMajorGeneric, EAknsMinorGenericQgnListAnimSheep };
+
+static const TAknsItemID KAknsIIDQgnListAnimSheepBw =
+    { EAknsMajorGeneric, EAknsMinorGenericQgnListAnimSheepBw };
+
+static const TAknsItemID KAknsIIDQgnListAnimSnake =
+    { EAknsMajorGeneric, EAknsMinorGenericQgnListAnimSnake };
+
+static const TAknsItemID KAknsIIDQgnListAnimSnakeBw =
+    { EAknsMajorGeneric, EAknsMinorGenericQgnListAnimSnakeBw };
+
+static const TAknsItemID KAknsIIDQgnListAnimTiger =
+    { EAknsMajorGeneric, EAknsMinorGenericQgnListAnimTiger };
+
+static const TAknsItemID KAknsIIDQgnListAnimTigerBw =
+    { EAknsMajorGeneric, EAknsMinorGenericQgnListAnimTigerBw };
+
+static const TAknsItemID KAknsIIDQgnMcspluginLogOut =
+    { EAknsMajorGeneric, EAknsMinorGenericQgnMcspluginLogOut };
+
+static const TAknsItemID KAknsIIDQgnMenuAnimplugingui =
+    { EAknsMajorGeneric, EAknsMinorGenericQgnMenuAnimplugingui };
+
+static const TAknsItemID KAknsIIDQgnMenuCmccChinamobileservice =
+    { EAknsMajorGeneric, EAknsMinorGenericQgnMenuCmccChinamobileservice };
+
+static const TAknsItemID KAknsIIDQgnMenuCmccCmmusic =
+    { EAknsMajorGeneric, EAknsMinorGenericQgnMenuCmccCmmusic };
+
+static const TAknsItemID KAknsIIDQgnMenuCmccCmphonebook =
+    { EAknsMajorGeneric, EAknsMinorGenericQgnMenuCmccCmphonebook };
+
+static const TAknsItemID KAknsIIDQgnMenuCmccCustomerservice =
+    { EAknsMajorGeneric, EAknsMinorGenericQgnMenuCmccCustomerservice };
+
+static const TAknsItemID KAknsIIDQgnMenuCmccMonternet =
+    { EAknsMajorGeneric, EAknsMinorGenericQgnMenuCmccMonternet };
+
+static const TAknsItemID KAknsIIDQgnMenuCmccMyfavorite =
+    { EAknsMajorGeneric, EAknsMinorGenericQgnMenuCmccMyfavorite };
+
+static const TAknsItemID KAknsIIDQgnMenuDcdAppicon =
+    { EAknsMajorGeneric, EAknsMinorGenericQgnMenuDcdAppicon };
+
+static const TAknsItemID KAknsIIDQgnMenuDcdChannelitem =
+    { EAknsMajorGeneric, EAknsMinorGenericQgnMenuDcdChannelitem };
+
+static const TAknsItemID KAknsIIDQgnMenuDcdGssetting =
+    { EAknsMajorGeneric, EAknsMinorGenericQgnMenuDcdGssetting };
+
+static const TAknsItemID KAknsIIDQgnMenuModesAutoOn =
+    { EAknsMajorGeneric, EAknsMinorGenericQgnMenuModesAutoOn };
+
+static const TAknsItemID KAknsIIDQgnMenuModesDefault =
+    { EAknsMajorGeneric, EAknsMinorGenericQgnMenuModesDefault };
+
+static const TAknsItemID KAknsIIDQgnMenuMsgboard =
+    { EAknsMajorGeneric, EAknsMinorGenericQgnMenuMsgboard };
+
+static const TAknsItemID KAknsIIDQgnMenuN9721swu =
+    { EAknsMajorGeneric, EAknsMinorGenericQgnMenuN9721swu };
+
+static const TAknsItemID KAknsIIDQgnMenuPlasma =
+    { EAknsMajorGeneric, EAknsMinorGenericQgnMenuPlasma };
+
+static const TAknsItemID KAknsIIDQgnMsActivesearch =
+    { EAknsMajorGeneric, EAknsMinorGenericQgnMsActivesearch };
+
+static const TAknsItemID KAknsIIDQgnMsAnniversary =
+    { EAknsMajorGeneric, EAknsMinorGenericQgnMsAnniversary };
+
+static const TAknsItemID KAknsIIDQgnMsArrowLeft =
+    { EAknsMajorGeneric, EAknsMinorGenericQgnMsArrowLeft };
+
+static const TAknsItemID KAknsIIDQgnMsArrowRight =
+    { EAknsMajorGeneric, EAknsMinorGenericQgnMsArrowRight };
+
+static const TAknsItemID KAknsIIDQgnMsCalendar =
+    { EAknsMajorGeneric, EAknsMinorGenericQgnMsCalendar };
+
+static const TAknsItemID KAknsIIDQgnMsContacts =
+    { EAknsMajorGeneric, EAknsMinorGenericQgnMsContacts };
+
+static const TAknsItemID KAknsIIDQgnMsEmail =
+    { EAknsMajorGeneric, EAknsMinorGenericQgnMsEmail };
+
+static const TAknsItemID KAknsIIDQgnMsEmailReceived =
+    { EAknsMajorGeneric, EAknsMinorGenericQgnMsEmailReceived };
+
+static const TAknsItemID KAknsIIDQgnMsEmailSent =
+    { EAknsMajorGeneric, EAknsMinorGenericQgnMsEmailSent };
+
+static const TAknsItemID KAknsIIDQgnMsFiles =
+    { EAknsMajorGeneric, EAknsMinorGenericQgnMsFiles };
+
+static const TAknsItemID KAknsIIDQgnMsFilesApps =
+    { EAknsMajorGeneric, EAknsMinorGenericQgnMsFilesApps };
+
+static const TAknsItemID KAknsIIDQgnMsFilesAudio =
+    { EAknsMajorGeneric, EAknsMinorGenericQgnMsFilesAudio };
+
+static const TAknsItemID KAknsIIDQgnMsFilesCategory =
+    { EAknsMajorGeneric, EAknsMinorGenericQgnMsFilesCategory };
+
+static const TAknsItemID KAknsIIDQgnMsFilesExcel =
+    { EAknsMajorGeneric, EAknsMinorGenericQgnMsFilesExcel };
+
+static const TAknsItemID KAknsIIDQgnMsFilesImage =
+    { EAknsMajorGeneric, EAknsMinorGenericQgnMsFilesImage };
+
+static const TAknsItemID KAknsIIDQgnMsFilesPowerpoint =
+    { EAknsMajorGeneric, EAknsMinorGenericQgnMsFilesPowerpoint };
+
+static const TAknsItemID KAknsIIDQgnMsFilesText =
+    { EAknsMajorGeneric, EAknsMinorGenericQgnMsFilesText };
+
+static const TAknsItemID KAknsIIDQgnMsFilesVideo =
+    { EAknsMajorGeneric, EAknsMinorGenericQgnMsFilesVideo };
+
+static const TAknsItemID KAknsIIDQgnMsFilesWord =
+    { EAknsMajorGeneric, EAknsMinorGenericQgnMsFilesWord };
+
+static const TAknsItemID KAknsIIDQgnMsHelpCategoryIcon =
+    { EAknsMajorGeneric, EAknsMinorGenericQgnMsHelpCategoryIcon };
+
+static const TAknsItemID KAknsIIDQgnMsIndevice1Music =
+    { EAknsMajorGeneric, EAknsMinorGenericQgnMsIndevice1Music };
+
+static const TAknsItemID KAknsIIDQgnMsIndevice2Contacts =
+    { EAknsMajorGeneric, EAknsMinorGenericQgnMsIndevice2Contacts };
+
+static const TAknsItemID KAknsIIDQgnMsIndevice2Placeholder =
+    { EAknsMajorGeneric, EAknsMinorGenericQgnMsIndevice2Placeholder };
+
+static const TAknsItemID KAknsIIDQgnMsIndevice3Pictures =
+    { EAknsMajorGeneric, EAknsMinorGenericQgnMsIndevice3Pictures };
+
+static const TAknsItemID KAknsIIDQgnMsIndevice3Placeholder =
+    { EAknsMajorGeneric, EAknsMinorGenericQgnMsIndevice3Placeholder };
+
+static const TAknsItemID KAknsIIDQgnMsIndevice4Placeholder =
+    { EAknsMajorGeneric, EAknsMinorGenericQgnMsIndevice4Placeholder };
+
+static const TAknsItemID KAknsIIDQgnMsIndevice4Videos =
+    { EAknsMajorGeneric, EAknsMinorGenericQgnMsIndevice4Videos };
+
+static const TAknsItemID KAknsIIDQgnMsIndevice5PlacesLocations =
+    { EAknsMajorGeneric, EAknsMinorGenericQgnMsIndevice5PlacesLocations };
+
+static const TAknsItemID KAknsIIDQgnMsIndevice6aBookmarks =
+    { EAknsMajorGeneric, EAknsMinorGenericQgnMsIndevice6aBookmarks };
+
+static const TAknsItemID KAknsIIDQgnMsIndevice9AppsGames =
+    { EAknsMajorGeneric, EAknsMinorGenericQgnMsIndevice9AppsGames };
+
+static const TAknsItemID KAknsIIDQgnMsMeeting =
+    { EAknsMajorGeneric, EAknsMinorGenericQgnMsMeeting };
+
+static const TAknsItemID KAknsIIDQgnMsMemo =
+    { EAknsMajorGeneric, EAknsMinorGenericQgnMsMemo };
+
+static const TAknsItemID KAknsIIDQgnMsMessaging =
+    { EAknsMajorGeneric, EAknsMinorGenericQgnMsMessaging };
+
+static const TAknsItemID KAknsIIDQgnMsMmsReceived =
+    { EAknsMajorGeneric, EAknsMinorGenericQgnMsMmsReceived };
+
+static const TAknsItemID KAknsIIDQgnMsMmsSent =
+    { EAknsMajorGeneric, EAknsMinorGenericQgnMsMmsSent };
+
+static const TAknsItemID KAknsIIDQgnMsNotes =
+    { EAknsMajorGeneric, EAknsMinorGenericQgnMsNotes };
+
+static const TAknsItemID KAknsIIDQgnMsOthersCategory =
+    { EAknsMajorGeneric, EAknsMinorGenericQgnMsOthersCategory };
+
+static const TAknsItemID KAknsIIDQgnMsSearchboxShadow =
+    { EAknsMajorGeneric, EAknsMinorGenericQgnMsSearchboxShadow };
+
+static const TAknsItemID KAknsIIDQgnMsSearchsettingsapp =
+    { EAknsMajorGeneric, EAknsMinorGenericQgnMsSearchsettingsapp };
+
+static const TAknsItemID KAknsIIDQgnMsSmsReceived =
+    { EAknsMajorGeneric, EAknsMinorGenericQgnMsSmsReceived };
+
+static const TAknsItemID KAknsIIDQgnMsSmsSent =
+    { EAknsMajorGeneric, EAknsMinorGenericQgnMsSmsSent };
+
+static const TAknsItemID KAknsIIDQgnMsTodos =
+    { EAknsMajorGeneric, EAknsMinorGenericQgnMsTodos };
+
+static const TAknsItemID KAknsIIDQgnPopupAlarm =
+    { EAknsMajorGeneric, EAknsMinorGenericQgnPopupAlarm };
+
+static const TAknsItemID KAknsIIDQgnPropActivenotes =
+    { EAknsMajorGeneric, EAknsMinorGenericQgnPropActivenotes };
+
+static const TAknsItemID KAknsIIDQgnPropActivenotesBusinessCard =
+    { EAknsMajorGeneric, EAknsMinorGenericQgnPropActivenotesBusinessCard };
+
+static const TAknsItemID KAknsIIDQgnPropActivenotesFile =
+    { EAknsMajorGeneric, EAknsMinorGenericQgnPropActivenotesFile };
+
+static const TAknsItemID KAknsIIDQgnPropActivenotesFileAudio =
+    { EAknsMajorGeneric, EAknsMinorGenericQgnPropActivenotesFileAudio };
+
+static const TAknsItemID KAknsIIDQgnPropActivenotesFileBusinessCard =
+    { EAknsMajorGeneric, EAknsMinorGenericQgnPropActivenotesFileBusinessCard };
+
+static const TAknsItemID KAknsIIDQgnPropActivenotesFileCorrupted =
+    { EAknsMajorGeneric, EAknsMinorGenericQgnPropActivenotesFileCorrupted };
+
+static const TAknsItemID KAknsIIDQgnPropActivenotesFileImage =
+    { EAknsMajorGeneric, EAknsMinorGenericQgnPropActivenotesFileImage };
+
+static const TAknsItemID KAknsIIDQgnPropActivenotesFileOther =
+    { EAknsMajorGeneric, EAknsMinorGenericQgnPropActivenotesFileOther };
+
+static const TAknsItemID KAknsIIDQgnPropActivenotesFileVideo =
+    { EAknsMajorGeneric, EAknsMinorGenericQgnPropActivenotesFileVideo };
+
+static const TAknsItemID KAknsIIDQgnPropActivenotesFolderGrid =
+    { EAknsMajorGeneric, EAknsMinorGenericQgnPropActivenotesFolderGrid };
+
+static const TAknsItemID KAknsIIDQgnPropActivenotesFolderList =
+    { EAknsMajorGeneric, EAknsMinorGenericQgnPropActivenotesFolderList };
+
+static const TAknsItemID KAknsIIDQgnPropActivenotesLinkToCall =
+    { EAknsMajorGeneric, EAknsMinorGenericQgnPropActivenotesLinkToCall };
+
+static const TAknsItemID KAknsIIDQgnPropActivenotesLinkToCallList =
+    { EAknsMajorGeneric, EAknsMinorGenericQgnPropActivenotesLinkToCallList };
+
+static const TAknsItemID KAknsIIDQgnPropActivenotesList =
+    { EAknsMajorGeneric, EAknsMinorGenericQgnPropActivenotesList };
+
+static const TAknsItemID KAknsIIDQgnPropActivenotesLocation =
+    { EAknsMajorGeneric, EAknsMinorGenericQgnPropActivenotesLocation };
+
+static const TAknsItemID KAknsIIDQgnPropCmccAreacode =
+    { EAknsMajorGeneric, EAknsMinorGenericQgnPropCmccAreacode };
+
+static const TAknsItemID KAknsIIDQgnPropCmccChat =
+    { EAknsMajorGeneric, EAknsMinorGenericQgnPropCmccChat };
+
+static const TAknsItemID KAknsIIDQgnPropCmccClubservice =
+    { EAknsMajorGeneric, EAknsMinorGenericQgnPropCmccClubservice };
+
+static const TAknsItemID KAknsIIDQgnPropCmccCmmusic =
+    { EAknsMajorGeneric, EAknsMinorGenericQgnPropCmccCmmusic };
+
+static const TAknsItemID KAknsIIDQgnPropCmccContactupdate =
+    { EAknsMajorGeneric, EAknsMinorGenericQgnPropCmccContactupdate };
+
+static const TAknsItemID KAknsIIDQgnPropCmccCorporatemail =
+    { EAknsMajorGeneric, EAknsMinorGenericQgnPropCmccCorporatemail };
+
+static const TAknsItemID KAknsIIDQgnPropCmccCustomermanager =
+    { EAknsMajorGeneric, EAknsMinorGenericQgnPropCmccCustomermanager };
+
+static const TAknsItemID KAknsIIDQgnPropCmccCustomermanagernumber =
+    { EAknsMajorGeneric, EAknsMinorGenericQgnPropCmccCustomermanagernumber };
+
+static const TAknsItemID KAknsIIDQgnPropCmccFetion =
+    { EAknsMajorGeneric, EAknsMinorGenericQgnPropCmccFetion };
+
+static const TAknsItemID KAknsIIDQgnPropCmccFinanceonline =
+    { EAknsMajorGeneric, EAknsMinorGenericQgnPropCmccFinanceonline };
+
+static const TAknsItemID KAknsIIDQgnPropCmccForwardsms =
+    { EAknsMajorGeneric, EAknsMinorGenericQgnPropCmccForwardsms };
+
+static const TAknsItemID KAknsIIDQgnPropCmccGallery =
+    { EAknsMajorGeneric, EAknsMinorGenericQgnPropCmccGallery };
+
+static const TAknsItemID KAknsIIDQgnPropCmccGames =
+    { EAknsMajorGeneric, EAknsMinorGenericQgnPropCmccGames };
+
+static const TAknsItemID KAknsIIDQgnPropCmccGgame =
+    { EAknsMajorGeneric, EAknsMinorGenericQgnPropCmccGgame };
+
+static const TAknsItemID KAknsIIDQgnPropCmccHotline =
+    { EAknsMajorGeneric, EAknsMinorGenericQgnPropCmccHotline };
+
+static const TAknsItemID KAknsIIDQgnPropCmccLocalcontacts =
+    { EAknsMajorGeneric, EAknsMinorGenericQgnPropCmccLocalcontacts };
+
+static const TAknsItemID KAknsIIDQgnPropCmccMagicbox =
+    { EAknsMajorGeneric, EAknsMinorGenericQgnPropCmccMagicbox };
+
+static const TAknsItemID KAknsIIDQgnPropCmccMmscard =
+    { EAknsMajorGeneric, EAknsMinorGenericQgnPropCmccMmscard };
+
+static const TAknsItemID KAknsIIDQgnPropCmccMobilesearch =
+    { EAknsMajorGeneric, EAknsMinorGenericQgnPropCmccMobilesearch };
+
+static const TAknsItemID KAknsIIDQgnPropCmccMobilesecretary =
+    { EAknsMajorGeneric, EAknsMinorGenericQgnPropCmccMobilesecretary };
+
+static const TAknsItemID KAknsIIDQgnPropCmccMobilesecretarynumber =
+    { EAknsMajorGeneric, EAknsMinorGenericQgnPropCmccMobilesecretarynumber };
+
+static const TAknsItemID KAknsIIDQgnPropCmccMomms =
+    { EAknsMajorGeneric, EAknsMinorGenericQgnPropCmccMomms };
+
+static const TAknsItemID KAknsIIDQgnPropCmccMonternet =
+    { EAknsMajorGeneric, EAknsMinorGenericQgnPropCmccMonternet };
+
+static const TAknsItemID KAknsIIDQgnPropCmccMosms =
+    { EAknsMajorGeneric, EAknsMinorGenericQgnPropCmccMosms };
+
+static const TAknsItemID KAknsIIDQgnPropCmccMovietv =
+    { EAknsMajorGeneric, EAknsMinorGenericQgnPropCmccMovietv };
+
+static const TAknsItemID KAknsIIDQgnPropCmccMymonternet =
+    { EAknsMajorGeneric, EAknsMinorGenericQgnPropCmccMymonternet };
+
+static const TAknsItemID KAknsIIDQgnPropCmccNewservices =
+    { EAknsMajorGeneric, EAknsMinorGenericQgnPropCmccNewservices };
+
+static const TAknsItemID KAknsIIDQgnPropCmccNewsweather =
+    { EAknsMajorGeneric, EAknsMinorGenericQgnPropCmccNewsweather };
+
+static const TAknsItemID KAknsIIDQgnPropCmccOnlinecontacts =
+    { EAknsMajorGeneric, EAknsMinorGenericQgnPropCmccOnlinecontacts };
+
+static const TAknsItemID KAknsIIDQgnPropCmccPbservices =
+    { EAknsMajorGeneric, EAknsMinorGenericQgnPropCmccPbservices };
+
+static const TAknsItemID KAknsIIDQgnPropCmccPhoneanimation =
+    { EAknsMajorGeneric, EAknsMinorGenericQgnPropCmccPhoneanimation };
+
+static const TAknsItemID KAknsIIDQgnPropCmccPhonebook =
+    { EAknsMajorGeneric, EAknsMinorGenericQgnPropCmccPhonebook };
+
+static const TAknsItemID KAknsIIDQgnPropCmccPhonebookmanager =
+    { EAknsMajorGeneric, EAknsMinorGenericQgnPropCmccPhonebookmanager };
+
+static const TAknsItemID KAknsIIDQgnPropCmccPicturesringtones =
+    { EAknsMajorGeneric, EAknsMinorGenericQgnPropCmccPicturesringtones };
+
+static const TAknsItemID KAknsIIDQgnPropCmccPlayer =
+    { EAknsMajorGeneric, EAknsMinorGenericQgnPropCmccPlayer };
+
+static const TAknsItemID KAknsIIDQgnPropCmccPushemail =
+    { EAknsMajorGeneric, EAknsMinorGenericQgnPropCmccPushemail };
+
+static const TAknsItemID KAknsIIDQgnPropCmccSendsms =
+    { EAknsMajorGeneric, EAknsMinorGenericQgnPropCmccSendsms };
+
+static const TAknsItemID KAknsIIDQgnPropCmccServicecenter =
+    { EAknsMajorGeneric, EAknsMinorGenericQgnPropCmccServicecenter };
+
+static const TAknsItemID KAknsIIDQgnPropCmccServiceguide =
+    { EAknsMajorGeneric, EAknsMinorGenericQgnPropCmccServiceguide };
+
+static const TAknsItemID KAknsIIDQgnPropCmccSetting =
+    { EAknsMajorGeneric, EAknsMinorGenericQgnPropCmccSetting };
+
+static const TAknsItemID KAknsIIDQgnPropCmccSimcardappication =
+    { EAknsMajorGeneric, EAknsMinorGenericQgnPropCmccSimcardappication };
+
+static const TAknsItemID KAknsIIDQgnPropCmccTravelagent =
+    { EAknsMajorGeneric, EAknsMinorGenericQgnPropCmccTravelagent };
+
+static const TAknsItemID KAknsIIDQgnPropCmccYdzq =
+    { EAknsMajorGeneric, EAknsMinorGenericQgnPropCmccYdzq };
+
+static const TAknsItemID KAknsIIDQgnPropCmccYdzqmore =
+    { EAknsMajorGeneric, EAknsMinorGenericQgnPropCmccYdzqmore };
+
+static const TAknsItemID KAknsIIDQgnPropEzynotesFolder =
+    { EAknsMajorGeneric, EAknsMinorGenericQgnPropEzynotesFolder };
+
+static const TAknsItemID KAknsIIDQgnPropEzynotesFolderLarge =
+    { EAknsMajorGeneric, EAknsMinorGenericQgnPropEzynotesFolderLarge };
+
+static const TAknsItemID KAknsIIDQgnPropLotus =
+    { EAknsMajorGeneric, EAknsMinorGenericQgnPropLotus };
+
+static const TAknsItemID KAknsIIDQgnPropModesAutomation =
+    { EAknsMajorGeneric, EAknsMinorGenericQgnPropModesAutomation };
+
+static const TAknsItemID KAknsIIDQgnPropModesAutoOff =
+    { EAknsMajorGeneric, EAknsMinorGenericQgnPropModesAutoOff };
+
+static const TAknsItemID KAknsIIDQgnPropModesAutoOn =
+    { EAknsMajorGeneric, EAknsMinorGenericQgnPropModesAutoOn };
+
+static const TAknsItemID KAknsIIDQgnPropModesCalendar =
+    { EAknsMajorGeneric, EAknsMinorGenericQgnPropModesCalendar };
+
+static const TAknsItemID KAknsIIDQgnPropModesEmail =
+    { EAknsMajorGeneric, EAknsMinorGenericQgnPropModesEmail };
+
+static const TAknsItemID KAknsIIDQgnPropModesLandmark =
+    { EAknsMajorGeneric, EAknsMinorGenericQgnPropModesLandmark };
+
+static const TAknsItemID KAknsIIDQgnPropModesMsgkey =
+    { EAknsMajorGeneric, EAknsMinorGenericQgnPropModesMsgkey };
+
+static const TAknsItemID KAknsIIDQgnPropModesProfile =
+    { EAknsMajorGeneric, EAknsMinorGenericQgnPropModesProfile };
+
+static const TAknsItemID KAknsIIDQgnPropModesTheme =
+    { EAknsMajorGeneric, EAknsMinorGenericQgnPropModesTheme };
+
+static const TAknsItemID KAknsIIDQgnPropMsgboard =
+    { EAknsMajorGeneric, EAknsMinorGenericQgnPropMsgboard };
+
+static const TAknsItemID KAknsIIDQgnPropMsgboardMoreMsgSub =
+    { EAknsMajorGeneric, EAknsMinorGenericQgnPropMsgboardMoreMsgSub };
+
+static const TAknsItemID KAknsIIDQgnPropMsgboardNewGroupSub =
+    { EAknsMajorGeneric, EAknsMinorGenericQgnPropMsgboardNewGroupSub };
+
+static const TAknsItemID KAknsIIDQgnPropMsgboardRead =
+    { EAknsMajorGeneric, EAknsMinorGenericQgnPropMsgboardRead };
+
+static const TAknsItemID KAknsIIDQgnPropMsgboardReadSub =
+    { EAknsMajorGeneric, EAknsMinorGenericQgnPropMsgboardReadSub };
+
+static const TAknsItemID KAknsIIDQgnPropMsgboardSent =
+    { EAknsMajorGeneric, EAknsMinorGenericQgnPropMsgboardSent };
+
+static const TAknsItemID KAknsIIDQgnPropMsgboardSentSub =
+    { EAknsMajorGeneric, EAknsMinorGenericQgnPropMsgboardSentSub };
+
+static const TAknsItemID KAknsIIDQgnPropMsgboardUnread =
+    { EAknsMajorGeneric, EAknsMinorGenericQgnPropMsgboardUnread };
+
+static const TAknsItemID KAknsIIDQgnPropMsgboardUnreadSub =
+    { EAknsMajorGeneric, EAknsMinorGenericQgnPropMsgboardUnreadSub };
+
+static const TAknsItemID KAknsIIDQgnPropNotifCale =
+    { EAknsMajorGeneric, EAknsMinorGenericQgnPropNotifCale };
+
+static const TAknsItemID KAknsIIDQgnPropNotifCalls =
+    { EAknsMajorGeneric, EAknsMinorGenericQgnPropNotifCalls };
+
+static const TAknsItemID KAknsIIDQgnPropNotifDelete =
+    { EAknsMajorGeneric, EAknsMinorGenericQgnPropNotifDelete };
+
+static const TAknsItemID KAknsIIDQgnPropNotifIm =
+    { EAknsMajorGeneric, EAknsMinorGenericQgnPropNotifIm };
+
+static const TAknsItemID KAknsIIDQgnPropNotifMsg =
+    { EAknsMajorGeneric, EAknsMinorGenericQgnPropNotifMsg };
+
+static const TAknsItemID KAknsIIDQgnPropNotifVoicemail =
+    { EAknsMajorGeneric, EAknsMinorGenericQgnPropNotifVoicemail };
+
+static const TAknsItemID KAknsIIDQgnPropSetActivenotesSub =
+    { EAknsMajorGeneric, EAknsMinorGenericQgnPropSetActivenotesSub };
+
+static const TAknsItemID KAknsIIDQgnPropSetAppsAn =
+    { EAknsMajorGeneric, EAknsMinorGenericQgnPropSetAppsAn };
+
+static const TAknsItemID KAknsIIDQgnPropSetAppsAnykey =
+    { EAknsMajorGeneric, EAknsMinorGenericQgnPropSetAppsAnykey };
+
+static const TAknsItemID KAknsIIDQgnPropSetSlideSub =
+    { EAknsMajorGeneric, EAknsMinorGenericQgnPropSetSlideSub };
+
+static const TAknsItemID KAknsIIDQgnSetwizEmailMenuLst =
+    { EAknsMajorGeneric, EAknsMinorGenericQgnSetwizEmailMenuLst };
+
+static const TAknsItemID KAknsIIDQgnSetwizOperatorMenuLst =
+    { EAknsMajorGeneric, EAknsMinorGenericQgnSetwizOperatorMenuLst };
+
+static const TAknsItemID KAknsIIDQgnSetwizPttMenuLst =
+    { EAknsMajorGeneric, EAknsMinorGenericQgnSetwizPttMenuLst };
+
+static const TAknsItemID KAknsIIDQgnSetwizVsMenuLst =
+    { EAknsMajorGeneric, EAknsMinorGenericQgnSetwizVsMenuLst };
+
+static const TAknsItemID KAknsIIDQgnStatDcdChannelitemUnread =
+    { EAknsMajorGeneric, EAknsMinorGenericQgnStatDcdChannelitemUnread };
+
+static const TAknsItemID KAknsIIDQgnTeamuiActivenotespluginIcon =
+    { EAknsMajorGeneric, EAknsMinorGenericQgnTeamuiActivenotespluginIcon };
+
+static const TAknsItemID KAknsIIDQgnWelcome2FinishedGraphic =
+    { EAknsMajorGeneric, EAknsMinorGenericQgnWelcome2FinishedGraphic };
+
+static const TAknsItemID KAknsIIDQgnWelcome2PluginEmailwizIcon =
+    { EAknsMajorGeneric, EAknsMinorGenericQgnWelcome2PluginEmailwizIcon };
+
+static const TAknsItemID KAknsIIDQgnWelcome2PluginEmailwizIntroGraphic =
+    { EAknsMajorGeneric, EAknsMinorGenericQgnWelcome2PluginEmailwizIntroGraphic };
+
+static const TAknsItemID KAknsIIDQgnWelcome2PluginPersIcon =
+    { EAknsMajorGeneric, EAknsMinorGenericQgnWelcome2PluginPersIcon };
+
+static const TAknsItemID KAknsIIDQgnWelcome2PluginPersIntroGraphic =
+    { EAknsMajorGeneric, EAknsMinorGenericQgnWelcome2PluginPersIntroGraphic };
+
+static const TAknsItemID KAknsIIDQgnWelcome2PluginSwitchIcon =
+    { EAknsMajorGeneric, EAknsMinorGenericQgnWelcome2PluginSwitchIcon };
+
+static const TAknsItemID KAknsIIDQgnWelcomeBackgroundDark =
+    { EAknsMajorGeneric, EAknsMinorGenericQgnWelcomeBackgroundDark };
+
+static const TAknsItemID KAknsIIDQgnWelcomeBackgroundLight =
+    { EAknsMajorGeneric, EAknsMinorGenericQgnWelcomeBackgroundLight };
+
+static const TAknsItemID KAknsIIDQgnWelcomePluginEmail =
+    { EAknsMajorGeneric, EAknsMinorGenericQgnWelcomePluginEmail };
+
+static const TAknsItemID KAknsIIDQgnWelcomePluginEmailLandsc =
+    { EAknsMajorGeneric, EAknsMinorGenericQgnWelcomePluginEmailLandsc };
+
+static const TAknsItemID KAknsIIDQgnWelcomePluginEmailPortr =
+    { EAknsMajorGeneric, EAknsMinorGenericQgnWelcomePluginEmailPortr };
+
+static const TAknsItemID KAknsIIDQgnWelcomePluginMaps =
+    { EAknsMajorGeneric, EAknsMinorGenericQgnWelcomePluginMaps };
+
+static const TAknsItemID KAknsIIDQgnWelcomePluginMusic =
+    { EAknsMajorGeneric, EAknsMinorGenericQgnWelcomePluginMusic };
+
+static const TAknsItemID KAknsIIDQgnWelcomePluginSignup =
+    { EAknsMajorGeneric, EAknsMinorGenericQgnWelcomePluginSignup };
+
+static const TAknsItemID KAknsIIDQgnWelcomeSetupComp =
+    { EAknsMajorGeneric, EAknsMinorGenericQgnWelcomeSetupComp };
+
+static const TAknsItemID KAknsIIDQgnMenuWebtv =
+    { EAknsMajorGeneric, EAknsMinorGenericQgnMenuWebtv };
+
+static const TAknsItemID KAknsIIDQgnIndiButtonVideoShare =
+    { EAknsMajorGeneric, EAknsMinorGenericQgnIndiButtonVideoShare };
+
+static const TAknsItemID KAknsIIDQgnGrafNotifNoEventsBg =
+    { EAknsMajorGeneric, EAknsMinorGenericQgnGrafNotifNoEventsBg };
+
+static const TAknsItemID KAknsIIDQgnIndiInputArabicBackspace =
+    { EAknsMajorGeneric, EAknsMinorGenericQgnIndiInputArabicBackspace };
+
+static const TAknsItemID KAknsIIDQgnIndiInputArabicEnter =
+    { EAknsMajorGeneric, EAknsMinorGenericQgnIndiInputArabicEnter };
+
+static const TAknsItemID KAknsIIDQgnIndiInputHwrArabicClose =
+    { EAknsMajorGeneric, EAknsMinorGenericQgnIndiInputHwrArabicClose };
+
+static const TAknsItemID KAknsIIDQgnIndiInputHwrArabicPage12 =
+    { EAknsMajorGeneric, EAknsMinorGenericQgnIndiInputHwrArabicPage12 };
+
+static const TAknsItemID KAknsIIDQgnIndiInputHwrArabicPage13 =
+    { EAknsMajorGeneric, EAknsMinorGenericQgnIndiInputHwrArabicPage13 };
+
+static const TAknsItemID KAknsIIDQgnIndiInputHwrArabicPage22 =
+    { EAknsMajorGeneric, EAknsMinorGenericQgnIndiInputHwrArabicPage22 };
+
+static const TAknsItemID KAknsIIDQgnIndiInputHwrArabicPage23 =
+    { EAknsMajorGeneric, EAknsMinorGenericQgnIndiInputHwrArabicPage23 };
+
+static const TAknsItemID KAknsIIDQgnIndiInputHwrArabicPage33 =
+    { EAknsMajorGeneric, EAknsMinorGenericQgnIndiInputHwrArabicPage33 };
+
+static const TAknsItemID KAknsIIDQgnIndiInputHwrArabicSymbolTable =
+    { EAknsMajorGeneric, EAknsMinorGenericQgnIndiInputHwrArabicSymbolTable };
+
+static const TAknsItemID KAknsIIDQgnIndiInputHwrArabicWritingArea =
+    { EAknsMajorGeneric, EAknsMinorGenericQgnIndiInputHwrArabicWritingArea };
+
+static const TAknsItemID KAknsIIDQgnIndiManyItemsAdd1 =
+    { EAknsMajorGeneric, EAknsMinorGenericQgnIndiManyItemsAdd1 };
+
+static const TAknsItemID KAknsIIDQgnIndiModeNotAutomatedAdd1 =
+    { EAknsMajorGeneric, EAknsMinorGenericQgnIndiModeNotAutomatedAdd1 };
+
+static const TAknsItemID KAknsIIDQgnIndiRrsfeedwidgetFeedsTbAddnew =
+    { EAknsMajorGeneric, EAknsMinorGenericQgnIndiRrsfeedwidgetFeedsTbAddnew };
+
+static const TAknsItemID KAknsIIDQgnIndiSignalGprsTdscdmaAttach =
+    { EAknsMajorGeneric, EAknsMinorGenericQgnIndiSignalGprsTdscdmaAttach };
+
+static const TAknsItemID KAknsIIDQgnIndiSignalGprsTdscdmaContext =
+    { EAknsMajorGeneric, EAknsMinorGenericQgnIndiSignalGprsTdscdmaContext };
+
+static const TAknsItemID KAknsIIDQgnIndiSignalGprsTdscdmaIcon =
+    { EAknsMajorGeneric, EAknsMinorGenericQgnIndiSignalGprsTdscdmaIcon };
+
+static const TAknsItemID KAknsIIDQgnIndiSignalGprsTdscdmaMultipdp =
+    { EAknsMajorGeneric, EAknsMinorGenericQgnIndiSignalGprsTdscdmaMultipdp };
+
+static const TAknsItemID KAknsIIDQgnIndiSignalGprsTdscdmaSuspended =
+    { EAknsMajorGeneric, EAknsMinorGenericQgnIndiSignalGprsTdscdmaSuspended };
+
+static const TAknsItemID KAknsIIDQgnIndiSignalHsdpaTdscdmaAttach =
+    { EAknsMajorGeneric, EAknsMinorGenericQgnIndiSignalHsdpaTdscdmaAttach };
+
+static const TAknsItemID KAknsIIDQgnIndiSignalHsdpaTdscdmaContext =
+    { EAknsMajorGeneric, EAknsMinorGenericQgnIndiSignalHsdpaTdscdmaContext };
+
+static const TAknsItemID KAknsIIDQgnIndiSignalHsdpaTdscdmaIcon =
+    { EAknsMajorGeneric, EAknsMinorGenericQgnIndiSignalHsdpaTdscdmaIcon };
+
+static const TAknsItemID KAknsIIDQgnIndiSignalHsdpaTdscdmaMultipdp =
+    { EAknsMajorGeneric, EAknsMinorGenericQgnIndiSignalHsdpaTdscdmaMultipdp };
+
+static const TAknsItemID KAknsIIDQgnIndiSignalHsdpaTdscdmaSuspended =
+    { EAknsMajorGeneric, EAknsMinorGenericQgnIndiSignalHsdpaTdscdmaSuspended };
+
+static const TAknsItemID KAknsIIDQgnIndiSignalTdscdmaAttach =
+    { EAknsMajorGeneric, EAknsMinorGenericQgnIndiSignalTdscdmaAttach };
+
+static const TAknsItemID KAknsIIDQgnIndiSignalTdscdmaContext =
+    { EAknsMajorGeneric, EAknsMinorGenericQgnIndiSignalTdscdmaContext };
+
+static const TAknsItemID KAknsIIDQgnIndiSignalTdscdmaIcon =
+    { EAknsMajorGeneric, EAknsMinorGenericQgnIndiSignalTdscdmaIcon };
+
+static const TAknsItemID KAknsIIDQgnIndiSignalTdscdmaMultipdp =
+    { EAknsMajorGeneric, EAknsMinorGenericQgnIndiSignalTdscdmaMultipdp };
+
+static const TAknsItemID KAknsIIDQgnIndiSignalTdscdmaSuspended =
+    { EAknsMajorGeneric, EAknsMinorGenericQgnIndiSignalTdscdmaSuspended };
+
+static const TAknsItemID KAknsIIDQgnIndiWmAdd1 =
+    { EAknsMajorGeneric, EAknsMinorGenericQgnIndiWmAdd1 };
+
+static const TAknsItemID KAknsIIDQgnNoteFaxpc1 =
+    { EAknsMajorGeneric, EAknsMinorGenericQgnNoteFaxpc1 };
+
+static const TAknsItemID KAknsIIDQgnPropCmccCustomermanage =
+    { EAknsMajorGeneric, EAknsMinorGenericQgnPropCmccCustomermanage };
+
+static const TAknsItemID KAknsIIDQgnPropModesProfiles =
+    { EAknsMajorGeneric, EAknsMinorGenericQgnPropModesProfiles };
+
+static const TAknsItemID KAknsIIDQgnPropModesThemes =
+    { EAknsMajorGeneric, EAknsMinorGenericQgnPropModesThemes };
 
 // SCMMARKER_INSERTIONPOINT
 

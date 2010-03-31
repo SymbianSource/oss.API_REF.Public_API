@@ -1,7 +1,11 @@
+/* Portions Copyright (c) 2005-2007 Nokia Corporation and/or its subsidiary(-ies).
+ * All rights reserved.
+ */
+
 /** 
 @file
 @publishedAll
-@released
+@externallyDefinedApi
 */
 
 /* zlib.h -- interface of the 'zlib' general purpose compression library

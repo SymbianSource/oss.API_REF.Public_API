@@ -1,67 +1,39 @@
-// Boost.Range library
+
+#ifndef BOOST_MPL_EMPTY_HPP_INCLUDED
+#define BOOST_MPL_EMPTY_HPP_INCLUDED
+
+// Copyright Aleksey Gurtovoy 2000-2004
 //
-//  Copyright Thorsten Ottosen 2003-2004. Use, modification and
-//  distribution is subject to the Boost Software License, Version
-//  1.0. (See accompanying file LICENSE_1_0.txt or copy at
-//  http://www.boost.org/LICENSE_1_0.txt)
+// Distributed under the Boost Software License, Version 1.0. 
+// (See accompanying file LICENSE_1_0.txt or copy at 
+// http://www.boost.org/LICENSE_1_0.txt)
 //
-// For more information, see http://www.boost.org/libs/range/
-//
+// See http://www.boost.org/libs/mpl for documentation.
 
-#ifndef BOOST_RANGE_EMPTY_HPP
-#define BOOST_RANGE_EMPTY_HPP
+// $Source: /cvsroot/boost/boost/boost/mpl/empty.hpp,v $
+// $Date: 2004/09/02 15:40:41 $
+// $Revision: 1.4 $
 
-#if defined(_MSC_VER) && (_MSC_VER >= 1200)
-# pragma once
-#endif
+#include <boost/mpl/empty_fwd.hpp>
+#include <boost/mpl/sequence_tag.hpp>
+#include <boost/mpl/aux_/empty_impl.hpp>
+#include <boost/mpl/aux_/na_spec.hpp>
+#include <boost/mpl/aux_/lambda_support.hpp>
 
-#include <boost/range/config.hpp>
-//#ifdef BOOST_NO_FUNCTION_TEMPLATE_ORDERING
-//#include <boost/range/detail/empty.hpp>
-//#else
+namespace boost { namespace mpl {
 
-#include <boost/range/begin.hpp>
-#include <boost/range/end.hpp>
-
-namespace boost 
-{ 
-namespace range_detail 
+template<
+      typename BOOST_MPL_AUX_NA_PARAM(Sequence)
+    >
+struct empty
+    : empty_impl< typename sequence_tag<Sequence>::type >
+        ::template apply< Sequence >
 {
+    BOOST_MPL_AUX_LAMBDA_SUPPORT(1,empty,(Sequence))
+};
 
-        //////////////////////////////////////////////////////////////////////
-        // primary template
-        //////////////////////////////////////////////////////////////////////
+BOOST_MPL_AUX_NA_SPEC(1, empty)
 
-        template< typename C >
-        inline bool empty( const C& c )
-        {
-            return boost::begin( c ) == boost::end( c );
-        }
+}}
 
-        //////////////////////////////////////////////////////////////////////
-        // string
-        //////////////////////////////////////////////////////////////////////
-
-        inline bool empty( const char* const& s )
-        {
-            return s == 0 || s[0] == 0;
-        }
-
-        inline bool empty( const wchar_t* const& s )
-        {
-            return s == 0 || s[0] == 0;
-        }
-        
-} // namespace 'range_detail'
-
-template< class T >
-inline bool empty( const T& r )
-{
-    return range_detail::empty( r );
-}
-
-} // namepace 'boost'
-
-//#endif //  BOOST_NO_FUNCTION_TEMPLATE_ORDERING
-
-#endif
+#endif // BOOST_MPL_EMPTY_HPP_INCLUDED

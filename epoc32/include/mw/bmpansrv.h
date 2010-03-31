@@ -1,9 +1,9 @@
 // Copyright (c) 1997-2009 Nokia Corporation and/or its subsidiary(-ies).
 // All rights reserved.
 // This component and the accompanying materials are made available
-// under the terms of the License "Symbian Foundation License v1.0" to Symbian Foundation members and "Symbian Foundation End User License Agreement v1.0" to non-members
+// under the terms of "Eclipse Public License v1.0"
 // which accompanies this distribution, and is available
-// at the URL "http://www.symbianfoundation.org/legal/licencesv10.html".
+// at the URL "http://www.eclipse.org/legal/epl-v10.html".
 //
 // Initial Contributors:
 // Nokia Corporation - initial contribution.
@@ -12,8 +12,6 @@
 //
 // Description:
 //
-
-
 
 /**
  @file
@@ -25,7 +23,7 @@
 
 #include <e32std.h>
 #include <w32adll.h>
-#include <bmpanconsts.h>
+#include "bmpanconsts.h"
 #include "bmpancli.h"
 #include <e32math.h>
 
@@ -208,13 +206,8 @@ private:
 		EPlayBackwards			= 0x0080,
 //	General
 		EFlash									= 0x0100,
-		EBackgroundBitmapProvided				= 0x0200,
-		EWindowContentsInitialized				= 0x0400,
 		ENoBitmapWindowRestoring				= 0x0800,
-		EChangedBackgroundFramePending			= 0x1000,
-		EBackgroundShouldIncludeWindowContents	= 0x2000,
 		EDisplayLastFrameWhenFinished			= 0x4000,
-		EBackgroundMaskProvided					= 0x8000
 		};
 
 private: //Pure Virtual function from CAnim
@@ -239,7 +232,6 @@ private:
 	inline TBool IsRunning() const;
 	inline TBool IsFrozen() const;
 	void ResetAnimation();
-	void ClearFrame(TInt aIndex);
 	void ClearFrameNow(TInt aIndex);
 	void RenderFrameBackground(TInt aIndex);
 	TRect CalcFrameRect(TInt aIndex);
@@ -252,25 +244,17 @@ private:
 	void SetPosition(SBitmapAnimNewPosition aNewPosition);
 	void StartAnimationL();
 	void StopAnimation();
-	void StoreWindowContentsToBackgroundBitmapL(const TRegion* aRegion);
 	void UpdateCurrentIndex();
 	inline TRect WindowRect() const;
-	CFbsBitmap* CreateRestoringBitmapL(TPoint& aPosition, TInt aPreviousIndex);
-	void UpdateBackgroundBitmapIfNeeded(const TRegion* aRegion, TRect aBackgroundBitmapScreenRect);
 	static TBool FrameNeedsRedrawing(const TRegion* aRedrawRegion, TRect aFrameScreenRect);
 	void ResetFrameArray();
 	void ClearFrameData();
-	TBool CanDrawNextFrameWithoutErasingPreviousFrameL(TInt aPreviousIndex);
-	TBool CompareBitmapsL(CFbsBitmap* aBmp1, CFbsBitmap* aBmp2);
 	
 private:
 	RPointerArray<CBitmapAnimFrameData> iBitmapAnimFrameDataArray;
 	CBitmapAnimTimer* iAnimTimer;
 	CBitmapAnimFlashTimer* iFlashTimer;
 	CBitmapAnimFrameData* iBackgroundFrame;
-	CFbsBitmap*  iBackgroundBitmap;
-	CFbsBitmapDevice* iBackgroundbitmapDevice;
-	CFbsBitGc* iBackgroundbitmapGc;
 
 //
 	TInt iDummy;
@@ -279,9 +263,7 @@ private:
 	TInt iNumberOfCycles;
 	TPoint iPosition;
 	TInt iWindowConfig;
-	TTimeIntervalMicroSeconds32 iFrameInterval;
-//
-	CFbsBitGc* iRestoringGc;	
+	TTimeIntervalMicroSeconds32 iFrameInterval;	
 	};
 
 // Returns the number of frames store in the frame array.
@@ -326,3 +308,4 @@ GLREF_C void Panic(TBitmapAnimServerPanic aReason);
 
 
 #endif
+

@@ -1,17 +1,20 @@
-// Copyright (c) 1997-2009 Nokia Corporation and/or its subsidiary(-ies).
-// All rights reserved.
-// This component and the accompanying materials are made available
-// under the terms of the License "Symbian Foundation License v1.0" to Symbian Foundation members and "Symbian Foundation End User License Agreement v1.0" to non-members
-// which accompanies this distribution, and is available
-// at the URL "http://www.symbianfoundation.org/legal/licencesv10.html".
-//
-// Initial Contributors:
-// Nokia Corporation - initial contribution.
-//
-// Contributors:
-//
-// Description:
-//
+/*
+* Copyright (c) 1997-2009 Nokia Corporation and/or its subsidiary(-ies).
+* All rights reserved.
+* This component and the accompanying materials are made available
+* under the terms of "Eclipse Public License v1.0"
+* which accompanies this distribution, and is available
+* at the URL "http://www.eclipse.org/legal/epl-v10.html".
+*
+* Initial Contributors:
+* Nokia Corporation - initial contribution.
+*
+* Contributors:
+*
+* Description: 
+*
+*/
+
 
 #ifndef __TXTSTYLE_H__
 #define __TXTSTYLE_H__
@@ -20,6 +23,9 @@
 #include <e32base.h>
 #include <txtfmlyr.h>
 
+#ifndef SYMBIAN_ENABLE_SPLIT_HEADERS
+#include <txtstyle_internal.h>
+#endif
 
 // Classes declared in this file:
 class CParagraphStyle;
@@ -30,24 +36,18 @@ class RReadStream;
 class RWriteStream;
 
 /** 
-The maximum number of characters in a paragraph style name. 
-@internalAll 
+The maximum number of characters in a paragraph style name.
+It should not be used by external developers.
 */
 const TInt KMaxParagraphStyleName=0x20;
 
 
 /** 
 The name of a paragraph style, with a maximum of 32 characters, to uniquely 
-identify the style. 
-@internalComponent 
+identify the style.
+It should not be used by external developers.
 */
 typedef TBuf<KMaxParagraphStyleName> TParagraphStyleName;
-
-/**
-@internalComponent 
-*/
-const TUid KUserDefinedParagraphStyleUid={268435535};
-
 
 //
 // Defines a paragraph style, and the paragraph style to use next.
@@ -190,7 +190,7 @@ public:
 
 /** 
 The number of entries by which a style list expands when its buffer is reallocated. 
-@internalComponent 
+It should not be used by external developers.
 */
 const TInt KMaxStyleListGranularity=0x04;
 

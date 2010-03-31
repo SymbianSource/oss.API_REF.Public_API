@@ -1,9 +1,9 @@
 // Copyright (c) 1998-2009 Nokia Corporation and/or its subsidiary(-ies).
 // All rights reserved.
 // This component and the accompanying materials are made available
-// under the terms of the License "Symbian Foundation License v1.0" to Symbian Foundation members and "Symbian Foundation End User License Agreement v1.0" to non-members
+// under the terms of "Eclipse Public License v1.0"
 // which accompanies this distribution, and is available
-// at the URL "http://www.symbianfoundation.org/legal/licencesv10.html".
+// at the URL "http://www.eclipse.org/legal/epl-v10.html".
 //
 // Initial Contributors:
 // Nokia Corporation - initial contribution.
@@ -11,16 +11,19 @@
 // Contributors:
 //
 // Description:
+// MSVSTD.H
 //
-
+/**
+ * @file 
+ * @publishedAll
+ * @released
+ */
 #ifndef __MSVSTD_H__
 #define __MSVSTD_H__
 
- 
-
-
 #include <e32base.h>
 #include <s32file.h>
+#include <msvstd.hrh>
 
 /**
 Specifies an entry in the Message Server index.
@@ -163,6 +166,8 @@ public:
 	/** This method sets bit 32 of iMtmData1, if you are using this bit elsewhere don't call this method.*/
 	inline void SetLocallyDeleted(TBool aLocallyDeleted);
 	inline TBool LocallyDeleted() const;
+	inline void SetVisibleFolderFlag(TBool aReadOnly);
+	inline TBool VisibleFolderFlag() const;
 	
 	IMPORT_C TBool PendingConditions() const;
 	IMPORT_C void SetPendingConditions(TBool aPendingConditions);
@@ -170,18 +175,9 @@ public:
 	IMPORT_C TInt32 MtmData1() const;
 	IMPORT_C TInt32 MtmData2() const;
 	IMPORT_C TInt32 MtmData3() const;
-	
-	/** 
-	@internalTechnology
-	*/
+
 	IMPORT_C void SetMtmData1(TInt32 aMtmData);
-	/** 
-	@internalTechnology
-	*/
 	IMPORT_C void SetMtmData2(TInt32 aMtmData);
-	/** 
-	@internalTechnology
-	*/
 	IMPORT_C void SetMtmData3(TInt32 aMtmData);
 	//
 protected:
@@ -249,6 +245,8 @@ public:
 	//
 private:
 	//
+	
+
 friend class CMsvEntry;
 friend class CMsvServer;
 friend class CMsvServerEntry;
@@ -264,7 +262,36 @@ friend class CMsvCopyEntry;
 friend class CMsvDelete;
 friend class CMsvIndexContext;
 friend class CMsvEntryArray;
-	//
+friend class CMsvIndexAdapter;
+friend class CMsvDBAdapter;
+friend class TSearchSortDbWrapper;
+
+#if (defined SYMBIAN_MESSAGESTORE_UNIT_TESTCODE)
+friend class CTestIndexAdapter;
+friend class CTestDbAdapter;
+friend class CTestVisibleFolder;
+friend class CTestIndexTableEntry;
+friend class CTestEntryFreePool;
+friend class CTestIndexContext;
+friend class CTestMsvServer;
+friend class CTestMsvEntry;
+friend class CTestSearchSortCacheEntry;
+friend class CTestSearchSortCacheManager;
+friend class CTestSearchSortDeltaCache;
+friend class CTestSearchSortOperation;
+friend class CTestSearchSortDBadapter;
+friend class CTestSearchSortCacheManager;
+friend class CTestSearchSortDeltaCache;
+friend class CTestHeaderSearchSortOperation;
+friend class CTestHeaderEntry;
+#endif
+
+#if (defined SYMBIAN_MESSAGESTORE_HEADER_BODY_USING_SQLDB)
+	friend class CMsvVersion0Version1Converter;
+#if (defined SYMBIAN_MESSAGESTORE_UNIT_TESTCODE)
+	friend class CTestConverterDBAdapter;
+#endif
+#endif
 private:
 	//
 enum {	KMsvEntryPriorityMask=			0x00000003,
@@ -292,7 +319,10 @@ enum {	KMsvEntryPriorityMask=			0x00000003,
 		KMsvEntryPendingConditionsFlag=	0x00800000,		
 		KMsvEntryTemporaryFlags=		0xFF000000,
 		KMsvEntryConnectedFlag=			0x01000000,
-		KMsvEntryPendingDeleteFlag=		0x02000000};
+		KMsvEntryPendingDeleteFlag=		0x02000000,
+	    KMsvVisibleFolderNodeFlag=      0x04000000
+	   };
+	   
 	};
 enum 
 	{
@@ -302,6 +332,11 @@ enum
 	};
 
 const TUint KMsvSendingStateShift=0x11; // Places to shift sending state
+
+#if (defined SYMBIAN_MSGS_ENHANCED_REMOVABLE_MEDIA_SUPPORT)
+	const TInt KDriveMask = 0x0fffffff;
+	const TInt KCurrentDriveId = 1;
+#endif
 
 /** Defines sending state flags. 
 @publishedAll
@@ -336,6 +371,12 @@ enum TMsvSendState
 
 const TUint KMsvSendStateLast = KMsvSendStateNotApplicable;
 const TUint KMsvSendStateMax = 0x0F;
+// Message Database Version.
+#if (defined SYMBIAN_MESSAGESTORE_HEADER_BODY_USING_SQLDB)
+const TUint KCurrentDatabaseVersion = 2;
+#else
+const TUint KCurrentDatabaseVersion = 1;
+#endif
 
 /** Supplies values for bitmasks that allows the rapid setting or clearing of a 
 number of TMsvEntry fields.
@@ -610,6 +651,102 @@ enum TMsvResolverLeave
 	KMsvIndexBackup      = -7003,
 	KMsvIndexRestore     = -7004
 	};
+
+#if (defined SYMBIAN_MESSAGESTORE_HEADER_BODY_USING_SQLDB)
+
+enum EFieldType
+/**
+Allowed field types.
+This class is also used at the server side.
+ 
+@publishedAll
+@released
+*/
+	{
+	EIntegerField,
+	ETextField,
+	EDateField
+	};
+
+
+
+// Common class used by both client and server.
+class CFieldPair: public CBase
+/**
+Allowed field types.
+This class is also used at the server side.
+ 
+@publishedAll
+@released
+*/
+	{
+public:
+	~CFieldPair()
+		{
+		if(iFieldName)
+			{
+			delete iFieldName;
+			}
+		if(iFieldTextValue)
+			{
+			delete iFieldTextValue;
+			}
+		}
+	HBufC* iFieldName;			// Column name
+	EFieldType iFieldType;		// Column type
+	TInt64 iFieldNumValue;		// Column value in number
+	HBufC* iFieldTextValue;		// Column value in text
+	};
+	
+
+
+class CHeaderFields: public CBase
+	{
+public:
+	~CHeaderFields()
+		{
+		iFieldPairList.ResetAndDestroy();
+		}
+	RPointerArray<CFieldPair> iFieldPairList;
+	TUid iUid;
+	};
+	
+
+/*
+// Used for CMsvEntry::ReadDBStoreL() and CMsvEntry::ReadDBStoreL()
+// Used for CMsvServerEntry::ReadDBStoreL() and CMsvServerEntry::ReadDBStoreL()
+
+@publishedAll
+@released
+*/
+
+enum TEntryStoreType
+	{
+	EHeaderEntry,
+	EBodyEntry,
+	EUnknownEntry,
+	EHeaderAndBodyEntry		
+	};
+
+
+#endif 				// #if (defined SYMBIAN_MESSAGESTORE_HEADER_BODY_USING_SQLDB)
+
+/**
+Temporary ID used for testing purpose
+@publishedAll
+@released
+@see TMsvId
+@see KMsvTempIndexEntryIdValue
+*/
+const TMsvId KMsvTempIndexEntryId = KMsvTempIndexEntryIdValue;//1
+
+/**
+@publishedAll
+@released
+@see TMsvId
+*/
+const TMsvId KFirstFreeEntryId=0x100000;
+		
 
 #include <msvstd.inl>
 

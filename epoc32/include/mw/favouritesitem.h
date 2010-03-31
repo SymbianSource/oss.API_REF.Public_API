@@ -22,8 +22,8 @@
 //  INCLUDES
 
 #include <e32base.h>
-#include <FavouritesLimits.h>
-#include <FavouritesWapAp.h>
+#include <favouriteslimits.h>
+#include <favouriteswapap.h>
 
 // FORWARD DECLARATION
 

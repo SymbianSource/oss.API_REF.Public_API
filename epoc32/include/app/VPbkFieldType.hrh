@@ -1,0 +1,276 @@
+/*
+* Copyright (c) 2002-2007 Nokia Corporation and/or its subsidiary(-ies).
+* All rights reserved.
+* This component and the accompanying materials are made available
+* under the terms of "Eclipse Public License v1.0"
+* which accompanies this distribution, and is available
+* at the URL "http://www.eclipse.org/legal/epl-v10.html".
+*
+* Initial Contributors:
+* Nokia Corporation - initial contribution.
+*
+* Contributors:
+*
+* Description:  Data types for the field type system
+*
+*/
+
+
+#ifndef VPBKFIELDTYPE_HRH
+#define VPBKFIELDTYPE_HRH
+
+/**
+ * Virtual Phonebook field data storage types.
+ * @see MVPbkContactFieldData::DataType
+ */
+enum TVPbkFieldStorageType
+    {
+    /// Undefined storage
+    EVPbkFieldStorageTypeNull = -1,
+    /// Text storage
+    EVPbkFieldStorageTypeText = 0,
+    /// Binary (BLOB) storage
+    EVPbkFieldStorageTypeBinary,
+    /// Date/Time storage
+    EVPbkFieldStorageTypeDateTime,
+    /// URI storage
+    EVPbkFieldStorageTypeUri,
+    /// Maximum number of field storage types supported.
+    KVPbkMaxFieldStorageTypes = 16
+    };
+
+/**
+ * Virtual Phonebook field type names. Based on the Versit 2.1 & 3.0 standards.
+ * @see MVPbkFieldType::TypeName
+ */
+enum TVPbkFieldTypeName
+    {
+    EVPbkVersitNameNone = 0,
+    EVPbkVersitNameFN,
+    EVPbkVersitNameN,
+    EVPbkVersitNamePHOTO,
+    EVPbkVersitNameBDAY,
+    EVPbkVersitNameADR,
+    EVPbkVersitNameLABEL,
+    EVPbkVersitNameTEL,
+    EVPbkVersitNameEMAIL,
+    EVPbkVersitNameMAILER,
+    EVPbkVersitNameTZ,
+    EVPbkVersitNameGEO,
+    EVPbkVersitNameTITLE,
+    EVPbkVersitNameROLE,
+    EVPbkVersitNameLOGO,
+    EVPbkVersitNameAGENT,
+    EVPbkVersitNameORG,
+    EVPbkVersitNameCATEGORIES,  // Versit 3.0
+    EVPbkVersitNameNOTE,
+    EVPbkVersitNamePRODID,      // Versit 3.0
+    EVPbkVersitNameREV,
+    EVPbkVersitNameSORTSTRING,  // Versit 3.0
+    EVPbkVersitNameSOUND,
+    EVPbkVersitNameURL,
+    EVPbkVersitNameUID,
+    EVPbkVersitNameVERSION,
+    EVPbkVersitNameCLASS,       // Versit 3.0
+    EVPbkVersitNameKEY,
+    EVPbkVersitNameX,
+    EVPbkVersitNameTopContact,
+    EVPbkVersitNameIMPP,
+    /// Number of field type names
+    KVPbkVersitNameCount // keep last
+    };
+
+/**
+ * Virtual Phonebook field types not supported by the Versit 2.1 standard.
+ * @see MVPbkFieldType::NonVersitType
+ */
+enum TVPbkNonVersitFieldType
+    {
+    EVPbkNonVersitTypeNone = 0,
+    EVPbkNonVersitTypeDTMF,
+    EVPbkNonVersitTypeRingTone,
+    EVPbkNonVersitTypeLocationPrivacy,
+    /// Generic label field type for folded view names and group labels
+    EVPbkNonVersitTypeGenericLabel,
+    /// Field type for caller object image
+    EVPbkNonVersitTypeCodImage,
+    /// Field type for caller object text
+    EVPbkNonVersitTypeCodText,
+    /// Number of non versit types
+    KVPbkNonVersitTypeCount // keep last
+    };
+
+/**
+ * Symbolic names for Virtual Phonebook subfield types.
+ */
+enum TVPbkSubFieldType
+    {
+    EVPbkVersitSubFieldNone = 0,
+    
+    // Subfields for the "N" property
+    EVPbkVersitSubFieldFamilyName = 0,
+    EVPbkVersitSubFieldGivenName,
+    EVPbkVersitSubFieldAdditionalName,
+    EVPbkVersitSubFieldNamePrefix,
+    EVPbkVersitSubFieldNameSuffix,
+    
+    // Subfields for the "ADR" property
+    EVPbkVersitSubFieldPostOfficeAddress = 0,
+    EVPbkVersitSubFieldExtendedAddress,
+    EVPbkVersitSubFieldStreet, 
+    EVPbkVersitSubFieldLocality, 
+    EVPbkVersitSubFieldRegion,
+    EVPbkVersitSubFieldPostalCode, 
+    EVPbkVersitSubFieldCountry,
+
+    // Subfields for the "ORG" property
+    EVPbkVersitSubFieldOrgName = 0,
+    EVPbkVersitSubFieldOrgUnit,
+
+    // Subfields for the "SOUND" property
+    EVPbkVersitSubFieldFamilyNamePronunciation = 0,
+    EVPbkVersitSubFieldGivenNamePronunciation,
+    EVPbkVersitSubFieldCompanyNamePronunciation,
+
+    // Subfields for the "PHOTO" property
+    EVPbkVersitSubFieldPicture = 0
+    };
+
+/**
+ * Virtual Phonebook field type parameters. Based on the Versit 2.1 standard.
+ * @see TVPbkFieldTypeParameters
+ * @see MVPbkFieldType::TypeParameters()
+ */
+enum TVPbkFieldTypeParameter
+    {
+    // General parameters
+    EVPbkVersitParamHOME,
+    EVPbkVersitParamWORK,
+    EVPbkVersitParamPREF,
+    // spare for additional general parameters
+
+    // Address parameters
+    EVPbkVersitParamDOM = 8,
+    EVPbkVersitParamINTL,
+    EVPbkVersitParamPOSTAL,
+    EVPbkVersitParamPARCEL,
+    // spare for additional address parameters
+
+    // Telephone parameters
+    EVPbkVersitParamVOICE = 24,
+    EVPbkVersitParamFAX,
+    EVPbkVersitParamMSG,
+    EVPbkVersitParamCELL,
+    EVPbkVersitParamPAGER,
+    EVPbkVersitParamBBS,
+    EVPbkVersitParamMODEM,
+    EVPbkVersitParamCAR,
+    EVPbkVersitParamISDN,
+    EVPbkVersitParamVIDEO,
+    // spare for additional telephone parameters
+
+    // Email parameters
+    EVPbkVersitParamAOL = 56,
+    EVPbkVersitParamAppleLink,
+    EVPbkVersitParamATTMail,
+    EVPbkVersitParamCIS,
+    EVPbkVersitParameWorld,
+    EVPbkVersitParamINTERNET,
+    EVPbkVersitParamIBMMail,
+    EVPbkVersitParamMCIMail,
+    EVPbkVersitParamPOWERSHARE,
+    EVPbkVersitParamPRODIGY,
+    EVPbkVersitParamTLX,
+    EVPbkVersitParamX400,
+    // spare for additional email parameters
+
+    // Key parameters
+    EVPbkVersitParamX509 = 72,
+    EVPbkVersitParamPGP,
+    // spare for additional key parameters
+
+    // Image types
+    EVPbkVersitParamGIF = 88,
+    EVPbkVersitParamCGM,
+    EVPbkVersitParamWMF,
+    EVPbkVersitParamBMP,
+    EVPbkVersitParamMET,
+    EVPbkVersitParamPMB,
+    EVPbkVersitParamDIB,
+    EVPbkVersitParamPICT,
+    EVPbkVersitParamTIFF,
+    EVPbkVersitParamPS,
+    EVPbkVersitParamPDF,
+    EVPbkVersitParamJPEG,
+    EVPbkVersitParamMPEG,
+    EVPbkVersitParamMPEG2,
+    EVPbkVersitParamAVI,
+    EVPbkVersitParamQTIME,
+    EVPbkVersitParamPNG,
+    EVPbkVersitParamJP2,
+    // spare for additional image types
+
+    // Sound types
+    EVPbkVersitParamWAVE = 112,
+    EVPbkVersitParamPCM,
+    EVPbkVersitParamAIFF,
+    // spare for additional sound types
+
+    /// SIP parameters
+    EVPbkVersitParamVOIP = 120,
+    EVPbkVersitParamSWIS,
+    EVPbkVersitParamPOC,
+    EVPbkVersitParamSIP,
+
+    // Reuse this first for parameters that don't match the categories above
+    EVPbkVersitParamOther = 128,
+
+    /// Maximum number of versit parameters supported.
+    KVPbkMaxVersitParams = 256 // this must be a power of 2!
+    };
+    
+enum TVPbkDefaultType
+    {
+    /// Defaults
+    EVPbkDefaultTypeUndefined,
+    EVPbkDefaultTypePhoneNumber, 
+    EVPbkDefaultTypeVideoNumber, 
+    EVPbkDefaultTypeSms,
+    EVPbkDefaultTypeMms, 
+    EVPbkDefaultTypeEmail, 
+    EVPbkDefaultTypeEmailOverSms,
+    EVPbkDefaultTypeVoIP,
+    EVPbkDefaultTypePOC,
+    EVPbkDefaultTypeChat,
+    EVPbkDefaultTypeOpenLink,
+    
+    // This has to be last in the enumeration
+    EVPbkLastDefaultType                
+    };
+
+enum TVPbkSpeedDialIndex
+    {
+    /// Speed dials
+    EVPbkSpeedDial1 = 0,
+    EVPbkSpeedDial2,
+    EVPbkSpeedDial3,
+    EVPbkSpeedDial4,
+    EVPbkSpeedDial5,
+    EVPbkSpeedDial6,
+    EVPbkSpeedDial7,
+    EVPbkSpeedDial8,
+    EVPbkSpeedDial9
+    };
+
+/**
+ * The version of the field type selector
+ */
+enum TVPbkFieldTypeSelectorVersion
+    {
+    EVPbkFieldTypeSelectorV1 = 1,
+    EVPbkFieldTypeSelectorV2 = 2
+    };
+
+#endif  // VPBKFIELDTYPE_HRH
+
+// End of File

@@ -1,9 +1,9 @@
 // Copyright (c) 1995-2009 Nokia Corporation and/or its subsidiary(-ies).
 // All rights reserved.
 // This component and the accompanying materials are made available
-// under the terms of the License "Symbian Foundation License v1.0" to Symbian Foundation members and "Symbian Foundation End User License Agreement v1.0" to non-members
+// under the terms of the License "Eclipse Public License v1.0"
 // which accompanies this distribution, and is available
-// at the URL "http://www.symbianfoundation.org/legal/licencesv10.html".
+// at the URL "http://www.eclipse.org/legal/epl-v10.html".
 //
 // Initial Contributors:
 // Nokia Corporation - initial contribution.
@@ -25,11 +25,31 @@
 @released
 */
 const TInt KMaxPrecision=15;
+
 /**
 @publishedAll
 @released
+
+This constant specifies the maximum number of significant digits available with floating 
+point computations. Rounding and string formatting methods will not use more digits than this.
 */
 const TInt KPrecisionLimit=12;
+
+/**
+@publishedAll
+@released
+
+Let D be the set of real numbers exactly representable by an IEEE-754 'double'
+For any positive integer n let X_n be the set of real numbers with an exact
+decimal representation using n significant digits.
+Let r_n : D -> X_n be defined by r_n(x)=y such that
+|y-x| = inf { |z-x| : z in X_n }
+and (in the case where two such y exist) that the last significant digit in the
+decimal representation of y is even.
+This constant is the least n such that r_n is injective.
+*/
+const TInt KIEEEDoubleInjectivePrecision=17;
+
 /**
 @publishedAll
 @released
@@ -455,6 +475,9 @@ public:
 	IMPORT_C static TInt Rand(TInt64 &aSeed);
 	IMPORT_C static TReal FRand(TInt64 &aSeed) __SOFTFP;
 	IMPORT_C static TUint32 Random();
+	IMPORT_C static void Random(TDes8& aRandomValue);
+	IMPORT_C static void RandomL(TDes8& aRandomValue);
+	IMPORT_C static TUint32 RandomL();
 	IMPORT_C static TInt Round(TReal &aTrg,const TReal &aSrc,TInt aDecimalPlaces);
 	IMPORT_C static TInt Sin(TReal &aTrg,const TReal &aSrc); 
 	IMPORT_C static TInt Sqrt(TReal &aTrg,const TReal &aSrc);

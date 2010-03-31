@@ -1,9 +1,9 @@
 // Copyright (c) 2005-2009 Nokia Corporation and/or its subsidiary(-ies).
 // All rights reserved.
 // This component and the accompanying materials are made available
-// under the terms of the License "Symbian Foundation License v1.0" to Symbian Foundation members and "Symbian Foundation End User License Agreement v1.0" to non-members
+// under the terms of "Eclipse Public License v1.0"
 // which accompanies this distribution, and is available
-// at the URL "http://www.symbianfoundation.org/legal/licencesv10.html".
+// at the URL "http://www.eclipse.org/legal/epl-v10.html".
 //
 // Initial Contributors:
 // Nokia Corporation - initial contribution.
@@ -23,6 +23,9 @@
 
 class CCalSessionImpl;
 class MCalChangeCallBack2;
+class CCalSession;
+class CCalCalendarInfo;
+class MCalFileChangeObserver;
 
 /** A handle to the calendar file.
 
@@ -51,17 +54,23 @@ NONSHARABLE_CLASS(CCalSession) : public CBase
     {
 public:
 	IMPORT_C static CCalSession* NewL();
+	IMPORT_C static CCalSession* NewL(CCalSession& aCalSession);
 	IMPORT_C ~CCalSession();
 
-	IMPORT_C void CreateCalFileL(const TDesC&  aFileName) const;
+	IMPORT_C void CreateCalFileL(const TDesC& aFileName) const;
+	IMPORT_C void CreateCalFileL(const TDesC& aFileName, const CCalCalendarInfo& aCalendarInfo) const;
+	IMPORT_C void SetCalendarInfoL(const CCalCalendarInfo& aCalendarInfo) const;
+	IMPORT_C CCalCalendarInfo* CalendarInfoL() const;
+
 	IMPORT_C void OpenL(const TDesC& aFileName) const;
 	IMPORT_C void OpenL(const TDesC& aFileName, CalCommon::TCalFileVersionSupport& aFileSupportStatus) const;
 	IMPORT_C const TDesC& DefaultFileNameL() const; 
 	IMPORT_C void DeleteCalFileL(const TDesC& aFileName) const;
 	IMPORT_C CDesCArray* ListCalFilesL() const;
-
 	IMPORT_C void StartChangeNotification(MCalChangeCallBack2& aCallBack, const CCalChangeNotificationFilter& aFilter);
+	IMPORT_C void StartFileChangeNotificationL(MCalFileChangeObserver& aCallBack);
 	IMPORT_C void StopChangeNotification();
+	IMPORT_C void StopFileChangeNotification();
 	IMPORT_C void DisableChangeBroadcast();
 	IMPORT_C void EnableChangeBroadcast();
 	
@@ -72,7 +81,8 @@ public:
 	IMPORT_C void GetFileNameL(TCalPubSubData aPubSubData, TDes& aFileName) const;
 	IMPORT_C TBool IsFileNameL(TCalPubSubData aPubSubData, const TDesC& aFileName) const;
 	IMPORT_C TBool IsOpenedFileL(TCalPubSubData aPubSubData) const;
-
+	IMPORT_C TCalCollectionId CollectionIdL() const;
+	
 	// debug only
 /**
 @publishedPartner
@@ -99,6 +109,7 @@ public:
 private:
 	CCalSession();
 	void ConstructL();
+	void ConstructL(CCalSession& aCalSession);
 private:
 	CCalSessionImpl* iImpl;
 	};

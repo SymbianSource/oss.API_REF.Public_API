@@ -1,9 +1,9 @@
 // Copyright (c) 1995-2009 Nokia Corporation and/or its subsidiary(-ies).
 // All rights reserved.
 // This component and the accompanying materials are made available
-// under the terms of the License "Symbian Foundation License v1.0" to Symbian Foundation members and "Symbian Foundation End User License Agreement v1.0" to non-members
+// under the terms of the License "Eclipse Public License v1.0"
 // which accompanies this distribution, and is available
-// at the URL "http://www.symbianfoundation.org/legal/licencesv10.html".
+// at the URL "http://www.eclipse.org/legal/epl-v10.html".
 //
 // Initial Contributors:
 // Nokia Corporation - initial contribution.
@@ -13,6 +13,9 @@
 // Description:
 // hal\inc\hal_int.h
 // 
+// WARNING: This file contains some APIs which are internal and are subject
+//          to change without notice. Such APIs should therefore not be used
+//          outside the Kernel and Hardware Services package.
 //
 
 #ifndef __HAL_INT_H__
@@ -20,6 +23,14 @@
 
 #include <hal.h>
 #include <e32svr.h>
+
+// Work around data import/export restriction of X86 compilers
+#if defined(__X86__) || defined(__WINS__)
+#undef IMPORT_D
+#undef EXPORT_D
+#define IMPORT_D IMPORT_C
+#define EXPORT_D
+#endif
 
 /**
 @publishedPartner
@@ -59,9 +70,9 @@ public:
 	static const TInt Offset[HAL::ENumHalAttributes];
 	// InitialValue[] is only exported for patchdata purposes (other executables
 	// must not import this array; all access should be through the published Hal
-	// APIs).  EXPORT_C needs to be on the declaration here so that it has external
+	// APIs).  IMPORT_D needs to be on the declaration here so that it has external
 	// linkage (class data is treated differently to non-class data).
-	EXPORT_C static const TInt InitialValue[HAL::ENumHalAttributes];
+	IMPORT_D static const TInt InitialValue[HAL::ENumHalAttributes];
 	static const THalImplementation Implementation[HAL::ENumHalAttributes];
 	static const TInt HalDataSize;
 

@@ -1,9 +1,9 @@
 // Copyright (c) 1997-2009 Nokia Corporation and/or its subsidiary(-ies).
 // All rights reserved.
 // This component and the accompanying materials are made available
-// under the terms of the License "Symbian Foundation License v1.0" to Symbian Foundation members and "Symbian Foundation End User License Agreement v1.0" to non-members
+// under the terms of "Eclipse Public License v1.0"
 // which accompanies this distribution, and is available
-// at the URL "http://www.symbianfoundation.org/legal/licencesv10.html".
+// at the URL "http://www.eclipse.org/legal/epl-v10.html".
 //
 // Initial Contributors:
 // Nokia Corporation - initial contribution.
@@ -46,6 +46,7 @@ typedef TInt32 TDataTypePriority;
 @released */
 const TInt32 KDataTypePriorityUserSpecified=KMaxTInt16;
 
+#ifndef SYMBIAN_ENABLE_SPLIT_HEADERS
 /** This is a special priority that overrides any user settings. Applications must
 have EWriteDeviceData to use this priority. If they have not then they will be
 downgraded to KDataTypePriorityNormal.
@@ -54,6 +55,8 @@ downgraded to KDataTypePriorityNormal.
 @released
 @see TDataTypeWithPriority */
 const TInt32 KDataTypePrioritySystem = 0xFFF9;
+
+#endif //SYMBIAN_ENABLE_SPLIT_HEADERS
 
 /** Trusted applications may use this priority value to ensure 
     their MIME type associations cannot be overridden by 
@@ -149,7 +152,7 @@ private:
 	TBuf8<KMaxDataTypeLength> iDataType;
 	TUid iUid;
 	};
-
+#ifndef SYMBIAN_ENABLE_SPLIT_HEADERS
 /**
 @internalComponent
 */
@@ -160,7 +163,7 @@ private:
 */
 _LIT8(KEpocUrlDataTypeHeader, "X-Epoc-Url/");
 
-
+#endif //SYMBIAN_ENABLE_SPLIT_HEADERS
 
 class TDataTypeWithPriority
 /** A data (MIME) type and a priority value for that data type.

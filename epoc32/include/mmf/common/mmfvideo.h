@@ -1,9 +1,9 @@
 // Copyright (c) 2002-2009 Nokia Corporation and/or its subsidiary(-ies).
 // All rights reserved.
 // This component and the accompanying materials are made available
-// under the terms of the License "Symbian Foundation License v1.0" to Symbian Foundation members and "Symbian Foundation End User License Agreement v1.0" to non-members
+// under the terms of "Eclipse Public License v1.0"
 // which accompanies this distribution, and is available
-// at the URL "http://www.symbianfoundation.org/legal/licencesv10.html".
+// at the URL "http://www.eclipse.org/legal/epl-v10.html".
 //
 // Initial Contributors:
 // Nokia Corporation - initial contribution.
@@ -19,6 +19,10 @@
 #define __MMF_COMMON_VIDEO_H__
 
 #include <mmf/common/mmfutilities.h>
+
+#ifndef SYMBIAN_ENABLE_SPLIT_HEADERS
+#include <mmf/common/mmfvideoenums.h>
+#endif
 
 class CFbsBitmap;
 
@@ -309,7 +313,7 @@ public:
 
 /**
 @publishedAll
-@prototype
+@released
 
 Represents the video aspect ratio as a fraction: iNumerator/iDenominator.
 */
@@ -380,44 +384,10 @@ inline TBool TVideoAspectRatio::operator!=(const TVideoAspectRatio& aAspectRatio
 	}
 
 /**
-Video playback rate capabilities. This structure defines playback rate
-capabilities for the current controller and video clip, and can be used
-to determine if fast forward, rewind, step forward, or step backward
-is possible.
-
-@publishedPartner
-@prototype
-
-@see CVideoPlayerUtility::GetPlayRateCapabilitiesL, CVideoPlayerUtility::SetPlayVelocityL
-*/
-class TVideoPlayRateCapabilities
-    {
-public:
-    /**
-    ETrue if fast or slow play forward is possible (i.e. playback
-    velocity 1-99 or 101-). Normal play forward (velocity 100) is
-    supported by default.
-    */
-    TBool iPlayForward;
-
-    /**
-    ETrue if play backward is possible (i.e. playback velocity below0).
-    This includes normal speed, slow, and fast reverse playback.
-    */
-    TBool iPlayBackward;
-
-    /** ETrue if step forward is possible */
-    TBool iStepForward;
-
-    /** Etrue if step backward is possible */
-    TBool iStepBackward;
-    };
-    
-/**
 Automatic scaling type.
 
-@publishedPartner
-@prototype
+@publishedAll
+@released
 
 @see CVideoPlayerUtility::SetAutoScaleL
 */
@@ -453,8 +423,8 @@ enum TAutoScaleType
 /**
 Horizontal alignment for automatic scaling.
 
-@publishedPartner
-@prototype
+@publishedAll
+@released
 
 @see SetAutoScaleL
 */
@@ -471,8 +441,8 @@ enum THorizontalAlign
 /**
 Vertical alignment for automatic scaling.
 
-@publishedPartner
-@prototype
+@publishedAll
+@released
 
 @see SetAutoScaleL
 */
@@ -484,22 +454,6 @@ enum TVerticalAlign
 	EVerticalAlignTop, 
 	/** The picture is bottom-aligned */
 	EVerticalAlignBottom 
-	};
-
-/**
-Video quality.
-
-@publishedPartner
-@prototype
-
-@see CVideoPlayerUtility::SetVideoQualityL
-*/
-enum TVideoQuality 
-	{
-	EVideoQualityLow = 25,
-	EVideoQualityNormal = 50,
-	EVideoQualityHigh = 75,
-	EVideoQualityLossless = 100
 	};
 	
 #endif

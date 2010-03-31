@@ -20,7 +20,7 @@ _STLP_BEGIN_NAMESPACE
 
 #if !defined (_STLP_USE_TEMPLATE_EXPRESSION)
 
-#  if defined (__GNUC__) || defined (__MLCCPP__)
+#  if defined (__GNUC__) || defined (__MLCCPP__) || (defined (__SYMBIAN32__) && defined (__GCCXML__))
 #    define _STLP_INIT_AMBIGUITY 1
 #  endif
 

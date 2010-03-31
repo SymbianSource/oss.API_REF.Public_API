@@ -1,9 +1,9 @@
 // Copyright (c) 1998-2009 Nokia Corporation and/or its subsidiary(-ies).
 // All rights reserved.
 // This component and the accompanying materials are made available
-// under the terms of the License "Symbian Foundation License v1.0" to Symbian Foundation members and "Symbian Foundation End User License Agreement v1.0" to non-members
+// under the terms of "Eclipse Public License v1.0"
 // which accompanies this distribution, and is available
-// at the URL "http://www.symbianfoundation.org/legal/licencesv10.html".
+// at the URL "http://www.eclipse.org/legal/epl-v10.html".
 //
 // Initial Contributors:
 // Nokia Corporation - initial contribution.
@@ -575,6 +575,13 @@ public:
 	IMPORT_C TBool UseSyncDownloadRules();
 	IMPORT_C void SetFolderSyncDisabled(TBool aFlag);
 	IMPORT_C TBool FolderSyncDisabled();
+	
+#if (defined SYMBIAN_EMAIL_CAPABILITY_SUPPORT)
+	IMPORT_C TBool IMAP4Auth() const;
+	IMPORT_C void SetIMAP4Auth(TBool aFlag);
+	IMPORT_C TBool FallBack() const;
+	IMPORT_C void SetFallBack(TBool aFlag);
+#endif
 
 private:
 	class TImImap4SettingsExtension
@@ -602,16 +609,22 @@ private:
 		{
 		KImap4EmailSettingsClearFlag				= 0x00000000,
 		KImap4BaseEmailSettingsLastUsedFlag			= CImBaseEmailSettings::EBaseEmailSettingsLastUsedFlag, //0x00000002
-		KImap4EmailDisconnectedModeFlag				= KImap4BaseEmailSettingsLastUsedFlag << 1, //0x00000004
-		KImap4EmailAutoSendFlag						= KImap4EmailDisconnectedModeFlag << 1, //0x00000008
-		KImap4EmailDeleteEmailsWhenDisconnecting	= KImap4EmailAutoSendFlag << 1, //0x00000010
-		KImap4EmailAcknowledgeReceipts				= KImap4EmailDeleteEmailsWhenDisconnecting << 1, //0x00000020
-		KImap4EmailUpdatingSeenFlags				= KImap4EmailAcknowledgeReceipts << 1, //0x00000040
-		KImap4EmailIdleFlag							= KImap4EmailUpdatingSeenFlags << 1, //0x00000080
+		KImap4EmailDisconnectedModeFlag				= KImap4BaseEmailSettingsLastUsedFlag << 1, 	//0x00000004
+		KImap4EmailAutoSendFlag						= KImap4EmailDisconnectedModeFlag << 1, 		//0x00000008
+		KImap4EmailDeleteEmailsWhenDisconnecting	= KImap4EmailAutoSendFlag << 1, 				//0x00000010
+		KImap4EmailAcknowledgeReceipts				= KImap4EmailDeleteEmailsWhenDisconnecting << 1,//0x00000020
+		KImap4EmailUpdatingSeenFlags				= KImap4EmailAcknowledgeReceipts << 1, 			//0x00000040
+		KImap4EmailIdleFlag							= KImap4EmailUpdatingSeenFlags << 1, 			//0x00000080
 		KImap4EmailExpungeFlag						= KImap4EmailIdleFlag << 1,
-		KImap4EmailUseSyncDownloadRules				= KImap4EmailExpungeFlag << 1, //0x00000200
-		KImap4EmailSettingsFolderSyncDisabled		= KImap4EmailUseSyncDownloadRules << 1, //0x00000400
-		KImap4EmailSettingsLastUsedFlag				= KImap4EmailSettingsFolderSyncDisabled
+		KImap4EmailUseSyncDownloadRules				= KImap4EmailExpungeFlag << 1, 					//0x00000200
+		KImap4EmailSettingsFolderSyncDisabled		= KImap4EmailUseSyncDownloadRules << 1, 		//0x00000400
+#if (defined SYMBIAN_EMAIL_CAPABILITY_SUPPORT)
+		KImap4EmailSettingsAuthenticationFlag 		= KImap4EmailSettingsFolderSyncDisabled << 1, 	//0x00000800
+		KImap4EmailSettingsFallBackFlag	 			= KImap4EmailSettingsAuthenticationFlag << 1, 	//0x00001000
+		KImap4EmailSettingsLastUsedFlag				= KImap4EmailSettingsFallBackFlag   			//0x00001000
+#else
+		KImap4EmailSettingsLastUsedFlag				= KImap4EmailSettingsFolderSyncDisabled    		//0x00000400
+#endif
 		};
 
 	TImImap4SettingsExtension*	iExtension; // renamed iReceiptAddress

@@ -4,9 +4,9 @@
 // Copyright (c) 1998-2009 Nokia Corporation and/or its subsidiary(-ies).
 // All rights reserved.
 // This component and the accompanying materials are made available
-// under the terms of the License "Symbian Foundation License v1.0" to Symbian Foundation members and "Symbian Foundation End User License Agreement v1.0" to non-members
+// under the terms of "Eclipse Public License v1.0"
 // which accompanies this distribution, and is available
-// at the URL "http://www.symbianfoundation.org/legal/licencesv10.html".
+// at the URL "http://www.eclipse.org/legal/epl-v10.html".
 //
 // Initial Contributors:
 // Nokia Corporation - initial contribution.
@@ -17,8 +17,6 @@
 // ESTLIB control for multi-thread and multi-process operation
 // 
 //
-
-
 
 /**
  @file
@@ -59,5 +57,6 @@ NB. This calls chdir(), so start the PosixServer before calling this if you want
 */
 IMPORT_C void __crt0(int& argc, char**& argv, char**& envp);
 IMPORT_C void __crt0(int& argc, wchar_t**& argv, wchar_t**& envp);
+
 
 #endif

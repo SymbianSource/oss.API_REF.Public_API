@@ -1,9 +1,9 @@
 // Copyright (c) 1998-2009 Nokia Corporation and/or its subsidiary(-ies).
 // All rights reserved.
 // This component and the accompanying materials are made available
-// under the terms of the License "Symbian Foundation License v1.0" to Symbian Foundation members and "Symbian Foundation End User License Agreement v1.0" to non-members
+// under the terms of "Eclipse Public License v1.0"
 // which accompanies this distribution, and is available
-// at the URL "http://www.symbianfoundation.org/legal/licencesv10.html".
+// at the URL "http://www.eclipse.org/legal/epl-v10.html".
 //
 // Initial Contributors:
 // Nokia Corporation - initial contribution.
@@ -11,7 +11,14 @@
 // Contributors:
 //
 // Description:
+// MIUTHDR.H
 //
+
+/**
+ * @file 
+ * @publishedAll
+ * @released
+ */
 
 #ifndef __MIUTHDR_H__
 #define __MIUTHDR_H__
@@ -22,68 +29,35 @@
 #include <msvstd.h>
 #include <msvids.h>			// KMsvNullIndexEntryId
 #include <miutstd.hrh>			// KUidMsvEmailTextEntryValue
-
-// IMail-specific stream type within an IMail file store for CImHeader
+#ifndef SYMBIAN_ENABLE_SPLIT_HEADERS  
+#include "timrfc822datefield.h"
+#endif
+/** 
+ * IMail-specific stream type within an IMail file store for CImHeader
+ * @publishedAll
+ * @released
+ */
 const TUid KUidMsgFileMimeHeader	= {0x1000160F};		// 268441103 decimal
-// IMail-specific stream type within an IMail file store for CImMimeHeader
+/** 
+ * IMail-specific stream type within an IMail file store for CImMimeHeader
+ * @publishedAll
+ * @released
+ */
 const TUid KUidMsgFileIMailHeader	= {0x100001D8};		// 268435928 decimal
 
-// Identifies which version of CImHeader has been stored in stream
-const TUint16 KImHeaderVersion = 2; 
-
-const TUid KUidMsvEmailTextEntry			= {KUidMsvEmailTextEntryValue};
-const TUid KUidMsvEmailHtmlEntry			= {KUidMsvEmailHtmlEntryValue};
-const TUid KUidMsvEmailExternalBodyEntry	= {KUidMsvEmailExternalBodyEntryValue};
-const TUid KUidMsvEmailRtfEntry				= {KUidMsvEmailRtfEntryValue};
-
-
-_LIT8(KMiutDateFormat, " %S, %2d %S %04d %02d:%02d:%02d ");
-_LIT8(KMiutMonthNames, "JanFebMarAprMayJunJulAugSepOctNovDec");
-_LIT8(KMiutDayNames, "MonTueWedThuFriSatSun");
-_LIT8(KMiutTimeZoneNeg, "-%02d%02d");
-_LIT8(KMiutTimeZonePos, "+%02d%02d");
-
-_LIT8(KMiutBase64String, "Base64");
-_LIT8(KMiutQPString, "quoted-printable");
-_LIT8(KMiut7BitString, "7bit");
-_LIT8(KMiut8BitString, "8bit");
-_LIT8(KMiutBinaryString, "binary");
-_LIT8(KMiutUUString, "uuencode");
-
-_LIT8(KMiutWildcardBase64, "*base64*");
-_LIT8(KMiutWildcardQP, "*quoted-printable*");
-_LIT8(KMiutWildcard7Bit, "*7bit*");
-_LIT8(KMiutWildcard8Bit, "*8bit*");
-_LIT8(KMiutWildcardBinary, "*binary*");
-_LIT8(KMiutWildcardUU, "*uu*");
-
-#define KMiutEmptyString KNullDesC
-
-_LIT(KMiutFormatString, "%S");
-_LIT(KImEngineResourceFile, "\\resource\\messaging\\imcm.rsc");
-
-const TInt KMiutDateStringLength	= 32;
-const TInt KCenturyThreshold		= 100;
-const TInt KCenturyOffset			= 70;
-const TInt KThisCentury				= 1900;	// as defined in 1998
-const TInt KNextCentury				= 2000;
-
+/** 
+ * @publishedAll
+ * @released
+ */
 class CMsvStore;
 class TMsvEntry;
 class RMsvReadStream;
 class RMsvWriteStream;
-class CImConvertHeader;
+/** 
+ * @internalTechnology
+ * @released
+ */
 class CImEncodedHeader;
-
-void CopyArrayL(const CDesCArray& aSource, CDesCArray& aDestination);
-
-// Maximum size for descriptors stored in HBufC members of CImHeader = 1000 chars
-const TInt KMaxImHeaderStringLength = 1000;
-const TInt KMaxImMimeFieldLength	= 1000;
-const TInt KImMailMaxBufferSize		= 1000;	// 1000 is defined by the SMTP spec as max space
-const TInt KSmtpMaxBufferExcludingCRLF = 979; // Line length limit is 1000 chars per line including CRLF (RFC2822, Section 2.1.1)
-                                              // 1000 chars including "Field name: "+"Field body"+CRLF (here "Resent-Message-ID: " is largest field)
-
 
 /** Defines how emails will be encoded when they are sent.
 
@@ -260,6 +234,7 @@ field of that name. */
 	IMPORT_C void StoreL  (CMsvStore& aMessageStore) const;
 	IMPORT_C void StoreWithoutCommitL(CMsvStore& aMessageStore) const;
 
+
 	// the bulk of the member functions are accessors & mutators so we can use
 	// objects of the class as data repositories during the data-marshalling stage
 	// of getting imail headers to/from the internet
@@ -372,6 +347,14 @@ private:
 	//finds the duplicate recipients in To and Cc list
 	TBool IsRecipientPresent(CImHeader& aCImHeader, TPtrC16 newRecipient);
 
+#if (defined SYMBIAN_MESSAGESTORE_HEADER_BODY_USING_SQLDB)
+	void ReStoreDBL(CMsvStore& aMessageStore);
+	void StoreDBL  (CMsvStore& aMessageStore) const;
+	void CreateImHeaderArrayListL(TDesC16& aStr, CDesCArray& aRecipients);
+	void CreateEncodingInfoL(TDesC16& aEncodingStr);
+	HBufC16* Convert8to16L(const TDesC8& aStr) const;
+	void CreateBufferL( RBuf16& aBuf, CDesCArray& aRecipients)const;
+#endif 
 private:
 	TUint16 iVersion;
 
@@ -405,23 +388,10 @@ private:
 	TUint							i822HeaderCharset; 
 
 	CImEncodedHeader* iEncodedHeader;
+#if (defined SYMBIAN_MESSAGESTORE_HEADER_BODY_USING_SQLDB)
+	friend class CTestEmailHeaderStoreReStore;
+#endif 
 	};
-
-class TImRfc822DateField
-/**
-@internalTechnology
-@released
-*/
-	{
-public:
-	IMPORT_C TInt ParseDateField(const TDesC8& aRfc822DateField, TTime& rTime);
-	IMPORT_C void SetDate(const TTime& aTimeDate, TDes8& rOutputLine);	// NB assumes that "Date: " string has already been inserted into  rOutputLine
-
-private:
-	TBool GetMonth( const TDesC8& name, TMonth& month );
-	TBool GetTimezone( const TDesC8& name, TInt& minsOffset );
-	};
-
 
 /** Folder type flags.
 
@@ -724,9 +694,10 @@ public:
 	// streaming operations
 	IMPORT_C void InternalizeL( RMsvReadStream& aReadStream );
 	IMPORT_C void ExternalizeL( RMsvWriteStream& aWriteStream ) const;
+	IMPORT_C void StoreWithoutCommitL(CMsvStore& aMessageStore) const;
 	IMPORT_C void RestoreL( CMsvStore& aMessageStore );
 	IMPORT_C void StoreL  ( CMsvStore& aMessageStore ) const;
-	IMPORT_C void StoreWithoutCommitL(CMsvStore& aMessageStore) const;
+
 
 	/** Sets the Content-Type field value (e.g. "text" in Content-Type:text/plain). 
 	
@@ -815,6 +786,12 @@ private:
 	void ConstructL();
 	TBool ArrayEntryExists(CDesCArray& aArray, TInt aField);
 
+#if (defined SYMBIAN_MESSAGESTORE_HEADER_BODY_USING_SQLDB)
+	void ReStoreMimeDBL(CMsvStore& aMessageStore);
+	void StoreMimeDBL  (CMsvStore& aMessageStore) const;
+	void CreateMimeArrayListL(TPtrC16 astr1 ,TInt ai);
+	TInt BufSize() const;
+#endif 
 private:
 	TUint16 iVersion;
 	HBufC8* iRelativePath;
@@ -842,6 +819,37 @@ private:
 	TUint iMimeCharset;	
 	};
 
+
+
+/**
+ * Convert16to8L()
+ *
+ * Convert the 16 bit descripter to 8 bit.
+ * @param astr A descripter to be convert into 8 bit discripter.
+ * @return HBufC16* A 8 bit discripter.
+ */
+static inline HBufC8* Convert16to8L(TDesC16& aStr)//const
+	{
+	HBufC8* newFrom1 = HBufC8::NewL(aStr.Length());
+	newFrom1->Des().Copy(aStr);
+	return newFrom1;
+	}
+
+
+/**
+ * ConvertToTInt()
+ * 
+ * Converts a string to an integer.
+ * @param aStr A string to make Integer.
+ * @return TInt A integer value 
+ */
+static inline TInt ConvertToTInt(TDesC16& aStr)
+	{
+	TLex string(aStr);
+	TInt32 stringIntValue;
+	string.Val(stringIntValue);
+	return stringIntValue;
+	}
 
 
 #include <miuthdr.inl>

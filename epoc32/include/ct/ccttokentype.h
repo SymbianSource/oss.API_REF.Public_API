@@ -17,33 +17,21 @@
 */
 
 
-
-
 /**
  @file 
- @internalTechnology
+ @publishedAll
+ @released
 */
  
 #ifndef __CCTTOKENTYPE_H__
 #define __CCTTOKENTYPE_H__
 
-#include <ct/mcttokentype.h>
+#ifndef SYMBIAN_ENABLE_SPLIT_HEADERS
+#include "cttokentypedeletehandler.h"
+#endif
 
-/**
- * Abstract base class for a handler object to be called when a CCTTokenType is
- * deleted.  The handler is called simply by being deleted.  It is called from
- * CCTTokenType's destructor.
- *
- * This allows for ecom-loaded tokens to be destroyed properly without
- * forcing clients of ctframework.dll to link against ecom.
- *
- * @internalTechnology
- */
-class CCTTokenTypeDeleteHandler : public CBase
-	{
- public:
-	IMPORT_C virtual ~CCTTokenTypeDeleteHandler();
-	};
+class CCTTokenTypeDeleteHandler;
+#include <ct/mcttokentype.h>
 
 /**
  * A token type.
@@ -56,8 +44,6 @@ class CCTTokenTypeDeleteHandler : public CBase
  * inadvertantly call delete on instances of it - they should call the Release()
  * method instead.
  * 
- * @publishedPartner
- * @released
  * @since v7.0
  */
 class CCTTokenType : protected CBase, public MCTTokenType

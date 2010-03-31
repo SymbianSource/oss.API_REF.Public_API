@@ -32,14 +32,6 @@
 # ifndef _STLP_EPOC_H
 #  define  _STLP_EPOC_H
 
-// NON-STANDARD!!!!
-
-#if defined(__WINS__)
-#  pragma warning ( disable : 4018 4097 4100 4127 4244 4284 4511 4512 4514 4786 4800 ) //4355 4284  4231 4511 4512 4097 4786 4800 4018 4146 4244 4514 4127 4100 4663)
-#  define _STLP_NO_FUNCTION_TMPL_PARTIAL_ORDER 1
-// Uncomment if partial order of template functions is not available
-#  define _STLP_NO_FUNC_PARTIAL_ORDERING 1
-#endif
 /*
 #ifndef _STLP_NO_IOSTREAMS
 #  define _STLP_NO_IOSTREAMS	               1
@@ -50,12 +42,6 @@
 //#  define _NOTHREADS                           1
 #  define _STLP_NO_TYPEINFO                    1
 */
-#ifndef __PLACEMENT_NEW_INLINE
-#ifndef __E32STD_H__
-inline void * operator new(unsigned int, void *_P) { return (_P); }
-#define __PLACEMENT_NEW_INLINE
-#endif // E32STD_H
-#endif
 
 //==========================================================
 
@@ -64,28 +50,28 @@ inline void * operator new(unsigned int, void *_P) { return (_P); }
 
 // Mostly correct guess, change it for Alpha (and other environments
 // that has 64-bit "long")
-#  define _STLP_UINT32_T unsigned long
+#  define _STLP_UINT32_T unsigned long  
 
 // Disables wchar_t functinality
-#  define _STLP_NO_WCHAR_T  1
+//#  define _STLP_NO_WCHAR_T  1
 
 // Define if wchar_t is not a unique type, and is actually a typedef to unsigned short. 
 // #  define _STLP_WCHAR_T_IS_USHORT 1
 
 // Uncomment if long long is available
-// #  define _STLP_LONG_LONG long long
+#  define _STLP_LONG_LONG long long
 
 // Uncomment if long double is not available
 // #  define _STLP_NO_LONG_DOUBLE 1
 
 // Uncomment this if your compiler does not support namespaces 
-#  define _STLP_HAS_NO_NAMESPACES 1
+//#  define _STLP_HAS_NO_NAMESPACES 1
 
 // Uncomment if "using" keyword does not work with template types 
 // # define _STLP_BROKEN_USING_DIRECTIVE 1
 
 // Uncomment this if your compiler does not support exceptions
-#  define _STLP_HAS_NO_EXCEPTIONS 1
+//#  define _STLP_HAS_NO_EXCEPTIONS 1
 
 // Header <new> that comes with the compiler 
 // does not define bad_alloc exception
@@ -97,11 +83,6 @@ inline void * operator new(unsigned int, void *_P) { return (_P); }
 // Uncomment if member template methods are not available
 // #  define _STLP_NO_MEMBER_TEMPLATES   1
 
-// Uncomment if member template classes are not available
-#if defined(__WINS__)
-#  define _STLP_NO_MEMBER_TEMPLATE_CLASSES   1
-#endif
-
 // Uncomment if friend member templates are not available
 #if defined(__WINS__)
 // Possibly required ???
@@ -111,10 +92,6 @@ inline void * operator new(unsigned int, void *_P) { return (_P); }
 // Compiler does not accept friend declaration qualified with namespace name.
 // #  define _STLP_NO_QUALIFIED_FRIENDS 1
 
-// Uncomment if partial specialization is not available
-#if defined(__WINS__)
-#  define _STLP_NO_CLASS_PARTIAL_SPECIALIZATION 1
-#endif
 
 // Define if class being partially specialized require full name (template parameters)
 // of itself for method declarations
@@ -163,9 +140,31 @@ inline void * operator new(unsigned int, void *_P) { return (_P); }
 // compiler headers included. Default is "../include".
 // C headers may reside in different directory, so separate macro is provided.
 // Hint : never install STLport in the directory that ends with "include"
-// # define _STLP_NATIVE_INCLUDE_PATH ../include
-# define _STLP_NATIVE_C_INCLUDE_PATH libc
-# define _STLP_NATIVE_INCLUDE_PATH libc
+
+# define _STLP_NATIVE_C_INCLUDE_PATH stdapis/
+# define _STLP_NATIVE_INCLUDE_PATH 
+#define _STLP_NATIVE_CPP_RUNTIME_INCLUDE_PATH runtime/
+
+// These are some options that are common across compilers used in Symbian
+#   define _STLP_NO_NEW_NEW_HEADER 1
+#	define _STLP_NO_NEW_HEADER
+#   define _STLP_USE_DECLSPEC
+#   undef _STLP_EXPORT_DECLSPEC
+#   undef _STLP_IMPORT_DECLSPEC
+#	define _STLP_NO_THREADS
+#	define _STLP_USE_NEW_IOSTREAMS
+#   define _STLP_NO_OWN_IOSTREAMS
+#	define _STLP_USE_NEWALLOC
+#   define _STLP_NO_LONG_DOUBLE
+#   define _STLP_LITTLE_ENDIAN
+#   define _STLP_LABS
+#   define _STLP_LDIV
+#   define _STLP_CONST_CONSTRUCTOR_BUG
+#	define _STLP_COMPLEX_SPECIALIZATION_BUG
+#	define _STLP_USE_EXCEPTIONS
+#	define _STLP_EXTERN_RANGE_ERRORS
+// Defined in _site_config.h
+//#   define _STLP_NO_OWN_NAMESPACE 
 
 //==========================================================
 # endif

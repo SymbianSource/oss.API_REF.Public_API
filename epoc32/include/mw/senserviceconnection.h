@@ -1,21 +1,24 @@
 /*
-* Copyright (c) 2002-2005 Nokia Corporation and/or its subsidiary(-ies). 
+* Copyright (c) 2002-2005 Nokia Corporation and/or its subsidiary(-ies).
 * All rights reserved.
 * This component and the accompanying materials are made available
-* under the terms of the License "Symbian Foundation License v1.0" to Symbian Foundation members and "Symbian Foundation End User License Agreement v1.0" to non-members
+* under the terms of "Eclipse Public License v1.0"
 * which accompanies this distribution, and is available
-* at the URL "http://www.symbianfoundation.org/legal/licencesv10.html".
+* at the URL "http://www.eclipse.org/legal/epl-v10.html".
 *
 * Initial Contributors:
 * Nokia Corporation - initial contribution.
 *
 * Contributors:
 *
-* Description:        CSenServiceConnection offers public API for
+* Description:           CSenServiceConnection offers public API for
 *                service consumers to access invocable services, 
 *                as a part of the Web Services Framework (WSF).
 *
 */
+
+
+
 
 
 
@@ -75,7 +78,7 @@ const TInt KErrSenHostNotAvailable                  =   -30318;
 
 const TInt KErrSenAuthenticationFault               =   -30319;
 const TInt KErrSenNoEndUserPermission               =   -30321;
-
+const TInt KErrSenBrandNotSupported                 =   -30322;
 
 const TInt KSenConnectionStatusCreateFailed         =  -1; // post-state
 const TInt KSenConnectionStatusNew                  =   0; // post-state
@@ -104,6 +107,57 @@ const TInt KSenTransportStatusCodeVtcpUnavailable = 2005; // KSenTransportStatus
 // FORWARD DECLARATIONS
 class CSenServicePattern;
 class CSenIdentityProvider;
+
+struct TSenDataTrafficDetails 
+{
+public:
+   	
+   	TSenDataTrafficDetails():iTotalBytesSent(0),
+   							 iTotalBytesRecieved(0)
+	{
+	}   						
+	
+	TBool operator==(TSenDataTrafficDetails& rhs)
+	{
+		if( (this->iTotalBytesSent == rhs.iTotalBytesSent) &&
+			(this->iTotalBytesRecieved == rhs.iTotalBytesRecieved) )
+			return ETrue;
+		else
+			return EFalse;
+	}
+	
+	TSenDataTrafficDetails& operator=(TSenDataTrafficDetails& rhs)
+	{
+		if(*this == rhs)
+			return *this;
+		this->iTotalBytesSent = rhs.iTotalBytesSent;
+		this->iTotalBytesRecieved = rhs.iTotalBytesRecieved;
+		return *this;
+	}
+	
+	TSenDataTrafficDetails& operator+=(TSenDataTrafficDetails& rhs)	
+	{
+		this->iTotalBytesSent += rhs.iTotalBytesSent;
+		this->iTotalBytesRecieved += rhs.iTotalBytesRecieved;
+		return *this;
+	}
+   	
+   	TUint iTotalBytesSent ; 
+   	TUint iTotalBytesRecieved ; 
+private:	   
+   	TAny* iReserved;
+};
+
+struct TSenDataTrafficOperations 
+{
+public:
+	TSenDataTrafficOperations(): iReset(EFalse)
+	{
+	}
+   	TBool iReset;
+private:   	
+   	TAny* iReserved;
+};
 
 // CLASS DECLARATION
 
@@ -1177,6 +1231,85 @@ class CSenServiceConnection : public CActive, public MSenFragment
         * @param aFilesObserver Implementation of transfer progress observer.
         */
     
+		virtual void DataTrafficDetails(TSenDataTrafficDetails& aDetails,
+    									TSenDataTrafficOperations& aOperations) = 0;     
+		
+        /**
+        * Service Consumer can call this method to acquire a new interface,
+        * which is identified by unique ID (UID).
+        * @param aUID is the UID of the interface being requested
+        * @return TAny* pointer to the interface, or if no interface to 
+        * given UID exists, function returns NULL. In typical cases, returned
+        * pointer should be cast to some preknown M-class pointer (the actual
+        * new interface).
+        *
+        * List of currently supported interfaces:
+        * KSenInterfaceUidAlrServiceConnection      => MSenAlrServiceConnection
+        */    
+	    virtual TAny* InterfaceByUid( TUid aUID ) = 0;
+		
+        /*
+        * Sends a RFile Handle to the service. 
+        * the Identity Based Web Service Framework (which ID is "ID-WSF") 
+        * and the Basic Web Services Framework (which ID is "WS-I"). 
+        * Please note, that ID-WSF does NOT support this method. 
+				* SendL(const TDesC8&).
+        * So, currently this method is supported only in Basic Web Services framework.
+        * @param aMessage  The service specific message - a full SOAP envelope 
+        * @return Transaction ID (positive integer) or error code, if method fails.
+        * Transaction ids:
+        * Positive integers                 SendL returns transaction ID of the request,
+        *                                   which can be later on utilized inside
+        *                                   HandleMessageL and HandleErrorL methods,
+        *                                   in order to map request and its response
+        *                                   together.
+        * Error codes:
+        * KErrSenNotInitialized             Connection has not been initialized.
+        * KErrArgument                      RFile handle is NULL ( Specified file doesnot exist)
+        * KErrSenServiceConnectionBusy      Connection is already busy with another
+        *                                   request.
+        * KErrConnectionInitializing        Connection is still initializing and
+        *                                   cannot yet process commands.
+        * KErrConnectionExpired             Connection is expired and needs to be
+        *                                   renewed.
+        * KErrSubmitting                    An internal error has occurred.
+        * KErrNoMemory                      Not enough memory to process the 
+        *                                   message.
+        * Other error codes are system-wide Symbian error codes.
+        */
+				virtual TInt SendL(RFile& aFileHandle) = 0;
+				
+				/*
+        * Submits a RFile Handle to the service. This is a synchronous call,
+        * returning  a SOAP envelope that was received from the service.
+        * There are two default frameworks available:
+        * @param    aResponseTo  This is a ref-to-pointer where response 
+        *                        from the service will be allocated. If the
+        *                        complete server messages mode is set to OFF,
+        *                        then only <Body> element will be returned, 
+        *                        otherwise a complete SOAP envelope.
+        *                        The ownership of aResponse is transfered to 
+        *                        the caller.
+        * @return status/error code
+        * Status codes:
+        * KErrNone                          ok
+        * Error codes:
+        * KErrSenNotInitialized             Connection has not been initialized.
+        * KErrSenServiceConnectionBusy      Connection is already busy with another
+        *                                   request.
+        * KErrConnectionInitializing        Connection is still initializing and
+        *                                   cannot yet process commands.
+        * KErrConnectionExpired             Connection is expired and needs to be
+        *                                   renewed.
+        * KErrSubmitting                    An internal error has occurred.
+        * KErrNoMemory                      Not enough memory to process the 
+        *                                   message.
+        * KErrArgument                      RFile handle is NULL ( Specified file doesnot exist)
+        * KErrSenInternal                   Internal state is invalid.
+        * Other error codes are system-wide Symbian error codes.
+        */
+		virtual TInt SubmitL(RFile& aFileHandle, HBufC8*& aResponseTo) = 0;
+		   
     protected:
         
         /**

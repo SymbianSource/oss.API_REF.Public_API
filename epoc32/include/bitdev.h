@@ -1,9 +1,9 @@
 // Copyright (c) 1997-2009 Nokia Corporation and/or its subsidiary(-ies).
 // All rights reserved.
 // This component and the accompanying materials are made available
-// under the terms of the License "Symbian Foundation License v1.0" to Symbian Foundation members and "Symbian Foundation End User License Agreement v1.0" to non-members
+// under the terms of "Eclipse Public License v1.0"
 // which accompanies this distribution, and is available
-// at the URL "http://www.symbianfoundation.org/legal/licencesv10.html".
+// at the URL "http://www.eclipse.org/legal/epl-v10.html".
 //
 // Initial Contributors:
 // Nokia Corporation - initial contribution.
@@ -21,20 +21,16 @@
 #include <bitstd.h>
 #include <graphicsaccelerator.h>
 
-/**
-Used by RectCompare()
-@internalComponent
-*/
-enum {EScanBufSize=0x80}; 
-
 class CFbsDrawDevice;
 class TSurfaceId;
 
-/**
-Screen device orientations.
-@internalTechnology
-@prototype
-*/
+/** Screen device orientations.
+
+WARNING: Enumeration for internal use ONLY.  Compatibility is not guaranteed in future releases.
+
+@publishedAll
+@released
+ */
 enum TDeviceOrientation
 	{
 	EDeviceOrientationNormal = 1,
@@ -102,6 +98,8 @@ public:
 								   TInt aDivisorX, TInt aDivisorY);
 	IMPORT_C void GetDrawRect(TRect& aRect) const;
 	IMPORT_C TInt RegisterLinkedTypeface(const CLinkedTypefaceSpecification& aLinkedTypefaceSpec, TInt& aId);
+	IMPORT_C TInt SetDrawDeviceOffset(const TPoint& aOrigin);
+
 protected:
 	CFbsDevice();
 	virtual void DrawingBegin(TBool /*aAlways*/ = EFalse) {}
@@ -113,35 +111,45 @@ protected:
 	virtual void SetBits() {}
 	
 	/**
-	Cancels drawing the sprite. 
+	This method has been deprecated.  Sprites are no longer supported in BitGDI.
+	Calling this method has no effect.
+	@deprecated
 	*/
 	virtual void CancelSprite() const {}
 	
 	/**
-	Hides the sprite over the whole screen.
-	@return TSpriteBase* A pointer to the hidden sprite. NULL in default implementation.
+	This method has been deprecated.  Sprites are no longer supported in BitGDI.
+	Calling this method has no effect.
+	@return TSpriteBase* NULL.
+	@deprecated
 	*/
 	virtual TSpriteBase* HideSprite() const {return(NULL);}
 	
 	/**
-	Hides the sprite within a particular region.
-	@param aRect A rectangle within the clipping region.
-	@param aClippingRegion The clipping region. 
-  	@return TSpriteBase* A pointer to the hidden sprite. NULL in default implementation.
+	This method has been deprecated.  Sprites are no longer supported in BitGDI.
+	Calling this method has no effect.
+	@param aRect Ignored.
+	@param aClippingRegion Ignored. 
+  	@return TSpriteBase* NULL.
+  	@deprecated
 	*/
 	virtual TSpriteBase* HideSprite(const TRect&,const TRegion*) const {return(NULL);}
 	
 	/**
-	Shows the specified sprite over the whole screen.
-	@param aSprite The sprite which is to be shown. 
+	This method has been deprecated.  Sprites are no longer supported in BitGDI.
+	Calling this method has no effect.
+	@param aSprite Ignored.
+	@deprecated
 	*/
 	virtual void ShowSprite(TSpriteBase*) const {}
 	
 	/**
-	Shows the specified sprite within a particular region.
-	@param aSprite The sprite which is to be shown. 
- 	@param aRect A rectangle within the clipping region. 
- 	@param aClippingRegion The clipping region 
+	This method has been deprecated.  Sprites are no longer supported in BitGDI.
+	Calling this method has no effect.
+	@param aSprite Ignored. 
+ 	@param aRect Ignored. 
+ 	@param aClippingRegion Ignored.
+ 	@deprecated
  	*/
 	virtual void ShowSprite(TSpriteBase*,const TRect&,const TRegion*) const {}
 	TInt GetNearestFbsFont(CFbsFont*& aFont,const TFontSpec& aFontSpec);
@@ -165,7 +173,6 @@ protected:
 /** A graphics device interface that provides direct access to the screen, without 
 the mediation of the window server.
 
-The interface adds sprite support to the CFbsDevice base class. 
 @publishedAll
 @released
 */
@@ -183,13 +190,13 @@ public:
 	IMPORT_C TInt HorizontalTwipsToPixels(TInt aTwips) const;
 	IMPORT_C TInt VerticalTwipsToPixels(TInt aTwips) const;
 	IMPORT_C void SetAutoUpdate(TBool aValue);
-	IMPORT_C void DrawSpriteBegin();
-	IMPORT_C void DrawSpriteEnd();
-	IMPORT_C void CancelSprite() const;
-	IMPORT_C TSpriteBase* HideSprite() const;
-	IMPORT_C TSpriteBase* HideSprite(const TRect& aRect,const TRegion* aClippingRegion) const;
-	IMPORT_C void ShowSprite(TSpriteBase* aSprite) const;
-	IMPORT_C void ShowSprite(TSpriteBase* aSprite,const TRect& aRect,const TRegion* aClippingRegion) const;
+	IMPORT_C void DrawSpriteBegin();		//< @deprecated
+	IMPORT_C void DrawSpriteEnd();		//< @deprecated
+	IMPORT_C void CancelSprite() const;		//< @deprecated
+	IMPORT_C TSpriteBase* HideSprite() const;		//< @deprecated
+	IMPORT_C TSpriteBase* HideSprite(const TRect& aRect,const TRegion* aClippingRegion) const;		//< @deprecated
+	IMPORT_C void ShowSprite(TSpriteBase* aSprite) const;		//< @deprecated
+	IMPORT_C void ShowSprite(TSpriteBase* aSprite,const TRect& aRect,const TRegion* aClippingRegion) const;		//< @deprecated
 	IMPORT_C void ChangeScreenDevice(CFbsScreenDevice* aOldDevice);
 	IMPORT_C void PaletteAttributes(TBool& aModifiable,TInt& aNumEntries) const;
 	IMPORT_C void SetPalette(CPalette* aPalette);
@@ -201,16 +208,16 @@ public:
 	IMPORT_C const TUint32* Bits() const;
 	IMPORT_C TInt Stride() const;
 	IMPORT_C TInt ScreenNo() const;
-	IMPORT_C TUint DeviceOrientationsAvailable() const;		//< @internalTechnology
-	IMPORT_C TBool SetDeviceOrientation(TDeviceOrientation aOrientation) const;	//< @internalTechnology
-	IMPORT_C void GetSurface(TSurfaceId& aSurface) const;		//< @internalTechnology
-	IMPORT_C TDeviceOrientation DeviceOrientation() const;		//< @internalTechnology
+	IMPORT_C TUint DeviceOrientationsAvailable() const;	/**< WARNING: Function for internal use ONLY. Compatibility is not guaranteed in future releases. */
+	IMPORT_C TBool SetDeviceOrientation(TDeviceOrientation aOrientation) const;	/**< WARNING: Function for internal use ONLY. Compatibility is not guaranteed in future releases. */
+	IMPORT_C void GetSurface(TSurfaceId& aSurface) const; /**< WARNING: Function for internal use ONLY. Compatibility is not guaranteed in future releases. */
+	IMPORT_C TDeviceOrientation DeviceOrientation() const; /**< WARNING: Function for internal use ONLY. Compatibility is not guaranteed in future releases. */
 private:
 	CFbsScreenDevice(TInt aScreenNo);
 	void ConstructL(TInt aScreenNo, TDisplayMode aDispMode);
 private:
-	TSpriteBase* iSprite;
-	TBool iSpriteDraw;
+	TInt iSpare1_CFbsScreenDevice;
+	TInt iSpare2_CFbsScreenDevice;
     TInt iScreenNo;
 	};
 
@@ -242,6 +249,7 @@ public:
 	IMPORT_C virtual void DrawingBegin(TBool aAlways = EFalse);
 	IMPORT_C virtual void DrawingEnd(TBool aAlways = EFalse);
 	IMPORT_C TInt SwapWidthAndHeight();
+
 private:
 	CFbsBitmapDevice();
 	virtual void SetBits();

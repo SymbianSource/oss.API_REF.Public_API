@@ -16,8 +16,6 @@
 */
 
 
-
-
 /**
  @file
  @publishedAll
@@ -36,8 +34,6 @@ class TCTTokenObjectHandle;
 
 
 /**
- * @publishedPartner
- * @released
  * 
  * Defines the interface for a read-only certificate store.
  *

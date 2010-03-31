@@ -1,9 +1,9 @@
 // Copyright (c) 1994-2009 Nokia Corporation and/or its subsidiary(-ies).
 // All rights reserved.
 // This component and the accompanying materials are made available
-// under the terms of the License "Symbian Foundation License v1.0" to Symbian Foundation members and "Symbian Foundation End User License Agreement v1.0" to non-members
+// under the terms of the License "Eclipse Public License v1.0"
 // which accompanies this distribution, and is available
-// at the URL "http://www.symbianfoundation.org/legal/licencesv10.html".
+// at the URL "http://www.eclipse.org/legal/epl-v10.html".
 //
 // Initial Contributors:
 // Nokia Corporation - initial contribution.
@@ -481,7 +481,33 @@ enum TKernelPanic
 	/**
 	A realtime thread executed a non-realtime function.
 	*/
-	EIllegalFunctionForRealtimeThread=61
+	EIllegalFunctionForRealtimeThread=61,
+
+	/**
+	This panic is raised by Kern::SetThreadRealtimeState when the state argument is invalid.
+	*/
+	EInvalidRealtimeState=62,
+
+	/**
+	A bad descriptor was passed to a server over IPC, causing an exception when the kernel tried to
+	update its length field.
+	*/
+	EBadIpcDescriptor=63,
+
+	/**
+	An invalid notification type was passed to a shared buffers exec call handler.
+	*/
+	EShBufExecBadNotification=64,
+
+	/**
+	An invalid parameter was passed to a shared buffers exec call handler.
+	*/
+	EShBufExecBadParameter=65,
+
+    /**
+	An entropy estimate passed to an entropy buffer was outside the allowed range.
+	*/
+	EEntropyEstimateOutOfRange=66,
 	};
 
 #endif

@@ -1,29 +1,40 @@
-# /* **************************************************************************
-#  *                                                                          *
-#  *     (C) Copyright Paul Mensonides 2002.
-#  *     Distributed under the Boost Software License, Version 1.0. (See
-#  *     accompanying file LICENSE_1_0.txt or copy at
-#  *     http://www.boost.org/LICENSE_1_0.txt)
-#  *                                                                          *
-#  ************************************************************************** */
-#
-# /* See http://www.boost.org for most recent version. */
-#
-# ifndef BOOST_PREPROCESSOR_SEQ_POP_BACK_HPP
-# define BOOST_PREPROCESSOR_SEQ_POP_BACK_HPP
-#
-# include <boost/preprocessor/arithmetic/dec.hpp>
-# include <boost/preprocessor/config/config.hpp>
-# include <boost/preprocessor/seq/first_n.hpp>
-# include <boost/preprocessor/seq/size.hpp>
-#
-# /* BOOST_PP_SEQ_POP_BACK */
-#
-# if ~BOOST_PP_CONFIG_FLAGS() & BOOST_PP_CONFIG_EDG()
-#    define BOOST_PP_SEQ_POP_BACK(seq) BOOST_PP_SEQ_FIRST_N(BOOST_PP_DEC(BOOST_PP_SEQ_SIZE(seq)), seq)
-# else
-#    define BOOST_PP_SEQ_POP_BACK(seq) BOOST_PP_SEQ_POP_BACK_I(seq)
-#    define BOOST_PP_SEQ_POP_BACK_I(seq) BOOST_PP_SEQ_FIRST_N(BOOST_PP_DEC(BOOST_PP_SEQ_SIZE(seq)), seq)
-# endif
-#
-# endif
+
+#ifndef BOOST_MPL_VECTOR_AUX_POP_BACK_HPP_INCLUDED
+#define BOOST_MPL_VECTOR_AUX_POP_BACK_HPP_INCLUDED
+
+// Copyright Aleksey Gurtovoy 2000-2004
+//
+// Distributed under the Boost Software License, Version 1.0. 
+// (See accompanying file LICENSE_1_0.txt or copy at 
+// http://www.boost.org/LICENSE_1_0.txt)
+//
+// See http://www.boost.org/libs/mpl for documentation.
+
+// $Source: /cvsroot/boost/boost/boost/mpl/vector/aux_/pop_back.hpp,v $
+// $Date: 2004/09/02 15:41:19 $
+// $Revision: 1.4 $
+
+#include <boost/mpl/pop_back_fwd.hpp>
+#include <boost/mpl/aux_/config/typeof.hpp>
+
+#if defined(BOOST_MPL_CFG_TYPEOF_BASED_SEQUENCES)
+
+#   include <boost/mpl/vector/aux_/item.hpp>
+#   include <boost/mpl/vector/aux_/tag.hpp>
+
+namespace boost { namespace mpl {
+
+template<>
+struct pop_back_impl< aux::vector_tag >
+{
+    template< typename Vector > struct apply
+    {
+        typedef v_mask<Vector,0> type;
+    };
+};
+
+}}
+
+#endif // BOOST_MPL_CFG_TYPEOF_BASED_SEQUENCES
+
+#endif // BOOST_MPL_VECTOR_AUX_POP_BACK_HPP_INCLUDED

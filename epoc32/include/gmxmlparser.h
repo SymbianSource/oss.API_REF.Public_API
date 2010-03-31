@@ -1,9 +1,9 @@
 // Copyright (c) 2003-2009 Nokia Corporation and/or its subsidiary(-ies).
 // All rights reserved.
 // This component and the accompanying materials are made available
-// under the terms of the License "Symbian Foundation License v1.0" to Symbian Foundation members and "Symbian Foundation End User License Agreement v1.0" to non-members
+// under the terms of "Eclipse Public License v1.0"
 // which accompanies this distribution, and is available
-// at the URL "http://www.symbianfoundation.org/legal/licencesv10.html".
+// at the URL "http://www.eclipse.org/legal/epl-v10.html".
 //
 // Initial Contributors:
 // Nokia Corporation - initial contribution.
@@ -17,8 +17,6 @@
 // 
 //
 
-
-
 /**
  @file
 */
@@ -27,8 +25,9 @@
 #define __GMXMLPARSER_H__
 
 #include <e32std.h>
-#include <eikenv.h>
+#include <txtetext.h>
 #include <gmxmlconstants.h>
+#include <f32file.h>
 
 //forward reference
 class CMDXMLDocument;
@@ -66,9 +65,9 @@ public:
 	/** Status codes returned by GetData() implementations. */
 	enum TDataProviderResults
 		{
-		KMoreData,		///< Returned by the interface implementation when it is returning more data.
-		KDataStreamError,	///< Returned by the interface when an unrecoverable error prevents obtaining more data.  A recoverable error should be represented by KDataNotReady.
-		KDataStreamEnd	///< Returned by the interface when there is no more data to come.
+		KMoreData,		//< Returned by the interface implementation when it is returning more data.
+		KDataStreamError,	//< Returned by the interface when an unrecoverable error prevents obtaining more data.  A recoverable error should be represented by KDataNotReady.
+		KDataStreamEnd	//< Returned by the interface when there is no more data to come.
 		};
 
 public:
@@ -223,8 +222,8 @@ public:
 	/** Defines input stream character widths. */
 	enum TMDXMLParserInputCharWidth
 		{
-		EAscii = 0x01, ///< ASCII
-		EUnicode = 0x02 ///<Unicode
+		EAscii = 0x01, //< ASCII
+		EUnicode = 0x02 //<Unicode
 		};
 	
 	/** Sets the input stream character width.

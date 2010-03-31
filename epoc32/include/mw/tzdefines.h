@@ -1,9 +1,9 @@
 // Copyright (c) 1997-2009 Nokia Corporation and/or its subsidiary(-ies).
 // All rights reserved.
 // This component and the accompanying materials are made available
-// under the terms of the License "Symbian Foundation License v1.0" to Symbian Foundation members and "Symbian Foundation End User License Agreement v1.0" to non-members
+// under the terms of "Eclipse Public License v1.0"
 // which accompanies this distribution, and is available
-// at the URL "http://www.symbianfoundation.org/legal/licencesv10.html".
+// at the URL "http://www.eclipse.org/legal/epl-v10.html".
 //
 // Initial Contributors:
 // Nokia Corporation - initial contribution.
@@ -26,14 +26,8 @@ enum TTzRuleDay
 	ETzDayAfterDate,				// e.g. first Sunday after 8th October
 	ETzDayBeforeDate,				// e.g. Sunday before 7th October
 	ETzDayInLastWeekOfMonth			// e.g. last Sunday in October
-	};
+	}; //There is an internal dependency on the KValidatedLastDayRule constant which should be equal to the last TTzRuleDay enumeration.
 
-/**
-this const must match the last TTzRuleDay enumeration;
-'int' is deliberately used because this file is shared with non Symbian C++ environments 
-@internalComponent
-*/
-const int KValidatedLastDayRule = ETzDayInLastWeekOfMonth;
 
 /** Time reference.
 @publishedAll
@@ -44,12 +38,6 @@ enum TTzTimeReference
 	ETzUtcTimeReference	= 0,
 	ETzStdTimeReference,
 	ETzWallTimeReference	// Local time
-	};
+	}; //There is an internal dependency on the KValidatedLastTimeReference constant which should be equal to the last TTzTimeReference enumeration.
 
-/**
-this const must match the last TTzTimeReference enumeration 
-'int' is deliberately used because this file is shared with non Symbian C++ environments 
-@internalComponent
-*/
-const int KValidatedLastTimeReference = ETzWallTimeReference;
 #endif

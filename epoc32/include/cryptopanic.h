@@ -1,5 +1,5 @@
 /*
-* Copyright (c) 2004-2007 Nokia Corporation and/or its subsidiary(-ies).
+* Copyright (c) 2004-2009 Nokia Corporation and/or its subsidiary(-ies).
 * All rights reserved.
 * This component and the accompanying materials are made available
 * under the terms of the License "Eclipse Public License v1.0"
@@ -12,6 +12,8 @@
 * Contributors:
 *
 * Description: 
+* ** IMPORTANT ** PublishedPartner API's in this file are published to 3rd party developers via the 
+* Symbian website. Changes to these API's should be treated as PublishedAll API changes and the Security TA should be consulted.
 *
 */
 
@@ -52,8 +54,8 @@ enum TCryptoPanicCode
 	 */	
 	ECryptoPanicPadInputTooLarge= 2,
 	/**
-	* The input data is too long
-	*/
+	 * The input data is too long
+	 */
 	ECryptoPanicInputTooLarge= 3
 	};
 

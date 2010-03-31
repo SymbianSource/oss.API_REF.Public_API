@@ -1,9 +1,9 @@
 // Copyright (c) 1998-2009 Nokia Corporation and/or its subsidiary(-ies).
 // All rights reserved.
 // This component and the accompanying materials are made available
-// under the terms of the License "Symbian Foundation License v1.0" to Symbian Foundation members and "Symbian Foundation End User License Agreement v1.0" to non-members
+// under the terms of "Eclipse Public License v1.0"
 // which accompanies this distribution, and is available
-// at the URL "http://www.symbianfoundation.org/legal/licencesv10.html".
+// at the URL "http://www.eclipse.org/legal/epl-v10.html".
 //
 // Initial Contributors:
 // Nokia Corporation - initial contribution.
@@ -12,11 +12,16 @@
 //
 // Description:
 // BSP.H (Base Script Parser)
-// Abstract class for different Parsers.
 // 
 //
 
-
+/**
+ * @file 
+ * Abstract class for different Parsers.
+ *
+ * @publishedAll
+ * @released
+ */
 #if !defined(__BSP_H__)
 #define __BSP_H__
 
@@ -40,27 +45,9 @@
 
 #include <bif.h>
 
-
-
-// Symbols:
-/** Space character. */
-#define KCharSpace          ' '
-/** Tab character. */
-#define KCharTab            '\t'
-/** Line feed character. */
-#define KCharLineFeed       '\n'
-
-
-// Define some generic error codes:
-/** BIO error code base. */
-const TInt KBspBaseError					= (-500);
-
-/** Invalid BIO message error code. */
-const TInt KBspInvalidMessage				= (KBspBaseError);
-/** Invalid smart message token error code. */
-const TInt KBspSmartMessageInvalidToken		= (KBspBaseError-1);
-/** No smart message parser defined error code. */
-const TInt KBspSmartMessageNoParserDefined	= (KBspBaseError-2);
+#ifndef SYMBIAN_ENABLE_SPLIT_HEADERS 
+#include "tmsvbioinfo.h"
+#endif
 
 // Parsed field class for use by parsers.
 class CParsedField : public CBase
@@ -91,7 +78,11 @@ private:
 	TBool  iMandatoryField;
 };
 
-// Forward declarations:
+/**
+ * Forward declarations:
+ * @publishedAll
+ * @released
+ */
 class CMsvServerEntry;
 class CMsvEntry;
 class CRegisteredParserDll;
@@ -99,8 +90,6 @@ class RMsvReadStream;
 class RMsvWriteStream;
 class CMsvStore;
 class CSmsMessage;
-
-
 
 /** Base class for BIO message parsers V2.
 
@@ -212,43 +201,5 @@ protected:
 	HBufC8*						iReadBuffer;			// used to restore data from file
 	};
 
- 
-/** BIO data location flag values.
-
-@see TMsvBIOEntry */
-enum TMsvBIODataLocation
-	{
-	/** Unknown. */
-	EUnknown,
-	/** Parser wrote data into the body text. */
-	EBodyText,		// parser wrote data back into richText
-	/** Parser wrote data into the parsed fields data stream. */
-	EBIODataStream,	// parser wrote data into KUIDMsvBioStream
-	/** Parser wrote data into an attachment file. */
-	EFile			// parser wrote data into attachment file
-	};
-
-
-/** Bearer Independent Object entry.
-Specialises the TMsvEntry message entry class to store additional BIO message-specific 
-information. 
-@internalTechnology
-@released
-*/
-class TMsvBIOEntry : public TMsvEntry
-	{
-public:
-	/** Constructor. */
-	TMsvBIOEntry() : TMsvEntry() {};
-	void SetBIOParserUid(const TUid aId);
-	const TUid BIOParserUid() const;
-	void SetLocationOfData(const TMsvBIODataLocation aLocation);
-	const TMsvBIODataLocation LocationOfData() const;
-
-private:
-	TMsvBIODataLocation	iLocationOfData;
-	};
-
-#include <bsp.inl>
-
 #endif
+

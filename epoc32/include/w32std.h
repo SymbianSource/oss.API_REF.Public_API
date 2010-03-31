@@ -1,9 +1,9 @@
-// Copyright (c) 1994-2009 Nokia Corporation and/or its subsidiary(-ies).
+// Copyright (c) 1994-2010 Nokia Corporation and/or its subsidiary(-ies).
 // All rights reserved.
 // This component and the accompanying materials are made available
-// under the terms of the License "Symbian Foundation License v1.0" to Symbian Foundation members and "Symbian Foundation End User License Agreement v1.0" to non-members
+// under the terms of "Eclipse Public License v1.0"
 // which accompanies this distribution, and is available
-// at the URL "http://www.symbianfoundation.org/legal/licencesv10.html".
+// at the URL "http://www.eclipse.org/legal/epl-v10.html".
 //
 // Initial Contributors:
 // Nokia Corporation - initial contribution.
@@ -27,41 +27,25 @@
 #ifndef __BITSTD_H__
 #include <bitstd.h>
 #endif
+#include <e32keys.h>
+#include <textcursor.h>
+#include <pointerevent.h>
+#include <advancedpointerevent.h>
+#include <sizemode.h>
+
+#ifndef SYMBIAN_ENABLE_SPLIT_HEADERS
+#include <graphics/windowserverconstants.h>
+#include <graphics/pointereventdata.h>
+#endif //SYMBIAN_ENABLE_SPLIT_HEADERS
 
 _LIT(KWSERVThreadName,"Wserv");
-
-/**
-@internalAll
-*/
-_LIT(KWSERVServerName,"!Windowserver");
 
 class RWindowBase;
 class RWindow;
 class RWsBuffer;
 class MWsObjectProvider;
-
-/** Used for testing purpose.
-
-@internalComponent
-@released
-*/
-class TSizeMode
-	{
-public:
-	inline TSizeMode(){}
-	inline TSizeMode(TSize& aSize);
-	static inline TInt ScaledCord(TInt aOrigin,TInt aScale);
-	inline TPoint ScaledOrigin();
-public:
-	CFbsBitGc::TGraphicsOrientation iRotation;
-	TPoint iOrigin;
-	TSize iScreenSize;
-	TSize iScreenTwipsSize;
-	TUint iAlternativeRotations;
-	TRect iPointerCursorArea;
-	TSize iScreenScale;
-	TDisplayMode iDefaultDisplayMode;
-	};
+class RWsDrawableSource;
+class TSizeMode;
 
 /** Screen mode enforcement flags.
 
@@ -318,10 +302,7 @@ enum TEventCode
 
 	This event is sent when the user presses or releases a pointer button (or
 	the equivalent action, depending on the type of pointing device), drags the
-	pointer, or uses the pointer to switch on the device. If the current input
-	type (see TXYInputType) is "mouse" or "relative mouse", i.e. it generates
-	pointer move events as well as drag events, then this event type is also
-	generated whenever the pointer is moved. */
+	pointer, moves it or uses the pointer to switch on the device. */
 	EEventPointer,			//5
 	/** Pointer enter event.
 
@@ -452,6 +433,14 @@ enum TEventCode
 	This event is only delivered if explicitly requested using RWsSession:RequestOffEvent(). */
 	EEventRestartSystem,
 #endif
+	/** The display state or configuration has changed
+	
+	Either change of the current resolution list (state change) or current resolution/background
+	(mode change) will trigger this event.
+	
+	Notification of this event is requested by calling MDisplayControl::EnableDisplayChangeEvents() 
+	 */
+	EEventDisplayChanged = EEventWindowVisibilityChanged+2,
 	//Codes for events only passed into Key Click DLL's
 	/** Repeating key event.
 
@@ -663,115 +652,12 @@ enum TPasswordMode
 	an instant password check. */
 	EPasswordOnceADayTriggerNow,
 	};
-struct TTextCursor
-/** Text cursor parameter information.
-
-A text cursor is a rectangular area which can be set to flash. It is normally
-only visible when the window group which owns it has the keyboard focus. This
-structure is used to define the parameters of a text cursor, which can be
-selected for use through the window group using RWindowGroup::SetTextCursor().
-
-Custom (non-rectangular) text cursors are supported from v7.0s. They are added
-to the window server using RWsSession::SetCustomTextCursor(), after which
-they can be selected for use through the window group, in the same way as
-standard rectangular cursors. They have a unique identifier, stored in the
-iType member, which must be greater than ETypeLastBasic. Custom text cursors
-are clipped to their iHeight and iWidth values. Their iColour member is not
-used.
-
-@publishedAll
-@released */
-    {
-	// The different normal text cursors
-	// A Text cursor can either be a predefined one
-	// or a general sprite. Cursors between ETypeFirst
-	// and ETypeLastBasic are predefined ones (even though
-	// the ones above ETypeLast do not exist and are
-	// for future use)
-	/** Cursor type values.
-
-	The values between ETypeFirst and ETypeLastBasic are reserved for predefined
-	cursors. Custom text cursors must have a value greater than ETypeLastBasic.
-
-	The values not listed below are for internal use only. */
-	enum ENamedCursors
-		{
-		/** @internalAll */
-		ETypeNone,
-		/** Standard filled rectangular cursor. */
-		ETypeRectangle,
-		/** Standard hollow rectangular cursor. */
-		ETypeHollowRectangle,
-		/** The first predefined cursor type.
-
-		Equivalent to ETypeRectangle. This can be used for iterating through the predefined
-		cursor types. */
-		ETypeFirst=ETypeRectangle,
-		/** The last predefined cursor type.
-
-		Equivalent to ETypeHollowRectangle. This can be used for iterating through
-		the predefined cursor types. */
-		ETypeLast=ETypeHollowRectangle,
-		/** Reserved for future use.
-
-		All custom text cursors must have a type value greater than this. */
-		ETypeLastBasic = 1000,
-		};
-	/** Added for compatibility with previous releases. */
-	typedef TInt EType;
-	/** Cursor flash and clipping flags.
-
-	The flags not listed below are for internal use only. */
-	enum EFlags
-		{
-		/** The text cursor should not flash. */
-		EFlagNoFlash		= 0x00000001,
-		/** The bitmap of each sprite member is clipped left of its x-origin and right of
-		its x-origin plus iWidth.
-
-		Used for custom text cursors only. */
-		EFlagClipHorizontal	= 0x00000002,
-		/** The bitmap of each sprite member is clipped vertically.
-
-		How it is clipped depends on the text cursor's vertical alignment, see the
-		TCustomTextCursorAlignment enum in class RWsSession.
-
-		Used for custom text cursors only. */
-		EFlagClipVertical	= 0x00000004,
-		/** @internalComponent */
-		EUserFlags			= 0x0000FFFF,
-		/** @internalComponent */
-		EFlagClipped		= 0x00010000,
-		/** @internalComponent */
-		EPrivateFlags		= 0xFFFF0000,
-		};
-	/** The cursor type.
-
-	For possible values, see the ENamedCursors enum. */
-	TInt iType;
-	/** The height of the text cursor.
-
-	This value is also used for clipping custom text cursors, if the EFlagClipVertical
-	flag is set. */
-    TInt iHeight;
-	/** The ascent of the text cursor (the distance between the origin and the top). */
-    TInt iAscent;
-	/** The width of the text cursor.
-
-	Custom text cursors are clipped to this value, if the EFlagClipHorizontal
-	flag is set. */
-    TInt iWidth;
-	/** Cursor flash and clipping flags.
-
-	For possible values, see the EFlags enum. */
-    TUint iFlags;
-	/** The colour of the text cursor.
-
-	If the cursor is flashing, this colour is XOR'd with the screen.
-
-	This value is not used for custom text cursors. */
-	TRgb iColor;
-    };
+enum TPriorities {
+           /**
+           Defines the value EAllPriorities.
+           */
+           EAllPriorities=KMinTInt,
+           };
 
 /** Sprite flags.
 
@@ -787,39 +673,17 @@ enum TSpriteFlags
 
 	All flashing is done on the same timer, including the text cursor. */
 	ESpriteFlash=0x1,
-	/** With this flag set, the sprite is displayed over the window and all its children.
-
-	Without the flag, the sprite is only displayed over the window's visible area.
-
-	This is particularly useful when the sprite is owned by a window group, as
-	it means the sprite will be displayed over the whole screen.
-
-	Notes:
-
-	By default a sprite is clipped to the visible region of the window that owns
-	it.
-
-	Sprites with this flag set are displayed in front of sprites without this
-	flag. */
+	/** This flag no longer has any effect.
+	
+	If you want a sprite to appear on top of all windows, you can create a floating sprite
+	by specifying a RWindowGroup as parent to the sprite.  */
 	ESpriteNoChildClip=0x2,
 	/** The sprite's appearance will not change when it is on a shadowed part of the
 	screen.
 
 	(Typically this is used for sprites attached to window groups so that
 	they are perceived to be floating above the windows). */
-	ESpriteNoShadows=0x4,
-	/** @internalComponent */
-	ESpriteNonSystemFlags=0x0000FFFF,
-	/** @internalComponent */
-	ESpriteSystemFlags=	  0xFFFF0000,
-	/** @internalComponent */
-	ESpritePointer=0x10000,
-	/** @internalComponent */
-	ESpriteOOM=0x20000,
-	/** @internalComponent */
-	ESpriteDisabled=0x40000,
-	/** @internalComponent */
-	ESpriteActive=0x80000,
+	ESpriteNoShadows=0x4
 	};
 
 struct TSpriteMember
@@ -929,70 +793,6 @@ enum TPointerFilter
 	EPointerMoveEvents=EPointerFilterMove|EPointerGenerateSimulatedMove,
 	};
 
-struct TPointerEvent
-/** Pointer event details.
-
-The function TWsEvent::Pointer() is used to get this structure for a pointer
-event.
-
-@publishedAll
-@released */
-	{
-/** Pointer event types.
-
-Note that the user actions that cause these events will vary according to
-the type of pointing device used. */
-	enum TType
-		{
-		/** Button 1 or pen down. */
-		EButton1Down,
-		/** Button 1 or pen up. */
-		EButton1Up,
-		/** Button 2 down.
-
-		This is the middle button of a 3 button mouse. */
-		EButton2Down,
-		/** Button 2 up.
-
-		This is the middle button of a 3 button mouse. */
-		EButton2Up,
-		/** Button 3 down. */
-		EButton3Down,
-		/** Button 3 up. */
-		EButton3Up,
-		/** Drag event.
-
-		These events are only received when button 1 is down. */
-		EDrag,
-		/** Move event.
-
-		These events are only received when button 1 is up and the XY input mode is
-		not pen. */
-		EMove,
-		/** Button repeat event. */
-		EButtonRepeat,
-		/** Switch on event caused by a screen tap. */
-		ESwitchOn,
-		};
-	/** The type of pointer event. */
-	TType iType;
-	/** The state of the modifier keys, defined in TEventModifier. */
-	TUint iModifiers;	// State of pointing device and associated buttons
-	/** Co-ordinates of the pointer event relative to the origin of the window it occurred
-	in.
-
-	Positive co-ordinates indicate a position to the right of and down from
-	the window's origin, negative co-ordinates indicate a position to the left
-	and up. */
-	TPoint iPosition;
-	/** Co-ordinates of the pointer event relative to the parent window of the window
-	it occurred in.
-
-	Positive co-ordinates indicate a position to the right of and down from the window's
-	origin, negative co-ordinates indicate a position to the left and up. */
-	TPoint iParentPosition;
-	};
-
 struct TKeyEvent
 /** Key event details.
 
@@ -1072,6 +872,41 @@ revealed after being obscured.
 	TUint iFlags;
 	};
 
+struct TWsDisplayChangedEvent
+/** Display changed events.
+
+These events are generated by attaching, detaching the display device, changing the resolution list or change
+current resolution or backgound (change the current configuration).
+@publishedAll
+@released
+@see MDisplayControl::EnableDisplayChangeEvents() */
+	{
+	/**
+	 Number of display that has changed, causing this event. This is
+	 also known as the screen number, and is zero-based.
+	
+	 @see CWsScreenDevice::Construct(TInt)
+	 */
+	TInt iDisplayNumber;
+	/**
+	 Opaque value that changes when the current display configuration
+	 has changed.
+	 
+	 Compare values in subsequent events to determine whether the
+	 current resolution has changed since the last event.
+	 */
+	TInt iConfigurationChangeId;
+	/**
+	 Opaque value that changes when the resolution list has changed.
+	 
+	 Compare values in subsequent events to determine whether the list
+	 of available resolutions has changed since the last event.
+	 
+	 @see MDisplayControlBase::GetResolutions
+	 */
+	TInt iResolutionListChangeId;	
+	};
+
 struct TWsErrorMessage
 /** Error event details.
 
@@ -1104,13 +939,6 @@ struct TWsErrorMessage
 	TUint iError;
 	};
 
-struct TWsGraphicMessageHeaderEvent
-/** @internalComponent @released */
-	{
-	TInt iClientHandle;
-	TInt iDataLen;
-	};
-
 class TWsRedrawEvent
 /** Window server redraw event.
 
@@ -1129,10 +957,8 @@ public:
 	void SetHandle(TUint aHandle);
 	void SetRect(TRect aRect);
 protected:
-	/**	@internalComponent */
-	TUint iHandle;
-	/** @internalComponent */
-	TRect iRect;			// Rectangle to redraw
+	TUint iHandle;	/**< WARNING: Member variable for internal use ONLY. Compatibility is not guaranteed in future releases. Please access using the provided get/set APIs only. */
+	TRect iRect;	/**< Rectangle to redraw.  WARNING: Member variable for internal use ONLY. Compatibility is not guaranteed in future releases. Please access using the provided get/set APIs only. */
 	};
 
 class TWsPriorityKeyEvent
@@ -1149,10 +975,8 @@ public:
 	inline TUint Handle() const;
 	inline void SetHandle(TUint aHandle);
 protected:
-	/**	@internalComponent */
-	TUint iHandle;
-	/** @internalComponent */
-	TUint8 iEventData[sizeof(TKeyEvent)];
+	TUint iHandle;	/**< WARNING: Member variable for internal use ONLY. Compatibility is not guaranteed in future releases. Please access using the provided get/set APIs only. */
+	TUint8 iEventData[sizeof(TKeyEvent)];	/**< WARNING: Member variable for internal use ONLY. Compatibility is not guaranteed in future releases. Please access using the provided get/set APIs only. */
 	};
 
 class TWsEvent
@@ -1171,18 +995,20 @@ public:
 	/** Event data size. */
 	enum
 		{
-		/** The size of a TPointerEvent.
-
+		/**
 		This is the maximum number of bytes of data that can be returned by EventData().
-		Note: this value is 24 bytes.*/
-		EWsEventDataSize=sizeof(TPointerEvent)+8
+		Note: this value is 32 bytes.*/
+		EWsEventDataSize=sizeof(TAdvancedPointerEvent)
 		};
 public:
-	inline TPointerEvent* Pointer() const;
+	inline TWsEvent();
+	inline TAdvancedPointerEvent* Pointer() const;
 	inline TKeyEvent* Key() const;
 	inline TModifiersChangedEvent* ModifiersChanged() const;
 	inline TWsVisibilityChangedEvent* VisibilityChanged();
 	inline const TWsVisibilityChangedEvent* VisibilityChanged() const;
+	inline TWsDisplayChangedEvent* DisplayChanged();
+	inline const TWsDisplayChangedEvent* DisplayChanged() const;
 	inline TWsErrorMessage* ErrorMessage() const;
 	inline TUint8* EventData() const;
 	inline TInt Type() const;
@@ -1192,15 +1018,14 @@ public:
 	inline void SetHandle(TUint aHandle);
 	inline void SetTimeNow();
 	inline TInt* Int() const;
+	IMPORT_C void InitAdvancedPointerEvent(TPointerEvent::TType aType, TUint aModifiers, const TPoint3D &aPoint3D, TUint8 aPointerNumber);
+	IMPORT_C void SetPointerNumber(TUint8 aPointerNumber);
+	IMPORT_C void SetPointerZ(TInt aZ);
 protected:
-	/** @internalComponent */
-	TInt iType;
-	/** @internalComponent */
-	TUint iHandle;
-	/**	@internalComponent */
-	TTime iTime;
-	/** @internalComponent */
-	TUint8 iEventData[EWsEventDataSize];
+	TInt iType;	/**< WARNING: Member variable for internal use ONLY. Compatibility is not guaranteed in future releases. Please access using the provided get/set APIs only. */
+	TUint iHandle;	/**< WARNING: Member variable for internal use ONLY. Compatibility is not guaranteed in future releases. Please access using the provided get/set APIs only. */
+	TTime iTime;	/**< WARNING: Member variable for internal use ONLY. Compatibility is not guaranteed in future releases. Please access using the provided get/set APIs only. */
+	TUint8 iEventData[EWsEventDataSize];	/**< WARNING: Member variable for internal use ONLY. Compatibility is not guaranteed in future releases. Please access using the provided get/set APIs only. */	
 	};
 
 
@@ -1274,6 +1099,7 @@ class TIpcArgs;
 class TReadDescriptorType;
 class TWriteDescriptorType;
 class CWindowGc;
+class RWsSession;
 
 class TWsGraphicId
 /** Identifies an abstract artwork
@@ -1338,6 +1164,8 @@ protected:
 	IMPORT_C TInt SendSynchronMessage(const TDesC8& aData) const;
 	IMPORT_C TInt Flush() const;
 	IMPORT_C void SetGraphicExtension(MWsObjectProvider* aExt);
+	IMPORT_C RWsSession& Session();
+	
 private:
 	// events from wserv, to be implemented by derived classes
 	/**
@@ -1396,11 +1224,16 @@ protected:
 	TInt WriteReplyByProvidingRemoteReadAccess(const TAny* aBuf, TInt aBufLen,const TReadDescriptorType& aRemoteReadBuffer,TUint aOpcode) const;
 	void AddToBitmapArray(const TInt aBitmapHandle)const;
 	void AsyncRequest(TRequestStatus& aStatus, TUint aOpcode) const;
+
+    TBool WindowSizeCacheEnabled() const;
+    void MarkWindowSizeCacheDirty();
+    void RefreshWindowSizeCache(const TSize& aNewSize) const;
+    TInt CachedWindowSize(TSize& aSize) const;
+    void DestroyWindowSizeCacheEntry();
+	
 protected:
-	/** @internalComponent*/
-	TInt32 iWsHandle;
-	/** @internalComponent*/
-	RWsBuffer *iBuffer;
+	TInt32 iWsHandle;	/**< WARNING: Member variable for internal use ONLY. Compatibility is not guaranteed in future releases. Please access using the provided get/set APIs only. */
+	RWsBuffer *iBuffer;	/**< WARNING: Member variable for internal use ONLY. Compatibility is not guaranteed in future releases. Please access using the provided get/set APIs only. */
 	};
 
 
@@ -1448,8 +1281,9 @@ sessions/applications. They include: auto-repeat and double-click, querying
 all window groups in the system, setting the default shadow vector, setting
 the system pointer cursors, counting resources used by the window server
 (this is only useful for debugging checks), getting and setting the state of
-the modifier keys (for instance Shift and Ctrl), and setting the window server
-background colour.
+the modifier keys (for instance Shift and Ctrl), setting the window server
+background colour, getting and setting thresholds for window server generated
+pointer events.
 
 @publishedAll
 @released */
@@ -1463,6 +1297,7 @@ background colour.
 	friend class RDirectScreenAccess;
 	friend class RSoundPlugIn;
 	friend class CWsGraphic;
+	friend class RWsDrawableSource;
 public:
 	/** Compute mode flags.
 
@@ -1519,7 +1354,7 @@ public:
 		};
 
 	struct SSystemInfo
-	/** @internalComponent */
+	/** WARNING: Struct for internal use ONLY.  Compatibility is not guaranteed in future releases. */ 
 		{
 		TInt iInfo[ESystemInfoArraySize];
 		};
@@ -1545,7 +1380,7 @@ public:
 	IMPORT_C TInt Connect();
 	IMPORT_C TInt Connect(RFs& aFileServer);
 	IMPORT_C void Close();
-	IMPORT_C TVersion Version();
+	IMPORT_C TVersion Version() const;
 
 	IMPORT_C TInt SetHotKey(THotKey aType, TUint aKeyCode, TUint aModifierMask, TUint aModifier);
 	IMPORT_C TInt ClearHotKeys(THotKey aType);
@@ -1553,7 +1388,7 @@ public:
 //
 	IMPORT_C void EventReady(TRequestStatus *aStat);
 	IMPORT_C void EventReadyCancel();
-	IMPORT_C void GetEvent(TWsEvent &aEvent);
+	IMPORT_C void GetEvent(TWsEvent &aEvent) const;
 	IMPORT_C void PurgePointerEvents();
 //
 	IMPORT_C void RedrawReady(TRequestStatus *aStat);
@@ -1562,38 +1397,38 @@ public:
 //
 	IMPORT_C void PriorityKeyReady(TRequestStatus *aStat);
 	IMPORT_C void PriorityKeyReadyCancel();
-	IMPORT_C void GetPriorityKey(TWsPriorityKeyEvent &aEvent);
+	IMPORT_C void GetPriorityKey(TWsPriorityKeyEvent &aEvent) const;
 //
 	IMPORT_C void Flush();
 	IMPORT_C TBool SetAutoFlush(TBool aState);
 	IMPORT_C TInt SetKeyboardRepeatRate(const TTimeIntervalMicroSeconds32 &aInitialTime, const TTimeIntervalMicroSeconds32 &aTime);
-	IMPORT_C void GetKeyboardRepeatRate(TTimeIntervalMicroSeconds32 &aInitialTime, TTimeIntervalMicroSeconds32 &aTime);
-	IMPORT_C void GetDoubleClickSettings(TTimeIntervalMicroSeconds32 &aInterval, TInt &aDistance);
+	IMPORT_C void GetKeyboardRepeatRate(TTimeIntervalMicroSeconds32 &aInitialTime, TTimeIntervalMicroSeconds32 &aTime) const;
+	IMPORT_C void GetDoubleClickSettings(TTimeIntervalMicroSeconds32 &aInterval, TInt &aDistance) const;
 	IMPORT_C TInt SetDoubleClick(const TTimeIntervalMicroSeconds32 &aInterval, TInt aDistance);
 //
 	IMPORT_C TInt NumWindowGroups() const;
-	IMPORT_C TInt WindowGroupList(CArrayFixFlat<TInt> *aWindowList);
-	IMPORT_C TInt WindowGroupList(RArray<TWindowGroupChainInfo>* aWindowList);
+	IMPORT_C TInt WindowGroupList(CArrayFixFlat<TInt> *aWindowList) const;
+	IMPORT_C TInt WindowGroupList(RArray<TWindowGroupChainInfo>* aWindowList) const;
 	IMPORT_C TInt NumWindowGroups(TInt aPriority) const;
-	IMPORT_C TInt WindowGroupList(TInt aPriority, CArrayFixFlat<TInt> *aWindowList);
-	IMPORT_C TInt WindowGroupList(TInt aPriority, RArray<TWindowGroupChainInfo>* aWindowList);
-	IMPORT_C TInt GetFocusWindowGroup();
-	IMPORT_C TInt GetDefaultOwningWindow();
+	IMPORT_C TInt WindowGroupList(TInt aPriority, CArrayFixFlat<TInt> *aWindowList) const;
+	IMPORT_C TInt WindowGroupList(TInt aPriority, RArray<TWindowGroupChainInfo>* aWindowList) const;
+	IMPORT_C TInt GetFocusWindowGroup() const;
+	IMPORT_C TInt GetDefaultOwningWindow() const;
 	IMPORT_C TInt SetWindowGroupOrdinalPosition(TInt aIdentifier, TInt aPosition);
-	IMPORT_C TInt GetWindowGroupClientThreadId(TInt aIdentifier, TThreadId &aThreadId);
-	IMPORT_C TInt GetWindowGroupHandle(TInt aIdentifier);
-	IMPORT_C TInt GetWindowGroupOrdinalPriority(TInt aIdentifier);
+	IMPORT_C TInt GetWindowGroupClientThreadId(TInt aIdentifier, TThreadId &aThreadId) const;
+	IMPORT_C TInt GetWindowGroupHandle(TInt aIdentifier) const;
+	IMPORT_C TInt GetWindowGroupOrdinalPriority(TInt aIdentifier) const;
 	IMPORT_C TInt SendEventToWindowGroup(TInt aIdentifier, const TWsEvent &aEvent);
 	IMPORT_C TInt SendEventToAllWindowGroups(const TWsEvent &aEvent);
 	IMPORT_C TInt SendEventToAllWindowGroups(TInt aPriority, const TWsEvent &aEvent);
 	IMPORT_C TInt SendEventToOneWindowGroupsPerClient(const TWsEvent &aEvent);
-	IMPORT_C TInt GetWindowGroupNameFromIdentifier(TInt aIdentifier, TDes &aWindowName);
-	IMPORT_C TInt FindWindowGroupIdentifier(TInt aPreviousIdentifier,const TDesC& aMatch,TInt aOffset=0);
-	IMPORT_C TInt FindWindowGroupIdentifier(TInt aPreviousIdentifier,TThreadId aThreadId);
+	IMPORT_C TInt GetWindowGroupNameFromIdentifier(TInt aIdentifier, TDes &aWindowName) const;
+	IMPORT_C TInt FindWindowGroupIdentifier(TInt aPreviousIdentifier,const TDesC& aMatch,TInt aOffset=0) const;
+	IMPORT_C TInt FindWindowGroupIdentifier(TInt aPreviousIdentifier,TThreadId aThreadId) const;
 	IMPORT_C TInt SendMessageToWindowGroup(TInt aIdentifier, TUid aUid, const TDesC8 &aParams);
 	IMPORT_C TInt SendMessageToAllWindowGroups(TUid aUid, const TDesC8& aParams);
 	IMPORT_C TInt SendMessageToAllWindowGroups(TInt aPriority, TUid aUid, const TDesC8& aParams);
-	IMPORT_C TInt FetchMessage(TUid &aUid, TPtr8 &aParams, const TWsEvent& aMessageEvent);
+	IMPORT_C TInt FetchMessage(TUid &aUid, TPtr8 &aParams, const TWsEvent& aMessageEvent) const;
 //
 	IMPORT_C void SetShadowVector(const TPoint &aVector);
 	IMPORT_C TPoint ShadowVector() const;
@@ -1601,9 +1436,9 @@ public:
 	IMPORT_C void SetBackgroundColor(TRgb aColor);
 	IMPORT_C TRgb GetBackgroundColor() const;
 //
-	IMPORT_C TInt RegisterSurface(TInt aScreenNumber, const TSurfaceId& aSurface);		///< @publishedPartner
-	IMPORT_C void UnregisterSurface(TInt aScreenNumber, const TSurfaceId& aSurface);	///< @publishedPartner
-	IMPORT_C TInt PreferredSurfaceConfigurationSize();		///< @publishedPartner
+	IMPORT_C TInt RegisterSurface(TInt aScreenNumber, const TSurfaceId& aSurface);
+	IMPORT_C void UnregisterSurface(TInt aScreenNumber, const TSurfaceId& aSurface);
+	IMPORT_C TInt PreferredSurfaceConfigurationSize() const;
 //
 	IMPORT_C TInt SetSystemPointerCursor(const RWsPointerCursor &aPointerCursor,TInt aCursorNumber);
 	IMPORT_C void ClearSystemPointerCursor(TInt aCursorNumber);
@@ -1612,7 +1447,7 @@ public:
 //
 	IMPORT_C TInt SetCustomTextCursor(TInt aIdentifier, const TArray<TSpriteMember>& aSpriteMemberArray, TUint aSpriteFlags, TCustomTextCursorAlignment aAlignment);
 //
-	IMPORT_C TInt ResourceCount();
+	IMPORT_C TInt ResourceCount() const;
 	IMPORT_C void PasswordEntered();
 	IMPORT_C void ComputeMode(TComputeMode aMode);
 //
@@ -1620,6 +1455,7 @@ public:
 	IMPORT_C TInt DebugInfo(TInt aFunction, TInt aParam=0) const;
 	IMPORT_C TInt DebugInfo(TInt aFunction, TDes8& aReturnBuf, TInt aParam=0) const;
 	IMPORT_C void HeapSetFail(TInt aTAllocFail,TInt aValue);
+	IMPORT_C void HeapSetBurstFail(TInt aTAllocFail,TInt aRate,TInt aBurst);
 	IMPORT_C TInt SetModifierState(TEventModifier aModifier,TModifierState aState);
 	IMPORT_C TInt GetModifierState() const;
 //
@@ -1648,22 +1484,27 @@ public:
 
 // Functions for multiple screens
 	IMPORT_C TInt SetFocusScreen(TInt aScreenNumber);
-	IMPORT_C TInt GetFocusScreen();
+	IMPORT_C TInt GetFocusScreen() const;
 	IMPORT_C void ClearAllRedrawStores();
+	IMPORT_C TInt NumWindowGroups(TInt aScreenNumber,TInt aPriority) const;
+	IMPORT_C TInt NumberOfScreens() const;
+	IMPORT_C TInt WindowGroupList(CArrayFixFlat<TInt>* aWindowList,TInt aScreenNumber,TInt aPriority=EAllPriorities) const;
+	IMPORT_C TInt GetFocusWindowGroup(TInt aScreenNumber) const;
+	IMPORT_C TInt GetDefaultOwningWindow(TInt aScreenNumber) const;
+	IMPORT_C TDisplayMode GetDefModeMaxNumColors(TInt aScreenNumber,TInt& aColor,TInt& aGray) const;
+	IMPORT_C TInt GetColorModeList(TInt aScreenNumber,CArrayFixFlat<TInt>* aModeList) const;
 #if defined(__WINS__)
 // Function for WINS behaviour only
-//
 	IMPORT_C void SetRemoveKeyCode(TBool aRemove);
-	IMPORT_C void SimulateXyInputType(TXYInputType aInputType);		//Only for testing WSERV
+	IMPORT_C void SimulateXyInputType(TInt aInputType);		//Only for testing WSERV
 #endif
 //
 	IMPORT_C void SimulateRawEvent(TRawEvent aEvent);
 	IMPORT_C void SimulateKeyEvent(TKeyEvent aEvent);
 	IMPORT_C void LogCommand(TLoggingCommand aCommand);
 	IMPORT_C void LogMessage(const TLogMessageText &aMessage);
-//
+
 // Functions for test code use only
-//
 	IMPORT_C void SystemInfo(TInt &aSystemInfoNumber, SSystemInfo &aSystemInfo);
 	IMPORT_C void TestWrite(TInt aHandle,TInt aOpcode,const TAny *aData, TInt aLength);
 	IMPORT_C void TestWriteReply(TInt aHandle,TInt aOpcode,const TAny *aData, TInt aLength);
@@ -1673,15 +1514,26 @@ public:
 	
 	IMPORT_C TInt Finish();
 	IMPORT_C void SyncMsgBuf();
+
+// Getters and setters for pointer event's thresholds
+	IMPORT_C TInt SetCloseProximityThresholds(TInt aEnterCloseProximityThreshold, TInt aExitCloseProximityThreshold);
+	IMPORT_C TInt GetEnterCloseProximityThreshold() const;
+	IMPORT_C TInt GetExitCloseProximityThreshold() const;
+	IMPORT_C TInt SetHighPressureThresholds(TInt aEnterHighPressureThreshold, TInt aExitHighPressureThreshold);
+	IMPORT_C TInt GetEnterHighPressureThreshold() const;
+	IMPORT_C TInt GetExitHighPressureThreshold() const;
+//
+    IMPORT_C void EnableWindowSizeCacheL();
+	
 // functions not exported, used by CWsGraphic
 	void GraphicMessageReady(TRequestStatus *aStat);
-	void GetGraphicMessage(TDes8& aData);
+	void GetGraphicMessage(TDes8& aData) const;
 	void GraphicMessageCancel();
 	void GraphicAbortMessage(TInt aError);
 	TInt GraphicFetchHeaderMessage();
 private:
-	TInt doWindowGroupList(TInt aPriority, RArray<TWindowGroupChainInfo>* aWindowListCh, TInt aNumOpcode, TInt aListOpcode);
-	TInt doWindowGroupList(TInt aPriority,CArrayFixFlat<TInt>* aWindowListId,TInt aNumOpcode,TInt aListOpcode);
+	TInt doWindowGroupList(TInt aPriority, RArray<TWindowGroupChainInfo>* aWindowListCh, TInt aNumOpcode, TInt aListOpcode) const;
+	TInt doWindowGroupList(TInt aScreenNumber, TInt aPriority, CArrayFixFlat<TInt>* aWindowListId, TInt aNumOpcode, TInt aListOpcode) const;
 	TInt doSetHotKey(TInt aOpcode, TInt aType, TUint aKeycode, TUint aModifierMask, TUint aModifiers);
 	void doReadEvent(TRequestStatus *aStat, TInt aOpcode);
 
@@ -1694,9 +1546,6 @@ private:
 
 class RWindowGroup;
 class RWsSprite;
-
-/** @internalComponent */
-typedef TInt (*AnimCommand)(TPtr8 *aBufPtr,TAny *aPackage);
 
 
 class RWindowTreeNode : public MWsClientClass
@@ -1745,7 +1594,8 @@ public:
 	IMPORT_C TInt FullOrdinalPosition() const;
 	IMPORT_C void SetOrdinalPosition(TInt aPos);
 	IMPORT_C void SetOrdinalPosition(TInt aPos,TInt aOrdinalPriority);
-	IMPORT_C TInt WindowGroupId();
+	IMPORT_C TInt ScreenNumber() const;	
+	IMPORT_C TInt WindowGroupId() const;
 	IMPORT_C TInt SetPointerCursor(TInt aCursorNumber);
 	IMPORT_C void SetCustomPointerCursor(const RWsPointerCursor &aPointerCursor);
 	IMPORT_C TInt EnableOnEvents(TEventControl aCircumstances=EEventControlOnlyWithKeyboardFocus);
@@ -1766,6 +1616,7 @@ public:
 	IMPORT_C void SetFaded(TBool aFaded,TFadeControl aIncludeChildren);
 	IMPORT_C void SetFaded(TBool aFaded,TFadeControl aIncludeChildren,TUint8 aBlackMap,TUint8 aWhiteMap);
 	IMPORT_C void ClearPointerCursor();
+	IMPORT_C RWsSession* Session() const;
 protected:
 	__DECLARE_TEST;
 	};
@@ -1823,6 +1674,7 @@ public:
 	IMPORT_C void PointerFilter(TUint32 aFilterMask, TUint32 aFilter);
 	IMPORT_C void SetPointerGrab(TBool aState);
 	IMPORT_C void ClaimPointerGrab(TBool aSendUpEvent=ETrue);
+	IMPORT_C TInt ClaimPointerGrab(const TUint8 aPointerNumber, const TBool aSendUpEvent=ETrue);
 	IMPORT_C void SetPointerCapture(TInt aFlags);
 	IMPORT_C void SetPointerCapturePriority(TInt aPriority);
 	IMPORT_C TInt GetPointerCapturePriority() const;
@@ -1834,28 +1686,32 @@ public:
 	IMPORT_C TInt SetCornerType(TCornerType aCornerType, TInt aCornerFlags=0);
 	IMPORT_C TInt SetShape(const TRegion &aRegion);
 	IMPORT_C TInt SetRequiredDisplayMode(TDisplayMode aMode);
-	IMPORT_C TDisplayMode DisplayMode();
+	IMPORT_C TDisplayMode DisplayMode() const;
 	IMPORT_C void EnableBackup(TUint aBackupType=EWindowBackupAreaBehind);
 	IMPORT_C void RequestPointerRepeatEvent(TTimeIntervalMicroSeconds32 aTime,const TRect &aRect);
 	IMPORT_C void CancelPointerRepeatEventRequest();
+	IMPORT_C TInt RequestPointerRepeatEvent(TTimeIntervalMicroSeconds32 aTime,const TRect &aRect, const TUint8 aPointerNumber);	//< @prototype
+	IMPORT_C TInt CancelPointerRepeatEventRequest(const TUint8 aPointerNumber);	//< @prototype
 	IMPORT_C TInt AllocPointerMoveBuffer(TInt aMaxPoints, TUint aFlags);
 	IMPORT_C void FreePointerMoveBuffer();
 	IMPORT_C void EnablePointerMoveBuffer();
 	IMPORT_C void DisablePointerMoveBuffer();
-	IMPORT_C TInt RetrievePointerMoveBuffer(TDes8 &aBuf);
+	IMPORT_C TInt RetrievePointerMoveBuffer(TDes8 &aBuf) const;
 	IMPORT_C void DiscardPointerMoveBuffer();
 	IMPORT_C TInt AddKeyRect(const TRect &aRect, TInt aScanCode, TBool aActivatedByPointerSwitchOn);
 	IMPORT_C void RemoveAllKeyRects();
 	IMPORT_C TInt PasswordWindow(TPasswordMode aPasswordMode);
 	IMPORT_C void FadeBehind(TBool aFade);
-	IMPORT_C TBool IsFaded();
-	IMPORT_C TBool IsNonFading();
+	IMPORT_C TBool IsFaded() const;
+	IMPORT_C TBool IsNonFading() const;
 	IMPORT_C TInt MoveToGroup(TInt aIdentifier);
-	IMPORT_C TInt SetBackgroundSurface(const TSurfaceId& aSurface);	///< @publishedPartner
-	IMPORT_C TInt SetBackgroundSurface(const TSurfaceConfiguration& aConfiguration, TBool aTriggerRedraw);	///< @publishedPartner
-	IMPORT_C void RemoveBackgroundSurface(TBool aTriggerRedraw);	///< @publishedPartner
-	IMPORT_C TInt GetBackgroundSurface(TSurfaceConfiguration& aConfiguration);	///< @publishedPartner
-	IMPORT_C TRgb KeyColor();										///< @publishedPartner whilst prototype
+	IMPORT_C TInt SetBackgroundSurface(const TSurfaceId& aSurface);
+	IMPORT_C TInt SetBackgroundSurface(const TSurfaceConfiguration& aConfiguration, TBool aTriggerRedraw);
+	IMPORT_C void RemoveBackgroundSurface(TBool aTriggerRedraw);
+	IMPORT_C TInt GetBackgroundSurface(TSurfaceConfiguration& aConfiguration) const;
+	IMPORT_C void SetSurfaceTransparency(TBool aSurfaceTransparency);
+	IMPORT_C TRgb KeyColor() const;
+	IMPORT_C void EnableAdvancedPointers();
 protected:
 	TInt construct(const RWindowTreeNode &parent,TUint32 aHandle, TInt aType, TDisplayMode aDisplayMode);
 	};
@@ -1902,7 +1758,7 @@ public:
 	IMPORT_C void Scroll(const TRect &aClipRect, const TPoint &aOffset);
 	IMPORT_C void Scroll(const TPoint &aOffset, const TRect &aRect);
 	IMPORT_C void Scroll(const TRect &aClipRect, const TPoint &aOffset, const TRect &aRect);
-	IMPORT_C TRect GetDrawRect();
+	IMPORT_C TRect GetDrawRect() const;
 protected:
 	void SetDrawRect(const TRect &aRect);
 private:
@@ -1943,7 +1799,7 @@ public:
 	IMPORT_C void EndRedraw();
 	IMPORT_C void Invalidate();
 	IMPORT_C void Invalidate(const TRect &aRect);
-	IMPORT_C void GetInvalidRegion(RRegion &aRegion);
+	IMPORT_C void GetInvalidRegion(RRegion &aRegion) const;
 	IMPORT_C void SetBackgroundColor(TRgb aColor);
 	IMPORT_C void SetBackgroundColor();
 	IMPORT_C void SetSize(const TSize &size);
@@ -1957,7 +1813,7 @@ public:
 	IMPORT_C TInt SetTransparencyAlphaChannel();
 	IMPORT_C TInt SetTransparentRegion(const TRegion& aRegion);
 	IMPORT_C TInt SetTransparencyPolicy(TWsTransparencyPolicy aPolicy);
-	IMPORT_C TBool IsRedrawStoreEnabled();
+	IMPORT_C TBool IsRedrawStoreEnabled() const;
 	IMPORT_C void EnableOSB(TBool);
 	IMPORT_C void ClearRedrawStore();
 	};
@@ -1975,13 +1831,14 @@ programs: functions are provided to allow the client application to access
 this bitmap directly and perform updates to the window under application control.
 
 @publishedAll
-@released */
+@deprecated
+*/
 	{
 public:
 	IMPORT_C RBackedUpWindow();
 	IMPORT_C RBackedUpWindow(RWsSession &aWs);
 	IMPORT_C TInt Construct(const RWindowTreeNode &parent,TDisplayMode aDisplayMode, TUint32 aHandle);
-	IMPORT_C TInt BitmapHandle();
+	IMPORT_C TInt BitmapHandle() const;
 	IMPORT_C void UpdateScreen();
 	IMPORT_C void UpdateScreen(const TRegion &aRegion);
 	IMPORT_C void UpdateBackupBitmap();
@@ -1999,6 +1856,8 @@ public:
 	IMPORT_C RWindowGroup();
 	IMPORT_C RWindowGroup(RWsSession &aWs);
 	IMPORT_C TInt Construct(TUint32 aClientHandle);
+	IMPORT_C TInt Construct(TUint32 aClientHandle,CWsScreenDevice* aScreenDevice);
+	IMPORT_C TInt Construct(TUint32 aClientHandle,TBool aIsFocusable,CWsScreenDevice* aScreenDevice);
 	IMPORT_C TInt Construct(TUint32 aClientHandle,TBool aIsFocusable);
 	IMPORT_C TInt ConstructChildApp(TInt aIdOfParentWindowGroup,TUint32 aClientHandle);
 	IMPORT_C TInt ConstructChildApp(TInt aIdOfParentWindowGroup,TUint32 aClientHandle,TBool aIsFocusable);
@@ -2032,12 +1891,13 @@ public:
 	IMPORT_C TInt EnableScreenChangeEvents();
 	IMPORT_C void DisableScreenChangeEvents();
 	IMPORT_C void SimulatePointerEvent(TRawEvent aEvent);
+	IMPORT_C void SimulateAdvancedPointerEvent(TRawEvent aEvent);
 	IMPORT_C TInt ClearChildGroup();
 	IMPORT_C TInt SetChildGroup(TInt aId);
 private:
 	TInt32 doCaptureKey(TUint aKey, TUint aModifierMask, TUint aModifiers, TInt aPriority, TInt aOpcode);
 	void doCancelCaptureKey(TInt32 aCaptureKeyHandle, TInt aOpcode);
-	TInt Construct(TInt aIdOfParentWindowGroup,TUint32 aClientHandle,TBool aIsFocusable);
+	TInt Construct(TInt aIdOfParentWindowGroup, TUint32 aClientHandle, TBool aIsFocusable, CWsScreenDevice* aScreenDevice);
 	};
 
 
@@ -2140,6 +2000,24 @@ classes.
 	{
 	friend class CWsScreenDevice;
 public:
+	/** Defines possible clockwise rotation values.
+	
+	WARNING: Enum for internal and partner use ONLY.  Compatibility is not guaranteed in future releases.
+
+	@prototype
+	*/
+	enum TGraphicsRotation
+		{
+		/** No rotation. */
+		EGraphicsRotationNone,
+		/** A 90 degree rotation. */
+		EGraphicsRotation90,
+		/** A 180 degree rotation. */
+		EGraphicsRotation180,
+		/** A 270 degree rotation. */
+		EGraphicsRotation270
+		};	
+
 	IMPORT_C CWindowGc(CWsScreenDevice *aDevice);
 	IMPORT_C virtual ~CWindowGc();
 	IMPORT_C virtual TInt Construct();
@@ -2204,6 +2082,10 @@ public:
 	IMPORT_C virtual void DrawBitmap(const TRect &aDestRect, const CFbsBitmap *aDevice, const TRect &aSourceRect);
 	IMPORT_C virtual void DrawBitmapMasked(const TRect& aDestRect, const CFbsBitmap* aBitmap, const TRect& aSourceRect, const CFbsBitmap* aMaskBitmap, TBool aInvertMask);
 	IMPORT_C virtual void DrawBitmapMasked(const TRect& aDestRect, const CWsBitmap* aBitmap, const TRect& aSourceRect, const CWsBitmap* aMaskBitmap, TBool aInvertMask);
+
+// Required as not all DrawText and DrawTextVertical functions are implemented in CWindowGc
+	using CBitmapContext::DrawText;
+	using CBitmapContext::DrawTextVertical;
 //
 // Text drawing subject to drawing mode
 // Subject to used font, pen color, drawing mode,
@@ -2237,6 +2119,9 @@ public:
 	IMPORT_C virtual void SetFadingParameters(TUint8 aBlackMap,TUint8 aWhiteMap);
 	IMPORT_C virtual TInt AlphaBlendBitmaps(const TPoint& aDestPt, const CFbsBitmap* aSrcBmp, const TRect& aSrcRect, const CFbsBitmap* aAlphaBmp, const TPoint& aAlphaPt);
 	IMPORT_C virtual TInt AlphaBlendBitmaps(const TPoint& aDestPt, const CWsBitmap* aSrcBmp, const TRect& aSrcRect, const CWsBitmap* aAlphaBmp, const TPoint& aAlphaPt);
+//
+	IMPORT_C TAny* Interface(TUid aInterfaceId);
+	IMPORT_C const TAny* Interface(TUid aInterfaceId) const;
 	
 protected:	
 	IMPORT_C TInt APIExtension(TUid aUid, TAny*& aOutput, TAny* aInput);
@@ -2252,13 +2137,12 @@ private:
 public:
 	IMPORT_C virtual void DrawWsGraphic(const TWsGraphicId& aId,const TRect& aDestRect);
 	IMPORT_C virtual void DrawWsGraphic(const TWsGraphicId& aId,const TRect& aDestRect,const TDesC8& aData);
-
 private:
 	IMPORT_C virtual void Reserved_CWindowGc_3();
 	IMPORT_C virtual void Reserved_CWindowGc_4();
 	IMPORT_C virtual void Reserved_CWindowGc_5();
 
-////=============================================================
+//=============================================================
 private: // Private code
 	TRgb Color(TInt aOpcode)const;
 	void SetJustification(TInt aExcessWidth,TInt aNumGaps, TInt aOpcode);
@@ -2268,11 +2152,24 @@ private: // Private code
 	void WriteTextPos(TInt aOpcode,TInt aOpcodePtr,const TPoint &aPos,const TDesC &aBuf) const;
 	void WriteTextCommand(TAny *aCmd, TInt aLen,const TDesC &aBuf,TInt aOpcode,TInt aOpcodePtr) const;
 	void WriteTextCommand(TAny *aCmd, TInt aLen,const TDesC8 &aBuf,TInt aOpcode,TInt aOpcodePtr) const;
-	void APIExGetUnderlineMetrics(TAny*& aOutput);
+	TInt APIExGetUnderlineMetrics(TAny*& aOutput);
 	TInt APIExSetShadowColor(TAny* aShadowColor);
+	TInt APIExGetShadowColor(TAny*& aOutput);
+	// New DrawText API's that take in context
+	TInt APIExDrawText(const TDesC &aBuf,const TTextParameters* aParam,const TPoint &aPos);
+	TInt APIExDrawText(const TDesC &aBuf,const TTextParameters* aParam,const TRect &aBox,TInt aBaselineOffset,TTextAlign aHoriz=ELeft,TInt aLeftMrg=0);
+	TInt APIExDrawTextVertical(const TDesC& aText,const TTextParameters* aParam,const TPoint& aPos,TBool aUp);
+	TInt APIExDrawTextVertical(const TDesC& aText,const TTextParameters* aParam,const TRect& aBox,TInt aBaselineOffset,TBool aUp,TTextAlign aVert=ELeft,TInt aMargin=0);
+	TInt APIExInterface(TAny*& aInterface, TUid aInterfaceId);
 
+	void DrawResource(const TPoint& aPos, const RWsDrawableSource& aSource, TGraphicsRotation aRotation=EGraphicsRotationNone);
+	void DrawResource(const TRect& aDestRect, const RWsDrawableSource& aSource, TGraphicsRotation aRotation=EGraphicsRotationNone);
+	void DrawResource(const TRect& aDestRect, const RWsDrawableSource& aSource, const TRect& aSrcRect, TGraphicsRotation aRotation=EGraphicsRotationNone);
+	void DrawResource(const TRect& aDestRect, const RWsDrawableSource& aSource, const TDesC8& aParam);
+	
 private: // Private data
-	CFbsFont *iFont;
+	class CPimpl;
+	CPimpl* iPimpl;
 	CWsScreenDevice *iDevice;
 	};
 
@@ -2321,6 +2218,10 @@ public:
 	IMPORT_C ~CWsScreenDevice();
 	IMPORT_C TInt Construct();
 	IMPORT_C TInt Construct( TInt aDefaultScreenNumber ) ;
+	IMPORT_C TAny* GetInterface(TUint aInterfaceId);
+	inline const TAny* GetInterface(TUint aInterfaceId) const;
+	IMPORT_C TBool IsModeDynamic(TInt aSizeMode) const;
+	IMPORT_C TBool IsCurrentModeDynamic() const;
 //==== From CGraphicsDevice ====//
 	IMPORT_C TDisplayMode DisplayMode() const;
 	IMPORT_C TSize SizeInPixels() const;
@@ -2355,7 +2256,7 @@ public:
 //===== Extra functions ====//
 	IMPORT_C TInt SetCustomPalette(const CPalette* aPalette);
 	IMPORT_C TInt GetFontById(CFont*& aFont,TUid aUid,const TAlgStyle& aAlgStyle);
-	IMPORT_C TBool RectCompare(const TRect &aRect1,const TRect &aRect2);
+	IMPORT_C TBool RectCompare(const TRect &aRect1,const TRect &aRect2) const;
 	IMPORT_C TBool RectCompare(const TRect& aRect1,const TRect &aRect2,TUint aFlags) const;
 	IMPORT_C TInt CopyScreenToBitmap(const CFbsBitmap *aBitmap) const;
 	IMPORT_C TInt CopyScreenToBitmap(const CFbsBitmap *aBitmap, const TRect &aRect) const;
@@ -2381,14 +2282,19 @@ public:
 	IMPORT_C TSize GetScreenModeScale(TInt aMode) const;
 	IMPORT_C TPoint GetCurrentScreenModeScaledOrigin() const;
 	IMPORT_C TPoint GetScreenModeScaledOrigin(TInt aMode) const;
-	IMPORT_C TInt GetScreenSizeModeList(RArray<TInt>* aModeList);
+	IMPORT_C TInt GetScreenSizeModeList(RArray<TInt>* aModeList) const;
 	IMPORT_C TDisplayMode GetScreenModeDisplayMode(const TInt &aMode) const;
 //===== Used for testing purpose only ====//
 	IMPORT_C TSizeMode GetCurrentScreenModeAttributes() const;
 	IMPORT_C void SetCurrentScreenModeAttributes(const TSizeMode &aModeAtt);
 	IMPORT_C TInt GetScreenNumber() const;
+private:
+	CFbsTypefaceStore* TypeFaceStore()const;
+	TSize DisplaySizeInPixels()const;
+	TSize PhysicalScreenSizeInTwips()const;
 private: // Private data
-	CFbsTypefaceStore* iTypefaceStore;
+	class CScrDevExtension;				//Implements extension interfaces, including and replacing typeface store
+	CScrDevExtension* iExtension;
 	TSize iPhysicalScreenSizeInTwips;
 	TSize iDisplaySizeInPixels;
 	friend class CWindowGc;
@@ -2445,16 +2351,19 @@ one or more sprite members containing the bitmaps to be displayed are added.
 After a pointer cursor has been created and activated, it does not become
 visible until the application calls RWindowTreeNode::SetPointerCursor() or
 RWindowTreeNode::SetCustomPointerCursor(). The pointer cursor's origin automatically
-tracks the position of the pointing device, and the origin forms the pointer
-cursor's "hot spot", i.e., the point whose co-ordinates are sent to the client
-if a pointer event occurs. If the pointer cursor's bitmap needs to extend
-to the left or upwards from the pointer position, its sprite member should
-be given a negative offset in TSpriteMember::iOffset.
+tracks the position of the pointing device, or position of emulated single pointer if there
+are more pointers in the system (see documentation of RWindowBase::EnableAdvancedPointers()
+for more details), and the origin forms the pointer cursor's "hot spot", i.e., the point 
+whose co-ordinates are sent to the client if a pointer event occurs. 
+If the pointer cursor's bitmap needs to extend to the left or upwards from the pointer 
+position, its sprite member should be given a negative offset in TSpriteMember::iOffset.
 
 Note:
 
 Pointer cursors are rarely used in pure pen architectures, but they are supported
 for mouse or tablet use.
+
+@see RWindowBase::EnableAdvancedPointers()
 
 @publishedAll
 @released */
@@ -2581,6 +2490,7 @@ public:
 	IMPORT_C RDirectScreenAccess();
 	IMPORT_C RDirectScreenAccess(RWsSession& aWs);
 	IMPORT_C TInt Construct();
+	IMPORT_C TInt Construct(TBool aRegionTrackingOnly);
 	IMPORT_C TInt Request(RRegion*& aRegion,TRequestStatus& aStatus,const RWindowBase& aWindow);
 	IMPORT_C void Completed();
 	IMPORT_C void Cancel();
@@ -2672,6 +2582,7 @@ that direct screen access will be aborted as quickly as possible.
 	{
 public:
 	IMPORT_C static CDirectScreenAccess* NewL(RWsSession& aWs,CWsScreenDevice& aScreenDevice,RWindowBase& aWin,MDirectScreenAccess& aAbort);
+	IMPORT_C static CDirectScreenAccess* NewL(RWsSession& aWs,CWsScreenDevice& aScreenDevice,RWindowBase& aWin,MDirectScreenAccess& aAbort,TBool aRegionTrackingOnly);
 	~CDirectScreenAccess();
 	IMPORT_C void StartL();
 	inline CFbsBitGc* Gc();
@@ -2680,12 +2591,13 @@ public:
 private:
 	enum TFlags
 		{
-		EDirectCheckModeChange=0x1,
-		EDirectCheckSizeModeChange=0x2,
+		EDirectCheckModeChange		=	0x01,
+		EDirectCheckSizeModeChange	=	0x02,
+		EDirectRegionTrackingOnly	=	0x04,
 		};
 private:
 	inline CDirectScreenAccess(RWsSession& aWs,CWsScreenDevice* aScreenDevice,RWindowBase& aWindow,MDirectScreenAccess& aAbort);
-	void ConstructL(RWsSession& aWs);
+	void ConstructL(RWsSession& aWs,TBool aRegionTrackingOnly);
 	void CreateScreenObjectsL(TDisplayMode aCurrentMode);
 	void UpdateSizeAndRotation(CFbsBitGc* aGc);
 	static TInt Restart(TAny* aDirect);
@@ -2735,13 +2647,13 @@ public:
 	IMPORT_C TInt Construct(TUid aUid=KNullUid);
 	IMPORT_C void Close();
 	IMPORT_C void Destroy();
-	IMPORT_C TBool IsLoaded(TBool& aIsChangeable);
+	IMPORT_C TBool IsLoaded(TBool& aIsChangeable) const;
 	IMPORT_C TInt Unload();
 	IMPORT_C TInt Load(const TDesC &aFileName);
 	IMPORT_C void SetKeyClick(TBool aEnabled);
 	IMPORT_C void SetPenClick(TBool aEnabled);
-	IMPORT_C TBool KeyClickEnabled();
-	IMPORT_C TBool PenClickEnabled();
+	IMPORT_C TBool KeyClickEnabled() const;
+	IMPORT_C TBool PenClickEnabled() const;
 	IMPORT_C TInt CommandReply(TInt aOpcode, const TPtrC8 &aArgs);
 	};
 
@@ -2750,6 +2662,11 @@ inline TInt MWsClientClass::WsHandle() const
 
 	@return The server-side handle for the object. */
 	{return(iWsHandle);}
+
+inline const TAny* CWsScreenDevice::GetInterface(TUint aInterfaceId) const
+	{
+	return const_cast<CWsScreenDevice*>(this)->GetInterface(aInterfaceId);
+	}
 
 inline TInt CWsScreenDevice::CreateContext(CWindowGc *&aGc)
 	/** Creates a graphics context for this device.
@@ -2779,14 +2696,146 @@ inline TRect TWsRedrawEvent::Rect() const
 	the window whose handle is given by Handle(). */
 	{return(iRect);}
 
-inline TPointerEvent *TWsEvent::Pointer() const
+inline TWsEvent::TWsEvent()
+	/** Constructor.  Zero Initialise Data
+	@publishedAll
+	@released */
+	{
+	iType=0;
+	iHandle=0;
+	iTime=0;
+	Mem::FillZ(iEventData,EWsEventDataSize);
+	}
+
+inline TAdvancedPointerEvent* TWsEvent::Pointer() const
 	/** Gets the pointer event.
+	
+	This method can be used to get information about the pointer event if Type()
+	returns an event of type EEventPointer or EEventDragDrop.
+	
+	If the event has been received by the window without advanced pointer events enabled,
+	this method will return a pointer to TPointerEvent with additional fields of
+	TAdvancedPointerEvent being cleared to 0.
+	
+	@return Structure containing advanced pointer event data.
+	@see TPointerEvent::AdvancedPointerEvent()
+	@see RWindowBase::EnableAdvancedPointers() */
+	{return((TAdvancedPointerEvent *)&iEventData);}
 
-	This function can be used to get information about the pointer event if Type()
-	returns an event of type EEventPointer. or EEventDragDrop.
+inline TInt TAdvancedPointerEvent::PointerNumber() const
+/** Gets the pointer number of the pointer whose state change is described by this event.
 
-	@return Structure containing pointer event data. */
-	{return((TPointerEvent *)&iEventData);}
+  As soon as the pointer (for example a finger) is detected by the device's sensors,
+  it is assigned a pointer number. Then all events related to this pointer always
+  use the same pointer number. When the device loses track of the pointer,
+  TPointerEvent::EOutOfRange is sent with its pointer number and the number is released
+  - from this time it may be re-used to identify another pointer coming into range.  
+  
+  On a particular device, the pointer number is always an integer in the range 0 to 
+  HALData::EPointerNumberOfPointers - 1. If the device doesn't provide value for
+  this attribute, it is assumed to be 1.
+  
+  Please note that in order to receive events from multiple pointers in a window, the method
+  RWindowBase::EnableAdvancedPointers() has to be called for this window's instance
+  before it is activated. Otherwise this window will only receive TPointerEvents from one
+  emulated pointer, which will always have pointer number 0.
+  
+  @return Pointer number of the pointer whose state change is described by this event.
+  @see RWindowBase::EnableAdvancedPointers()
+  @see HALData::EPointerNumberOfPointers */
+	{
+	return IsAdvancedPointerEvent() ? DoGetPointerNumber() : ENonAdvancedPointerPointerNumber;
+	}
+
+inline TInt TAdvancedPointerEvent::Proximity() const
+/** Gets the proximity of the pointer to the screen's surface.
+  Proximity units may vary between devices and may be non-linear.
+  Returned value will be a negative integer as the maximum supported proximity
+  range in Symbian OS is from KMinTInt to 0, where KMinTInt means the highest
+  proximity that Symbian OS can support and 0 means touching the screen. 
+  HALData attributes provide more information about proximity support on particular 
+  device.
+  
+  On platforms without pointer proximity support, proximity is always assumed to be 0.
+  
+  @return Proximity of the pointer to the screen's surface.
+  @see TAdvancedPointerEvent::Position3D()
+  @see TAdvancedPointerEvent::ProximityAndPressure()
+  @see HALData::EPointer3DMaxProximity
+  @see HALData::EPointer3DProximityStep */
+	{
+	return IsAdvancedPointerEvent() ? DoGetProximity() : ENonAdvancedPointerZCoordinate;
+	}
+
+inline TInt TAdvancedPointerEvent::Pressure() const
+/** Gets the pressure applied by the pointer to the screen. 
+  Pressure units may vary between devices and may be non-linear.
+  Returned value will be a positive integer as the maximum supported pressure range
+  in Symbian OS is from 0 to KMaxTInt. HALData attributes provide more information
+  about pressure support on particular device.
+  
+  On platforms without pointer pressure support, pressure is always assumed to be 0.
+  
+  @return Pressure applied by the pointer to the screen.
+  @see TAdvancedPointerEvent::Pressure3D()
+  @see TAdvancedPointerEvent::ProximityAndPressure()
+  @see HALData::EPointer3DMaxPressure
+  @see HALData::EPointer3DPressureStep */
+	{
+	return IsAdvancedPointerEvent() ? DoGetPressure() : ENonAdvancedPointerZCoordinate;
+	}
+
+inline TInt TAdvancedPointerEvent::ProximityAndPressure() const
+/** Gets pressure applied by the pointer to the screen and proximity of the pointer
+  to the screen as one value. This is possible because the pointer is never in proximity
+  to the screen and pressing the screen at the same time.
+  
+  @return The value of proximity if the pointer is in proximity to the screen; proximity
+          is always represented as negative TInt. The value of pressure if the pointer
+          is touching the screen; pressure is always represented as positive TInt.
+  @see TAdvancedPointerEvent::Proximity()
+  @see TAdvancedPointerEvent::Pressure()
+  @see TAdvancedPointerEvent::PositionAndPressure3D() */
+	{return IsAdvancedPointerEvent() ? DoGetProximityAndPressure() : ENonAdvancedPointerZCoordinate;}
+
+inline TPoint3D TAdvancedPointerEvent::PositionAndPressure3D() const
+/**
+  @return Pointer's X and Y coordinates plus combined proximity and pressure as
+          Z coordinate. 
+  @see TAdvancedPointerEvent::ProximityAndPressure() */
+	{
+	TPoint3D point3D;
+	point3D.iX=iPosition.iX;
+	point3D.iY=iPosition.iY;
+	point3D.iZ=ProximityAndPressure();
+	return point3D;
+	}
+
+inline TPoint3D TAdvancedPointerEvent::Position3D() const
+/**
+  @return Pointer's X and Y coordinates plus pointer's proximity to the screen as
+          Z coordinate. Please note that returned Z coordinate will be always negative or 0.
+  @see TAdvancedPointerEvent::Proximity() */
+	{
+	TPoint3D point3D;
+	point3D.iX=iPosition.iX;
+	point3D.iY=iPosition.iY;
+	point3D.iZ=IsAdvancedPointerEvent() ? DoGetProximity() : ENonAdvancedPointerZCoordinate;
+	return point3D;
+	}
+
+inline TPoint3D TAdvancedPointerEvent::Pressure3D() const
+/**  
+  @return Pointer's X and Y coordinates plus pressure applied by the pointer to the screen
+          as Z coordinate. 
+  @see TAdvancedPointerEvent::Pressure() */
+	{
+	TPoint3D point3D;
+	point3D.iX=iPosition.iX;
+	point3D.iY=iPosition.iY;
+	point3D.iZ=IsAdvancedPointerEvent() ? DoGetPressure() : ENonAdvancedPointerZCoordinate;
+	return point3D;
+	}
 
 inline TKeyEvent *TWsEvent::Key() const
 	/** Gets the key event.
@@ -2814,6 +2863,24 @@ inline const TWsVisibilityChangedEvent* TWsEvent::VisibilityChanged() const
 
 	@return Structure containing visibility changed event data */
 	{ return reinterpret_cast<const TWsVisibilityChangedEvent*>(iEventData); }
+
+inline TWsDisplayChangedEvent* TWsEvent::DisplayChanged()
+	/** Gets information about the display changed event.
+
+	This function can be used to get information about the display changed event
+	if Type() returns an event of type EEventDisplayChanged.
+
+	@return Structure containing display changed event data */
+	{ return reinterpret_cast<TWsDisplayChangedEvent*>(iEventData); }
+
+inline const TWsDisplayChangedEvent* TWsEvent::DisplayChanged() const
+	/** Gets information about the display changed event.
+
+	This function can be used to get information about the display changed event
+	if Type() returns an event of type EEventDisplayChanged.
+
+	@return Structure containing display changed event data */
+	{ return reinterpret_cast<const TWsDisplayChangedEvent*>(iEventData); }
 
 inline TModifiersChangedEvent *TWsEvent::ModifiersChanged() const
 	/** Gets information about the modifier changed event.
@@ -2885,7 +2952,19 @@ inline void TWsEvent::SetTimeNow()
 	{iTime.UniversalTime();}
 
 inline TInt *TWsEvent::Int() const
-	/** Gets the event data as a TInt.*/
+	/** Gets the event data as a TInt.
+	 
+	 For TWsEvents of type EEventPointerEnter and EEventPointerExit this is the pointer number
+	 of the pointer that entered/exited the window. Please note that on platforms that 
+	 use the older Symbian OS, without multipointer support, pointer number is not initialized 
+	 for EEventPointerEnter and EEventPointerExit and thus it is random.
+	 
+	 If the value of the attribute returned from HALData::EPointerNumberOfPointers is greater than 1,
+	 then the system has multipointer support. 
+	 
+	 @see HALData::EPointerNumberOfPointers
+	 @see HAL::Get(TAttribute,TInt&)
+	*/
 	{ return (TInt*)&iEventData; }
 
 inline TUint TWsPriorityKeyEvent::Handle() const
@@ -2954,14 +3033,4 @@ inline RRegion* CDirectScreenAccess::DrawingRegion()
 	@return The clipping region to draw to. */
 	{ return iDrawingRegion; }
 
-inline TSizeMode::TSizeMode(TSize& aSize) :
-	iOrigin(0, 0), iScreenSize(aSize)
-	{}
-
-inline TInt TSizeMode::ScaledCord(TInt aOrigin,TInt aScale)
-	{return (aOrigin+aScale-1)/aScale;}
-
-inline TPoint TSizeMode::ScaledOrigin()
-	{return TPoint(ScaledCord(iOrigin.iX,iScreenScale.iWidth),ScaledCord(iOrigin.iY,iScreenScale.iHeight));}
-
-#endif
+#endif //__W32STD_H__

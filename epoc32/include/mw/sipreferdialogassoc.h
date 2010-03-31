@@ -2,9 +2,9 @@
 * Copyright (c) 2005-2009 Nokia Corporation and/or its subsidiary(-ies).
 * All rights reserved.
 * This component and the accompanying materials are made available
-* under the terms of the License "Symbian Foundation License v1.0" to Symbian Foundation members and "Symbian Foundation End User License Agreement v1.0" to non-members
+* under the terms of "Eclipse Public License v1.0"
 * which accompanies this distribution, and is available
-* at the URL "http://www.symbianfoundation.org/legal/licencesv10.html".
+* at the URL "http://www.eclipse.org/legal/epl-v10.html".
 *
 * Initial Contributors:
 * Nokia Corporation - initial contribution.
@@ -63,7 +63,8 @@ class CSIPReferDialogAssoc: public CSIPDialogAssocBase
 		* will create a SIP dialog association.
 		* @pre aReferTo != 0
 		* @param aDialog a dialog to be associated with
-		* @param aReferTo referred-to resource
+		* @param aReferTo referred-to resource;
+		* Ownership is transferred
         * @return New object; the ownership is transferred
         * @leave KErrArgument if aReferTo == 0
 		*/
@@ -77,7 +78,8 @@ class CSIPReferDialogAssoc: public CSIPDialogAssocBase
 		* will create a SIP dialog association.
 		* @pre aReferTo != 0
 		* @param aDialog a dialog to be associated with
-		* @param aReferTo referred-to resource
+		* @param aReferTo referred-to resource;
+		* Ownership is transferred
         * @return New object; the ownership is transferred
         * @leave KErrArgument if aReferTo == 0
 		*/
@@ -97,7 +99,8 @@ class CSIPReferDialogAssoc: public CSIPDialogAssocBase
         * @param aFrom originator's address; the ownership is transfered
         * @param aRemoteUri a remote target URI that identifies a resource that
         *		 the request is addressed to.
-		* @param aReferTo referred-to resource
+		* @param aReferTo referred-to resource;
+		* Ownership is transferred
         * @param aTo logical recipient's address; if not defined
         *        the remote target uri will be used for To-header
         *        construction; the ownership is transfered
@@ -127,7 +130,8 @@ class CSIPReferDialogAssoc: public CSIPDialogAssocBase
         * @param aFrom originator's address; the ownership is transfered
         * @param aRemoteUri a remote target URI that identifies a resource that
         *		 the request is addressed to.
-		* @param aReferTo referred-to resource
+		* @param aReferTo referred-to resource;
+		* Ownership is transferred
         * @param aTo logical recipient's address; if not defined
         *        the remote target uri will be used for To-header
         *        construction; the ownership is transfered
@@ -158,7 +162,8 @@ class CSIPReferDialogAssoc: public CSIPDialogAssocBase
         *		 the request is targeted to.
         * @param aContext used for selecting outbound 
         *        proxy and originator's address (AOR) and contact
-        * @param aReferTo referred-to resource
+        * @param aReferTo referred-to resource;
+        * Ownership is transferred
         * @param aFrom originator's address. If not defined it will
         *        constructed using registration context (User's AOR);
         *        the ownership is transfered
@@ -195,7 +200,8 @@ class CSIPReferDialogAssoc: public CSIPDialogAssocBase
         *		 the request is targeted to.
         * @param aContext used for selecting outbound 
         *        proxy and originator's address (AOR) and contact
-        * @param aReferTo referred-to resource
+        * @param aReferTo referred-to resource;
+        * Ownership is transferred
         * @param aFrom originator's address. If not defined it will
         *        constructed using registration context (User's AOR);
         *        the ownership is transfered

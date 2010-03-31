@@ -1,9 +1,9 @@
 // Copyright (c) 1999-2009 Nokia Corporation and/or its subsidiary(-ies).
 // All rights reserved.
 // This component and the accompanying materials are made available
-// under the terms of the License "Symbian Foundation License v1.0" to Symbian Foundation members and "Symbian Foundation End User License Agreement v1.0" to non-members
+// under the terms of "Eclipse Public License v1.0"
 // which accompanies this distribution, and is available
-// at the URL "http://www.symbianfoundation.org/legal/licencesv10.html".
+// at the URL "http://www.eclipse.org/legal/epl-v10.html".
 //
 // Initial Contributors:
 // Nokia Corporation - initial contribution.
@@ -11,7 +11,14 @@
 // Contributors:
 //
 // Description:
+// MIUTCONV.H
 //
+
+/**
+ * @file 
+ * @publishedAll
+ * @released
+ */
 
 #ifndef __MIUTCONV_H__
 #define __MIUTCONV_H__
@@ -31,18 +38,9 @@
 #include <utf.h>
 #endif
 
-// IMail-specific stream type within an IMail file store for TImEmailTransformingInfo
-//
-const TUint KUidMsvCharsetNone				= {0x10003C7F};		// 268450943
-const TUid KUidMsgFileTransformingInfo		= {0x100094A5};		// 268473509
-const TUid KUidMsgEmailGeneralCenRep		= {0x10285A25};		// 271079973
-
-// No longer used as the charset information retrieved from resource file.
-// Might possibly needed in the future ? maybe
-// const TUid KUidMiutSystemDefaultCharset		= {0x10009418};		// 268473368
-// const TUid KUidMiutOverrideCharset			= {0x10009419};		// 268473369
-
-_LIT8(KMiutUndisplayableChar, "?");
+#ifndef SYMBIAN_ENABLE_SPLIT_HEADERS
+#include "cimconvertcharconv.h"
+#endif
 
 /** SMTP send methods. 
 @publishedAll
@@ -133,74 +131,4 @@ private:
 	TImSendMethod iSendMethod;
 	};
 
-
-// Default Sending Charset/Encoding Values
-const TImEncodingType KDefaultMIMEHeaderEncoding	=	EEncodingTypeBASE64;		// MIME
-const TImEncodingType KDefaultMIMEBodyTextEncoding	=	EEncodingTypeQP;
-const TImEncodingType KDefaultMIMEHTMLEncoding		=	EEncodingTypeBASE64;
-const TImEncodingType KDefaultMIMEAttachmentEncoding=	EEncodingTypeBASE64;
-
-#define KDefaultPlainCharset		KCharacterSetIdentifierIso88591
-
-const TImEncodingType	KDefaultPlainHeaderEncoding		=	EEncodingTypeNone;	// Non-MIME or Plain
-const TImEncodingType	KDefaultPlainBodyTextEncoding	=	EEncodingTypeNone;
-const TImEncodingType KDefaultPlainAttachmentEncoding	=	EEncodingTypeUU;
-
-
-
-
-// Wrapper class for CHARCONV.
-// 'Our' charset dependant on build, UNICODE or CodePage 1252.
-//
-class CImConvertCharconv : public CBase
-/**
-@internalTechnology
-@released
-*/
-	{
-public:	
-	IMPORT_C static CImConvertCharconv* NewL(CCnvCharacterSetConverter& aConverter, RFs& anFs);
-	~CImConvertCharconv();
-
-	// MUST call prepare function first.
-	IMPORT_C TInt ConvertToOurCharsetL( const TDesC8& aBufIn, TDes& rBufOut, 
-										TInt& rNumUnconvertedChars, 
-										TInt& rIndexOfFirstUnconvertedChar);
-	IMPORT_C TInt ConvertFromOurCharsetL(const TDesC& aBufIn, TDes8& rBufOut, 
-										 TInt& rNumUnconvertedChars,
-										 TInt& rIndexOfFirstUnconvertedChar);
-
-	// MUST be called prior to calling above two functions.
-	IMPORT_C TInt PrepareToConvertToFromOurCharsetL(const TUint aUid);
-
-	IMPORT_C TUint GetMimeCharsetUidL(const TDesC8& aBufIn) const;
-	IMPORT_C HBufC8* GetMimeCharsetTextStringL(const TUint& aUid) const;
-	IMPORT_C TUint DefaultCharset() const;
-	IMPORT_C TUint SystemDefaultCharset() const;
-
-	static TInt StraightCopy( const TDesC8& aBufIn, TDes& rBufOut);
-	static TInt StraightCopy( const TDesC& aBufIn, TDes8& rBufOut);
-private:
-	void ConstructL();
-	CImConvertCharconv(CCnvCharacterSetConverter& aConverter, RFs& anFs);
-	TBool CharsetAvailable(const TUint aUid);
-	void SetSystemDefaultCharsetL();
-
-	TInt GetSystemCharsetFromCenRepL(TDes8& aMimeCharSet);
-
-	enum TEmailGeneralSettingsCenRepId
-		{
-		EEmailGeneralCharSetId				= 0x00000000
-		};
-
-private:
-	CCnvCharacterSetConverter& iConverter;
-	CArrayFix<CCnvCharacterSetConverter::SCharacterSet>* iCharsetsAvailable; 
-
-	RFs& iFs;
-	TUint iCharsetUid;
-	TUint iSystemDefaultCharset;		// Value obtained from .ini file
-	TInt  iCharconvState;
-	};
-
-#endif
+#endif //__MIUTCONV_H__

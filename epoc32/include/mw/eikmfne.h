@@ -2,9 +2,9 @@
 * Copyright (c) 1997-1999 Nokia Corporation and/or its subsidiary(-ies).
 * All rights reserved.
 * This component and the accompanying materials are made available
-* under the terms of the License "Symbian Foundation License v1.0" to Symbian Foundation members and "Symbian Foundation End User License Agreement v1.0" to non-members
+* under the terms of "Eclipse Public License v1.0"
 * which accompanies this distribution, and is available
-* at the URL "http://www.symbianfoundation.org/legal/licencesv10.html".
+* at the URL "http://www.eclipse.org/legal/epl-v10.html".
 *
 * Initial Contributors:
 * Nokia Corporation - initial contribution.
@@ -46,7 +46,7 @@
 
 // For MAknMfneCommandObserver
 #if !defined(__AKNMFNECOMMANDOBSERVER)
-#include <AknMfneCommandObserver.h>
+#include <aknmfnecommandobserver.h>
 #endif //!defined(__AKNMFNECOMMANDOBSERVER)
 
 //
@@ -812,7 +812,11 @@ public: // AVKON addition
         EDisablePenInput,
         
         /** Support finger input. Paramter is TFingerSupportParams.*/ 
-        EFingerSupport
+        EFingerSupport,
+        
+        ELaunchPenInputAutomatic,
+
+        EPartialScreenInput
         };
     /** Parameter for finger support feature: 
       * 0 means disable the suppor; 
@@ -1143,6 +1147,7 @@ public:
     void SetCurrentField( TInt aCurrentField );
     void SetValidateCallBack( TCallBack aCallBack );
     void ReportStateChangeEventL();
+    void SetFirstEditableField();
     
 private:
 	// framework
@@ -1151,7 +1156,24 @@ private:
 	// new virtual functions
 	IMPORT_C virtual void CreatePopoutIfRequiredL();
 	// miscellaneous functions
-	void DrawRange(CWindowGc& aGc, TInt aFirstField, TInt aLastField) const;
+
+	/**
+	 * Draws the specified fields within the MFNE.
+	 * All fields between and including the @c aFirstField and @c aLastField
+	 * will be drawn.
+	 *
+	 * @param  aGc                    The graphics context to draw to.
+	 * @param  aFirstField            First field to be drawn.
+	 * @param  aLastField             Last field to be drawn.
+	 * @param  aSkipBackgroundDrawer  @c ETrue to skip the background drawing
+	 *                                with a background drawer if it's used
+	 *                                for the MFNE. 
+	 */
+	void DrawRange( CWindowGc& aGc,
+                    TInt aFirstField,
+                    TInt aLastField,
+                    TBool aSkipBackgroundDrawer = EFalse ) const;
+
 	CWindowGc& PreparedGc() const;
 	void SetGcToNormalVideo(CWindowGc& aGc) const;
 	void SetGcToInverseVideo(CWindowGc& aGc) const;
@@ -1160,6 +1182,8 @@ private:
 	void HideCursor();	
 	IMPORT_C void Reserved_2();
 	IMPORT_C virtual void CEikMfne_Reserved();
+	
+	void LaunchPenInputL();
 	
 private:
     /**

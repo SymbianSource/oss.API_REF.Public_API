@@ -9,13 +9,13 @@
  * Copyright (c) 1997
  * Moscow Center for SPARC Technology
  *
- * Copyright (c) 1999 
+ * Copyright (c) 1999
  * Boris Fomitchev
  *
  * This material is provided "as is", with absolutely no warranty expressed
  * or implied. Any use is at your own risk.
  *
- * Permission to use or copy this software for any purpose is hereby granted 
+ * Permission to use or copy this software for any purpose is hereby granted
  * without fee, provided the above notices are retained on all copies.
  * Permission to modify the code and to distribute modified code is granted,
  * provided the above notices are retained, and a notice that the code was
@@ -31,52 +31,16 @@
 #ifndef _STLP_INTERNAL_PAIR_H
 #define _STLP_INTERNAL_PAIR_H
 
-#include <stl/_construct.h>
+#if defined (_STLP_CLASS_PARTIAL_SPECIALIZATION)
+#  include <stl/type_traits.h>
+#endif
+
+#ifndef _STLP_MOVE_CONSTRUCT_FWK_H
+#  include <stl/_move_construct_fwk.h>
+#endif
 
 _STLP_BEGIN_NAMESPACE
 
-#ifdef _STLP_USE_TRAP_LEAVE
-template <class _T1, class _T2>
-struct pair {
-  typedef _T1 first_type;
-  typedef _T2 second_type;
-
-  _T1 first;
-  _STLP_StackPusher<_T1> __pusher;
-  _T2 second;
-
-  // first and second should construct themselves with their default constructors in ANSI order
-  pair() : __pusher(&first) {
-    CleanupStack::Pop();
-  }
-
-  pair(const _T1& __a, const _T2& __b) : first(__a), __pusher(&first), second(__b) {
-    CleanupStack::Pop();
-  }
-
-  // undergroud extensions
-  pair(const _T1& __a, __false_type) : first(__a), __pusher(&first), second() {
-    CleanupStack::Pop();
-  }
-  pair(__true_type, const _T2& __a) : first(), __pusher(&first), second(__a) {
-    CleanupStack::Pop();
-  }
-
-#if defined (_STLP_MEMBER_TEMPLATES) && !(defined (_STLP_MSVC) && (_STLP_MSVC < 1200))
-  template <class _U1, class _U2>
-  pair(const pair<_U1, _U2>& __p) : first(__p.first), __pusher(&first), second(__p.second) {
-    CleanupStack::Pop();
-  }
-
-  pair(const pair<_T1,_T2>& __o) : first(__o.first), __pusher(&first), second(__o.second) {
-    CleanupStack::Pop();
-  }
-#endif
-  __TRIVIAL_DESTRUCTOR(pair)
-};
-
-#else
-
 template <class _T1, class _T2>
 struct pair {
   typedef _T1 first_type;
@@ -84,16 +48,12 @@ struct pair {
 
   _T1 first;
   _T2 second;
-# if defined (_STLP_CONST_CONSTRUCTOR_BUG)
+#if defined (_STLP_CONST_CONSTRUCTOR_BUG)
   pair() {}
-# else
+#else
   pair() : first(_T1()), second(_T2()) {}
-# endif
+#endif
   pair(const _T1& __a, const _T2& __b) : first(__a), second(__b) {}
-
-  // undergroud extensions
-  pair(const _T1& __a, __false_type) : first(__a), second() {}
-  pair(const _T2& __a, __true_type) : first(), second(__a) {}
 
 #if defined (_STLP_MEMBER_TEMPLATES) && !(defined (_STLP_MSVC) && (_STLP_MSVC < 1200))
   template <class _U1, class _U2>
@@ -101,107 +61,118 @@ struct pair {
 
   pair(const pair<_T1,_T2>& __o) : first(__o.first), second(__o.second) {}
 #endif
+
+  pair(__move_source<pair<_T1, _T2> > src) : first(_STLP_PRIV _AsMoveSource(src.get().first)),
+                                             second(_STLP_PRIV _AsMoveSource(src.get().second))
+  {}
+
   __TRIVIAL_DESTRUCTOR(pair)
 };
-#endif
 
 template <class _T1, class _T2>
 inline bool _STLP_CALL operator==(const pair<_T1, _T2>& __x, const pair<_T1, _T2>& __y)
-{ 
-  return __x.first == __y.first && __x.second == __y.second; 
-}
+{ return __x.first == __y.first && __x.second == __y.second; }
 
 template <class _T1, class _T2>
-inline bool _STLP_CALL operator<(const pair<_T1, _T2>& __x, const pair<_T1, _T2>& __y)
-{ 
-  return __x.first < __y.first || 
-         (!(__y.first < __x.first) && __x.second < __y.second); 
+inline bool _STLP_CALL operator<(const pair<_T1, _T2>& __x, const pair<_T1, _T2>& __y) {
+  return __x.first < __y.first ||
+         (!(__y.first < __x.first) && __x.second < __y.second);
 }
 
-#ifdef _STLP_USE_SEPARATE_RELOPS_NAMESPACE
+#if defined (_STLP_USE_SEPARATE_RELOPS_NAMESPACE)
+template <class _T1, class _T2>
+inline bool _STLP_CALL operator!=(const pair<_T1, _T2>& __x, const pair<_T1, _T2>& __y)
+{ return !(__x == __y); }
 
 template <class _T1, class _T2>
-inline bool _STLP_CALL operator!=(const pair<_T1, _T2>& __x, const pair<_T1, _T2>& __y) {
-  return !(__x == __y);
-}
+inline bool _STLP_CALL operator>(const pair<_T1, _T2>& __x, const pair<_T1, _T2>& __y)
+{ return __y < __x; }
 
 template <class _T1, class _T2>
-inline bool _STLP_CALL operator>(const pair<_T1, _T2>& __x, const pair<_T1, _T2>& __y) {
-  return __y < __x;
-}
+inline bool _STLP_CALL operator<=(const pair<_T1, _T2>& __x, const pair<_T1, _T2>& __y)
+{ return !(__y < __x); }
 
 template <class _T1, class _T2>
-inline bool _STLP_CALL operator<=(const pair<_T1, _T2>& __x, const pair<_T1, _T2>& __y) {
-  return !(__y < __x);
-}
-
-template <class _T1, class _T2>
-inline bool _STLP_CALL operator>=(const pair<_T1, _T2>& __x, const pair<_T1, _T2>& __y) {
-  return !(__x < __y);
-}
-
+inline bool _STLP_CALL operator>=(const pair<_T1, _T2>& __x, const pair<_T1, _T2>& __y)
+{ return !(__x < __y); }
 #endif /* _STLP_USE_SEPARATE_RELOPS_NAMESPACE */
 
-
-#if defined(_STLP_FUNCTION_TMPL_PARTIAL_ORDER) && ! defined (_STLP_NO_EXTENSIONS) && ! defined (__BORLANDC__) && ! defined (__DMC__)
+#if defined (_STLP_FUNCTION_TMPL_PARTIAL_ORDER) && !defined (_STLP_NO_EXTENSIONS)
 template <class _T1, class _T2, int _Sz>
 inline pair<_T1, _T2 const*> make_pair(_T1 const& __x,
                                        _T2 const (&__y)[_Sz])
-{
-  return pair<_T1, _T2 const*>(__x, static_cast<_T2 const*>(__y));
-}
+{ return pair<_T1, _T2 const*>(__x, static_cast<_T2 const*>(__y)); }
 
 template <class _T1, class _T2, int _Sz>
 inline pair<_T1 const*, _T2> make_pair(_T1 const (&__x)[_Sz],
                                        _T2 const& __y)
-{
-  return pair<_T1 const*, _T2>(static_cast<_T1 const*>(__x), __y);
-}
+{ return pair<_T1 const*, _T2>(static_cast<_T1 const*>(__x), __y); }
 
 template <class _T1, class _T2, int _Sz1, int _Sz2>
 inline pair<_T1 const*, _T2 const*> make_pair(_T1 const (&__x)[_Sz1],
-                                              _T2 const (&__y)[_Sz2])
-{
+                                              _T2 const (&__y)[_Sz2]) {
   return pair<_T1 const*, _T2 const*>(static_cast<_T1 const*>(__x),
                                       static_cast<_T2 const*>(__y));
 }
 #endif
 
 template <class _T1, class _T2>
-inline pair<_T1, _T2> _STLP_CALL make_pair(const _T1& __x, const _T2& __y)
-{
-  return pair<_T1, _T2>(__x, __y);
-}
-
+inline pair<_T1, _T2> _STLP_CALL make_pair(_T1 __x, _T2 __y)
+{ return pair<_T1, _T2>(__x, __y); }
 
 _STLP_END_NAMESPACE
 
-# if defined (_STLP_USE_NAMESPACES) || ! defined (_STLP_USE_SEPARATE_RELOPS_NAMESPACE) 
+#if defined (_STLP_USE_NAMESPACES) || !defined (_STLP_USE_SEPARATE_RELOPS_NAMESPACE)
 _STLP_BEGIN_RELOPS_NAMESPACE
 
 template <class _Tp>
-inline bool _STLP_CALL operator!=(const _Tp& __x, const _Tp& __y) {
-  return !(__x == __y);
-}
+inline bool _STLP_CALL operator!=(const _Tp& __x, const _Tp& __y)
+{ return !(__x == __y); }
 
 template <class _Tp>
-inline bool _STLP_CALL operator>(const _Tp& __x, const _Tp& __y) {
-  return __y < __x;
-}
+inline bool _STLP_CALL operator>(const _Tp& __x, const _Tp& __y)
+{ return __y < __x; }
 
 template <class _Tp>
-inline bool _STLP_CALL operator<=(const _Tp& __x, const _Tp& __y) {
-  return !(__y < __x);
-}
+inline bool _STLP_CALL operator<=(const _Tp& __x, const _Tp& __y)
+{ return !(__y < __x); }
 
 template <class _Tp>
-inline bool _STLP_CALL  operator>=(const _Tp& __x, const _Tp& __y) {
-  return !(__x < __y);
-}
+inline bool _STLP_CALL  operator>=(const _Tp& __x, const _Tp& __y)
+{ return !(__x < __y); }
 
 _STLP_END_RELOPS_NAMESPACE
+#endif
 
-# endif
+#if defined (_STLP_CLASS_PARTIAL_SPECIALIZATION)
+_STLP_BEGIN_NAMESPACE
+
+template <class _T1, class _T2>
+struct __type_traits<pair<_T1, _T2> > {
+  typedef __type_traits<_T1> _T1Traits;
+  typedef __type_traits<_T2> _T2Traits;
+  typedef typename _Land2<typename _T1Traits::has_trivial_default_constructor,
+                          typename _T2Traits::has_trivial_default_constructor>::_Ret has_trivial_default_constructor;
+  typedef typename _Land2<typename _T1Traits::has_trivial_copy_constructor,
+                          typename _T2Traits::has_trivial_copy_constructor>::_Ret has_trivial_copy_constructor;
+  typedef typename _Land2<typename _T1Traits::has_trivial_assignment_operator,
+                          typename _T2Traits::has_trivial_assignment_operator>::_Ret has_trivial_assignment_operator;
+  typedef typename _Land2<typename _T1Traits::has_trivial_destructor,
+                          typename _T2Traits::has_trivial_destructor>::_Ret has_trivial_destructor;
+  typedef __false_type is_POD_type;
+
+#if defined (__BORLANDC__) && (__BORLANDC__ < 0x560)
+  // disable incorrect "dependent type qualifier" error
+  typedef __false_type implemented;
+#endif
+};
+
+template <class _T1, class _T2>
+struct __move_traits<pair<_T1, _T2> >
+  : _STLP_PRIV __move_traits_help1<_T1, _T2> {};
+
+_STLP_END_NAMESPACE
+#endif /* _STLP_CLASS_PARTIAL_SPECIALIZATION */
 
 #endif /* _STLP_INTERNAL_PAIR_H */
 

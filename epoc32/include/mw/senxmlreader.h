@@ -2,9 +2,9 @@
 * Copyright (c) 2002-2005 Nokia Corporation and/or its subsidiary(-ies). 
 * All rights reserved.
 * This component and the accompanying materials are made available
-* under the terms of the License "Symbian Foundation License v1.0" to Symbian Foundation members and "Symbian Foundation End User License Agreement v1.0" to non-members
+* under the terms of "Eclipse Public License v1.0"
 * which accompanies this distribution, and is available
-* at the URL "http://www.symbianfoundation.org/legal/licencesv10.html".
+* at the URL "http://www.eclipse.org/legal/epl-v10.html".
 *
 * Initial Contributors:
 * Nokia Corporation - initial contribution.
@@ -26,9 +26,9 @@
 #define SEN_XMLREADER_H
 
 //  INCLUDES
-#include <Xml/Parser.h>
-#include <Xml/ParserFeature.h> // for TParserFeature enumeration
-#include <Xml/ContentHandler.h>
+#include <xml/parser.h>
+#include <xml/parserfeature.h> // for TParserFeature enumeration
+#include <xml/contenthandler.h>
 #include <badesca.h>
 
 using namespace Xml;
@@ -37,6 +37,13 @@ using namespace Xml;
 const TInt KSenDefaultParserFeature = (TInt)EReportNamespaceMapping;
 
 
+#ifdef RD_SEN_FORCE_LIBXML_SAX_PLUGIN_MIMETYPE
+    _LIT8(KXmlParserMimeType,   "text/wsstarlibxml2");
+    _LIT8(KXmlVariant,          "wsstarlibxml2");
+#else
+    _LIT8(KXmlParserMimeType,   "text/xml");
+    _LIT8(KXmlVariant,          "libxml2");  // LibXml2 SAX parser
+#endif
    
 // FORWARD DECLARATIONS
 class MSenContentHandlerClient;

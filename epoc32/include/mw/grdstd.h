@@ -1,9 +1,9 @@
 // Copyright (c) 1997-2009 Nokia Corporation and/or its subsidiary(-ies).
 // All rights reserved.
 // This component and the accompanying materials are made available
-// under the terms of the License "Symbian Foundation License v1.0" to Symbian Foundation members and "Symbian Foundation End User License Agreement v1.0" to non-members
+// under the terms of "Eclipse Public License v1.0"
 // which accompanies this distribution, and is available
-// at the URL "http://www.symbianfoundation.org/legal/licencesv10.html".
+// at the URL "http://www.eclipse.org/legal/epl-v10.html".
 //
 // Initial Contributors:
 // Nokia Corporation - initial contribution.
@@ -58,7 +58,7 @@ public:
 	};
 
 
-////////////////////////->
+//->
 
 class TGridColors
 /** The grid colour specification.
@@ -84,7 +84,7 @@ public:
 	TRgb iLabelSeparators;
 //	TRgb iEdge;
 	};
-////////////////////////->
+//->
 
 
 class RReadStream;
@@ -274,12 +274,12 @@ public:
 	IMPORT_C void InternalizeL(RReadStream &aStream);
 	IMPORT_C TStreamId StoreL(CStreamStore& aStore) const;
 	IMPORT_C void RestoreL(const CStreamStore& aStore,TStreamId aStreamId);
-////////////////////////->
+//->
 //	Setting the grid colors
 	IMPORT_C void SetGridColors(TGridColors aColors);
 //	Getting the grid colors
 	IMPORT_C const TGridColors& GridColors() const;
-////////////////////////->
+//->
 private:
 	void SetIndefiniteRowBoundaries(TBool aState);
 	inline TBool IsVisibleToRowFullyVisible() const;
@@ -384,9 +384,9 @@ private:
 	TInt        iMinColumnWidthInPixels;
 	TSize       iPageSizeInTwips;						//*
 	TUint32		iFlags;									//* Starred items are used in printing
-////////////////////////->
+//->
 	TGridColors iColors;
-////////////////////////->
+//->
 // End of persistent data
 	TBool		iHasChanged;
 	};
@@ -411,9 +411,9 @@ public:
 	inline void SetGridColors(const TGridColors& aGridColors);
 protected:
 	IMPORT_C CGridLabelImg(const TFontSpec& aFontSpec,MGraphicsDeviceMap* aGraphicsDeviceMap);
-////////////////////////->
+//->
 	IMPORT_C void DrawTopLeftLabelL(CGraphicsContext* aGc,const TRect& aRect, TRgb aColor) const;
-////////////////////////->
+//->
 private:
 	/** Draws a row label.
 	
@@ -591,9 +591,9 @@ public:
 	IMPORT_C static CGridImg* NewL(CGridCellImg* aGridCellImg,CGridLay* aGridLay); //Creates Partial GridImg
 	inline void SetGridLay(CGridLay* aGridLay);
 	inline void SetWindow(RWindow* aWin);
-////////////////////////->
+//->
 	IMPORT_C void SetGridLabelImg(CGridLabelImg* aGridLabelImg);
-////////////////////////->
+//->
 	inline void SetCursorMoveCallBack(MGridCursorMoveCallBack* aCursorMoveCallBack);
 	inline const CGridCellRegion* Selected() const;
 	inline const CGridLabelImg* GridLabelImg() const;
@@ -706,9 +706,9 @@ private:
 	CGridImg(CGridCellImg* aGridCellImg,CGridLay* aGridLay);
 	void ConstructL();
 
-////////////////////////->
+//->
 	void SetGridColors(const TGridColors& aGridColors);
-////////////////////////->
+//->
 private:
 	TRect		iGridRect;
 	TPoint		iTitlePoint;

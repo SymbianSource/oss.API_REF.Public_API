@@ -1,9 +1,9 @@
 // Copyright (c) 1997-2009 Nokia Corporation and/or its subsidiary(-ies).
 // All rights reserved.
 // This component and the accompanying materials are made available
-// under the terms of the License "Symbian Foundation License v1.0" to Symbian Foundation members and "Symbian Foundation End User License Agreement v1.0" to non-members
+// under the terms of "Eclipse Public License v1.0"
 // which accompanies this distribution, and is available
-// at the URL "http://www.symbianfoundation.org/legal/licencesv10.html".
+// at the URL "http://www.eclipse.org/legal/epl-v10.html".
 //
 // Initial Contributors:
 // Nokia Corporation - initial contribution.
@@ -13,10 +13,9 @@
 // Description:
 //
 
-
-
 /**
  @file
+ @publishedAll
 */
 
 #if !defined(__ES_WSMS_H__)
@@ -38,14 +37,14 @@ const TUint KWAPSMSDatagramServiceInfo = KSIConnectionLess | KSIMessageBased;
 const TUint KWAPCDMASMSAddrFamily=0x013;
 
 /**
- *  @internalComponent
+ *  @publishedAll
  */
 _LIT(KWAPSMSProtocolId,"WAPSMS Datagram");
 _LIT(KWAPCDMASMSProtocolId,"WAP CDMA SMS Datagram");
 
-//////////////////////////////////////////////////////////////////////////////
+//
 // Wap Address / Port Settings
-//////////////////////////////////////////////////////////////////////////////
+//
 
 /** WAP port setting. */
 enum TWapPortNumber
@@ -118,9 +117,9 @@ public:
 	inline TBool operator==(const TWapAddr& aAddr) const;
 	};
 
-//////////////////////////////////////////////////////////////////////////////
+//
 // Option Settings
-//////////////////////////////////////////////////////////////////////////////
+//
 
 /** WAP SMS Protocol Module option level, for RSocket::SetOpt() and RSocket::GetOpt() calls. */
 const TInt KWapSmsOptionLevel = KSOLSocket + 1;

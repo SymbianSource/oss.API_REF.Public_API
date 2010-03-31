@@ -1,9 +1,9 @@
 // Copyright (c) 2004-2009 Nokia Corporation and/or its subsidiary(-ies).
 // All rights reserved.
 // This component and the accompanying materials are made available
-// under the terms of the License "Symbian Foundation License v1.0" to Symbian Foundation members and "Symbian Foundation End User License Agreement v1.0" to non-members
+// under the terms of "Eclipse Public License v1.0"
 // which accompanies this distribution, and is available
-// at the URL "http://www.symbianfoundation.org/legal/licencesv10.html".
+// at the URL "http://www.eclipse.org/legal/epl-v10.html".
 //
 // Initial Contributors:
 // Nokia Corporation - initial contribution.
@@ -27,8 +27,8 @@
 #include <s32file.h>
 
 
+
 /**
-@publishedPartner
 
 When SYMBIAN_SECURE_TASK_SCHEDULER is defined, platform security
 support functionality is included in Task Scheduler.
@@ -40,7 +40,10 @@ the scheduled task file by the Task Scheduler.
 
 (ii) The CScheduledTask::SecurityInfo() API is availble to
 retrieve security information about the schedule creator.
+@publishedPartner
+@released
 */
+//Only to be used internally and by Phone Manufacturers
 #ifndef SYMBIAN_SECURE_TASK_SCHEDULER
 #define SYMBIAN_SECURE_TASK_SCHEDULER
 #endif
@@ -142,18 +145,5 @@ private:
 	TBool iPersists;
 	};
 	
-/**
-Streaming operators for TSecurityInfo
-@internalComponent
-*/	
-RWriteStream& operator<<(RWriteStream& aWriteStream, 
-						const TSecurityInfo& aSecurityInfo);
-
-/**
-Streaming operators for TSecurityInfo
-@internalComponent
-*/	
-RReadStream& operator>>(RReadStream& aReadStream,
-						TSecurityInfo& aSecurityInfo);
 
 #endif

@@ -18,11 +18,10 @@
 */
 
 
-
-
 /**
  @file 
- @internalTechnology 
+ @publishedAll
+ @released
 */
  
 #ifndef __PKIXCERTCHAIN_H__
@@ -41,7 +40,6 @@ class MCertStore;
 
 /**
  * Base class for CPKIXCertChain
- * @internalTechnology
  */
 class CPKIXCertChainBase : public CX509CertChain
 	{
@@ -263,8 +261,6 @@ private:
 /**
  * This class implements a PKIX certificate chain.
  *
- * @publishedAll
- * @released
  * @since v6.0
  */
 class CPKIXCertChain : public CPKIXCertChainBase

@@ -1,9 +1,9 @@
 // Copyright (c) 2001-2009 Nokia Corporation and/or its subsidiary(-ies).
 // All rights reserved.
 // This component and the accompanying materials are made available
-// under the terms of the License "Symbian Foundation License v1.0" to Symbian Foundation members and "Symbian Foundation End User License Agreement v1.0" to non-members
+// under the terms of "Eclipse Public License v1.0"
 // which accompanies this distribution, and is available
-// at the URL "http://www.symbianfoundation.org/legal/licencesv10.html".
+// at the URL "http://www.eclipse.org/legal/epl-v10.html".
 //
 // Initial Contributors:
 // Nokia Corporation - initial contribution.
@@ -13,10 +13,8 @@
 // Description:
 //
 
-
-
 /**
- @file RHTTPRequest.h
+ @file
  @warning : This file contains Rose Model ID comments - please do not delete
 */
 
@@ -44,12 +42,12 @@ identifies that resource.
 		Methods for reading information from the response.
 	*/
 	//@{
-	/// Gets the method name
-	/// @return The method to be used in the HTTP request.
+	// Gets the method name
+	// @return The method to be used in the HTTP request.
 	//##ModelId=3C4C186E01B3
 	IMPORT_C RStringF Method() const;
-	/// Gets the URI
-	/// @return The URI to be used in the HTTP request.
+	// Gets the URI
+	// @return The URI to be used in the HTTP request.
 	//##ModelId=3C4C186E01B2
 	IMPORT_C const TUriC8& URI() const;
 	//@}
@@ -60,12 +58,12 @@ identifies that resource.
 		filters
 	*/
 	//@{
-	/// Sets the method name
-	/// @param aMethod The method name to be used in the HTTP request.
+	// Sets the method name
+	// @param aMethod The method name to be used in the HTTP request.
 	//##ModelId=3C4C186E01B0
 	IMPORT_C void  SetMethod(RStringF aMethod);
-	/// Sets the URI
-	/// @param aURI The URI to be used in the HTTP request.
+	// Sets the URI
+	// @param aURI The URI to be used in the HTTP request.
 	//##ModelId=3C4C186E01A6
 	IMPORT_C void SetURIL(const TUriC8& aURI);
 	//@}

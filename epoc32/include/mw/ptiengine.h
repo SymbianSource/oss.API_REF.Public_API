@@ -2,9 +2,9 @@
 * Copyright (c) 2003-2008 Nokia Corporation and/or its subsidiary(-ies). 
 * All rights reserved.
 * This component and the accompanying materials are made available
-* under the terms of the License "Symbian Foundation License v1.0" to Symbian Foundation members and "Symbian Foundation End User License Agreement v1.0" to non-members
+* under the terms of "Eclipse Public License v1.0""
 * which accompanies this distribution, and is available
-* at the URL "http://www.symbianfoundation.org/legal/licencesv10.html".
+* at the URL "http://www.eclipse.org/legal/epl-v10.html".
 *
 * Initial Contributors:
 * Nokia Corporation - initial contribution.
@@ -1259,7 +1259,7 @@ NONSHARABLE_CLASS(CPtiEngine) : public CBase
         */
         IMPORT_C TInt AddPhrase(const TDesC& aNewPhrase);
         
-#ifdef __DUAL_LANGUAGE_SUPPORT__
+#ifdef FF_DUAL_LANGUAGE_SUPPORT
         /**
         * Activates specified secondary input language in current input mode.
         *
@@ -1268,7 +1268,7 @@ NONSHARABLE_CLASS(CPtiEngine) : public CBase
         * @return KErrNone if success or system wide error code.
         */
         IMPORT_C TInt SetSecondaryInputL(TInt aEpocLanguageID);
-#endif //__DUAL_LANGUAGE_SUPPORT__
+#endif //FF_DUAL_LANGUAGE_SUPPORT
     private:
         CPtiEngine();
         void ConstructL(TBool aUseDefaultUserDictionary);

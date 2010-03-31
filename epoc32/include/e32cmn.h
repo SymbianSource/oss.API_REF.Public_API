@@ -1,9 +1,9 @@
 // Copyright (c) 1994-2009 Nokia Corporation and/or its subsidiary(-ies).
 // All rights reserved.
 // This component and the accompanying materials are made available
-// under the terms of the License "Symbian Foundation License v1.0" to Symbian Foundation members and "Symbian Foundation End User License Agreement v1.0" to non-members
+// under the terms of the License "Eclipse Public License v1.0"
 // which accompanies this distribution, and is available
-// at the URL "http://www.symbianfoundation.org/legal/licencesv10.html".
+// at the URL "http://www.eclipse.org/legal/epl-v10.html".
 //
 // Initial Contributors:
 // Nokia Corporation - initial contribution.
@@ -1718,22 +1718,6 @@ counting object.
 typedef TBuf<KMaxName> TName;
 
 
-
-
-/**
-@internalTechnology
-*/
-typedef TBuf<KMaxKernelName> TKName;
-
-
-/**
-@internalTechnology
-*/
-typedef TBuf<KMaxInfoName> TInfoName;
-
-
-
-
 /**
 @publishedAll
 @released
@@ -1791,12 +1775,6 @@ typedef TBuf<KMaxPath> TPath;
 
 
 
-/**
-@internalComponent
-*/
-typedef TBuf<KMaxDeviceInfo> TDeviceInfo;
-
-
 
 /**
 @publishedAll
@@ -1811,11 +1789,6 @@ information in a descriptor of this type.
 @see TVersion
 */
 typedef TBuf<KMaxVersionName> TVersionName;
-
-
-
-
-typedef TBuf<KMaxPassword> TPassword;
 
 
 
@@ -2182,16 +2155,74 @@ public:
 	TInt iY;
 	};
 
+
+
+
 /**
-@internalTechnology
-@prototype For now, only intended to be used by TRwEvent and the Windows Server
+@publishedAll
+@prototype
 
 Stores a three-dimensional point in Cartesian or polar co-ordinates.
-
 Its data members (iX, iY and iZ) are public and can be manipulated directly.
+
 */
 class TPoint3D
 	{
+public:
+#ifndef __KERNEL_MODE__
+	enum TUninitialized { EUninitialized };
+
+	/**
+	TUninitialized Constructor
+	*/
+	TPoint3D(TUninitialized) {}
+	/**
+	Constructs default TPoint3D, initialising its iX , iY and iZ members to zero.
+	*/
+	inline TPoint3D();
+	/**
+	Constructs  TPoint3D with the specified x,y  and z co-ordinates.
+	*/
+	inline TPoint3D(TInt aX,TInt aY,TInt aZ);
+	/** 
+	Copy Construct from TPoint , initialises Z co-ordinate to  Zero
+	*/
+	inline TPoint3D(const  TPoint& aPoint);
+
+	IMPORT_C TBool operator==(const TPoint3D& aPoint3D) const;
+	IMPORT_C TBool operator!=(const TPoint3D& aPoint3D) const;
+
+	IMPORT_C TPoint3D& operator-=(const TPoint3D& aPoint3D);
+	IMPORT_C TPoint3D& operator-=(const TPoint& aPoint);
+
+	IMPORT_C TPoint3D& operator+=(const TPoint3D& aPoint3D);	
+	IMPORT_C TPoint3D& operator+=(const TPoint& aPoint);
+
+	IMPORT_C TPoint3D operator-(const TPoint3D& aPoint3D) const;
+	IMPORT_C TPoint3D operator-(const TPoint& aPoint) const;	
+
+	IMPORT_C TPoint3D operator+(const TPoint3D& aPoint3D) const;
+	IMPORT_C TPoint3D operator+(const TPoint& aPoint) const;
+	/**
+    Unary minus operator. The operator returns the negation of this Point3D 
+	*/
+	IMPORT_C TPoint3D operator-() const;
+	
+	/**
+	Set Method to set the xyz co-ordinates of TPoint3D
+	*/
+	IMPORT_C void SetXYZ(TInt aX,TInt aY,TInt aZ);
+	
+	/**
+	TPoint3D from TPoint, sets the Z co-ordinate to  Zero
+	*/
+	IMPORT_C void SetPoint(const TPoint& aPoint);
+
+	/**
+	Returns TPoint from TPoint3D
+	*/
+	IMPORT_C TPoint AsPoint() const;
+#endif
 public:
 	/**
 	The x co-ordinate.
@@ -2206,6 +2237,8 @@ public:
 	*/
 	TInt iZ;
 	};
+
+
 
 /**
 @internalTechnology
@@ -2363,9 +2396,12 @@ class RHandleBase
 	{
 public:
     /**
-    @internalComponent
+    @publishedAll
+    @released
+
+	Read/Write attributes for the handle.
     */
-    enum
+    enum TAttributes
 		{
 		EReadAccess=0x1,
 		EWriteAccess=0x2,
@@ -2457,6 +2493,66 @@ public:
 	IMPORT_C void Signal();
 private:
 	TInt iCount;
+	};
+
+
+
+
+/**
+@publishedAll
+@released
+
+A read-write lock.
+
+This is a lock for co-ordinating readers and writers to shared resources.
+It is designed to allow multiple concurrent readers.
+It is not a kernel side object and so does not inherit from RHandleBase.
+*/
+class RReadWriteLock
+	{
+public:
+	enum TReadWriteLockPriority
+		{
+		/** Pending writers always get the lock before pending readers */
+		EWriterPriority,
+		/** Lock is given alternately to pending readers and writers */
+		EAlternatePriority,
+		/** Pending readers always get the lock before pending writers - beware writer starvation! */
+		EReaderPriority,
+		};
+	enum TReadWriteLockClientCategoryLimit
+		{
+		/** Maximum number of clients in each category: read locked, read lock pending, write lock pending */
+		EReadWriteLockClientCategoryLimit = KMaxTUint16
+		};
+
+public:
+	inline RReadWriteLock();
+	IMPORT_C TInt CreateLocal(TReadWriteLockPriority aPriority = EWriterPriority);
+	IMPORT_C void Close();
+
+	IMPORT_C void ReadLock();
+	IMPORT_C void WriteLock();
+	IMPORT_C TBool TryReadLock();
+	IMPORT_C TBool TryWriteLock();
+	IMPORT_C TBool TryUpgradeReadLock();
+	IMPORT_C void DowngradeWriteLock();
+	IMPORT_C void Unlock();
+
+private:
+	RReadWriteLock(const RReadWriteLock& aLock);
+	RReadWriteLock& operator=(const RReadWriteLock& aLock);
+
+	TInt UnlockWriter();
+	TInt UnlockAlternate();
+	TInt UnlockReader();
+
+private:
+	volatile TUint64 iValues; // Bits 0-15: readers; bit 16: writer; bits 32-47: readersPending; bits 48-63: writersPending
+	TReadWriteLockPriority iPriority;
+	RSemaphore iReaderSem;
+	RSemaphore iWriterSem;
+	TUint32 iSpare[4]; // Reserved for future development
 	};
 
 
@@ -2663,10 +2759,13 @@ public:
 	                  };
 	                  
 	                  
-	enum TFlags {ESingleThreaded=1, EFixedSize=2, ETraceAllocs=4};
+	enum TFlags {ESingleThreaded=1, EFixedSize=2, ETraceAllocs=4, EMonitorMemory=8,};
 	struct SCheckInfo {TBool iAll; TInt iCount; const TDesC8* iFileName; TInt iLineNum;};
-	struct SRAllocatorBurstFail {TInt iBurst; TInt iRate; TInt iUnused[2];};	/**< @internalComponent*/
+#ifndef SYMBIAN_ENABLE_SPLIT_HEADERS
+	struct SRAllocatorBurstFail {TInt iBurst; TInt iRate; TInt iUnused[2];};
+#endif
 	enum {EMaxHandles=32};
+
 public:
 	inline RAllocator();
 #ifndef __KERNEL_MODE__
@@ -2767,24 +2866,21 @@ public:
 	                  */
 	                  TInt allocCount;
 	                  };
-	                  
-    /**
-    @internalComponent
-    */
-	struct _s_align {char c; double d;};
 
-	
 	/**
     @internalComponent
     */
 	struct SHeapCellInfo { RHeap* iHeap; TInt iTotalAlloc;	TInt iTotalAllocSize; TInt iTotalFree; TInt iLevelAlloc; SDebugCell* iStranded; };
 
+	/**
+	@internalComponent
+	*/
+	struct _s_align {char c; double d;};
 
-    /** 
-    The default cell alignment.
-    */
+	/** 
+	The default cell alignment.
+	*/
 	enum {ECellAlignment = sizeof(_s_align)-sizeof(double)};
-	
 	
 	/**
 	Size of a free cell header.
@@ -2828,11 +2924,16 @@ public:
     @internalComponent
     */
     enum TDefaultShrinkRatios {EShrinkRatio1=256, EShrinkRatioDflt=512};
-    	
-    /**
+
+#ifndef SYMBIAN_ENABLE_SPLIT_HEADERS
+	/**
     @internalComponent
     */
+#else
+private:
+#endif
     typedef void (*TWalkFunc)(TAny*, TCellType, TAny*, TInt);
+
 public:
 	UIMPORT_C virtual TAny* Alloc(TInt aSize);
 	UIMPORT_C virtual void Free(TAny* aPtr);
@@ -2968,7 +3069,8 @@ public:
 	inline   void ClientL(RThread& aClient, TOwnerType aOwnerType=EOwnerProcess) const;
 	IMPORT_C TUint ClientProcessFlags() const;
 	IMPORT_C const TRequestStatus* ClientStatus() const;
-
+	IMPORT_C TBool ClientIsRealtime() const;
+	
 	/**
 	Return the Secure ID of the process which sent this message.
 
@@ -2986,7 +3088,7 @@ public:
 	@code
 		RMessagePtr2& message;
 		static _LIT_SECURITY_POLICY_S0(mySidPolicy, KRequiredSecureId);
-		TInt error = mySidPolicy().CheckPolicy(message);
+		TBool pass = mySidPolicy().CheckPolicy(message);
 	@endcode
 
 	This has the benefit that the TSecurityPolicy::CheckPolicy methods are
@@ -3021,7 +3123,7 @@ public:
 	@code
 		RMessagePtr2& message;
 		static _LIT_SECURITY_POLICY_V0(myVidPolicy, KRequiredVendorId);
-		TInt error = myVidPolicy().CheckPolicy(message);
+		TBool pass = myVidPolicy().CheckPolicy(message);
 	@endcode
 
 	This has the benefit that the TSecurityPolicy::CheckPolicy methods are
@@ -3299,32 +3401,6 @@ public:
 	};
 
 
-/** Default value to clear all data to committed to a chunk to.
-@see TChunkCreateInfo::SetClearByte()
-@see RChunk::Create()
-@internalComponent
-*/
-const TUint8 KChunkClearByteDefault = 0x3;
-
-/**
-Values that specify the attributes of a chunk to be created.
-
-@see RChunk::Create()
-@internalComponent
-*/
-enum TChunkCreateAttributes
-	{
-	/**	Force local chunk to be named.  Internal as only required for
-	thread heap chunks, all other local chunks should be nameless.
-	*/
-	EChunkAttLocalNamed = 0x400,
-
-	EChunkAttMask =	EChunkAttLocalNamed,
-	};
-
-/**@internalComponent */
-const TUint32 KEmulatorImageFlagAllowDllData = 0x01;
-
 /** Maximum size of capability set
 
 @internalTechnology
@@ -3336,6 +3412,7 @@ const TInt KCapabilitySetMaxSize = (((TInt)ECapability_HardLimit + 7)>>3);
 @internalTechnology
 */
 const TInt KMaxSecurityPolicySize = KCapabilitySetMaxSize + 3*sizeof(TUint32);
+
 
 /** Class representing an arbitrary set of capabilities.
 
@@ -3371,6 +3448,7 @@ public:
 	@internalComponent
 	*/
 	TBool NotEmpty() const;
+
 private:
 	TUint32 iCaps[KCapabilitySetMaxSize / sizeof(TUint32)];
 	};
@@ -3453,7 +3531,10 @@ class TSecurityInfo
 	{
 public:
 	inline TSecurityInfo();
-#ifndef __KERNEL_MODE__
+#ifdef __KERNEL_MODE__
+	IMPORT_C TSecurityInfo(DProcess* aProcess);
+	IMPORT_C TSecurityInfo(DThread* aThread);
+#else
 	IMPORT_C TSecurityInfo(RProcess aProcess);
 	IMPORT_C TSecurityInfo(RThread aThread);
 	IMPORT_C TSecurityInfo(RMessagePtr2 aMesPtr);
@@ -3632,7 +3713,7 @@ public:
 		ETypeV3=5,		/**< Vendor ID and up to 3 capabilities*/
 
 		/** The number of possible TSecurityPolicy types
-		This is intended of internal Symbian use only.
+		This is intended for internal Symbian use only.
 		@internalTechnology
 		*/
 		ETypeLimit
@@ -4744,12 +4825,10 @@ public:
 #endif //__KERNEL_MODE__
 
 private:
-	/** @internalTechnology */
 	UIMPORT_C static TInt EmitDiagnostic(TPlatSecDiagnostic& aDiagnostic, const char* aContextText);
 #else //__REMOVE_PLATSEC_DIAGNOSTICS__
 #ifndef __KERNEL_MODE__
 private:
-	/** @internalTechnology */
 	IMPORT_C static TInt EmitDiagnostic(TPlatSecDiagnostic& aDiagnostic, const char* aContextText);
 #endif // !__KERNEL_MODE__
 #endif // !__REMOVE_PLATSEC_DIAGNOSTICS__
@@ -4760,22 +4839,8 @@ public:
 	};
 
 
-
-/**
-@internalTechnology
- */
-struct TEmulatorImageHeader
-	{
-	TUid iUids[KMaxCheckedUid];
-	TProcessPriority iPriority;
-	SSecurityInfo iS;
-	TUint32 iSpare1;
-	TUint32 iSpare2;
-	TUint32 iModuleVersion;
-	TUint32 iFlags;
-	};
-
-
+#define KMaxSerialNumLength 64
+typedef TBuf8<KMaxSerialNumLength> TMediaSerialNumber;
 
 
 /**
@@ -4974,8 +5039,11 @@ template <class T>
 class TIdentityRelation
 	{
 public:
+	inline TIdentityRelation();
 	inline TIdentityRelation( TBool (*anIdentity)(const T&, const T&) );
 	inline operator TGeneralIdentityRelation() const;
+private:
+	inline static TBool EqualityOperatorCompare(const T& aLeft, const T& aRight);
 private:
 	TGeneralIdentityRelation iIdentity;
 	};
@@ -6145,6 +6213,24 @@ User::Leave(..) was called. */
 
 #endif //__LEAVE_EQUALS_THROW__
 
+/* The macro __SYMBIAN_STDCPP_SUPPORT__ is defined when building a StdC++ target.
+ * In this case, operator new and operator delete below should not be declared
+ * to avoid clashing with StdC++ declarations.
+ */ 
+
+#ifndef __SYMBIAN_STDCPP_SUPPORT__
+
+#ifndef __OPERATOR_NEW_DECLARED__
+
+/* Some operator new and operator delete overloads may be declared in compiler
+ * pre-include files.
+ *
+ * __OPERATOR_NEW_DECLARED__ is #defined if they are, so that we can avoid
+ * re-declaring them here.
+ */
+
+#define __OPERATOR_NEW_DECLARED__
+
 /**
 @publishedAll
 @released
@@ -6163,7 +6249,7 @@ GLREF_C TAny* operator new(TUint aSize,TUint anExtraSize) __NO_THROW;
 */
 GLREF_C void operator delete(TAny* aPtr) __NO_THROW;
 
-#ifndef __PLACEMENT_VEC_NEW_INLINE
+#ifndef __OMIT_VEC_OPERATOR_NEW_DECL__
 /**
 @publishedAll
 @released
@@ -6175,22 +6261,17 @@ GLREF_C TAny* operator new[](TUint aSize) __NO_THROW;
 @released
 */
 GLREF_C void operator delete[](TAny* aPtr) __NO_THROW;
-#endif
+#endif // !__OMIT_VEC_OPERATOR_NEW_DECL__
+
+#endif // !__OPERATOR_NEW_DECLARED__
+
+#endif // !__SYMBIAN_STDCPP_SUPPORT__
 
 /**
 @publishedAll
 @released
 */
 inline TAny* operator new(TUint aSize, TAny* aBase) __NO_THROW;
-
-#ifndef __PLACEMENT_VEC_NEW_INLINE
-/**
-@publishedAll
-@released
-*/
-inline TAny* operator new[](TUint aSize, TAny* aBase) __NO_THROW;
-
-#endif // !__PLACEMENT_VEC_NEW_INLINE
 
 /**
 @publishedAll
@@ -6199,6 +6280,12 @@ inline TAny* operator new[](TUint aSize, TAny* aBase) __NO_THROW;
 inline void operator delete(TAny* aPtr, TAny* aBase) __NO_THROW;
 
 #ifndef __PLACEMENT_VEC_NEW_INLINE
+/**
+@publishedAll
+@released
+*/
+inline TAny* operator new[](TUint aSize, TAny* aBase) __NO_THROW;
+
 /**
 @publishedAll
 @released
@@ -6280,12 +6367,17 @@ public:
 
     /**
     @internalComponent
-    
-    Bit width of type information.
 	*/
-	enum {
-	     KBitsPerType=3 /** Number of bits of type information used for each of the 4 arguments. */
-	     };
+	enum 
+		{
+		KBitsPerType	= 3, 		/**< Number of bits of type information used for each of the 4 arguments.*/
+		KPinArgShift	= KBitsPerType*KMaxMessageArguments,	/**< Bit number of the start of the pin flags. */
+		KPinArg0		= 1<<(KPinArgShift+0),	/**< Set to pin argument at index 0.*/
+		KPinArg1		= 1<<(KPinArgShift+1),	/**< Set to pin argument at index 1.*/
+		KPinArg2		= 1<<(KPinArgShift+2),	/**< Set to pin argument at index 2.*/
+		KPinArg3		= 1<<(KPinArgShift+3),	/**< Set to pin argument at index 3.*/
+		KPinMask 		= 0xf<<KPinArgShift,	/**< The bits used for the pinning attributes of each argument.*/
+		};
 	
 	
 	/**
@@ -6407,6 +6499,8 @@ public:
 #ifndef __KERNEL_MODE__
 	inline void Set(TInt aIndex,TDes16* aValue);
 #endif
+
+	inline TIpcArgs& PinArgs(TBool aPinArg0=ETrue, TBool aPinArg1=ETrue, TBool aPinArg2=ETrue, TBool aPinArg3=ETrue);
 private:
 	inline static TArgType Type(TNothing);
 	inline static TArgType Type(TInt);
@@ -6566,11 +6660,21 @@ private:
 
 // The standard header file <exception> defines the following guard macro for EDG and CW, VC++, GCC respectively.
 // The guard below is ugly. It will surely come back and bite us unless we resolve the whole issue of standard headers
-// when we move to supporting Standard C++. 
-#if !defined(_EXCEPTION) && !defined(_EXCEPTION_) && !defined(__EXCEPTION__)
+// when we move to supporting Standard C++.
+
+// The macro __SYMBIAN_STDCPP_SUPPORT__ is defined when building a StdC++ target.
+// In this case, we include the StdC++ specification <exception> rather than declaring uncaught_exception.
+ 
+#ifdef __SYMBIAN_STDCPP_SUPPORT__
+	#include <stdapis/stlportv5/exception>
+#elif !defined(_EXCEPTION) && !defined(_EXCEPTION_) && !defined(__EXCEPTION__)
 // Declare standard C++ functions relating to exceptions here
 namespace std {
-  bool uncaught_exception(void);
+#if defined(__VC32__) || defined(__CW32__)
+  bool uncaught_exception();
+#else
+  IMPORT_C bool uncaught_exception();
+#endif
   void terminate(void);
   void unexpected(void);
   typedef void (*terminate_handler)();
@@ -6668,6 +6772,28 @@ public:
 #endif //__X86__
 #endif //__WINS__
 
+/**
+@internalTechnology
+ */
+struct TEmulatorImageHeader
+	{
+	TUid iUids[KMaxCheckedUid];
+	TProcessPriority iPriority;
+	SSecurityInfo iS;
+	TUint32 iSpare1;
+	TUint32 iSpare2;
+	TUint32 iModuleVersion;
+	TUint32 iFlags;
+	};
+
+// forward declaration of shareable data buffers pool infomation
+class TShPoolInfo;
+
 #include <e32cmn.inl>
 
+#ifndef SYMBIAN_ENABLE_SPLIT_HEADERS
+#include <e32cmn_private.h>
+#endif
+
 #endif //__E32CMN_H__
+

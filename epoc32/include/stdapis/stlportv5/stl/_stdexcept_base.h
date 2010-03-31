@@ -1,4 +1,6 @@
 /*
+ * Portions Copyright (c) 2008 Nokia Corporation and/or its subsidiary(-ies). All rights reserved.
+ *
  * Copyright (c) 1996,1997
  * Silicon Graphics Computer Systems, Inc.
  *
@@ -67,19 +69,19 @@ using _STLP_VENDOR_EXCEPT_STD::exception;
 
 class _STLP_CLASS_DECLSPEC __Named_exception : public _STLP_EXCEPTION_BASE {
 public:
-  __Named_exception(const string& __str)
+  _STLP_DECLSPEC __Named_exception(const string& __str)
 #    ifndef _STLP_USE_NO_IOSTREAMS
     ;
-  const char* what() const _STLP_NOTHROW_INHERENTLY;
-  ~__Named_exception() _STLP_NOTHROW_INHERENTLY;
+  _STLP_DECLSPEC const char* what() const _STLP_NOTHROW_INHERENTLY;
+  _STLP_DECLSPEC ~__Named_exception() _STLP_NOTHROW_INHERENTLY;
 #    else
   {
 #      if !defined (_STLP_USE_SAFE_STRING_FUNCTIONS)
     strncpy(_M_name, _STLP_PRIV __get_c_string(__str), _S_bufsize);
-#      else
-    strncpy_s(_STLP_ARRAY_AND_SIZE(_M_name), _STLP_PRIV __get_c_string(__str), _S_bufsize);
-#      endif
     _M_name[_S_bufsize - 1] = '\0';
+#      else
+    strncpy_s(_STLP_ARRAY_AND_SIZE(_M_name), _STLP_PRIV __get_c_string(__str), _TRUNCATE);
+#      endif
   }
   const char* what() const _STLP_NOTHROW_INHERENTLY { return _M_name; }
 #    endif

@@ -17,11 +17,10 @@
 */
 
 
-
-
 /**
  @file 
- @internalAll
+ @publishedAll
+ @released
 */
  
 #ifndef __X509CERT_H__
@@ -34,16 +33,70 @@
 #include <x500dn.h>
 #include <asn1enc.h>
 
-_LIT(KMD2WithRSA,"1.2.840.113549.1.1.2");
-_LIT(KMD5WithRSA,"1.2.840.113549.1.1.4");
-_LIT(KSHA1WithRSA,"1.2.840.113549.1.1.5");
-_LIT(KDSAWithSHA1,"1.2.840.10040.4.3");
-
+/* These OIDs have been defined for PKCS#1 with the 
+ * superior reference to OID 1.2.840.113549.1.1
+ * {iso(1) member-body(2) us(840) rsadsi(113549) pkcs(1) pkcs-1(1)}
+ */ 
+// RSA (PKCS #1 v1.5) key transport algorithm
 _LIT(KRSA,"1.2.840.113549.1.1.1");
-_LIT(KDH,"1.2.840.10046.2.1");
+// MD2 with RSA Encryption
+_LIT(KMD2WithRSA,"1.2.840.113549.1.1.2");
+// RSA (PKCS #1 v1.5) with MD5 signature
+_LIT(KMD5WithRSA,"1.2.840.113549.1.1.4");
+// RSA (PKCS #1 v1.5) with SHA-1 signature 
+_LIT(KSHA1WithRSA,"1.2.840.113549.1.1.5");
+// SHA256 with RSA Encryption
+_LIT(KSHA256WithRSA,"1.2.840.113549.1.1.11");
+// SHA384 with RSA Encryption 
+_LIT(KSHA384WithRSA,"1.2.840.113549.1.1.12");
+// SHA512 with RSA Encryption 
+_LIT(KSHA512WithRSA,"1.2.840.113549.1.1.13");
+// SHA224 with RSA Encryption 
+_LIT(KSHA224WithRSA,"1.2.840.113549.1.1.14");
+
+/* 
+ * These OIDs have been defined for PKIX with the 
+ * superior reference to OID 1.2.840.10040.
+ */
+// Digital Signature Algorithm (DSA), also known as the Digital Signature Standard (DSS) 
 _LIT(KDSA,"1.2.840.10040.4.1");
+// ANSI X9.57 DSA signature generated with SHA-1 hash (DSA x9.30) 
+_LIT(KDSAWithSHA1,	"1.2.840.10040.4.3");
+
+/*
+ * These OIDs have been defined for ANSI X9 standard with 
+ * superior reference to oid 1.2.840.10046.
+ * {iso(1) member-body(2) us(840) ansi-x942(10046) number-types(2)}
+ */
+// ANSI X9.42 Ephemeral-Static Diffie-Hellman key agreement algorithm 
+_LIT(KDH,"1.2.840.10046.2.1");
+
+/*
+ * These OIDs have been defined for digest algorithms with 
+ * superior reference to oid 1.2.840.113549.2
+ * {iso(1) member-body(2) us(840) rsadsi(113549) digestAlgorithm(2)}
+ */
 _LIT(KMD5,"1.2.840.113549.2.5");
 _LIT(KMD2,"1.2.840.113549.2.2");
+
+/*
+ * These OIDs have been defined for hash algorithms conforming NIST algorithms 
+ * with superior reference to oid 2.16.840.1.101.3.4.2
+ * {joint-iso-itu-t(2) country(16) us(840) organization(1) gov(101) csor(3) nistAlgorithm(4) hashAlgs(2)}
+ */
+_LIT(KSHA256,"2.16.840.1.101.3.4.2.1");
+_LIT(KSHA384,"2.16.840.1.101.3.4.2.2");
+_LIT(KSHA512,"2.16.840.1.101.3.4.2.3");
+_LIT(KSHA224,"2.16.840.1.101.3.4.2.4");
+
+/*
+ * These OIDs are for OIW Security Special Interest Group defined algorithms  
+ * with superior reference to oid 1.3.14.3.2
+ * {iso(1) identified-organization(3) oiw(14) secsig(3) algorithms(2)}
+ */
+// SHA1 with RSA signature (obsolete)
+_LIT(KSHA1WithRSASignature,"1.3.14.3.2.29");
+// Hash algorithm identifier SHA-1 (Secure Hash Algorithm, Revision 1) 
 _LIT(KSHA1,"1.3.14.3.2.26");
 
 /** The maximum number of allowed data elements.
@@ -59,8 +112,6 @@ class CDSAParameters;
 class CPKCS1SignatureResult : public CRSASignatureResult
 /** The signature result in PKCS#1 format.
 * 
-* @publishedAll
-* @released
 * @since v6.0 */
 	{
 public:
@@ -93,8 +144,6 @@ class TX509KeyFactory : public TKeyFactory
 /** Constructs the public key objects used for signature verification, from their 
 * encoded binary form, for X.509 certificates.
 * 
-* @publishedAll
-* @released
 * @since v6.0 */
 	{
 public:
@@ -143,8 +192,6 @@ public:
 class CX509ValidityPeriod : public CValidityPeriod
 /** The period for which an X.509 certificate is valid.
 * 
-* @publishedAll
-* @released
 * @since v6.0 */
 	{
 public:
@@ -194,8 +241,6 @@ private:
 class CX509AlgorithmIdentifier : public CAlgorithmIdentifier
 /** Algorithm identifier for an X.509 certificate.
 *
-* @publishedAll
-* @released
 * @since v6.0 */
 	{
 public:
@@ -266,8 +311,6 @@ private:
 class CX509SigningAlgorithmIdentifier : public CSigningAlgorithmIdentifier
 /** Encapsulates the IDs of the algorithms used for signing an X.509 certificate.
 *
-* @publishedAll
-* @released
 * @since v6.0 */
 	{
 public:
@@ -322,8 +365,6 @@ private:
 class CX509SubjectPublicKeyInfo : public CSubjectPublicKeyInfo
 /** X.509 subject public key information.
 * 
-* @publishedAll
-* @released
 * @since v6.0 */
 	{
 public:
@@ -372,8 +413,6 @@ class CX509CertExtension : public CBase
 * Consists of an any-defined-by structure along with a boolean flag saying whether 
 * the extension is critical or not.
 * 
-* @publishedAll
-* @released
 * @since v6.0 */
 	{
 public:
@@ -493,8 +532,6 @@ private:
 class CX509Certificate : public CCertificate
 /** An X.509 certificate.
 * 
-* @publishedAll
-* @released
 * @since v6.0 */
 	{
 public:

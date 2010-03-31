@@ -2,8 +2,7 @@
 /*	$NetBSD: sem.h,v 1.5 1994/06/29 06:45:15 cgd Exp $	*/
 
 /*
- *© Portions copyright (c) 2006 Nokia Corporation.  All rights reserved.
- *© Portions copyright (c) 2006 Symbian Software Ltd. All rights reserved.
+ *© * © * Portions Copyright (c) 2006 Nokia Corporation and/or its subsidiary(-ies). All rights reserved.
  * SVID compatible sem.h file
  *
  * Author:  Daniel Boulet

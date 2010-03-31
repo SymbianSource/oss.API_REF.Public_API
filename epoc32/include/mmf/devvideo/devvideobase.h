@@ -1,9 +1,9 @@
 // Copyright (c) 2003-2009 Nokia Corporation and/or its subsidiary(-ies).
 // All rights reserved.
 // This component and the accompanying materials are made available
-// under the terms of the License "Symbian Foundation License v1.0" to Symbian Foundation members and "Symbian Foundation End User License Agreement v1.0" to non-members
+// under the terms of "Eclipse Public License v1.0"
 // which accompanies this distribution, and is available
-// at the URL "http://www.symbianfoundation.org/legal/licencesv10.html".
+// at the URL "http://www.eclipse.org/legal/epl-v10.html".
 //
 // Initial Contributors:
 // Nokia Corporation - initial contribution.
@@ -20,11 +20,14 @@
 #include <w32std.h>
 #include <mmf/devvideo/devvideoconstants.h>
 #include <ecom/ecom.h>
+#ifndef SYMBIAN_ENABLE_SPLIT_HEADERS
+#include <mmf/devvideo/devvideohwdeviceadaptersetup.h>
+#endif
 
 
 /**
 Panic utility function
-@internalTechnology
+@publishedAll
 */
 LOCAL_C void DevVideoPanic(TInt aReason)
 	{
@@ -211,6 +214,11 @@ public:
 		Pointer to an RGB bitmap. Valid if iDataFormat is ERgbFbsBitmap.
 		*/
 		CFbsBitmap* iRgbBitmap;
+		
+		/**
+		 Buffer number of current buffer for composition that is used when submitting a surface update. Valid if iDataFormat is set to ESurfaceBuffer
+		*/
+		TInt iSurfaceBufNum;
 		};
 	};
 
@@ -398,7 +406,11 @@ public:
 		EPictureEffect	 = 0x00000040,
 		/** Set if picture effect parameters are valid.
 		*/
-		EEffectParameters  = 0x00000080
+		EEffectParameters  = 0x00000080,
+		/** Content protected pictures cannot be displayed on unprotected 
+		    external displays such as TV-out.
+		*/
+		EContentProtected = 0x00000100
 		};
 
 	/**
@@ -566,14 +578,14 @@ public:
 	*/
 	IMPORT_C TBool operator==(const CCompressedVideoFormat& aOther) const;
 protected:
-    /**     
-    @internalTechnology
-    */
+        /**
+        @internalTechnology
+        */
 	CCompressedVideoFormat();
 
-    /**     
-    @internalTechnology
-    */
+        /**
+        @internalTechnology
+        */
 	void ConstructL(const TDesC8& aMimeType, const TDesC8& aOptionalData);
 private:
 	HBufC8* iMimeType;
@@ -1086,16 +1098,17 @@ public:
 	Value 1.0 specifies that picture rate should be maintained as well as possible, sacrificing 
 	picture quality.
 	*/
-	TReal iQualityTemporalTradeoff;
-
+ 	TReal iQualityTemporalTradeoff;
+ 
 	/**
-	The latency/quality tradeoff for bit-rate control. The value range is [0.0…1.0]. Value 0.0 
-	specifies that the transmission delay and the decoder input buffer occupancy level caused by 
-	the bit-rate control is minimized, i.e. the actual coded bit-rate follows the target bit-rate 
-	as closely as possible. 1.0 specifies that the transmission delay caused by the bit-rate control 
-	should be as high as needed to guarantee a constant picture quality and frame rate as long as 
-	the coded data conforms to the given HRD/VBV parameters (if any).
-	*/
+        The latency/quality tradeoff for bit-rate control. The value range is [0.0…1.0]. Value 0.0 
+        specifies that the transmission delay and the decoder input buffer occupancy level caused by 
+        the bit-rate control is minimized, i.e. the actual coded bit-rate follows the target bit-rate 
+        as closely as possible. 1.0 specifies that the transmission delay caused by the bit-rate control 
+        should be as high as needed to guarantee a constant picture quality and frame rate as long as 
+        the coded data conforms to the given HRD/VBV parameters (if any).
+        */
+	
 	TReal iLatencyQualityTradeoff;
 	};
 	
@@ -1103,21 +1116,8 @@ public:
 Custom interface Uid for setting up the DevVideo hw device adapter
 */
 const TInt	KUidDevVideoHwDeviceAdapterSetup = 0x102737EF;
-
-/**
-Custom interface for setting up the DevVideo hw device adapter
-@publishedPartner
-@prototype
-*/	
-class MDevVideoHwDeviceAdapterSetup 
-	{
-public:
-	/**
-	Set the Uid of the processing unit into the hw device adapter
-	*/
-	virtual void LoadProcessingUnitL(const CImplementationInformation& aImplInfo) = 0;
-	};
 	
 #include <mmf/devvideo/devvideobase.inl>
 
 #endif
+

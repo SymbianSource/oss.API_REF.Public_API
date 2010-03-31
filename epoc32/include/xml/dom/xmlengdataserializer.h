@@ -1,51 +1,50 @@
-/*
-* Copyright (c) 2006-2006 Nokia Corporation and/or its subsidiary(-ies). 
-* All rights reserved.
-* This component and the accompanying materials are made available
-* under the terms of the License "Symbian Foundation License v1.0" to Symbian Foundation members and "Symbian Foundation End User License Agreement v1.0" to non-members
-* which accompanies this distribution, and is available
-* at the URL "http://www.symbianfoundation.org/legal/licencesv10.html".
-*
-* Initial Contributors:
-* Nokia Corporation - initial contribution.
-*
-* Contributors:
-*
-* Description:       Interface class describing class that may be used as
-*                serializer for binary data
-*
-*/
+// Copyright (c) 2006-2009 Nokia Corporation and/or its subsidiary(-ies).
+// All rights reserved.
+// This component and the accompanying materials are made available
+// under the terms of "Eclipse Public License v1.0"
+// which accompanies this distribution, and is available
+// at the URL "http://www.eclipse.org/legal/epl-v10.html".
+//
+// Initial Contributors:
+// Nokia Corporation - initial contribution.
+//
+// Contributors:
+//
+// Description:
+// Interface class describing class that may be used as
+// serializer for binary data
+//
 
 
-
-
-
-
-
-#ifndef XMLENGINE_MDATASERIALIZER_H_INCLUDED
-#define XMLENGINE_MDATASERIALIZER_H_INCLUDED
-
-#include "xmlengnode.h"
 
 /**
- * MXmlEngDataSerializer interface used by XML Engine to serialize binary data for example binary data
- * stored in node, external memory chunk (RChunk) or file. This interface may be implemented by client application.
- *
- * @lib XmlEngineDOM.lib
- * @since S60 v3.2
- */
+ @file
+ @publishedAll
+ @released
+*/
+#ifndef XMLENGMDATASERIALIZER_H
+#define XMLENGMDATASERIALIZER_H
+
+#include <xml/dom/xmlengnode.h>
+
+/**
+This interface is used to serialize binary data stored in a node, external
+memory chunk (RChunk) or file.  This interface may be implemented by client
+applications.
+@see TXmlEngSerializationOptions
+*/
 class MXmlEngDataSerializer
     {
 public:
-    /**
-     * Callback for serializing data
-     *
-     * @since S60 v3.1
-     * @param aNode is a node to serialize
-     * @return Replacement string for node data
-     */
+    /** 
+	Serializes the node.  The implementor of this class must allocate and own
+	the memory returned by this method until serialization is complete.
+    @param aNode A node to serialize
+    @return The serialized node
+	@leave - One of the system-wide error codes
+    */
     virtual TPtrC8 SerializeDataL(TXmlEngNode aNode) = 0;
     };
 
 
-#endif /* XMLENGINE_MDATASERIALIZER_H_INCLUDED */  
+#endif /* XMLENGMDATASERIALIZER_H */  

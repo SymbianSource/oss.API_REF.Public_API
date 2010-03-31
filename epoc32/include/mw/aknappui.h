@@ -2,9 +2,9 @@
 * Copyright (c) 2002-2007 Nokia Corporation and/or its subsidiary(-ies).
 * All rights reserved.
 * This component and the accompanying materials are made available
-* under the terms of the License "Symbian Foundation License v1.0" to Symbian Foundation members and "Symbian Foundation End User License Agreement v1.0" to non-members
+* under the terms of "Eclipse Public License v1.0"
 * which accompanies this distribution, and is available
-* at the URL "http://www.symbianfoundation.org/legal/licencesv10.html".
+* at the URL "http://www.eclipse.org/legal/epl-v10.html".
 *
 * Initial Contributors:
 * Nokia Corporation - initial contribution.
@@ -20,11 +20,11 @@
 
 //  INCLUDES
 #include <eikappui.h>
-#include <Eikspane.h>
+#include <eikspane.h>
 #include <eikcba.h>
 #include <avkon.hrh>
-#include <akndef.h>
-#include <AknTouchPaneObserver.h>
+#include <AknDef.h>
+#include <akntouchpaneobserver.h>
 
 // FORWARD DECLARATIONS
 class CEikButtonGroupContainer;
@@ -98,7 +98,14 @@ private:
          *
          * @since S60 5.0
          */
-        EAknTouchCompatibleFlag                 = 0x00800000
+        EAknTouchCompatibleFlag                 = 0x00800000,
+
+        /**
+         * Application supports single click.
+         *
+         * @since S60 5.2
+         */
+        EAknSingleClickCompatibleFlag           = 0x01000000
         };
 
     public:
@@ -160,7 +167,9 @@ private:
         // Since 3.2
         EAknExplicitStartupEffectCompletion = EAknExplicitStartupEffectCompletionFlag,
         // Since 5.0
-        EAknTouchCompatible = EAknTouchCompatibleFlag
+        EAknTouchCompatible = EAknTouchCompatibleFlag,
+        // Since 5.2
+        EAknSingleClickCompatible = EAknSingleClickCompatibleFlag
         };
     enum TKeyEventFlag
         {
@@ -440,7 +449,16 @@ public: // New Functions
     * @return ETrue if the application is touch compatible
     */
     IMPORT_C TBool IsTouchCompatible() const;
-    
+
+    /**
+     * Checks if the application is single click compatible i.e.
+     * it has been constructed with the flag EAknSingleClickCompatible.
+     *
+     * @since S60 v5.0
+     * @return ETrue if the application is single click compatible
+     */
+    IMPORT_C TBool IsSingleClickCompatible() const;
+
 protected: // From CCoeAppUiBase
     /**
     * From @c CCoeAppUiBase.   

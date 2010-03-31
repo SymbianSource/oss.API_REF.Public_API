@@ -7,7 +7,11 @@
 
 struct TStringTable;
 
-/** A String table */
+/** 
+An Example String Table
+@publishedAll
+@released
+*/ 
 class SMILAttributes 
 	{
 public:

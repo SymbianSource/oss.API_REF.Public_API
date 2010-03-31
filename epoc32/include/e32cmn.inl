@@ -1,9 +1,9 @@
 // Copyright (c) 1994-2009 Nokia Corporation and/or its subsidiary(-ies).
 // All rights reserved.
 // This component and the accompanying materials are made available
-// under the terms of the License "Symbian Foundation License v1.0" to Symbian Foundation members and "Symbian Foundation End User License Agreement v1.0" to non-members
+// under the terms of the License "Eclipse Public License v1.0"
 // which accompanies this distribution, and is available
-// at the URL "http://www.symbianfoundation.org/legal/licencesv10.html".
+// at the URL "http://www.eclipse.org/legal/epl-v10.html".
 //
 // Initial Contributors:
 // Nokia Corporation - initial contribution.
@@ -2962,6 +2962,40 @@ Constructs the size object with the specified width and height values.
 
 
 
+// Class TPoint3D
+#ifndef __KERNEL_MODE__
+inline TPoint3D::TPoint3D()
+	: iX(0),iY(0),iZ(0)
+/**
+Constructs default 3Dpoint, initialising its iX, iY and iZ members to zero.
+*/
+	{}
+
+inline TPoint3D::TPoint3D(TInt aX,TInt aY,TInt aZ)
+	: iX(aX),iY(aY),iZ(aZ)
+/**
+Constructs  TPoint3D with the specified x,y  and z co-ordinates.
+
+@param aX The x co-ordinate value.
+@param aY The y co-ordinate value.
+@param aZ The z co-ordinate value.
+*/
+	{}
+
+
+
+
+inline TPoint3D::TPoint3D(const  TPoint& aPoint)
+:iX(aPoint.iX),iY(aPoint.iY),iZ(0)
+/* 
+Copy Construct from TPoint , initialises Z co-ordinate to  Zero
+@param aPoint The TPoint from which we create TPoint3D object
+*/
+	{}
+
+
+#endif
+
 
 // Class TFindHandle
 inline TFindHandle::TFindHandle()
@@ -3186,6 +3220,16 @@ inline RFastLock::RFastLock()
 
 
 
+/**
+Default constructor.
+*/
+inline RReadWriteLock::RReadWriteLock()
+	: iValues(0), iPriority(EAlternatePriority), iReaderSem(), iWriterSem()
+	{}
+
+
+
+
 // Class RMessagePtr2
 
 
@@ -3233,6 +3277,7 @@ inline TBool operator!=(RMessagePtr2 aLeft,RMessagePtr2 aRight)
 Default constructor
 */
 inline RMessage2::RMessage2()
+	:iFunction(0), iSpare1(0), iSessionPtr(NULL), iFlags(0), iSpare3(0)
 	{}
 
 
@@ -3472,6 +3517,17 @@ as const if that function is to be accessed through this operator.
 
 // Class TIdentityRelation<T>
 template <class T>
+inline TIdentityRelation<T>::TIdentityRelation()
+/**
+Constructs the object to use the equality operator (==) defined for class T
+to determine whether two class T type objects match.
+*/
+	{iIdentity=(TGeneralIdentityRelation)&EqualityOperatorCompare;}
+
+
+
+
+template <class T>
 inline TIdentityRelation<T>::TIdentityRelation( TBool (*anIdentity)(const T&, const T&) )
 /**
 Constructs the object taking the specified function as an argument.
@@ -3499,6 +3555,14 @@ objects of a given class type match.
 */
 	{ return iIdentity; }
 
+
+
+template <class T>
+inline TBool TIdentityRelation<T>::EqualityOperatorCompare(const T& aLeft, const T& aRight)
+/**
+Compares two objects of class T using the equality operator defined for class T.
+*/
+	{return aLeft == aRight;}
 
 
 
@@ -5063,6 +5127,9 @@ a sequential search.
 Matching is based on the comparison of a TInt value at the key offset position 
 within the objects.
 
+For classes which define their own equality operator (==), the alternative method
+Find(const T& anEntry, TIdentityRelation<T> anIdentity) is recommended.
+
 The find operation always starts at the low index end of the array. There 
 is no assumption about the order of objects in the array.
 
@@ -5084,6 +5151,18 @@ a sequential search and a matching algorithm.
 
 The algorithm for determining whether two class T type objects match is provided 
 by a function supplied by the caller.
+
+Such a function need not be supplied if an equality operator (==) is defined for class T. 
+In this case, default construction of anIdentity provides matching, as in the example below:
+
+@code
+//Construct a TPoint and append to an RArray<TPoint>
+TPoint p1(0,0);
+RArray<TPoint> points;
+points.AppendL(p1);
+//Find position of p1 in points using TIdentityRelation<TPoint> default construction
+TInt r = points.Find(p1, TIdentityRelation<TPoint>());
+@endcode
 
 The find operation always starts at the low index end of the array. There 
 is no assumption about the order of objects in the array.
@@ -5110,6 +5189,9 @@ a sequential search.
 Matching is based on the comparison of a TInt value at the key offset position 
 within the objects.
 
+For classes which define their own equality operator (==), the alternative method
+FindReverse(const T& anEntry, TIdentityRelation<T> anIdentity) is recommended.
+
 The find operation always starts at the high index end of the array. There 
 is no assumption about the order of objects in the array.
 
@@ -5131,6 +5213,11 @@ a sequential search and a matching algorithm.
 
 The algorithm for determining whether two class T type objects match is provided 
 by a function supplied by the caller.
+
+Such a function need not be supplied if an equality operator (==) is defined for class T. 
+In this case, default construction of anIdentity provides matching.
+
+See Find(const T& anEntry, TIdentityRelation<T> anIdentity) for more details.
 
 The find operation always starts at the high index end of the array. There 
 is no assumption about the order of objects in the array.
@@ -6815,6 +6902,29 @@ inline void TIpcArgs::Set(TInt aIndex,TDes16* aValue)
 #endif
 
 
+/**
+Allows the client to specify whether each argument of the TIpcArgs object will
+be pinned before being sent to the server.
+
+To pin all the arguments in the TIpcArgs object pass no parameters to this
+method.
+
+@return A reference to this TIpcArgs object that can be passed as a parameter to
+		one of the overloads the DSession::Send() and DSession::SendReceive() methods.
+*/
+inline TIpcArgs& TIpcArgs::PinArgs(TBool aPinArg0, TBool aPinArg1, TBool aPinArg2, TBool aPinArg3)
+	{
+	__ASSERT_COMPILE(!((1 << ((KBitsPerType*KMaxMessageArguments)-1)) & KPinMask));
+	if (aPinArg0)
+		iFlags |= KPinArg0;
+	if (aPinArg1)
+		iFlags |= KPinArg1;
+	if (aPinArg2)
+		iFlags |= KPinArg2;
+	if (aPinArg3)
+		iFlags |= KPinArg3;
+	return *this;
+	}
 
 
 inline TIpcArgs::TArgType TIpcArgs::Type(TNothing)
@@ -6981,7 +7091,7 @@ inline TSecureId::operator TUid() const
 inline const TSecureId* SSecureId::operator&() const
 	{ return (const TSecureId*)this; }
 inline SSecureId::operator const TSecureId&() const
-	{ return (const TSecureId&)iId; }
+	{ /* coverity[return_local_addr] */ return (const TSecureId&)iId; }
 inline SSecureId::operator TUint32() const
 	{ return iId; }
 inline SSecureId::operator TUid() const
@@ -7021,7 +7131,7 @@ inline TVendorId::operator TUid() const
 inline const TVendorId* SVendorId::operator&() const
 	{ return (const TVendorId*)this; }
 inline SVendorId::operator const TVendorId&() const
-	{ return (const TVendorId&)iId; }
+	{ /* coverity[return_local_addr] */ return (const TVendorId&)iId; }
 inline SVendorId::operator TUint32() const
 	{ return iId; }
 inline SVendorId::operator TUid() const

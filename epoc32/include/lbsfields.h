@@ -2,9 +2,9 @@
 * Copyright (c) 2005-2009 Nokia Corporation and/or its subsidiary(-ies).
 * All rights reserved.
 * This component and the accompanying materials are made available
-* under the terms of the License "Symbian Foundation License v1.0" to Symbian Foundation members and "Symbian Foundation End User License Agreement v1.0" to non-members
+* under the terms of "Eclipse Public License v1.0"
 * which accompanies this distribution, and is available
-* at the URL "http://www.symbianfoundation.org/legal/licencesv10.html".
+* at the URL "http://www.eclipse.org/legal/epl-v10.html".
 *
 * Initial Contributors:
 * Nokia Corporation - initial contribution.
@@ -56,7 +56,7 @@ class HPositionGenericInfo;
  * methods. Methods in this class are not intended to be called directly.
  * Clients should use HPositionGenericInfo::GetValue() and
  * HPositionGenericInfo::SetValue() methods.
- * @internalTechnology
+ * @publishedAll
  * @released
  */
 class PositionFieldManager
@@ -122,9 +122,9 @@ private:
      * HPositionGenericInfo.
      * @param aFieldId Id of the field for which the value should be read from
      * HPositionGenericInfo.
-     * @param[out] aValue The object where the data from the
+     * @param [out] aValue The object where the data from the
      * HPositionGenericInfo is returned.
-     * @param[in] aInfo The HPositionGenericInfo object from where this field needs
+     * @param [in] aInfo The HPositionGenericInfo object from where this field needs
      * to be read.
      * @return KErrNone is the operation was successful.
      * @return KErrNotFound if an object with aFieldId cannot be found in aInfo.
@@ -156,7 +156,7 @@ private:
      * HPositionGenericInfo.
      * @param aFieldId Id of the field for which the value should be read from
      * HPositionGenericInfo.
-     * @param[in] aValue The object where the data from the
+     * @param [in] aValue The object where the data from the
      * HPositionGenericInfo is returned.
      * @param aInfo The HPositionGenericInfo object from where this field needs
      * to be read.
@@ -190,7 +190,7 @@ private:
      * HPositionGenericInfo.
      * @param aFieldId Id of the field for which the value should be read from
      * HPositionGenericInfo.
-     * @param[out] aValue The object where the data from the
+     * @param [out] aValue The object where the data from the
      * HPositionGenericInfo is returned.
      * @param aInfo The HPositionGenericInfo object from where this field needs
      * to be read.
@@ -224,7 +224,7 @@ private:
      * HPositionGenericInfo.
      * @param aFieldId Id of the field for which the value should be read from
      * HPositionGenericInfo.
-     * @param[out] aValue The object where the data from the
+     * @param [out] aValue The object where the data from the
      * HPositionGenericInfo is returned.
      * @param aInfo The HPositionGenericInfo object from where this field needs
      * to be read.
@@ -258,7 +258,7 @@ private:
      * HPositionGenericInfo.
      * @param aFieldId Id of the field for which the value should be read from
      * HPositionGenericInfo.
-     * @param[out] aValue The object where the data from the
+     * @param [out] aValue The object where the data from the
      * HPositionGenericInfo is returned.
      * @param aInfo The HPositionGenericInfo object from where this field needs
      * to be read.
@@ -292,7 +292,7 @@ private:
      * HPositionGenericInfo.
      * @param aFieldId Id of the field for which the value should be read from
      * HPositionGenericInfo.
-     * @param[out] aValue The object where the data from the
+     * @param [out] aValue The object where the data from the
      * HPositionGenericInfo is returned.
      * @param aInfo The HPositionGenericInfo object from where this field needs
      * to be read.
@@ -326,7 +326,7 @@ private:
      * HPositionGenericInfo.
      * @param aFieldId Id of the field for which the value should be read from
      * HPositionGenericInfo.
-     * @param[out] aValue The object where the data from the
+     * @param [out] aValue The object where the data from the
      * HPositionGenericInfo is returned.
      * @param aInfo The HPositionGenericInfo object from where this field needs
      * to be read.
@@ -360,7 +360,7 @@ private:
      * HPositionGenericInfo.
      * @param aFieldId Id of the field for which the value should be read from
      * HPositionGenericInfo.
-     * @param[out] aValue The object where the data from the
+     * @param [out] aValue The object where the data from the
      * HPositionGenericInfo is returned.
      * @param aInfo The HPositionGenericInfo object from where this field needs
      * to be read.
@@ -394,7 +394,7 @@ private:
      * HPositionGenericInfo.
      * @param aFieldId Id of the field for which the value should be read from
      * HPositionGenericInfo.
-     * @param[out] aValue The object where the data from the
+     * @param [out] aValue The object where the data from the
      * HPositionGenericInfo is returned.
      * @param aInfo The HPositionGenericInfo object from where this field needs
      * to be read.
@@ -428,7 +428,7 @@ private:
      * HPositionGenericInfo.
      * @param aFieldId Id of the field for which the value should be read from
      * HPositionGenericInfo.
-     * @param[out] aValue The object where the data from the
+     * @param [out] aValue The object where the data from the
      * HPositionGenericInfo is returned.
      * @param aInfo The HPositionGenericInfo object from where this field needs
      * to be read.
@@ -462,7 +462,7 @@ private:
      * HPositionGenericInfo.
      * @param aFieldId Id of the field for which the value should be read from
      * HPositionGenericInfo.
-     * @param[out] aValue The object where the data from the
+     * @param [out] aValue The object where the data from the
      * HPositionGenericInfo is returned.
      * @param aInfo The HPositionGenericInfo object from where this field needs
      * to be read.
@@ -478,7 +478,7 @@ private:
      * HPositionGenericInfo.
      * @param aFieldId Id of the field for which the value should be read from
      * HPositionGenericInfo.
-     * @param[out] aValue The object where the data from the
+     * @param [out] aValue The object where the data from the
      * HPositionGenericInfo is returned.
      * @param aInfo The HPositionGenericInfo object from where this field needs
      * to be read.
@@ -494,7 +494,7 @@ private:
      * HPositionGenericInfo.
      * @param aFieldId Id of the field for which the value should be read from
      * HPositionGenericInfo.
-     * @param[out] aValue The object where the data from the
+     * @param [out] aValue The object where the data from the
      * HPositionGenericInfo is returned.
      * @param aInfo The HPositionGenericInfo object from where this field needs
      * to be read.
@@ -528,7 +528,7 @@ private:
      * HPositionGenericInfo.
      * @param aFieldId Id of the field for which the value should be read from
      * HPositionGenericInfo.
-     * @param[out] aValue The object where the data from the
+     * @param [out] aValue The object where the data from the
      * HPositionGenericInfo is returned.
      * @param aInfo The HPositionGenericInfo object from where this field needs
      * to be read.
@@ -562,7 +562,7 @@ private:
      * HPositionGenericInfo.
      * @param aFieldId Id of the field for which the value should be read from
      * HPositionGenericInfo.
-     * @param[out] aValue The object where the data from the
+     * @param [out] aValue The object where the data from the
      * HPositionGenericInfo is returned.
      * @param aInfo The HPositionGenericInfo object from where this field needs
      * to be read.
@@ -574,6 +574,8 @@ private:
 	                              const HPositionGenericInfo& aInfo);
 	};
 
+
+#ifndef SYMBIAN_ENABLE_SPLIT_HEADERS
 /**
  * This is an internal class used for indexing entries in HPositionGenericInfo.
  * Methods in this class are not intended to be called directly. Clients should use
@@ -631,5 +633,6 @@ private:
 	/** Type of the data that this index refers to. */
 	PositionFieldManager::TFieldType iFieldType;
 	};
+#endif // SYMBIAN_ENABLE_SPLIT_HEADERS
 
 #endif //__LBSFIELDS_H__

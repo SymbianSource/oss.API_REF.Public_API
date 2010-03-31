@@ -1,9 +1,9 @@
 // Copyright (c) 2008-2009 Nokia Corporation and/or its subsidiary(-ies).
 // All rights reserved.
 // This component and the accompanying materials are made available
-// under the terms of the License "Symbian Foundation License v1.0" to Symbian Foundation members and "Symbian Foundation End User License Agreement v1.0" to non-members
+// under the terms of "Eclipse Public License v1.0"
 // which accompanies this distribution, and is available
-// at the URL "http://www.symbianfoundation.org/legal/licencesv10.html".
+// at the URL "http://www.eclipse.org/legal/epl-v10.html".
 //
 // Initial Contributors:
 // Nokia Corporation - initial contribution.
@@ -12,8 +12,6 @@
 //
 // Description:
 //
-
-
 
 /**
  @file
@@ -29,7 +27,6 @@
 #include <remconcoreapi.h>
 #include <remcon/avrcpspec.h>
 
-#include <remcon/remcongroupnavigation.h>
 #include <remcon/remconinterfacebase.h>
 #include <remcon/remconinterfaceif.h>
 
@@ -53,6 +50,18 @@ public:
 	*/
 	IMPORT_C static CRemConGroupNavigationApiTarget* NewL(CRemConInterfaceSelector& aInterfaceSelector, 
 		MRemConGroupNavigationTargetObserver& aObserver);
+	/**
+	Factory function.
+	@see CRemConInterfaceSelector
+	@param aInterfaceSelector The interface selector. The client must have 
+	created one of these first.
+	@param aObserver The observer of this interface.
+	@param aNextGroupSupported Whether the Client support the next Group functionality.
+	@param aPreviousGroupSupported Whether the Client support the previous Group functionality.
+	@return A new CRemConGroupNavigationApiTarget, owned by the interface selector.
+		*/
+	IMPORT_C static CRemConGroupNavigationApiTarget* NewL(CRemConInterfaceSelector& aInterfaceSelector, 
+			MRemConGroupNavigationTargetObserver& aObserver, TBool aNextGroupSupported, TBool aPreviousGroupSupported);
 	
 	/** Destructor */
 	IMPORT_C ~CRemConGroupNavigationApiTarget();
@@ -87,6 +96,7 @@ private:
 
 	void ConstructL();
 
+	void ConstructL(TBool aNextGroupSupported, TBool aPreviousGroupSupported);
 private: // from CRemConInterfaceBase
 	TAny* GetInterfaceIf(TUid aUid);
 
@@ -100,7 +110,7 @@ private: // owned
 	CBufFlat*		iOutData;
 	TPtr8			iPtr;
 	RBufWriteStream iStream;
-			
+	TUint 			iNumRemotes;
 	};
 
 #endif // REMCONGROUPNAVIGATIONTARGET_H

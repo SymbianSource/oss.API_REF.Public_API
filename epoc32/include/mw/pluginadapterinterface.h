@@ -20,9 +20,9 @@
 #define MPLUGINADAPTER_H
 
 //  INCLUDES
-#include "coecntrl.h"
-#include "coecobs.h"
-#include "npupp.h"
+#include <coecntrl.h>
+#include <coecobs.h>
+#include <npupp.h>
 
 // FORWARD DECLARATIONS
 class MPluginNotifier;

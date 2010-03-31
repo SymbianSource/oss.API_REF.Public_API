@@ -1,9 +1,9 @@
 // Copyright (c) 2001-2009 Nokia Corporation and/or its subsidiary(-ies).
 // All rights reserved.
 // This component and the accompanying materials are made available
-// under the terms of the License "Symbian Foundation License v1.0" to Symbian Foundation members and "Symbian Foundation End User License Agreement v1.0" to non-members
+// under the terms of "Eclipse Public License v1.0"
 // which accompanies this distribution, and is available
-// at the URL "http://www.symbianfoundation.org/legal/licencesv10.html".
+// at the URL "http://www.eclipse.org/legal/epl-v10.html".
 //
 // Initial Contributors:
 // Nokia Corporation - initial contribution.
@@ -14,8 +14,6 @@
 // please do not delete
 // 
 //
-
-
 
 /**
  @file CProtocolHandler.h
@@ -244,7 +242,7 @@ protected: // callbacks/methods for sub-classes
  */
 	//##ModelId=3C4C186B0010
 	IMPORT_C void TransactionCompletedL(RHTTPTransaction aTrans, THTTPEvent aEventStatus);
-
+    IMPORT_C TInt TransactionCompleted(RHTTPTransaction aTrans, THTTPEvent aEventStatus);
 /**	
 	Obtain the number of currently active transactions
 	@return			The number of currently active transactions
@@ -282,6 +280,7 @@ protected: // callbacks/methods for sub-classes
  */
 	IMPORT_C TInt FindTransaction(RHTTPTransaction aTransaction, const CProtTransaction*& aProtTransaction) const;
 
+	IMPORT_C CProtTransaction* FindProtocolTransaction(RHTTPTransaction aTransaction) const;
 private: // methods to be implemented in specific protocol handlers
 
 /**	Intended usage:	Creates the specific type of codec required for a specific type

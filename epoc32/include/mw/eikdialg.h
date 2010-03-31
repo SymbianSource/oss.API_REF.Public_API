@@ -2,9 +2,9 @@
 * Copyright (c) 1997-1999 Nokia Corporation and/or its subsidiary(-ies).
 * All rights reserved.
 * This component and the accompanying materials are made available
-* under the terms of the License "Symbian Foundation License v1.0" to Symbian Foundation members and "Symbian Foundation End User License Agreement v1.0" to non-members
+* under the terms of "Eclipse Public License v1.0"
 * which accompanies this distribution, and is available
-* at the URL "http://www.symbianfoundation.org/legal/licencesv10.html".
+* at the URL "http://www.eclipse.org/legal/epl-v10.html".
 *
 * Initial Contributors:
 * Nokia Corporation - initial contribution.
@@ -57,7 +57,7 @@
 #include <eikbtgpc.h>
 #endif
 
-#include <aknpopupfader.h>
+#include <AknPopupFader.h>
 
 // constant definitions
 const TInt KAknMediatorFacade(0x10275076);
@@ -1162,6 +1162,33 @@ private: // internal functions
     void DoFadeBehindPopup(TBool aFade);
 
 	void DoResourceChangeLayout();
+	
+    /**
+     * Handles embedded softkey state change.
+     *
+     * @internal
+     * @since S60 v5.2
+     */
+    void HandleEmbeddedSofkeyStateChange();
+
+    /**
+     * Call back method to handle @c CEikCba content changes.
+     *
+     * @internal
+     * @since S60 v5.2
+     * @param aAny pointer to @c CEikDialog instance.
+     * @return error code.
+     */         
+    static TInt HandleEmbeddedSoftkeyStateChangeCallBack( TAny* aAny );
+    
+    /**
+     * Enables/disables content observer.
+     *
+     * @internal
+     * @since S60 v5.2
+     * @param aEnabled ETrue to enable, EFalse to disable.
+     */
+    void EnableContentObserver( TBool aEnabled );
 
     // From MAknFadedComponent
 	

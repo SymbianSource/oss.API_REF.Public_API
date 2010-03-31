@@ -1,58 +1,44 @@
+//=======================================================================
+// Copyright 2002 Indiana University.
+// Authors: Andrew Lumsdaine, Lie-Quan Lee, Jeremy G. Siek
 //
-// Boost.Pointer Container
-//
-//  Copyright Thorsten Ottosen 2003-2005. Use, modification and
-//  distribution is subject to the Boost Software License, Version
-//  1.0. (See accompanying file LICENSE_1_0.txt or copy at
-//  http://www.boost.org/LICENSE_1_0.txt)
-//
-// For more information, see http://www.boost.org/libs/ptr_container/
-//
+// Distributed under the Boost Software License, Version 1.0. (See
+// accompanying file LICENSE_1_0.txt or copy at
+// http://www.boost.org/LICENSE_1_0.txt)
+//=======================================================================
 
-#ifndef BOOST_PTR_CONTAINER_EXCEPTION_HPP
-#define BOOST_PTR_CONTAINER_EXCEPTION_HPP
+#ifndef BOOST_GRAPH_EXCEPTION_HPP
+#define BOOST_GRAPH_EXCEPTION_HPP
 
-#if defined(_MSC_VER) && (_MSC_VER >= 1200)
-# pragma once
-#endif
+#include <stdexcept>
+#include <string>
 
-#include <exception>
+namespace boost {
 
-namespace boost
-{
-    class bad_ptr_container_operation : public std::exception
-    {
-        const char* what_;
-    public:
-        bad_ptr_container_operation( const char* what ) : what_( what )
-        { }
-        
-        virtual const char* what() const throw()
-        {
-            return what_;
-        }
-    };
+  struct bad_graph : public std::invalid_argument {
+    bad_graph(const std::string& what_arg)
+      : std::invalid_argument(what_arg) { }
+  };
 
+  struct not_a_dag : public bad_graph {
+    not_a_dag()
+        : bad_graph("The graph must be a DAG.") { } 
+  };
 
-    
-    class bad_index : public bad_ptr_container_operation
-    {
-    public:
-        bad_index( const char* what ) : bad_ptr_container_operation( what )
-        { }
-    };
+  struct negative_edge : public bad_graph {
+    negative_edge()
+      : bad_graph("The graph may not contain an edge with negative weight."){ }
+  };
 
+  struct negative_cycle : public bad_graph {
+    negative_cycle()
+      : bad_graph("The graph may not contain negative cycles.") { }
+  };
+  struct not_connected : public bad_graph {
+    not_connected()
+      : bad_graph("The graph must be connected.") { }
+  };
 
+} // namespace boost
 
-    class bad_pointer : public bad_ptr_container_operation
-    {
-    public:
-        bad_pointer() : bad_ptr_container_operation( "Null pointer not allowed in a pointer container!" )
-        { }
-        
-        bad_pointer( const char* text ) : bad_ptr_container_operation( text )
-        { }
-    };
-}
-
-#endif
+#endif // BOOST_GRAPH_EXCEPTION_HPP

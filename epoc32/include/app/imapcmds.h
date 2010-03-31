@@ -1,9 +1,9 @@
 // Copyright (c) 1998-2009 Nokia Corporation and/or its subsidiary(-ies).
 // All rights reserved.
 // This component and the accompanying materials are made available
-// under the terms of the License "Symbian Foundation License v1.0" to Symbian Foundation members and "Symbian Foundation End User License Agreement v1.0" to non-members
+// under the terms of "Eclipse Public License v1.0"
 // which accompanies this distribution, and is available
-// at the URL "http://www.symbianfoundation.org/legal/licencesv10.html".
+// at the URL "http://www.eclipse.org/legal/epl-v10.html".
 //
 // Initial Contributors:
 // Nokia Corporation - initial contribution.
@@ -216,7 +216,7 @@ enum TImap4Cmds {
 	after a service is disconnected. It is more efficient if it stays loaded
 	if further use of the MTM is expected.
 	
-	@c aSelection: @c aSelection[0] should contain the TMsvId of the IMAP4service.
+	@c aSelection: @c aSelection[0] should contain the entry ID of the service 
 	 
 	@c aParameter: unused.
 	
@@ -270,7 +270,7 @@ enum TImap4Cmds {
 	
 	Pre-condition: a connected service.
 
-	@c aSelection: @c aSelection[0] should contain the TMsvId of the IMAP4service.
+	@c aSelection: @c aSelection[0] should contain the TMsvId of the IMAP4service. 	
 	 
 	@c aParameter: unused.
 	

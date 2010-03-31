@@ -1,9 +1,9 @@
 // Copyright (c) 2001-2009 Nokia Corporation and/or its subsidiary(-ies).
 // All rights reserved.
 // This component and the accompanying materials are made available
-// under the terms of the License "Symbian Foundation License v1.0" to Symbian Foundation members and "Symbian Foundation End User License Agreement v1.0" to non-members
+// under the terms of "Eclipse Public License v1.0"
 // which accompanies this distribution, and is available
-// at the URL "http://www.symbianfoundation.org/legal/licencesv10.html".
+// at the URL "http://www.eclipse.org/legal/epl-v10.html".
 //
 // Initial Contributors:
 // Nokia Corporation - initial contribution.
@@ -17,9 +17,9 @@
 #define __STRINGPOOL_H__ 
 
 #include <e32base.h>
-#include <stringtablesupport.h>
-#include <stringpoolerr.h>
 
+
+struct TStringTable;
 class RStringF;
 class RString;
 class RStringToken;
@@ -37,7 +37,7 @@ closes.
 @released
 */
 	{
-	///Implement this function to perform some operation when the string pool is being closed
+	//Implement this function to perform some operation when the string pool is being closed
 	public:
 	/** Called when the string pool is about to close. */
 		virtual void StringPoolClosing()=0;
@@ -270,14 +270,14 @@ A pointer to a string table.
 
 struct TStringTable
 	{
-	/// The number of elements in the table
+	// The number of elements in the table
 	/** The number of elements in the table. */
 	TUint iCount;
-	/// A pointer to an array of pointers to the strings
+	// A pointer to an array of pointers to the strings
 	/** A pointer to an array of pointers to the strings. */
 	const void* const * iTable;	
 
-	/// ETrue if the table should be considered case-sensitive.
+	// ETrue if the table should be considered case-sensitive.
 	/** Flag that is ETrue if the table should be considered case-sensitive, otherwise 
 	EFalse. */
 	TBool iCaseSensitive;
@@ -287,3 +287,5 @@ struct TStringTable
 #include <stringpool.inl>
 
 #endif // __STRINGPOOL_H__
+
+

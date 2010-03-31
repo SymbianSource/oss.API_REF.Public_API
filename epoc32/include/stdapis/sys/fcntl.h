@@ -1,6 +1,5 @@
 /*-
- * © Portions copyright (c) 2005 Nokia Corporation.  All rights reserved.
- * © Portions copyright (c) 2006-2007 Symbian Software Ltd. All rights reserved.
+ * 
  * Copyright (c) 1983, 1990, 1993
  *	The Regents of the University of California.  All rights reserved.
  * (c) UNIX System Laboratories, Inc.
@@ -32,6 +31,7 @@
  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY
  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
+ * * © * Portions Copyright (c) 2005-2007 Nokia Corporation and/or its subsidiary(-ies). All rights reserved.
  *
  *	@(#)fcntl.h	8.3 (Berkeley) 1/21/94
  * $FreeBSD: src/sys/sys/fcntl.h,v 1.16 2004/04/07 04:19:49 imp Exp $
@@ -56,6 +56,11 @@ typedef	__mode_t	mode_t;
 
 #ifndef _OFF_T_DECLARED
 typedef	__off_t		off_t;
+
+#if defined(SYMBIAN_OE_LARGE_FILE_SUPPORT) && !defined(SYMBIAN_OE_NO_LFS)
+typedef	__off_t		off64_t;
+#endif /* SYMBIAN_OE_LARGE_FILE_SUPPORT && !SYMBIAN_OE_NO_LFS */
+
 #define	_OFF_T_DECLARED
 #endif
 
@@ -76,6 +81,10 @@ typedef	__pid_t		pid_t;
 #define	O_WRONLY	0x0001		/* open for writing only */
 #define	O_RDWR		0x0002		/* open for reading and writing */
 #define	O_ACCMODE	0x0003		/* mask for above modes */
+
+#if defined(SYMBIAN_OE_LARGE_FILE_SUPPORT) && !defined(SYMBIAN_OE_NO_LFS)
+#define O_LARGEFILE 0x0004
+#endif /* SYMBIAN_OE_LARGE_FILE_SUPPORT && !SYMBIAN_OE_NO_LFS */
 
 /*
  * Kernel encoding of open mode; separate read and write bits that are
@@ -173,7 +182,10 @@ typedef	__pid_t		pid_t;
 #ifdef __SYMBIAN32__
 #define O_TMPFILE 	0x10000000		/* flag for cleanup of tmpfiles*/
 #endif //__SYMBIAN32__
-
+/*SYMBIAN Flag for shm_open()*/
+#ifdef __SYMBIAN32__
+#define O_SHMFLG 	0x01000000		/* flag for shm_open()*/
+#endif //__SYMBIAN32__
 /*
  * Constants used for fcntl(2)
  */
@@ -191,6 +203,12 @@ typedef	__pid_t		pid_t;
 #define	F_GETLK		7		/* get record locking information */
 #define	F_SETLK		8		/* set record locking information */
 #define	F_SETLKW	9		/* F_SETLK; wait if blocked */
+
+#if defined(SYMBIAN_OE_LARGE_FILE_SUPPORT) && !defined(SYMBIAN_OE_NO_LFS)
+#define F_GETLK64	F_GETLK
+#define F_SETLK64	F_SETLK
+#define F_SETLKW64	F_SETLKW
+#endif /* SYMBIAN_OE_LARGE_FILE_SUPPORT && !SYMBIAN_OE_NO_LFS */
 
 /* file descriptor flags (F_GETFD, F_SETFD) */
 #define	FD_CLOEXEC	1		/* close-on-exec flag */
@@ -217,6 +235,10 @@ struct flock {
 	short	l_whence;	/* type of l_start */
 };
 
+#if defined(SYMBIAN_OE_LARGE_FILE_SUPPORT) && !defined(SYMBIAN_OE_NO_LFS)
+#define flock64	flock
+#endif /* SYMBIAN_OE_LARGE_FILE_SUPPORT && !SYMBIAN_OE_NO_LFS */
+
 
 #if __BSD_VISIBLE
 /* lock operations for flock(2) */
@@ -235,6 +257,12 @@ __BEGIN_DECLS
 IMPORT_C int	open(const char *, int, ...);
 IMPORT_C int	creat(const char *, mode_t);
 IMPORT_C int	fcntl(int, int, ...);
+
+#if defined(SYMBIAN_OE_LARGE_FILE_SUPPORT) && !defined(SYMBIAN_OE_NO_LFS)
+#define open64	open
+#define creat64	creat
+#endif /* SYMBIAN_OE_LARGE_FILE_SUPPORT && !SYMBIAN_OE_NO_LFS */
+
 #if __BSD_VISIBLE
 int	flock(int, int);
 #endif

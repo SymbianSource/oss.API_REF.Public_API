@@ -2,9 +2,9 @@
 * Copyright (c) 2003-2006 Nokia Corporation and/or its subsidiary(-ies). 
 * All rights reserved.
 * This component and the accompanying materials are made available
-* under the terms of the License "Symbian Foundation License v1.0" to Symbian Foundation members and "Symbian Foundation End User License Agreement v1.0" to non-members
+* under the terms of "Eclipse Public License v1.0""
 * which accompanies this distribution, and is available
-* at the URL "http://www.symbianfoundation.org/legal/licencesv10.html".
+* at the URL "http://www.eclipse.org/legal/epl-v10.html".
 *
 * Initial Contributors:
 * Nokia Corporation - initial contribution.
@@ -300,7 +300,8 @@ enum TPtiEngineInputMode
     EPtiEngineStrokePhraseHalfQwerty,
     EPtiEngineZhuyinPhraseHalfQwerty,
     EPtiEngineMultitappingKorean,       // Basic multitapping input for korean language.
-    EPtiEngineMaxInputModes = EPtiEngineMultitappingKorean
+    EPtiEngineQwertyKorean,    
+    EPtiEngineMaxInputModes = EPtiEngineQwertyKorean  
     };
 
 
@@ -498,7 +499,7 @@ enum TPtiSpelling
     EPtiPinyin   = 0x02,
     EPtiBopomofo = 0x04,
     EPtiZhuyin   = 0x08,
-    EPtiCangJie  = 0x10,
+    EPtiCangJie  = 0x16,
     EPtiEasyCangjie = 0x20,
     EPtiAdvCangjie = 0x40
     };
@@ -618,7 +619,9 @@ enum TPtiEngineCommand
     EPtiCommandSetCursorCrossedMaxLength,   // sets when cursor crosses max words length in editor
     EPtiCommandResetCursorCrossedMaxLength,
     EPtiCommandUserActionSetIndexOfActiveCandidate,
-    EPtiCommandAddWordToUDBWithoutPunctMark   
+    EPtiCommandAddWordToUDBWithoutPunctMark,
+    EPtiCommandGetSecondaryCandidate,   
+    EPtiCommandAutoCompletionOnToOff        //to signify that autocompletion is set from on to off in between typing  
     };
 
 /**

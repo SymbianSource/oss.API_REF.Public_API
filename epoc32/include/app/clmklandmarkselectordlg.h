@@ -2,9 +2,9 @@
 * Copyright (c) 2004 Nokia Corporation and/or its subsidiary(-ies).
 * All rights reserved.
 * This component and the accompanying materials are made available
-* under the terms of the License "Symbian Foundation License v1.0" to Symbian Foundation members and "Symbian Foundation End User License Agreement v1.0" to non-members
+* under the terms of "Eclipse Public License v1.0"
 * which accompanies this distribution, and is available
-* at the URL "http://www.symbianfoundation.org/legal/licencesv10.html".
+* at the URL "http://www.eclipse.org/legal/epl-v10.html".
 *
 * Initial Contributors:
 * Nokia Corporation - initial contribution.
@@ -61,6 +61,20 @@ class CLmkLandmarkSelectorDlg : public CBase
         * @return new instance of this class
         */
         IMPORT_C static CLmkLandmarkSelectorDlg* NewL();
+        
+        /**
+        * This is a static function, which creates and returns an instance of this class.
+        * All the landmarks present in the user specified landmark database are shown in the selector.
+        * @param[in] aDatabaseUri The URI of the databases to open.
+    		*
+        * @leave  Leaves with KErrNotSupported if framework functionality is not available or
+        *					the protocol specified in URI is not supported.
+        * @leave  Leaves with KErrArgument if an empty string is passed as argument or
+        *					extension of the local database name is not "ldb".
+        * @panic  Panics with system-wide panic codes.
+        * @return new instance of this class
+        */
+        IMPORT_C static CLmkLandmarkSelectorDlg* NewL( const TDesC&  aDatabaseUri );
 
         /**
         * Destructor.
@@ -105,6 +119,18 @@ class CLmkLandmarkSelectorDlg : public CBase
         * @return Returns non-zero if accepted, else zero.
         */
         IMPORT_C TInt ExecuteLD( RArray<TLmkItemIdDbCombiInfo>& aSelectedItems );
+
+        /**
+        * This function sets the title string of the landmark selector dialog.
+        * This function has to be called before ExecuteLD() to make the set title appear on ui. 
+        * Calling this api after ExecuteLD() will not have any impact.
+        *
+        * @param [in] aTitle The title string of the selector dialog. 
+        * @panic Panics with KLmkPanicNullMember, if the selector is not
+        *        constructed properly.
+        */
+        IMPORT_C void SetDialogTitleL(const TDesC& aTitle );
+
     private:
         /**
         * C++ default constructor.
@@ -122,6 +148,9 @@ class CLmkLandmarkSelectorDlg : public CBase
     private:    // Data
         // ETrue if executed in multiple item selector mode
         TBool iIsMultiSelector;
+
+        // User defined database set to be viewed in selector
+        HBufC* iDatabaseUri;
 
         /// Own: Search implementor object
         CLmkDlgSelectorImplBase* iSelector;

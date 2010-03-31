@@ -23,7 +23,7 @@
 
 #include <e32base.h>
 #include <d32dbms.h>
-#include <FavouritesDbNotifier.h>
+#include <favouritesdbnotifier.h>
 
 // FORWARD DECLARATION
 

@@ -1,9 +1,9 @@
 // Copyright (c) 2005-2009 Nokia Corporation and/or its subsidiary(-ies).
 // All rights reserved.
 // This component and the accompanying materials are made available
-// under the terms of the License "Symbian Foundation License v1.0" to Symbian Foundation members and "Symbian Foundation End User License Agreement v1.0" to non-members
+// under the terms of "Eclipse Public License v1.0"
 // which accompanies this distribution, and is available
-// at the URL "http://www.symbianfoundation.org/legal/licencesv10.html".
+// at the URL "http://www.eclipse.org/legal/epl-v10.html".
 //
 // Initial Contributors:
 // Nokia Corporation - initial contribution.
@@ -84,61 +84,104 @@ the change.
 class MCalChangeCallBack2
 	{
 public:
-	/** Instance view change type
-	@publishedAll
-	@released
+	/**
+	Type of change to the entry.
 	*/
 	enum TChangeType
 		{
-		/**	Entries are added */
+		/**	Calendar entry added. */
 		EChangeAdd,
-		/** Entries are deleted */
+		/** Calendar entry deleted. */
 		EChangeDelete,
-		/** Entries are modified */
+		/** Calendar entry modified. */
 		EChangeModify,
-		/** Undefined entries */
-		EChangeUndefined
+		/** Undefined Calendar entry change. */
+		EChangeUndefined,
+		/** The time zone rules for one or more Calendar entries have changed. */
+		EChangeTzRules,
+        /** Backup Starts
+        * When the backup event is in process, the Calendar file is locked. 
+        * Most of operations are not permitted when it happens. However, few
+        * operations, such as notification request, enabling broadcast
+        * and closing Calendar is still permitted.
+        * */
+        EBackupStart,
+        /** Restore Starts 
+        * When the restore event is in process, the Calendar file is locked. 
+        * Most of operations are not permitted when it happens. However, few
+        * operations, such as notification request, enabling broadcast
+        * and closing Calendar is still permitted.
+        */
+        ERestoreStart,       
+        /** Backup Ends 
+        * When the backup event is completed, the Calendar file is unlocked. 
+        * The application can continue to operate on the current Calendar file.
+        */
+        EBackupEnd,
+        /** Restore Ends
+        * When the restore event is completed, the Calendar file is unlocked. 
+        * The application can operate on the restored Calendar file after the application
+        * is notified with the message. However, if the application has cached any
+        * Calendar objects, such as Calendar file ID, Calendar entries, Calendar instances,
+        * they are not necessarily synched with the data in the newly restored Calendar file. 
+        */
+        ERestoreEnd,
+        /** The restored Calendar file can not be opened 
+        * When the restore event is completed, the newly restored Calendar file can not
+        * be opened. It is because either the file version is not supported or the data is corrupted.
+        * Apart from closing the session and delete the file, no any other operation is permitted
+        * when it happens.
+        */
+        ERestoredFileCanNotBeOpened
 		};
 
-	/** Instance view entry type
-	@publishedAll
-	@released
+	/**
+	Type of entry.
 	*/
 	enum TChangeEntryType
 		{
-		/** Entry type is todo */
+		/** Entry type is todo. */
 		EChangeEntryTodo,
-		/** Entry type is event */
+		/** Entry type is event. */
 		EChangeEntryEvent,
-		/** All entry types */
+		/** All entry types. */
 		EChangeEntryAll
 		};
-	/** A call back function for change notification
-	@param aChangeItems  List of changes since the last notification.
 
+	/**
+	A call back function for change notification.
+	
+	@param aChangeItems List of changes since the last notification.
 	*/
 	virtual void CalChangeNotification(RArray<TCalChangeEntry>& aChangeItems) = 0;
 	};
 
-/** Struct for storing change notification data.
-This contains the calendar local ID, the type of change and the entry type.
+/**
+A structure for storing Calendar change notification data.  This contains the
+Calendar entry local UID, the type of change and the entry type.
 
-The iChangeType will only be set to EChangeEntryTodo or EChangeEntryEvent
-values. EChangeEntryAll is provided for callback registration only.
+The iChangeEntryType member may be set to MCalChangeCallBack2::EChangeEntryTodo
+or MCalChangeCallBack2::EChangeEntryEvent.  MCalChangeCallBack2::EChangeEntryAll
+is provided for call back registration only.
 
-If iChangeType is EChangeUndefined or EChangeOverflowError, iEntryId and
-iEntryType are undefined and should not be used by clients.
+If the iChangeType member is MCalChangeCallBack2::EChangeUndefined or
+MCalChangeCallBack2::EChangeTzRules, iEntryId and iEntryType are undefined and
+should not be used by clients.
+
+When the iChangeType member is MCalChangeCallBack2::EChangeTzRules a change in
+time zone rules has been detected and processed by the Calendar server.  The
+client should refresh any instance data they own as a result of this change.
 
 @publishedAll
 @released
 */
 struct TCalChangeEntry
 	{
-	/** Local UID of the entry */
+	/** Local UID of the entry. */
 	TCalLocalUid iEntryId;
-	/** Type of change to the entry */
+	/** Type of change to the entry. */
 	MCalChangeCallBack2::TChangeType iChangeType;
-	/** Type of entry */
+	/** Type of entry. */
 	MCalChangeCallBack2::TChangeEntryType iEntryType;
 	};
 

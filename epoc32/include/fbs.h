@@ -1,9 +1,9 @@
 // Copyright (c) 1995-2009 Nokia Corporation and/or its subsidiary(-ies).
 // All rights reserved.
 // This component and the accompanying materials are made available
-// under the terms of the License "Symbian Foundation License v1.0" to Symbian Foundation members and "Symbian Foundation End User License Agreement v1.0" to non-members
+// under the terms of "Eclipse Public License v1.0"
 // which accompanies this distribution, and is available
-// at the URL "http://www.symbianfoundation.org/legal/licencesv10.html".
+// at the URL "http://www.eclipse.org/legal/epl-v10.html".
 //
 // Initial Contributors:
 // Nokia Corporation - initial contribution.
@@ -16,11 +16,22 @@
 #ifndef __FBS_H__
 #define __FBS_H__
 
+/**
+@file
+@publishedAll
+@released
+ */
 #include <e32std.h>
 #include <gdi.h>
 #include <fntstore.h>
 #include <bitmap.h>
-#include <fbsmessage.h>
+#include <graphics/fbsdefs.h>
+
+/**
+@publishedAll
+@released
+ */
+const TUid KCFbsFontUid = { 268435518 };
 
 /**
 Indicates version of the font and bitmap server without heap locking.
@@ -28,36 +39,6 @@ Indicates version of the font and bitmap server without heap locking.
 @released
 */
 #define SYMBIAN_FBSERV_V2
-
-/**
-@internalTechnology
-*/
-const TUid KCFbsFontUid = { 268435518 };
-/**
-@internalComponent
-*/
-const TUid KMultiBitmapRomImageUid = { 268435521 };
-/**
-@internalComponent
-*/
-const TUint32 KFontBitmapServerUidValue = 0x10003a16;
-/**
-@internalComponent
-*/
-const TUid KFontBitmapServerUid = { KFontBitmapServerUidValue };
-/**
-@internalAll
-*/
-IMPORT_C TInt FbsStartup();
-
-/** 
-Required to ensure BC between NGage and 7.0S platforms.  
-Function is exported at ordinal corresponding to where NGage platform
-has extended this library and must not be moved.
-@internalAll
-*/
-IMPORT_C void DummyReserved1();
-
 
 /** 
 Character width and adjustment information. 
@@ -79,6 +60,7 @@ public:
 
 class CFbsRalCache;
 class CFbsSessionHelper;
+class CFbsRasterizer;
 
 /** 
 A session with the font and bitmap server. 
@@ -118,12 +100,11 @@ public:
 	void SetCallBackPtr(TInt* aBitmapHandle)const;
 	HBufC8* GetDecompressionBuffer(TInt aSize);
 	HBufC8* GetExtraBuffer(TInt aSize);
+    TInt ServerSessionHandle() const;
 public:
-	/**
-	Used for testing server side out of memory failures
-	
-	@internalTechnology
-	@prototype
+	/** WARNING: For internal use ONLY.  Compatibility is not guaranteed in future releases.	 
+	Used for testing server side out of memory failures.	
+	@test
 	*/
 	enum THeapFailType
 		{
@@ -196,6 +177,9 @@ public:
 	IMPORT_C TBool GetFaceAttrib(TOpenFontFaceAttrib& aAttrib) const;
 	IMPORT_C TBool IsOpenFont() const;
 	IMPORT_C TBool HasCharacter(TInt aCode) const;
+	IMPORT_C TInt TextWidthInPixels(const TDesC& aText,const TMeasureTextInput* aParam) const;
+	IMPORT_C void TextWidthInPixels(const TDesC& aText,const TMeasureTextInput* aParam,SCharWidth& aCharWidth) const;
+
 
 protected:
 	IMPORT_C CFbsFont();
@@ -206,17 +190,38 @@ protected:
 	IMPORT_C void Reset();
 	
 private:
-	void InsertCharacterInCache(TInt aCode, CLinkedFontInformation* &aInfo, CBitmapFont* &aBitmapFont) const;
-
-private:
 	TInt DoFontGetShaping(TFontShapeFunctionParameters* aParam) const;
 	TInt DoFontDeleteShaping(TFontShapeDeleteFunctionParameters* aParam) const;
+	TInt DoTextWidthInPixels(const TDesC& aText,const TMeasureTextInput* aParam) const;
 
 protected:
 	RFbsSession* iFbs;
 	CBitmapFont* iAddressPointer;
 	TInt iHandle;
 	TInt iServerHandle;
+	};
+
+/**
+An interface for initialization of extended bitmaps. By implementing this interface, 
+creators of extended bitmaps can set the contents of an extended bitmap without 
+allocating a temporary buffer and avoid unnecessary memory copying during calls to 
+CFbsBitmap::CreateExtendedBitmap().
+
+WARNING: Class for internal and partner use ONLY.  Compatibility is not guaranteed in future releases.
+
+@publishedAll
+@see CFbsBitmap::CreateExtendedBitmap()
+*/
+class MFbsExtendedBitmapInitializer
+	{
+public:
+	/**
+	Initializes the raw data of an extended bitmap.
+	@param aData A pointer to the raw data to be initialized.
+	@param aDataSize The size in bytes of the raw data to be initialized.
+	@return KErrNone if successful, otherwise another of the system-wide error codes.
+	*/
+	virtual TInt InitExtendedBitmap(TAny* aData, TInt aDataSize) = 0;
 	};
 
 class CDirectFileStore;
@@ -307,18 +312,26 @@ public:
 	IMPORT_C void UnlockHeap(TBool aAlways=EFalse) const;
 	IMPORT_C void LockHeapLC(TBool aAlways=EFalse) const;
 	IMPORT_C static void UnlockHeap(TAny* aFbsBitmap);
+	IMPORT_C TBool IsVolatile() const;
+	IMPORT_C TInt TouchCount() const;
+	IMPORT_C TInt64 SerialNumber() const;
 	IMPORT_C TBool IsCompressedInRAM() const;
 	IMPORT_C TInt SwapWidthAndHeight();
+	IMPORT_C TInt CreateExtendedBitmap(const TSize& aSizeInPixels, TDisplayMode aDispMode, TUid aType, const TAny* aData, TInt aDataSize);
+	IMPORT_C TInt CreateExtendedBitmap(const TSize& aSizeInPixels, TDisplayMode aDispMode, TUid aType, TInt aDataSize, MFbsExtendedBitmapInitializer& aInitializer);
+	IMPORT_C TUid ExtendedBitmapType() const;
+	IMPORT_C TInt DataSize() const;
 	IMPORT_C static HBufC8* GetDecompressionBuffer(TInt aSize);
+	IMPORT_C static CFbsRasterizer* Rasterizer();
 	IMPORT_C TInt GetAllBitmapHandles(RArray<TInt>& aBitmapIdArray) const;
 	IMPORT_C static HBufC8* GetExtraBuffer(TInt aSize);
 protected:
     IMPORT_C void GetScanLine(TDes8& aBuf,const TPoint& aPixel,TInt aLength,const TPoint& aDitherOffset,TDisplayMode aDispMode) const;
 	CBitwiseBitmap* Address() const;
 	IMPORT_C CBitwiseBitmap* CleanAddress() const;
-	inline CBitwiseBitmap* CleanAddress(TUint32*& aDataAddress) const;
+	inline CBitwiseBitmap* BeginDataAccessAndGetCleanAddress(TUint32*& aDataAddress) const;
 	void DoSaveL(RFile& aFile);
-	TInt DoCreate(const TSize& aSizeInPixels,TDisplayMode aDispMode,TUid aCreatorUid);
+	TInt DoCreate(const TSize& aSizeInPixels, TDisplayMode aDispMode, TUid aUid, TInt aDataSize = 0);
 private:
 	TInt DoLoad(RFile& aFile,TInt32 aId,TBool aShareIfLoaded,TUint aFileOffset);
 	TInt DoLoad(const TDesC& aFileName,TInt32 aId,TBool aShareIfLoaded,TUint aFileOffset);
@@ -326,74 +339,21 @@ private:
 	TBool LoadShiftedRomBmpL(const TDesC& aFileName,TInt32 aId,TUint aFileOffset);
 	static void DoStoreL(CDirectFileStore* aFileStore,CFbsBitmap* aBitmap,TInt aNumSources,const TDesC* aSources[],TInt32 aSourceIds[]);
 protected:
-/**
-@internalComponent
-*/
+	/** WARNING: For internal use ONLY.  Compatibility is not guaranteed in future releases.
+	 */
 	enum // Flags
 		{
-		EIsRomBitmap = 0x0001
+		EIsRomBitmap = 0x0001,
+		EIsExtendedBitmap = 0x0002,
+		EIsReadOnlyBitmapMask = EIsRomBitmap | EIsExtendedBitmap
 		};
-protected:
-/**
-@internalComponent
-*/
-	RFbsSession* iFbs;
-/**
-@internalComponent
-*/
-	CBitwiseBitmap* iAddressPointer;
-/**
-@internalComponent
-*/
-	TUint16 iFlags;
-/**
-@internalComponent
-*/
-	TInt16 iUseCount;
-/**
-@internalComponent
-*/
-	TInt iHandle;
-/**
-@internalComponent
-*/
-	TInt iServerHandle;
-	};
-
-class CDirectFileStore;
-
-/**
-@deprecated
-@internalComponent
-*/
-class CFbsBitmapAsyncStreamer : public CBase
-	{
-public:
-	enum TMode {ELoad, ESave};
-public:
-	IMPORT_C ~CFbsBitmapAsyncStreamer();
-	IMPORT_C static CFbsBitmapAsyncStreamer* NewL(TMode aMode);
-	IMPORT_C TInt Load(const TDesC& aFilename,TInt32 aId,TInt& aScanLines);
-	IMPORT_C TBool LoadScanLinesL(TInt aNumberOfScanLines,CFbsBitmap*& aBitmap);
-	IMPORT_C TInt Save(const TDesC& aFilename,CFbsBitmap* aBitmap,TInt32& aId,TInt& aScanLines);
-	IMPORT_C TBool SaveScanLinesL(TInt aNumberOfScanLines);
-private:
-	CFbsBitmapAsyncStreamer(TMode aMode);
-	void ConstructL();
-	void DoLoadL(const TDesC& aFilename,TInt32 aId);
-	void DoSaveL(RFile& aFile);
-private:
-	RFbsSession* iFbs;
-	RStoreReadStream iReadStream;
-	RStoreWriteStream iWriteStream;
-	TStreamId iId;
-	CDirectFileStore* iStore;
-	TInt iCurrentScanLine;
-	TUint32* iScanLineBase;
-	CFbsBitmap* iBitmap;
-	SEpocBitmapHeader iHeader;
-	TDisplayMode iDispMode;
-	TMode iMode;
+protected:		
+	RFbsSession* iFbs;	/**< WARNING: Member variable for internal use ONLY. Compatibility is not guaranteed in future releases. Please access using the provided get/set APIs only. */	
+	CBitwiseBitmap* iAddressPointer; /**< WARNING: Member variable for internal use ONLY. Compatibility is not guaranteed in future releases. Please access using the provided get/set APIs only. */	
+	TUint16 iFlags; /**< WARNING: Member variable for internal use ONLY. Compatibility is not guaranteed in future releases. Please access using the provided get/set APIs only. */
+	TInt16 iUseCount; /**< WARNING: Member variable for internal use ONLY. Compatibility is not guaranteed in future releases. Please access using the provided get/set APIs only. */
+	TInt iHandle; /**< WARNING: Member variable for internal use ONLY. Compatibility is not guaranteed in future releases. Please access using the provided get/set APIs only. */
+	TInt iServerHandle; /**< WARNING: Member variable for internal use ONLY. Compatibility is not guaranteed in future releases. Please access using the provided get/set APIs only. */
 	};
 
 
@@ -482,15 +442,18 @@ public:
 	IMPORT_C void ReleaseTwipsCache();
 	IMPORT_C void SetSystemDefaultTypefaceNameL(const TDesC& aFontTypefaceName);
 	IMPORT_C TInt RegisterLinkedTypeface(const CLinkedTypefaceSpecification& aLinkedTypefaceSpec, TInt& aId);
+	IMPORT_C void GetLinkedTypefaceL(CLinkedTypefaceSpecification& aLinkedTypefaceSpec);
+	IMPORT_C TInt RegisterLinkedTypeface(const CLinkedTypefaceSpecification& aLinkedTypefaceSpec);
+	IMPORT_C TInt UpdateLinkedTypeface(const CLinkedTypefaceSpecification& aLinkedTypefaceSpec);
 private:
 	CFbsTypefaceStore(CGraphicsDevice* aDevice);
 	void ConstructL();
 	TInt CreateFont(CFont*& aFont,const TFontInfo& aFontInfo);
 	TBool IsFontLoaded(CFont*& aFont, const TFontInfo& aFontInfo) const;
 	TInt FontHeight(TInt aTypefaceIndex,TInt aHeightIndex,TInt aMessage) const;
-	TInt GetNearestFontInTwipsAndCreateFont(CFont*& aFont, TFbsMessage aFbsMessage, const TFontSpec& aFontSpec, TInt aMaxHeight = 0);
+	TInt GetNearestFontInTwipsAndCreateFont(CFont*& aFont, TInt aFbsMessage, const TFontSpec& aFontSpec, TInt aMaxHeight = 0);
 	TInt SendGetNearestFontCommandNCreateFont(
-		CFont*& aFont, TFbsMessage aFbsMessage, const TFontSpec& aFontSpec, TInt aMaxHeight = 0);
+		CFont*& aFont, TInt aFbsMessage, const TFontSpec& aFontSpec, TInt aMaxHeight = 0);
 	void GetPixelSizeInTwips(TSize& aSize) const;
 
 private:

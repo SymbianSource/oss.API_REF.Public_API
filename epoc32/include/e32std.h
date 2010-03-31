@@ -1,9 +1,9 @@
 // Copyright (c) 1994-2009 Nokia Corporation and/or its subsidiary(-ies).
 // All rights reserved.
 // This component and the accompanying materials are made available
-// under the terms of the License "Symbian Foundation License v1.0" to Symbian Foundation members and "Symbian Foundation End User License Agreement v1.0" to non-members
+// under the terms of the License "Eclipse Public License v1.0"
 // which accompanies this distribution, and is available
-// at the URL "http://www.symbianfoundation.org/legal/licencesv10.html".
+// at the URL "http://www.eclipse.org/legal/epl-v10.html".
 //
 // Initial Contributors:
 // Nokia Corporation - initial contribution.
@@ -1203,8 +1203,8 @@ public:
 	/** @deprecated Use BoundedVal(TInt64& aVal,TRadix aRadix,const TInt64& aLimit) */
 	inline TInt Val(TInt64& aVal,TRadix aRadix,const TInt64& aLimit) { return BoundedVal(aVal,aRadix,aLimit); };
 private:
-	void Scndig(TInt& aSig,TInt& aExp,TInt64& aDl);
-	void ScndigAfterPoint(TInt& aSig,TInt64& aDl);
+	void Scndig(TInt& aSig, TInt& aExp, TUint64& aDl);
+	void ScndigAfterPoint(TInt& aSig, TUint64& aDl);
 	void ValidateMark(const TLexMark8 aMark) const;
 private:
 	const TUint8* iNext;
@@ -1334,7 +1334,7 @@ public:
 	/** @deprecated Use BoundedVal(TInt64& aVal,TRadix aRadix,const TInt64& aLimit) */
 	inline TInt Val(TInt64& aVal,TRadix aRadix,const TInt64& aLimit) { return BoundedVal(aVal,aRadix,aLimit); };
 private:
-	void Scndig(TInt& aSig,TInt& aExp,TInt64& aDl);
+	void Scndig(TInt& aSig, TInt& aExp, TUint64& aDl);
 	void ValidateMark(const TLexMark16 aMark) const;
 private:
 	const TUint16* iNext;
@@ -1759,7 +1759,7 @@ class TLocale;
 Stores and manipulates the date and time. 
 
 It represents a date and time as a number of microseconds since midnight, 
-January 1st, 0 AD nominal Gregorian. BC dates are represented by negative 
+January 1st, 1 AD nominal Gregorian. BC dates are represented by negative 
 TTime values. A TTime object may be constructed from a TInt64, a TDateTime 
 a string literal, or by default, which initialises the time to an arbitrary 
 value. To access human-readable time information, the TTime may be converted 
@@ -2295,6 +2295,7 @@ public:
 	inline void SetDigitType(TDigitType aDigitType);
 	inline TDeviceTimeState DeviceTime() const;
  	inline void SetDeviceTime(TDeviceTimeState aState);
+ 	inline TInt RegionCode() const;
 
 	void SetDefaults(); /**< @internalComponent */
 
@@ -2326,72 +2327,11 @@ private:
 	TUnitsFormat iUnitsDistanceLong;
 	TUint iExtraNegativeCurrencyFormatFlags;
 	TUint16 iLanguageDowngrade[3];
-	TUint16 iSpare16;
+	TUint16 iRegionCode;
 	TDigitType iDigitType;
  	TDeviceTimeState iDeviceTimeState;
  	TInt iSpare[0x1E];
 	};
-
-
-/**
-@internalComponent
-*/
-const TUint KLocaleLanguageKey = 0x10208903;
-
-/**
-@internalComponent
-*/
-const TUint KLocaleDataKey = 0x10208904;
-
-/**
-@internalComponent
-*/
-const TUint KLocaleDataExtraKey = 0x10208905;
-
-/**
-@internalComponent
-*/
-const TUint KLocaleTimeDateFormatKey = 0x10208907;
-
-/**
-@internalComponent
-*/
-const TUint KLocaleDefaultCharSetKey = 0x10208908;
-
-/**
-@internalComponent
-*/
-const TUint KLocalePreferredCharSetKey = 0x10208909;
-
-/**
-@internalComponent
-*/
-enum TLocaleFunctions
-	{
-	FnDummy,
-	FnAmPmTable,
-	FnCharSet,
-	FnCollTable,
-	FnCurrencySymbol,
-	FnDateSuffixTable,
-	FnDayAbbTable,
-	FnDayTable,
-	FnFoldTable,
-	FnLanguage,
-	FnLocaleData,
-	FnLowerTable,
-	FnMonthAbbTable,
-	FnMonthTable,
-	FnMsgTable,
-	FnTypeTable,
-	FnUniCode,
-	FnUpperTable,
-	FnShortDateFormatSpec,
-	FnLongDateFormatSpec,
-	FnTimeFormatSpec,
-	FnFatUtilityFunctions
-	};
-
 
 /** 
 @publishedAll
@@ -2489,9 +2429,12 @@ public:
 	// contents of this TExtendedLocale
 	IMPORT_C TInt SaveSystemSettings();
 
-	// Load a complete set of locale data from a named Locale DLL
+	//load a complete locale data from a single locale dll
 	IMPORT_C TInt LoadLocale(const TDesC& aLocaleDllName);
-
+	
+	//load a complete locale data from three locale dlls, which are language lcoale dll, region locale dll, and collation locale dll.
+	IMPORT_C TInt LoadLocale(const TDesC& aLanguageLocaleDllName, const TDesC& aRegionLocaleDllName, const TDesC& aCollationLocaleDllName);	
+	
 	// Load an additional Locale DLL and over-ride a selected subset
 	// (currently ELocaleLanguageSettings to select an alternative set
 	// of language specific text strings, ELocaleCollateSetting to
@@ -2501,6 +2444,13 @@ public:
 	// ELocaleOverRideSortCollationTable for ordering text strings)
 	// of settings with its contents
 	IMPORT_C TInt LoadLocaleAspect(TUint aAspectGroup, const TDesC& aLocaleDllName);
+	
+	//load a locale aspect from a locale dll. 
+	//Such as load language locale aspect from locale language dll; 
+	//load region locale aspect from locale region dll; 
+	//load collation locale aspect from locale collation dll. 
+	//There are in all three aspect, which are langauge, region, and collation.
+	IMPORT_C TInt LoadLocaleAspect(const TDesC& aLocaleDllName);
 
 	// Set the currency Symbol
 	IMPORT_C TInt SetCurrencySymbol(const TDesC &aSymbol);
@@ -2536,6 +2486,13 @@ private:
 	void DoUpdateLanguageSettings(TLibraryFunction* aExportList);
 	void DoUpdateLocaleSettings(TLibraryFunction* aExportList);
 	void DoUpdateTimeDateFormat(TLibraryFunction* aExportList);
+	
+#ifdef SYMBIAN_DISTINCT_LOCALE_MODEL	
+	void DoUpdateLanguageSettingsV2(TLibraryFunction* aExportList);
+	void DoUpdateLocaleSettingsV2(TLibraryFunction* aExportList);		
+	TInt CheckLocaleDllName(const TDesC& aLocaleDllName, TInt& languageID);
+	void AddExtension(TDes& aFileName, TInt aExtension);	
+#endif
 
 private:
 
@@ -3405,28 +3362,15 @@ The chunk itself is a kernel side object.
 class RChunk : public RHandleBase
 	{
 public:
-    /**
-    @internalComponent
-    */
-	enum TAttribs
-		{
-		ENormal=0x00,
-		EDoubleEnded=0x01,
-		EDisconnected=0x02,
-		ELocal=0x00,
-		EGlobal=0x10,
-		EData=0x00,
-		ECode=0x20,
-		};
-
 	/**	
-    Set of flags used by SetRestrictions().
-    
-    @see RChunk::SetRestrictions
-    */
+	Set of flags used by SetRestrictions().
+	
+	@see RChunk::SetRestrictions
+	*/
 	enum TRestrictions
 		{
-		EPreventAdjust = 0x01,  // Prevent Adjust, Commit, Allocate and Decommit
+		/** Prevent Adjust, Commit, Allocate and Decommit */
+		EPreventAdjust = 0x01,
 		};
 public:
 	inline TInt Open(const TFindChunk& aFind,TOwnerType aType=EOwnerProcess);
@@ -3456,6 +3400,7 @@ public:
 	IMPORT_C TInt MaxSize() const;
 	inline TBool IsReadable() const;
 	inline TBool IsWritable() const;
+	IMPORT_C TBool IsPaged() const;
 private:
 	friend class UserHeap;
 	};
@@ -3483,6 +3428,16 @@ public :
 
 	friend class RChunk;
 
+	/**
+	Attributes that specify whether the chunk to be created	is data paged or not.
+	*/
+	enum TChunkPagingAtt
+		{
+		EUnspecified,	/**< The chunk will use the creating process's paging attributes.*/
+		EPaged,			/**< The chunk will be data paged.*/
+		EUnpaged,		/**< The chunk will not be data paged.*/
+		};
+
 	IMPORT_C TChunkCreateInfo();
 	IMPORT_C void SetNormal(TInt aInitialSize, TInt aMaxSize);
 	IMPORT_C void SetCode(TInt aInitialSize, TInt aMaxSize);
@@ -3491,8 +3446,15 @@ public :
 	IMPORT_C void SetOwner(TOwnerType aType);
 	IMPORT_C void SetGlobal(const TDesC& aName);
 	IMPORT_C void SetClearByte(TUint8 aClearByte);
+	IMPORT_C void SetPaging(const TChunkPagingAtt aPaging);
+	IMPORT_C void SetReadOnly();
 	void SetThreadHeap(TInt aInitialSize, TInt aMaxSize, const TDesC& aName);
 
+	/**
+	For use by file server only.
+	@internalTechnology
+	*/
+	IMPORT_C void SetCache(TInt aMaxSize);
 protected :
 	/** The version number of this TChunkCreateInfo.
 	@internalComponent
@@ -3534,7 +3496,7 @@ protected :
 	*/
 	TInt iInitialTop;
 	/**	Attributes to the chunk to be created should have.
-		Should be set from one or more the values in TChunkCreateAttributes.
+		Should be set from one or more the values in TChunkCreate::TChunkCreateAtt.
 	@internalComponent
 	*/
 	TUint iAttributes;
@@ -3548,6 +3510,96 @@ protected :
 	TUint iSpare2;
 	};
 
+/**
+This structure specifies the type and properties of the user heap to be created.  It
+is passed as a parameter to the UserHeap::Create() method.
+
+@publishedAll
+@released
+*/
+struct TChunkHeapCreateInfo
+	{
+public:
+	/**
+	Currently supported version numbers
+	@internalComponent
+	*/
+	enum TChunkHeapCreateVersions
+		{
+		EVersion0,
+		ESupportedVersions,
+		};
+
+	/**
+	Attributes that specify whether the chunk heap to be created is data paged or not.
+	*/
+	enum TChunkHeapPagingAtt
+		{
+		EUnspecified,	/**< The chunk heap will use the creating process's paging attributes.*/
+		EPaged,			/**< The chunk heap will be data paged.*/
+		EUnpaged,		/**< The chunk heap will not be data paged.*/
+		};
+
+	friend class UserHeap;
+
+	IMPORT_C TChunkHeapCreateInfo(TInt aMinLength, TInt aMaxLength);
+	IMPORT_C void SetCreateChunk(const TDesC* aName);
+	IMPORT_C void SetUseChunk(const RChunk aChunk);
+	inline void SetSingleThread(TBool aSingleThread);
+	inline void SetAlignment(TInt aAlign);
+	inline void SetGrowBy(TInt aGrowBy);
+	inline void SetOffset(TInt aOffset);
+	inline void SetMode(TUint aMode);
+	inline void SetPaging(const TChunkHeapPagingAtt aPaging);
+
+protected:
+	/** The version number of this TChunkHeapCreateInfo.
+	@internalComponent
+	*/
+	TUint iVersionNumber;
+	/** The minimum size for the heap.
+	@internalConponent
+	*/
+	TInt iMinLength;
+	/** The maximum size for the heap.
+	@internalConponent
+	*/
+	TInt iMaxLength;
+	/** The alignment of the heap.
+	@internalComponent
+	*/
+	TInt iAlign;
+	/** The grow by value of the heap.
+	@internalComponent
+	*/
+	TInt iGrowBy;
+	/** The single thread value of the heap.
+	@internalComponent
+	*/
+	TBool iSingleThread;
+	/** The offset from the base of the chunk to the start of the heap.
+	@internalComponent
+	*/
+	TInt iOffset;
+	/** The paging attributes of the chunk.
+	@internalComponent
+	*/
+	TChunkHeapPagingAtt iPaging;
+	/** The mode flags for the heap.
+	@internalComponent
+	*/
+	TUint iMode;
+	/** The name of the chunk to be created for the heap.
+	@internalComponent
+	*/
+	TDesC* iName;
+	/** The chunk to use for the heap.
+	@internalComponent
+	*/
+	RChunk iChunk;
+	/**@internalComponent*/
+	TInt iSpare[5];
+	};
 
 struct SStdEpocThreadCreateInfo;
 /**
@@ -3563,11 +3615,28 @@ global heaps.
 class UserHeap
 	{
 public:
-	enum TChunkHeapCreateMode {EChunkHeapSwitchTo=1, EChunkHeapDuplicate=2};
+	/**
+	Flags to control the heap creation.
+	*/
+	enum TChunkHeapCreateMode
+		{
+		/** On successful creation of the heap this switches the calling thread to
+			use the new heap.
+		*/
+		EChunkHeapSwitchTo	= 0x1,
+		/** On successful creation of the heap this causes the handle to the heap
+			to be duplicated.
+		*/ 
+		EChunkHeapDuplicate	= 0x2,
+
+		/** @internalComponent*/
+		EChunkHeapMask = EChunkHeapSwitchTo | EChunkHeapDuplicate,
+		};
 	IMPORT_C static RHeap* FixedHeap(TAny* aBase, TInt aMaxLength, TInt aAlign=0, TBool aSingleThread=ETrue);
 	IMPORT_C static RHeap* ChunkHeap(const TDesC* aName, TInt aMinLength, TInt aMaxLength, TInt aGrowBy=1, TInt aAlign=0, TBool aSingleThread=EFalse);
 	IMPORT_C static RHeap* ChunkHeap(RChunk aChunk, TInt aMinLength, TInt aGrowBy=1, TInt aMaxLength=0, TInt aAlign=0, TBool aSingleThread=EFalse, TUint32 aMode=0);
 	IMPORT_C static RHeap* OffsetChunkHeap(RChunk aChunk, TInt aMinLength, TInt aOffset, TInt aGrowBy=1, TInt aMaxLength=0, TInt aAlign=0, TBool aSingleThread=EFalse, TUint32 aMode=0);
+	IMPORT_C static RHeap* ChunkHeap(const TChunkHeapCreateInfo& aCreateInfo);
 	IMPORT_C static TInt SetupThreadHeap(TBool aNotFirst, SStdEpocThreadCreateInfo& aInfo);
 	IMPORT_C static TInt CreateThreadHeap(SStdEpocThreadCreateInfo& aInfo, RHeap*& aHeap, TInt aAlign=0, TBool aSingleThread=EFalse);
 	};
@@ -3619,6 +3688,91 @@ public:
 
 
 
+/**
+This structure specifies the type and properties of the thread to be created.  It
+is passed as a parameter to the RThread::Create() method.
+
+@publishedAll
+@released
+*/
+struct TThreadCreateInfo
+	{
+public :
+	/**
+	Currently supported version numbers
+	@internalComponent
+	*/
+	enum TThreadCreateVersions
+		{
+		EVersion0,
+		ESupportedVersions,
+		};
+
+	/**
+	Attributes that specify whether the stack and heap of the thread to be created
+	are data paged or not.
+	*/
+	enum TThreadPagingAtt
+		{
+		EUnspecified,	/**< The thread will use the creating process's paging attributes.*/
+		EPaged,			/**< The thread will data page its stack and heap.*/
+		EUnpaged,		/**< The thread will not data page its stack and heap.*/
+		};
+
+	friend class RThread;
+
+	IMPORT_C TThreadCreateInfo(	const TDesC &aName, TThreadFunction aFunction, 
+								TInt aStackSize, TAny* aPtr);
+	IMPORT_C void SetCreateHeap(TInt aHeapMinSize, TInt aHeapMaxSize);
+	IMPORT_C void SetUseHeap(const RAllocator* aHeap);
+	IMPORT_C void SetOwner(const TOwnerType aOwner);
+	IMPORT_C void SetPaging(const TThreadPagingAtt aPaging);
+
+protected:
+	/**	The version number of this TChunkCreateInfo.
+		@internalComponent
+	*/
+	TUint iVersionNumber;
+	/**	The Name to be given to the thread to be created
+		@internalComponent
+	*/
+	const TDesC* iName;
+	/**	The function this thread will execute.
+		@internalComponent
+	*/
+	TThreadFunction iFunction;
+	/**	The size of the stack of the thread to be created.
+		@internalComponent
+	*/
+	TInt iStackSize;
+	/** The parameter to be passed to the function of the thread to be created.
+		@internalComponent
+	*/
+	TAny* iParameter;
+	/** The owner of the thread to be created.
+		@internalComponent
+	*/
+	TOwnerType iOwner;
+	/**	The heap for the thread to be created to use.
+		NULL if a new heap is to be created.
+		@internalComponent
+	*/
+	RAllocator* iHeap;
+	/**	Minimum size of any heap to be created for the thread.
+		@internalComponent*/
+	TInt iHeapMinSize;
+	/**	Maximum size of any heap to be created for the thread.
+		@internalComponent
+	*/
+	TInt iHeapMaxSize;
+	/** The attributes of the thread
+		@internalComponent
+	*/
+	TUint iAttributes;
+	/**@internalComponent*/
+	TUint32 iSpare[6];
+	};
+
 class RProcess;
 
 
@@ -3636,6 +3790,7 @@ public:
 	inline RThread();
 	IMPORT_C TInt Create(const TDesC& aName, TThreadFunction aFunction, TInt aStackSize, TInt aHeapMinSize, TInt aHeapMaxSize, TAny *aPtr, TOwnerType aType=EOwnerProcess);
 	IMPORT_C TInt Create(const TDesC& aName, TThreadFunction aFunction, TInt aStackSize, RAllocator* aHeap, TAny* aPtr, TOwnerType aType=EOwnerProcess);
+	IMPORT_C TInt Create(const TThreadCreateInfo& aCreateInfo);
 	IMPORT_C TInt Open(const TDesC& aFullName, TOwnerType aType=EOwnerProcess);
 	IMPORT_C TInt Open(TThreadId aID, TOwnerType aType=EOwnerProcess);
 	IMPORT_C TThreadId Id() const;
@@ -3689,7 +3844,7 @@ public:
 	@code
 		RThread& thread;
 		static _LIT_SECURITY_POLICY_S0(mySidPolicy, KRequiredSecureId);
-		TInt error = mySidPolicy().CheckPolicy(thread);
+		TBool pass = mySidPolicy().CheckPolicy(thread);
 	@endcode
 
 	This has the benefit that the TSecurityPolicy::CheckPolicy methods are
@@ -3723,7 +3878,7 @@ public:
 	@code
 		RThread& thread;
 		static _LIT_SECURITY_POLICY_V0(myVidPolicy, KRequiredVendorId);
-		TInt error = myVidPolicy().CheckPolicy(thread);
+		TBool pass = myVidPolicy().CheckPolicy(thread);
 	@endcode
 
 	This has the benefit that the TSecurityPolicy::CheckPolicy methods are
@@ -3878,7 +4033,7 @@ public:
 	IMPORT_C TInt ExitReason() const;
 	IMPORT_C TExitCategoryName ExitCategory() const;
 	IMPORT_C TProcessPriority Priority() const;
-	IMPORT_C void SetPriority(TProcessPriority aPriority) const;
+	IMPORT_C TInt SetPriority(TProcessPriority aPriority) const;
     IMPORT_C TBool JustInTime() const;
     IMPORT_C void SetJustInTime(TBool aBoolean) const; 
 	IMPORT_C void Logon(TRequestStatus& aStatus) const;
@@ -3888,6 +4043,7 @@ public:
 	IMPORT_C void Rendezvous(TRequestStatus& aStatus) const;
 	IMPORT_C TInt RendezvousCancel(TRequestStatus& aStatus) const;
 	IMPORT_C static void Rendezvous(TInt aReason);
+	IMPORT_C TBool DefaultDataPaged() const;
 
 	/**
 	Return the Secure ID of the process.
@@ -3906,7 +4062,7 @@ public:
 	@code
 		RProcess& process;
 		static _LIT_SECURITY_POLICY_S0(mySidPolicy, KRequiredSecureId);
-		TInt error = mySidPolicy().CheckPolicy(process);
+		TBool pass = mySidPolicy().CheckPolicy(process);
 	@endcode
 
 	This has the benefit that the TSecurityPolicy::CheckPolicy methods are
@@ -3940,7 +4096,7 @@ public:
 	@code
 		RProcess& process;
 		static _LIT_SECURITY_POLICY_V0(myVidPolicy, KRequiredVendorId);
-		TInt error = myVidPolicy().CheckPolicy(process);
+		TBool pass = myVidPolicy().CheckPolicy(process);
 	@endcode
 
 	This has the benefit that the TSecurityPolicy::CheckPolicy methods are
@@ -4054,11 +4210,7 @@ public:
 	*/
 	IMPORT_C TInt DataCaging(TInt aState); // __DATA_CAGING__ __SECURE_API__ remove this
 	
-	/** 
-	
-	CR0885
-	
-	*/
+
 	IMPORT_C TInt CreateWithStackOverride(const TDesC& aFileName,const TDesC& aCommand, const TUidType &aUidType, TInt aMinStackSize, TOwnerType aType);
 
 	IMPORT_C static TAny* ExeExportData(void);
@@ -4087,6 +4239,7 @@ class RServer2 : public RHandleBase
 public:
 	IMPORT_C TInt CreateGlobal(const TDesC& aName);
 	IMPORT_C TInt CreateGlobal(const TDesC& aName, TInt aMode);
+	IMPORT_C TInt CreateGlobal(const TDesC& aName, TInt aMode, TInt aRole, TInt aOpts);
 	IMPORT_C void Receive(RMessage2& aMessage,TRequestStatus& aStatus);
 	IMPORT_C void Receive(RMessage2& aMessage);
 	IMPORT_C void Cancel();
@@ -4385,62 +4538,6 @@ private:
 	HBufC16* iCombinedBuffer;
 	};
 
-
-
-
-
-
-
-
-/**
-@internalAll
-*/
-const TInt KMediaPasswordNotifyUid(0x10004c00);
-
-/**
-@internalAll
-*/
-enum TMediaPswdNotifyExitMode {EMPEMUnlock, EMPEMCancel, EMPEMUnlockAndStore};
-
-/**
-@internalAll
-*/
-struct TMediaPswdNotifyBase
-	{
-	enum TCardType {ECTMmcPassword} iCT;
-	TVersion iVersion;
-	};
-
-/**
-@internalAll
-*/
-struct TMediaPswdSendNotifyInfoV1 : public TMediaPswdNotifyBase
-	{
-	// empty.
-	};
-
-/**
-@internalAll
-*/
-struct TMediaPswdSendNotifyInfoV1Debug : public TMediaPswdSendNotifyInfoV1
-	{
-	TInt iSleepPeriod;							// us, -ve means maximum range
-	TMediaPswdNotifyExitMode iEM;
-	TText8 iPW[KMaxMediaPassword];
-	};
-
-/**
-@internalAll
-*/
-struct TMediaPswdReplyNotifyInfoV1 : public TMediaPswdNotifyBase
-	{
-	TText8 iPW[KMaxMediaPassword];
-	TMediaPswdNotifyExitMode iEM;
-	};
-
-
-
-
 /**
 @publishedAll
 @released
@@ -4569,6 +4666,7 @@ public:
     IMPORT_C static void LeaveNoMemory();
     IMPORT_C static TInt LeaveIfError(TInt aReason);
     IMPORT_C static TAny* LeaveIfNull(TAny* aPtr);
+    inline static const TAny* LeaveIfNull(const TAny* aPtr);
     IMPORT_C static TTrapHandler* SetTrapHandler(TTrapHandler* aHandler);
     IMPORT_C static TTrapHandler* TrapHandler();
     IMPORT_C static TTrapHandler* MarkCleanupStack();   /**< @internalComponent */
@@ -4639,6 +4737,7 @@ public:
     IMPORT_C static TInt QuickSort(TInt aCount,const TKey& aKey,const TSwap& aSwap);
     // Language-dependent character functions 
     IMPORT_C static TLanguage Language();
+    IMPORT_C static TRegionCode RegionCode();
     IMPORT_C static TUint Collate(TUint aChar); 
     IMPORT_C static TUint Fold(TUint aChar); 
     IMPORT_C static TUint LowerCase(TUint aChar); 
@@ -4839,7 +4938,7 @@ public:
 	-	ERealtimeStateWarn - no action. However, if the kernel trace flag KREALTIME is enabled
 							 then tracing will be emitted as if the thread state was ERealtimeStateOn.
 	@publishedPartner
-	@prototype
+	@released
 	*/
 	enum TRealtimeState
 		{
@@ -4854,7 +4953,7 @@ public:
 	@param aState The state
 	@return KErrNone if successful. KErrArgument if aState is invalid.
 	@publishedPartner
-	@prototype
+	@released
 	*/
 	IMPORT_C static TInt SetRealtimeState(TRealtimeState aState);
 
@@ -5166,4 +5265,9 @@ inline TAny* operator new[](TUint aSize, TLeave);
 // Inline methods
 #include <e32std.inl>
 
+#ifndef SYMBIAN_ENABLE_SPLIT_HEADERS
+#include <e32std_private.h>
 #endif
+
+#endif
+

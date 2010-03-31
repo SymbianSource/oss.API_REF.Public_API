@@ -2,9 +2,9 @@
 * Copyright (c) 2005-2008 Nokia Corporation and/or its subsidiary(-ies).
 * All rights reserved.
 * This component and the accompanying materials are made available
-* under the terms of the License "Symbian Foundation License v1.0" to Symbian Foundation members and "Symbian Foundation End User License Agreement v1.0" to non-members
+* under the terms of "Eclipse Public License v1.0"
 * which accompanies this distribution, and is available
-* at the URL "http://www.symbianfoundation.org/legal/licencesv10.html".
+* at the URL "http://www.eclipse.org/legal/epl-v10.html".
 *
 * Initial Contributors:
 * Nokia Corporation - initial contribution.
@@ -21,9 +21,9 @@
 #define __AKNBUTTON_H__
 
 //  INCLUDES
-#include <akncontrol.h>
-#include <akniconutils.h>
-#include <aknutils.h>
+#include <AknControl.h>
+#include <AknIconUtils.h>
+#include <AknUtils.h>
 
 // FORWARD DECLARATIONS
 class CGulIcon;
@@ -1309,11 +1309,6 @@ class CAknButton : public CAknControl
          * Continues drawing of the button which has both text and icon.
          */
         void DrawTextAndIconButton( CWindowGc& aGc ) const;
-
-        /**
-        * Draws a button with additional mask.
-        */
-        void DrawMaskedL( CWindowGc& aGc ) const;
         
         /**
          * Starts the long press timer.

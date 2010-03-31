@@ -1,25 +1,34 @@
 /*
-* Copyright (c) 2002-2005 Nokia Corporation and/or its subsidiary(-ies). 
+* Copyright (c) 2002-2005 Nokia Corporation and/or its subsidiary(-ies).
 * All rights reserved.
 * This component and the accompanying materials are made available
-* under the terms of the License "Symbian Foundation License v1.0" to Symbian Foundation members and "Symbian Foundation End User License Agreement v1.0" to non-members
+* under the terms of "Eclipse Public License v1.0"
 * which accompanies this distribution, and is available
-* at the URL "http://www.symbianfoundation.org/legal/licencesv10.html".
+* at the URL "http://www.eclipse.org/legal/epl-v10.html".
 *
 * Initial Contributors:
 * Nokia Corporation - initial contribution.
 *
 * Contributors:
 *
-* Description: Callback interface for service consumers        
+* Description:    Callback interface for service consumers        
 *
 */
+
+
+
 
 #ifndef M_SEN_SERVICE_CONSUMER_H
 #define M_SEN_SERVICE_CONSUMER_H
 
 const TUid KSenInterfaceUidFilesObserver            = { 0x101F9742 }; // MSenFilesObserver
+const TUid KSenInterfaceUidCoBrandingObserver       = { 0x10282C6C }; // MSenCoBrandingObserver
+const TUid KSenInterfaceUidAlrObserver              = { 0x10282C6D }; // MMobilityProtocolResp
+const TUid KSenInterfaceUidUserinfoProvider         = { 0x10282C6E }; // MSenUserInfoProvider
 const TUid KSenInterfaceUidAuthenticationProvider   = { 0x10282C6F }; // MSenAuthenticationProvider
+const TUid KSenInterfaceUidHostletConsumer          = { 0xE760F697 }; // MSenAuthenticationProvider 
+
+
 // CLASS DECLARATION
 
 /**
@@ -89,7 +98,12 @@ class MSenServiceConsumer
     };
 
 /**
- * Callback interface for trnsfer progress observer
+ * Callback interface for transfer progress observer. Typically,
+ * this interface is implemented by applications that want to 
+ * monitor how many bytes (of a file, request, or response) have
+ * been sent or received during a transaction. Callback is thus
+ * often integrated to progress bar implementations in UI layer.
+ * Note: UID of this interface is KSenInterfaceUidFilesObserver.
  */
 class MSenFilesObserver
     {
@@ -103,14 +117,40 @@ class MSenFilesObserver
     * @param aCid CID of current BLOB.
     * @param aProgress Count of sent/received BLOB bytes.
     */
-    virtual void TransferProgress(TInt aTxnId, TBool aIncoming, const TDesC8& aMessage,
-            const TDesC8& aCid, TInt aProgress) = 0;
+    virtual void TransferProgress( TInt aTxnId, 
+                                   TBool aIncoming, 
+                                   const TDesC8& aMessage,
+                                   const TDesC8& aCid, 
+                                   TInt aProgress) = 0;
     };
+class MSenHostletConsumer
+    {
+    public:
+    virtual void SetConnectionId( TInt aConnectionId ) = 0; 
+    };    
+/**
+ * Callback interface for extended consumer interface.
+ * When this interface is provided to service connection as constructor
+ * argument, the service connection (web services stack) can later on 
+ * query for a variety of different interfaces, extensions, from the
+ * application. Each extension (interface) is has unique identifier (UID).
+ */    
 class MSenExtendedConsumerInterface
     {       
     public: 
+        /**
+        * Service connection calls this method several times, passing a different
+        * UID per each call. If application wants to provide particular interface
+        * to service connection (web services stack), it needs to return a pointer
+        * to such M-class as a return value of this method. For any interface, that
+        * application has not implemented, it is supposed to return NULL.
+        * @param aUID is the unique identifier of some interface
+        * @return value should be a valid (void) pointer to any interface implemented
+        * by the application. NULL signalizes that application does not provide interface
+        * for give UID. 
+        */    
 	    inline virtual TAny* GetInterfaceByUid( TUid /* aUID */ ) { return NULL; };
-    };    
+    };
 
 #endif // M_SEN_SERVICE_CONSUMER_H
 

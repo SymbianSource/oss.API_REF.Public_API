@@ -25,7 +25,7 @@
  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY
  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
-* © Portions copyright (c) 2007 Symbian Software Ltd. All rights reserved.
+* © Portions Copyright (c) 2007 Nokia Corporation and/or its subsidiary(-ies). All rights reserved.
  * $FreeBSD: src/sys/posix4/sched.h,v 1.7 2002/10/03 06:27:50 mike Exp $
  */
 

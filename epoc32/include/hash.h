@@ -19,8 +19,6 @@
 */
 
 
-
-
 /**
  @file 
  @publishedAll
@@ -31,10 +29,6 @@
 #define __HASH_H__
 
 #include <e32base.h>
-
-
-//Forward Declarations
-class MSHA2Impl;
 
 /**
  * Base class for message digests.
@@ -246,6 +240,13 @@ class CMessageDigest:public CBase
 		 * Stores the internal state of the message digest. 
 		 */
 		virtual void StoreState() = 0;
+
+		/**
+		@internalComponent
+		Used to retrieve the extended interfaces extension
+		*/		
+		TInt GetExtension(TUint aExtensionId, TAny*& a0, TAny* a1);		
+
 	protected:
 		/**
 		 * Constructor
@@ -261,13 +262,13 @@ class CMessageDigest:public CBase
 	};
 
 /** 
- * The MD2 block size (in bytes) 
- * 
- * @internalTechnology 
- */
+The MD2 block size (in bytes) 
+*/
 const TInt MD2_BLOCK=16;
 
-/** The size (in bytes) of the MD2 message digest */
+/** 
+The size (in bytes) of the MD2 message digest 
+*/
 const TInt MD2_HASH=16;
 
 /**
@@ -297,42 +298,27 @@ class CMD2:public CMessageDigest
 	public:
 		void RestoreState();
 		void StoreState();
-	private:
-		void DoUpdate(const TUint8* aData,TUint aLength);
-		void DoFinal(void);
-		void Block(const TUint8* aData);
-	private:
+	protected:	
+		/** @internalComponent */
 		CMD2(void);
-		CMD2(const CMD2& aMD2);
-	private:
-		TBuf8<MD2_HASH> iHash;
-		TInt iNum;
-		TUint8 iData[MD2_BLOCK];
-		TUint iChecksum[MD2_BLOCK];
-		TUint iState[MD2_BLOCK];
-	private:
-		TBuf8<MD2_HASH> iHashBuf;
-		TUint8 iDataTemp[MD2_BLOCK];
-		TUint iChecksumTemp[MD2_BLOCK];
-		TUint iStateTemp[MD2_BLOCK];
 	};
 
 /** 
- * The MD5 block size (in bytes)
- * 
- * @internalTechnology 
- */
+The MD5 block size (in bytes)
+*/
 const TUint MD5_LBLOCK=16;
 
-/** The size (in bytes) of the MD5 message digest */
+/** 
+The size (in bytes) of the MD5 message digest 
+*/
 const TUint MD5_HASH=16;
 
 /**
  * An MD5 message digest
  *
  * Takes a message of arbitrary length as input and produces a 128-bit message digest. 
- *
- * The length of input data should not be longer than 2^32 in bits(2^31 in bytes)
+ * 
+ * The total input length of data should not be longer than 2^32 in bits(2^31 in bytes)
  * which is roughly half a gig.
  *
  */
@@ -359,44 +345,25 @@ class CMD5:public CMessageDigest
 	public:
 		void RestoreState();
 		void StoreState();
-	private:
+	protected:
+		/** @internalComponent */
 		CMD5(void);
-		CMD5(const CMD5& aMD5);
-	private:
-		void DoUpdate(const TUint8* aData,TUint aLength);
-		void DoFinal(void);
-		void Block();
-	private:
-		TBuf8<MD5_HASH> iHash;
-	private:
-		TUint iA;
-		TUint iB;
-		TUint iC;
-		TUint iD;
-		TUint iNl;
-		TUint iNh;
-		TUint iData[MD5_LBLOCK];
-	private:
-		TUint iACopy;
-		TUint iBCopy;
-		TUint iCCopy;
-		TUint iDCopy;
-		TUint iNlCopy;
-		TUint iNhCopy;
-		TUint iDataCopy[MD5_LBLOCK];
 	};
 
+
 /** 
- * The SHA-1 block size (in bytes) 
- * 
- * @internalTechnology 
- */
+The SHA-1 block size (in bytes) 
+*/
 const TUint SHA1_LBLOCK=16;
 
-/** The size (in bytes) of the SHA-1 message digest */
+/** 
+The size (in bytes) of the SHA-1 message digest 
+*/
 const TUint SHA1_HASH=20;
 
-/** The size (in bytes) of the SHA message digest */
+/** 
+The size (in bytes) of the SHA message digest 
+*/
 const TUint SHA_HASH=SHA1_HASH;
 
 /**
@@ -425,33 +392,9 @@ class CSHA1:public CMessageDigest
 	public:
 		void RestoreState();
 		void StoreState();
-	private:
+	protected:
+		/** @internalComponent */
 		CSHA1(void);
-		CSHA1(const CSHA1& aSHA1);
-		void ConstructL(void);
-	private:
-		void DoUpdate(const TUint8* aData,TUint aLength);
-		void DoFinal(void);
-		void Block();
-	private:
-		TBuf8<SHA1_HASH> iHash;
-		TUint iA;
-		TUint iB;
-		TUint iC;
-		TUint iD;
-		TUint iE;
-		TUint iNl;
-		TUint iNh;
-		TUint iData[SHA1_LBLOCK*5];
-	private:
-		TUint iACopy;
-		TUint iBCopy;
-		TUint iCCopy;
-		TUint iDCopy;
-		TUint iECopy;
-		TUint iNlCopy;
-		TUint iNhCopy;	
-		TUint iDataCopy[SHA1_LBLOCK*5];
 	};
 
 enum TSH2Algo
@@ -465,45 +408,29 @@ enum TSH2Algo
 /**
  * A SHA-2 message digest
  * 
- * SHA-2 comprises of SHA-224, SHA256, SHA384 and SHA512
+ * SHA-2 is comprised of SHA-224, SHA256, SHA384 and SHA512
  */
 class CSHA2 : public CMessageDigest
 	{
-public:
-	//NewL & NewLC	
-	IMPORT_C static CSHA2* NewL(TSH2Algo aAlgorithmId);
-	IMPORT_C static CSHA2* NewLC(TSH2Algo aAlgorithmId);
-	
-	/** Destructor */
-	IMPORT_C ~CSHA2(void);
-	
-	//From CMessageDigest
-	IMPORT_C CMessageDigest* ReplicateL(void);
-	IMPORT_C TPtrC8 Hash(const TDesC8& aMessage);
-	IMPORT_C CMessageDigest* CopyL(void);
-	IMPORT_C TInt BlockSize(void);
-	IMPORT_C TInt HashSize(void);
-	IMPORT_C void Reset(void);
-	IMPORT_C void Update(const TDesC8& aMessage);
-	IMPORT_C TPtrC8 Final(const TDesC8& aMessage);
-	IMPORT_C TPtrC8 Final();
-
-public:
-	void RestoreState();
-	void StoreState();
-	
-private:
-	//Constructors
-	void ConstructL(TSH2Algo aAlgorithmId);
-	void ConstructL(const CSHA2& aSHA512);
-	
-private:
-	MSHA2Impl*	iImplementation;
-	const TAny*	iInitValues;
-	TSH2Algo	iAlgorithmType;
-	TUint		iHashSize;
+	public:
+		/**
+		 * Creates a new SHA-1 object.
+		 *
+		 * @return	A pointer to the new SHA-1 object
+		 */
+		IMPORT_C static CSHA2* NewL(TSH2Algo aAlgorithmId);
+		IMPORT_C static CSHA2* NewLC(TSH2Algo aAlgorithmId);
+		/** Destructor */
+		IMPORT_C ~CSHA2(void);
+	public:
+		void RestoreState();
+		void StoreState();		
+	protected:
+		/** @internalComponent */
+		CSHA2(void);
 	};	
-	
+
+
 /**
  * A SHA message digest
  *
@@ -537,12 +464,12 @@ class CSHA:public CMessageDigest
 /**
  * This is the maximum block size currently supported by HMAC implementation.
  */ 
-	const TUint KMaxBlockSize=128;
+const TUint KMaxBlockSize=128;
 
 /**
  * An HMAC (Hashed Message Authentication Code)
  */
-	class CHMAC:public CMessageDigest
+class CHMAC:public CMessageDigest
 
 	{
 	public:
@@ -571,13 +498,19 @@ class CSHA:public CMessageDigest
 	public:
 		void RestoreState();
 		void StoreState();
-	private:
+	protected:
+		/** @internalComponent */
 		CHMAC(void);
+		/** @internalComponent */
 		CHMAC(CMessageDigest* aDigest);
+		/** @internalComponent */
 		CHMAC(const CHMAC& aHMAC);
+		/** @internalComponent */
 		void InitialiseL(const TDesC8& aKey);
-		void InitBlockSizeL();
 		
+	private:
+		void InitBlockSizeL();
+
 	private:
 		CMessageDigest* iDigest;
 		TBuf8<KMaxBlockSize> iInnerPad;
@@ -585,23 +518,23 @@ class CSHA:public CMessageDigest
 		TBuf8<KMaxBlockSize> iInnerPadCopy;
 		TBuf8<KMaxBlockSize> iOuterPadCopy;		
 		TInt iBlockSize;
+
 	};
-	
+
 /** 
- * The MD4 block size 
- * @internalTechnology 
- */
- const TUint MD4_LBLOCK=16;
+The MD4 block size (in bytes)
+*/
+const TUint MD4_LBLOCK=16;
 
-/** The size (in bytes) of the MD4 message digest */
- const TUint MD4_HASH=16;
-
+/** 
+The size (in bytes) of the MD4 message digest 
+*/
+const TUint MD4_HASH=16;
 
 /**
  * An MD4 message digest Algorithm.
- *
  * Takes a message of arbitrary length as input and produces a 128-bit message digest. 
- *
+ * 
  * The total input length of data should not be longer than 2^32 in bits(2^31 in bytes)
  * which is roughly half a gig.
  *
@@ -629,45 +562,9 @@ class CMD4:public CMessageDigest
 	public:
 		virtual void RestoreState();
 		virtual void StoreState();
-	private:
+	protected:
+		/** @internalComponent */
 		CMD4(void);
-		CMD4(const CMD4& aMD4);
-	private:
-	   /**
-		* Divides the message into blocks of 512 bits and performs the
-		* Block operation on them.
-		*/
-		void DoUpdate(const TUint8* aData,TUint aLength);
-	   /**
-		* Performs the Block operation on the last 512 bit block.
-		* This function does the padding on the last 512 bit block
-		* and also appends the length of the message to the last 64-bits
-		* of the block.
-		*/
-		void DoFinal(void);
-	   /**
-		* Performs the Block operation on the 512 bit blocks
-		*/
-		void Block();
-	private:
-		/*Holds the generated 128-bit Message Digest*/
-		TBuf8<MD4_HASH> iHash;
-	private:
-		TUint iA;
-		TUint iB;
-		TUint iC;
-		TUint iD;
-		TUint iNl;
-		TUint iNh;
-		TUint iData[MD4_LBLOCK];
-	private:
-		TUint iACopy;
-		TUint iBCopy;
-		TUint iCCopy;
-		TUint iDCopy;
-		TUint iNlCopy;
-		TUint iNhCopy;
-		TUint iDataCopy[MD4_LBLOCK];
 	};
 
 
@@ -678,7 +575,7 @@ class CMessageDigestFactory : public CBase
 {
 public:
 	/**
-	 * Creates a CMessageDigest derived object according to the specified type of hash algorithm.
+	 *Creates a CMessageDigest derived object according to the specified type of hash algorithm.
 	 *
 	 * @param aHashId	The identity of the hash algorithm
 	 * @return			A pointer to a CMessageDigest object

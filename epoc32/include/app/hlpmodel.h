@@ -1,9 +1,9 @@
 // Copyright (c) 1999-2009 Nokia Corporation and/or its subsidiary(-ies).
 // All rights reserved.
 // This component and the accompanying materials are made available
-// under the terms of the License "Symbian Foundation License v1.0" to Symbian Foundation members and "Symbian Foundation End User License Agreement v1.0" to non-members
+// under the terms of "Eclipse Public License v1.0"
 // which accompanies this distribution, and is available
-// at the URL "http://www.symbianfoundation.org/legal/licencesv10.html".
+// at the URL "http://www.eclipse.org/legal/epl-v10.html".
 //
 // Initial Contributors:
 // Nokia Corporation - initial contribution.
@@ -22,7 +22,6 @@
 #include <txtmrtsr.h>	// For MRichTextStoreResolver
 #include <gdi.h>		// For MPictureFactory
 #include <d32dbms.h>
-
 // Help model includes
 #include "hlpconstants.h"
 
@@ -38,17 +37,59 @@ class CHlpPicture;
 
 // Typedefs
 /**
-@internalComponent
+@publishedAll
 @released
 */
 typedef CArrayPtrFlat<CHlpDatabase> CHlpDatabases;
 
 /**
-@internalComponent
+@publishedAll
 @released
 */
 typedef CArrayPtrFlat<CHlpFileEntry> CHlpFileList;
+#ifdef SYMBIAN_ENABLE_SPLIT_HEADERS
+/** Maximum Title column. 
+@publishedAll
+@released
+*/
+const TInt KMaxTitleColumn = 120;
+#endif
 
+#ifndef SYMBIAN_ENABLE_SPLIT_HEADERS
+/**
+@internalComponent
+@released
+*/
+const TInt KHlpModelDefaultNumberOfImagesForV6Point2Files = 1;
+/**
+@internalComponent
+@released
+*/
+const TInt KHlpModelMaximumNumberOfImagesForV6Point2Files = 3;
+//
+/** Default zoom factor for small zoom size. 
+@internalComponent
+@released
+*/
+const TInt KHlpModelZoomFactorSmall = 750;
+/** Default zoom factor for medium zoom size. 
+@internalComponent
+@released
+*/
+const TInt KHlpModelZoomFactorMedium = 1000;
+/** Default zoom factor for large zoom size. 
+@internalComponent
+@released
+*/
+const TInt KHlpModelZoomFactorLarge = 1250;
+
+/** Default zoom factor for medium zoom size as real number. 
+@internalComponent
+@released
+*/
+const TReal KHlpModelDefaultZoomFactorAsRealNumber = 1000.0;
+
+#endif //SYMBIAN_ENABLE_SPLIT_HEADERS
 
 class MHlpModelObserver
 /** Client callback inteface to receive events from the help model. 
@@ -64,12 +105,10 @@ public:
 	virtual void HandleModelEventL(TInt aEvent) = 0;
 	};
 
-//
-// Internal API to handle events reported by the search engine
-//
+
 class MHlpDbObserver
-/**
-@internalComponent
+/** Internal API to handle events reported by the search engine
+@publishedAll
 @released
 */
 	{
@@ -80,7 +119,10 @@ public: // TInt aEvent should be a named enum
 //
 // Search types (these should be named, but SC cannot be broken until v7.0
 //
-/** Defines the search types for use with CHlpModel::SearchL(). */
+/** Defines the search types for use with CHlpModel::SearchL(). 
+@publishedAll
+@released
+*/
 enum
 	{
 	/** Gets a list of index entries for all help files.
@@ -137,6 +179,10 @@ enum
 // Search progress responses (this should be scoped as members of MHlpModelObserver
 // and should also be named, but SC cannot be broken until v7.0
 //
+/** Search progress responses
+@publishedAll
+@released
+*/
 enum
 	{
 	ENoRecordsFound,
@@ -147,7 +193,10 @@ enum
 //
 // Search progress responses (ditto for naming and scoping)
 //
-/** Help model search result events*/
+/** Help model search result events
+@publishedAll
+@released
+*/
 enum
 	{
 	/** The search returned a category list.
@@ -191,8 +240,13 @@ enum
 	/** The search has been cancelled. */
 	EHlpSearchCancelled
 	};
+	
+	// Constants
 
-/** Defines help model zoom sizes. */
+/** Defines help model zoom sizes. 
+@publishedAll
+@released
+*/
 enum THlpZoomState
 	{
 	/** Small zoom. */
@@ -202,20 +256,6 @@ enum THlpZoomState
 	/** Large zoom. */
 	EHlpZoomStateLarge = 2
 	};
-
-// Constants
-const TInt KHlpModelDefaultNumberOfImagesForV6Point2Files = 1;
-const TInt KHlpModelMaximumNumberOfImagesForV6Point2Files = 3;
-//
-/** Default zoom factor for small zoom size. */
-const TInt KHlpModelZoomFactorSmall = 750;
-/** Default zoom factor for medium zoom size. */
-const TInt KHlpModelZoomFactorMedium = 1000;
-/** Default zoom factor for large zoom size. */
-const TInt KHlpModelZoomFactorLarge = 1250;
-//
-/** Default zoom factor for medium zoom size as real number. */
-const TReal KHlpModelDefaultZoomFactorAsRealNumber = 1000.0;
 
 
 class CHlpItem : public CBase
@@ -277,9 +317,9 @@ private: // Meta data required for correct restoration of topics
 
 
 
-///////////////////////////////////////////////////////////////////////////////////////
+//
 // ----> MHlpTitleArray 
-///////////////////////////////////////////////////////////////////////////////////////
+//
 class MHlpTitleArray : public MDesCArray
 /** Interface to get a topic ID from an array index. 
 @publishedAll
@@ -296,9 +336,9 @@ public:
 
 
 
-///////////////////////////////////////////////////////////////////////////////////////
+//
 // ----> CHlpList 
-///////////////////////////////////////////////////////////////////////////////////////
+//
 class CHlpList : public CBase, public MHlpTitleArray
 /** A list of help items (CHlpItem objects). 
 @publishedAll
@@ -336,9 +376,9 @@ private:
 
 
 
-///////////////////////////////////////////////////////////////////////////////////////
+//
 // ----> CHlpTopic 
-///////////////////////////////////////////////////////////////////////////////////////
+//
 class CHlpTopic : public CBase
 /** Encapsulates a help topic.
 
@@ -392,9 +432,9 @@ private:
 
 
 
-///////////////////////////////////////////////////////////////////////////////////////
+//
 // ----> CHlpModel 
-///////////////////////////////////////////////////////////////////////////////////////
+//
 class CHlpModel : public CBase, public MHlpDbObserver, public MPictureFactory, public MRichTextStoreResolver
 /** Help model interface.
 
@@ -528,13 +568,9 @@ private: // Member data
 	CArrayFix<TInt>* iZoomFactors;
 	};
 
-
-
-
-
-///////////////////////////////////////////////////////////////////////////////////////
+//
 // ----> CHlpModel (inlines)
-///////////////////////////////////////////////////////////////////////////////////////
+//
 inline TInt CHlpModel::DatabaseCount() const
 	{
 	return iDatabases->Count();
@@ -555,3 +591,4 @@ inline TInt CHlpModel::CurrentSearchType() const
 
 
 #endif
+

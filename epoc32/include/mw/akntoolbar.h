@@ -2,9 +2,9 @@
 * Copyright (c) 2005-2007 Nokia Corporation and/or its subsidiary(-ies).
 * All rights reserved.
 * This component and the accompanying materials are made available
-* under the terms of the License "Symbian Foundation License v1.0" to Symbian Foundation members and "Symbian Foundation End User License Agreement v1.0" to non-members
+* under the terms of "Eclipse Public License v1.0"
 * which accompanies this distribution, and is available
-* at the URL "http://www.symbianfoundation.org/legal/licencesv10.html".
+* at the URL "http://www.eclipse.org/legal/epl-v10.html".
 *
 * Initial Contributors:
 * Nokia Corporation - initial contribution.
@@ -22,11 +22,12 @@
 
 //  INCLUDES
 #include <avkon.hrh> // TAknOrientation
-#include <akncontrol.h> // CCoeControl
+#include <AknControl.h> // CCoeControl
 #include <coecobs.h>    // MCoeControlObserver
 #include <eikcmobs.h>   // MEikCommandObserver
-#include <aknpopupfader.h>
+#include <AknPopupFader.h>
 #include <babitflags.h>
+#include <AknsItemID.h>
 
 // FORWARD DECLARATIONS
 class CAknButton;
@@ -538,6 +539,18 @@ class CAknToolbar : public CAknControl, public MCoeControlObserver,
          * @param aPriority Ordinal priority of toolbar window.  
          */
         IMPORT_C void HideItemsAndDrawOnlyBackground( TBool aHide, TInt aPriority ); 
+        /**
+         * Sets the skin background for fixed toolbar. The new background is used 
+         * for all the subsequent drawing operations. This method does not itself 
+         * cause a repaint. 
+         *
+         * @internal     
+         *
+         * @param aIID Skin item ID of the new background. This is one of the constants
+         *             defined in AknsConstants.h, and the usual values are KAknsIIDQsnBgScreen
+         * @since S60 5.0
+         */
+        IMPORT_C void SetSkinBackgroundId( const TAknsItemID& aIID );
 
 
     protected: // From base class
@@ -812,11 +825,6 @@ class CAknToolbar : public CAknControl, public MCoeControlObserver,
         */
         static TInt ShowDelayedToolbar( TAny* aThis );
 
-        /**
-         * Modifies highlight bitmap that is 50% transparent to use when drawing 
-         * highlight for small transparent toolbar. 
-         */
-        void ModifyHighlightMaskL( TBool aCreateBitmaps );
 
         /**
          * Fades behind toolbar
@@ -867,6 +875,11 @@ class CAknToolbar : public CAknControl, public MCoeControlObserver,
         */
         void UpdateControlVisibility();
 	
+        /*
+         * Update item tooltip position
+         */
+        void UpdateItemTooltipPosition();
+        
     private: // Member variables
 
         // Array for toolbar items
@@ -913,6 +926,7 @@ class CAknToolbar : public CAknControl, public MCoeControlObserver,
         
         // Transparency bitmap
         // own
+        // this member variable is deserted
         CFbsBitmap* iBgBitmap;
 
         // This is used to call ShowToolbarForBackgroundChange after toolbar has
@@ -921,9 +935,11 @@ class CAknToolbar : public CAknControl, public MCoeControlObserver,
         CIdle* iIdle;
         
         // Highlight bitmap
+        // this member variable is deserted
         CFbsBitmap* iHighlightBitmap; 
 
         // Highlight mask 
+        // this member variable is deserted
         CFbsBitmap* iHighlightMask; 
         
         // event modifiers
@@ -937,6 +953,9 @@ class CAknToolbar : public CAknControl, public MCoeControlObserver,
 	    
         // Used to store previous item that had pointerevents
         TInt iPreviousItem;
+
+        // Item that catches point down event
+        TInt iDownItem;
 
 	    // Step for toolbar sliding
 	    TInt iStep; 
@@ -954,6 +973,11 @@ class CAknToolbar : public CAknControl, public MCoeControlObserver,
         // Toolbar window priority if set in HideItemsAndDrawOnlyBackground
 	    TInt iDrawingPriority;
 
+	    /*
+	     * Background theme ID user defined. And in default, its value is 
+	     * KAknsIIDNone is used and toolbar draw background with the current skin  
+	     */
+	    TAknsItemID iBgIID;
     };
 
 #endif // __AKNTOOLBAR_H__

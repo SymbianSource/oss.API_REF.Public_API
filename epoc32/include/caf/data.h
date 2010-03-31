@@ -1,5 +1,5 @@
 /*
-* Copyright (c) 2003-2007 Nokia Corporation and/or its subsidiary(-ies).
+* Copyright (c) 2003-2008 Nokia Corporation and/or its subsidiary(-ies).
 * All rights reserved.
 * This component and the accompanying materials are made available
 * under the terms of the License "Eclipse Public License v1.0"
@@ -20,7 +20,7 @@
 /** 
 @file
 
-@publishedPartner
+@publishedAll
 @released
 */
 
@@ -48,8 +48,6 @@ namespace ContentAccess
  	This class is initialised with an agent implementation that is
  	responsible for this content object.
  
- 	@publishedPartner
- 	@released
  	*/
 	class CData : public CBase
 		{
@@ -247,9 +245,6 @@ namespace ContentAccess
 		 @leave ...				One of the other CAF error codes defined in \c caferr.h  
 		 						or one of the other system-wide error codes 
 								for any other errors.
-		
-		@internalComponent
-		@released
 		 */
 		static CData* NewLC(TUid aAgentUid, const TVirtualPathPtr& aVirtualPath,
 							TIntent aIntent, TContentShareMode aShareMode); 
@@ -275,11 +270,78 @@ namespace ContentAccess
 		 						or one of the other system-wide error codes for 
 								any other errors.
 
-		@internalComponent
-		@released
 		 */
 		static CData* NewLC(TUid aAgentUid, RFile& aFile, const TDesC& aUniqueId, TIntent aIntent);
+
+#ifdef SYMBIAN_ENABLE_SDP_WMDRM_SUPPORT
 		
+		/** 
+		 Creates a new CData object. 
+		 @param aHeaderData				Header data of WMDRM file/stream content. 
+		 @return 						CData object.
+		 @leave							One of the CAF error codes defined in caferr.h or one of the 
+										system-wide error for any other errors.
+		 @capability 					DRM Access to DRM protected content is not permitted for processes without DRM capability.
+										Access to unprotected content is unrestricted.
+		*/
+			
+		IMPORT_C static CData* NewL(const TDesC8& aHeaderData);
+		
+		/** 
+		 Creates a new CData object. 
+		 @param aHeaderData				Header data of WMDRM file/stream content.
+		 @param aIntent					The intended use of the content.
+		 @return 						CData object.
+		 @leave							One of the CAF error codes defined in caferr.h or one of the 
+										system-wide error for any other errors.
+		 @capability 					DRM Access to DRM protected content is not permitted for processes without DRM capability.
+										Access to unprotected content is unrestricted.
+		*/		
+		
+		IMPORT_C static CData* NewL(const TDesC8& aHeaderData, TIntent aIntent);
+		
+		/** 
+		 Creates a new CData object. 
+		 @param aHeaderData				Header data of WMDRM file/stream content. 
+		 @return 						CData object.
+		 @leave							One of the CAF error codes defined in caferr.h or one of the 
+										system-wide error for any other errors.
+		 @capability 					DRM Access to DRM protected content is not permitted for processes without DRM capability.
+										Access to unprotected content is unrestricted.
+		*/
+		
+		IMPORT_C static CData* NewLC(const TDesC8& aHeaderData);
+		
+		/** 
+		 Creates a new CData object. 
+		 @param aHeaderData				Header data of WMDRM file/stream content.
+		 @param aIntent					The intended use of the content. 
+		 @return 						CData object.
+		 @leave							One of the CAF error codes defined in caferr.h or one of the 
+										system-wide error for any other errors.
+		 @capability 					DRM Access to DRM protected content is not permitted for processes without DRM capability.
+										Access to unprotected content is unrestricted.
+		*/
+		
+		IMPORT_C static CData* NewLC(const TDesC8& aHeaderData, TIntent aIntent);
+		
+		/** 
+		 Creates a new CData object.
+		 @param	aAgentUid				UID of an agent which supports this content. 
+		 @param aHeaderData				Header data of WMDRM file/stream content.
+		 @param aIntent					The intended use of the content.
+		 @return 						CData object.
+		 @leave							One of the CAF error codes defined in caferr.h or one of the 
+										system-wide error for any other errors.
+		 @capability 					DRM Access to DRM protected content is not permitted for processes without DRM capability.
+										Access to unprotected content is unrestricted.
+		 
+		*/
+		
+		static CData* NewLC(TUid aAgentUid, const TDesC8& aHeaderData, TIntent aIntent);
+		
+#endif //SYMBIAN_ENABLE_SDP_WMDRM_SUPPORT
+
 		/** destructor */
 		virtual ~CData();
 		
@@ -375,17 +437,19 @@ namespace ContentAccess
 		*/
 		IMPORT_C void ReadCancel(TRequestStatus &aStatus) const;		
 
+#ifdef SYMBIAN_ENABLE_64_BIT_FILE_SERVER_API
 		/**
 		 Reads content asynchronously. The data is read from a specified offset 
 		 up to a specified number of bytes or until the end of the content object 
 		 is reached. The data is read into the descriptor buffer supplied.
 		 NB: It is important that the descriptor passed to 
-		 aDes remains in scope until the request has completed.			
-		 
+		 aDes remains in scope until the request has completed.
+		 If agent does not support 64bit, fallback to 32bit Read is provided automatically by CAF			
+				 
 		 @see Read(TDes8& aDes)
-		 
+				 
 		 @param aPos		Position of first byte to be read. 
-		 					This is an offset from the start of the file. 
+							This is an offset from the start of the file. 
 		 @param aDes 		Descriptor into which binary data is read. Any
 		  					existing contents are overwritten. On return,
 		 					its length is set to the number of bytes read. 
@@ -401,9 +465,37 @@ namespace ContentAccess
 		 @return KErrArgument if a negative offset is supplied.
 		 @return KErrCANotSupported if the agent does not support this operation.
 		 @capability DRM Access to DRM protected content is not permitted for processes without DRM capability. Access to unprotected content is unrestricted 
-		 */
+		*/
+		IMPORT_C TInt Read(TInt64 aPos, TDes8& aDes, TInt aLength, TRequestStatus& aStatus) const;
+#else
+			/**
+		 Reads content asynchronously. The data is read from a specified offset 
+		 up to a specified number of bytes or until the end of the content object 
+		 is reached. The data is read into the descriptor buffer supplied.
+				 
+		 @see Read(TDes8& aDes)
+				 
+		 @param aPos		Position of first byte to be read. 
+							This is an offset from the start of the file. 
+		 @param aDes 		Descriptor into which binary data is read. Any
+		  					existing contents are overwritten. On return,
+		 					its length is set to the number of bytes read. 
+		 @param aLength		The number of bytes to read from the file,
+		 					or to the end of the file, whichever is encountered first. 
+		 					The length of the buffer is set to the number of bytes actually read.
+		 @param aStatus		Asynchronous request status. On completion this will contain one 
+		 					of the following error codes: KErrNone if the data was 
+							successfully read. Otherwise one of the CAF error codes defined in 
+							\c caferr.h  or one of the other standard system-wide
+							error codes for any other errors.
+		 @return KErrNone if the async read request was successfully submitted.
+		 @return KErrArgument if a negative offset is supplied.
+		 @return KErrCANotSupported if the agent does not support this operation.
+		 @capability DRM Access to DRM protected content is not permitted for processes without DRM capability. Access to unprotected content is unrestricted 
+		*/
 		IMPORT_C TInt Read(TInt aPos, TDes8& aDes, TInt aLength, TRequestStatus& aStatus) const;
-		
+#endif //SYMBIAN_ENABLE_64_BIT_FILE_SERVER_API
+
 		/**
 		 Gets the data size in bytes.
 		 
@@ -415,6 +507,17 @@ namespace ContentAccess
 		 */
 		IMPORT_C void DataSizeL(TInt& aSize);
 
+#ifdef SYMBIAN_ENABLE_64_BIT_FILE_SERVER_API
+		/**
+		 This is the 64bit version of CData::DataSizeL
+		 Client can call this function instead of CData::DataSizeL. If it's not implemented by the agent,
+		 fallback to 32bit counterpart will be provided automatically
+		 
+		 @see DataSizeL(TInt& aSize)
+		*/
+		IMPORT_C void DataSize64L(TInt64& aSize);
+#endif //SYMBIAN_ENABLE_64_BIT_FILE_SERVER_API
+				
 		/**
 		 Changes or retrieves the location of the file pointer within 
 		 the content object.
@@ -452,6 +555,16 @@ namespace ContentAccess
 		*/
 		IMPORT_C TInt Seek(TSeek aMode,TInt& aPos) const;
 		
+#ifdef SYMBIAN_ENABLE_64_BIT_FILE_SERVER_API
+		/**
+		 This is the 64bit version of CData::Seek
+		 Client can call this function instead of CData::Seek. If it's not implemented by the agent,
+		 fallback to 32bit counterpart will be provided automatically
+		 
+		 @see Seek(TSeek aMode,TInt& aPos)
+		*/
+		IMPORT_C TInt Seek64(TSeek aMode,TInt64& aPos) const;
+#endif //SYMBIAN_ENABLE_64_BIT_FILE_SERVER_API
 
 		/** Request the agent handling this content to set a property value. If the property is set
 		it is only set for this CData session and does not impact other CAF	users.
@@ -678,7 +791,8 @@ namespace ContentAccess
 		@capability DRM Access to DRM protected content is not permitted for processes without DRM capability. Access to unprotected content is unrestricted 
 		*/
 		IMPORT_C TInt GetStringAttributeSet(RStringAttributeSet& aStringAttributeSet) const;
-
+				
+				
 #ifndef REMOVE_CAF1
 		/** Set Qos attribute
 		@param aQosAttr The Qos attribute to set.
@@ -695,6 +809,37 @@ namespace ContentAccess
 		IMPORT_C TBool GetMimeTypeL(TDes8& aMimeType) const;
 #endif	// REMOVE_CAF1
 
+#ifdef SYMBIAN_ENABLE_SDP_WMDRM_SUPPORT
+		/**
+		Decrypts the encrypted input data packet.
+		
+		@param aEncryptedInputDataPacket	Buffer descriptor containing the encrypted data packet supplied by client application. 
+		@param aDecryptedOutputDataPacket	Buffer descriptor supplied by the client application into which the decrypted data is written.
+											The length of this descriptor must be equal to or greater than the input packet.
+		@return								KErrNone if successful.KErrInsufficientDataPacketLength if a part of input packet is provided,
+											otherwise one of the CAF error codes defined in \c caferr.h  or 
+		 									one of the other system-wide error codes.
+		@capability 						DRM Access to DRM protected content is not permitted for processes without DRM capability.
+											Access to unprotected content is unrestricted.
+		*/
+
+		IMPORT_C TInt Read(const TDesC8& aEncryptedInputDataPacket, TDes8& aDecryptedOutputDataPacket) const;
+		
+		/**
+		Decrypts the encrypted input data packet asynchronously.
+		@param aEncryptedInputDataPacket	Buffer descriptor containing the encrypted data packet supplied by client application. 
+		@param aDecryptedOutputDataPacket	Buffer descriptor supplied by the client application into which the decrypted data is written.
+											The length of this descriptor must be equal to or greater than the input packet.
+		@param aStatus						Asynchronous request status. On completion this will contain one of the following error codes:
+											KErrNone if the data packet was successfully decrypted.KErrInsufficientDataPacketLength if a 
+											part of input packet is provided, otherwise one of the CAF error codes defined in \c caferr.h or 
+		 									one of the other system-wide error codes.
+		@capability 						DRM Access to DRM protected content is not permitted for processes without DRM capability.
+										    Access to unprotected content is unrestricted. 
+		*/
+		IMPORT_C void Read(const TDesC8& aEncryptedInputDataPacket, TDes8& aDecryptedOutputDataPacket, TRequestStatus& aStatus) const;
+
+#endif //#ifdef SYMBIAN_ENABLE_SDP_WMDRM_SUPPORT
 	
 	private:
 		CData();
@@ -708,6 +853,24 @@ namespace ContentAccess
 		void ConstructL(TUid aAgentUid, RFile& aFile, const TDesC& aUniqueId);
 		void ConstructL(TUid aAgentUid, const TVirtualPathPtr& aVirtualPath, TContentShareMode aShareMode); 
 
+#ifdef SYMBIAN_ENABLE_SDP_WMDRM_SUPPORT
+		
+		void ConstructL(TUid aAgentUid, const TDesC8& aHeaderData, TIntent aIntent);
+		void ConstructL(const TDesC8& aHeaderData);
+		void ConstructL(const TDesC8& aHeaderData, TIntent aIntent);
+		void ConstructL(TUid aAgentUid, const TDesC8& aHeaderData);
+		
+#endif //#ifdef SYMBIAN_ENABLE_SDP_WMDRM_SUPPORT
+
+#ifdef SYMBIAN_ENABLE_64_BIT_FILE_SERVER_API
+		/*
+		 * This is the obselete 32bit Read and replaced by its 64bit counterpart
+		 * TInt Read(TInt64 aPos, TDes8& aDes, TInt aLength, TRequestStatus& aStatus) const
+		 * However, this function still exits at its original ordinal to avoid BC break. 
+		 * Upgrade to 64bit Read is done automatically upon recompling the client code which uses CAF interfaces 
+		*/
+		IMPORT_C TInt Read_Unused(TInt aPos, TDes8& aDes, TInt aLength, TRequestStatus& aStatus) const;
+#endif //SYMBIAN_ENABLE_64_BIT_FILE_SERVER_API
 
 	private:
 		// The agent handling this content

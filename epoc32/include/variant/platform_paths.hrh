@@ -2,9 +2,9 @@
 * Copyright (c) 2002-2009 Nokia Corporation and/or its subsidiary(-ies). 
 * All rights reserved.
 * This component and the accompanying materials are made available
-* under the terms of the License "Symbian Foundation License v1.0" to Symbian Foundation members and "Symbian Foundation End User License Agreement v1.0" to non-members
+* under the terms of "Eclipse Public License v1.0"
 * which accompanies this distribution, and is available
-* at the URL "http://www.symbianfoundation.org/legal/licencesv10.html".
+* at the URL "http://www.eclipse.org/legal/epl-v10.html".
 *
 * Initial Contributors:
 * Nokia Corporation - initial contribution.
@@ -304,6 +304,12 @@
 */
 
 /**
+* Delete or comment out this macro definition to turn on header relocation.
+*/
+//#define SYMBIAN_OLD_EXPORT_LOCATION
+
+
+/**
 * This define statements defines the SYSTEMINCLUDE-line, which is intended to be 
 * used in the mmp-files that are part of the applications-layer. It includes all 
 * the needed directories from the /epoc32/include, that are valid ones for the 
@@ -325,6 +331,28 @@
  /epoc32/include/platform/loc/sc \
  /epoc32/include/platform/mw/loc/sc \
  /epoc32/include/platform/app/loc/sc
+
+#ifdef SYMBIAN_OLD_EXPORT_LOCATION
+#define APP_LAYER_SYSTEMINCLUDE_SYMBIAN SYSTEMINCLUDE \
+ /epoc32/include \
+ /epoc32/include/platform 
+#else
+#define APP_LAYER_SYSTEMINCLUDE_SYMBIAN SYSTEMINCLUDE \
+ /epoc32/include \
+ /epoc32/include/mw \
+ /epoc32/include/platform/mw \
+ /epoc32/include/platform \
+ /epoc32/include/app \
+ /epoc32/include/platform/app
+#endif
+/*
+ /epoc32/include/platform/loc \
+ /epoc32/include/platform/mw/loc \
+ /epoc32/include/platform/app/loc \
+ /epoc32/include/platform/loc/sc \
+ /epoc32/include/platform/mw/loc/sc \
+ /epoc32/include/platform/app/loc/sc
+*/
  
 /**
 * This define statements defines the SYSTEMINCLUDE-line, which is intended to be
@@ -342,6 +370,24 @@
  /epoc32/include/platform/loc/sc \
  /epoc32/include/platform/mw/loc/sc
 
+#ifdef SYMBIAN_OLD_EXPORT_LOCATION
+#define MW_LAYER_SYSTEMINCLUDE_SYMBIAN SYSTEMINCLUDE \
+ /epoc32/include \
+ /epoc32/include/platform 
+#else
+#define MW_LAYER_SYSTEMINCLUDE_SYMBIAN SYSTEMINCLUDE \
+ /epoc32/include \
+ /epoc32/include/mw \
+ /epoc32/include/platform/mw \
+ /epoc32/include/platform 
+#endif
+/*
+ /epoc32/include/platform/loc \
+ /epoc32/include/platform/mw/loc \
+ /epoc32/include/platform/loc/sc \
+ /epoc32/include/platform/mw/loc/sc
+*/
+
 /**
 * This define statements defines the SYSTEMINCLUDE-line, which is intended to be
 * used in the mmp-files that are part of the  osextensions-layer. It includes all
@@ -353,6 +399,20 @@
  /epoc32/include/platform \
  /epoc32/include/platform/loc \
  /epoc32/include/platform/loc/sc
+
+#ifdef SYMBIAN_OLD_EXPORT_LOCATION
+#define OS_LAYER_SYSTEMINCLUDE_SYMBIAN SYSTEMINCLUDE \
+ /epoc32/include \
+ /epoc32/include/platform
+#else
+#define OS_LAYER_SYSTEMINCLUDE_SYMBIAN SYSTEMINCLUDE \
+ /epoc32/include \
+ /epoc32/include/platform 
+#endif
+/*
+ /epoc32/include/platform/loc \
+ /epoc32/include/platform/loc/sc
+*/
 
 // Below statement is Deprecated and the OS_LAYER_SYSTEMINCLUDE-macro has to be
 // used.
@@ -386,7 +446,7 @@
 
 #define OS_LAYER_GLIB_SYSTEMINCLUDE SYSTEMINCLUDE  OS_LAYER_PUBLIC_EXPORT_PATH(stdapis/glib-2.0) \
                                                    OS_LAYER_PUBLIC_EXPORT_PATH(stdapis/glib-2.0/glib) \
-                                                   OS_LAYER_PUBLIC_EXPORT_PATH(stdapis/glib-2.0/gObject)
+                                                   OS_LAYER_PUBLIC_EXPORT_PATH(stdapis/glib-2.0/gobject)
 
 
 #define OS_LAYER_SSL_SYSTEMINCLUDE SYSTEMINCLUDE   OS_LAYER_PUBLIC_EXPORT_PATH(stdapis/openssl)
@@ -411,6 +471,16 @@
 // the stllib. 
 #define STLLIB_USAGE_DEFINITIONS OPTION CW -wchar_t on\
         MACRO _WCHAR_T_DECLARED
+
+
+/**
+ *  Symbian systeminclude macros for standard APIs.
+*/
+#define OS_LAYER_ESTLIB_SYSTEMINCLUDE SYSTEMINCLUDE  OS_LAYER_PUBLIC_EXPORT_PATH(libc)
+
+#define OS_LAYER_STLPORTV5_SYSTEMINCLUDE SYSTEMINCLUDE    OS_LAYER_PUBLIC_EXPORT_PATH(stdapis/stlportv5)
+
+#define OS_LAYER_LIBXML2_SYSTEMINCLUDE SYSTEMINCLUDE  OS_LAYER_PUBLIC_EXPORT_PATH(stdapis/libxml2)
 
 
 /**
@@ -551,15 +621,15 @@
 * ---------------------------------------
 */
 #if __GNUC__ >= 3
-#define CONFML_EXPORT_PATH(file,category)           /epoc32/rom/config/confml_data/category/file
-#define CRML_EXPORT_PATH(file,category)             /epoc32/rom/config/confml_data/category/file
-#define GCFML_EXPORT_PATH(file,category)            /epoc32/rom/config/confml_data/category/file
-#define CONFML_CONFIG_EXPORT_PATH(file,category)    /epoc32/rom/config/confml_data/category/config/file
+#define CONFML_EXPORT_PATH(file,category)           /epoc32/rom/config/assets/category/confml/file
+#define CRML_EXPORT_PATH(file,category)             /epoc32/rom/config/assets/category/implml/file
+#define GCFML_EXPORT_PATH(file,category)            /epoc32/rom/config/assets/category/implml/file
+#define CONFML_CONFIG_EXPORT_PATH(file,category)    /epoc32/rom/config/assets/category/confml/file
 #else
-#define CONFML_EXPORT_PATH(file,category)           /epoc32/rom/config/confml_data/##category##/##file
-#define CRML_EXPORT_PATH(file,category)             /epoc32/rom/config/confml_data/##category##/##file
-#define GCFML_EXPORT_PATH(file,category)            /epoc32/rom/config/confml_data/##category##/##file
-#define CONFML_CONFIG_EXPORT_PATH(file,category)    /epoc32/rom/config/confml_data/##category##/config/##file
+#define CONFML_EXPORT_PATH(file,category)           /epoc32/rom/config/assets/##category##/confml/##file
+#define CRML_EXPORT_PATH(file,category)             /epoc32/rom/config/assets/##category##/implml/##file
+#define GCFML_EXPORT_PATH(file,category)            /epoc32/rom/config/assets/##category##/implml/##file
+#define CONFML_CONFIG_EXPORT_PATH(file,category)    /epoc32/rom/config/assets/##category##/confml/##file
 #endif
 
 #define APP_LAYER_CONFML(exported)                  CONFML_EXPORT_PATH(exported,s60)
@@ -582,4 +652,92 @@
 #define OS_LAYER_GCFML(exported)                    GCFML_EXPORT_PATH(exported,s60)
 #define OS_LAYER_CONFML_CONFIG(exported)            CONFML_CONFIG_EXPORT_PATH(exported,s60)
 
+#define APP_LAYER_EXPORTS_CONFML(exported)           CONFML_EXPORT_PATH(exported,symbianos)
+#define APP_LAYER_EXPORTS_CRML(exported)             CRML_EXPORT_PATH(exported,symbianos)
+#define APP_LAYER_EXPORTS_GCFML(exported)            GCFML_EXPORT_PATH(exported,symbianos)
+
+#define MW_LAYER_EXPORTS_CONFML(exported)            CONFML_EXPORT_PATH(exported,symbianos)
+#define MW_LAYER_EXPORTS_CRML(exported)              CRML_EXPORT_PATH(exported,symbianos)
+#define MW_LAYER_EXPORTS_GCFML(exported)             GCFML_EXPORT_PATH(exported,symbianos)
+       
+// Deprecate: Use the OS_LAYER_* macros instead of OSEXT_LAYER_*                                             
+#define OSEXT_LAYER_CONFML(exported)                do not use intentionally generates error
+#define OSEXT_LAYER_CRML(exported)                  do not use intentionally generates error
+#define OSEXT_LAYER_GCFML(exported)                 do not use intentionally generates error
+#define OSEXT_LAYER_CONFML_CONFIG(exported)         do not use intentionally generates error
+#define OS_LAYER_EXPORTS_CONFML(exported)            CONFML_EXPORT_PATH(exported,symbianos)
+#define OS_LAYER_EXPORTS_CRML(exported)              CRML_EXPORT_PATH(exported,symbianos)
+#define OS_LAYER_EXPORTS_GCFML(exported)             GCFML_EXPORT_PATH(exported,symbianos)
+
+/**
+ * Macros to be used in kernel and BSP files to specify systeminclude locations. These macros are necessary
+ * because in some case, the systeminclude location changes based on, e.g., hardware platform.
+ */
+#if __GNUC__ >= 3
+#define SYMBIAN_BASE_SYSTEMINCLUDE(included) SYSTEMINCLUDE SYMBIAN_OS_LAYER_PLATFORM_EXPORT_PATH(included)
+#define SYMBIAN_NE1_TB_SYSTEMINCLUDE(included) SYSTEMINCLUDE SYMBIAN_OS_LAYER_PLATFORM_EXPORT_PATH(ne1_tb/included)
+#define SYMBIAN_TIOMAP3_SYSTEMINCLUDE(included) SYSTEMINCLUDE SYMBIAN_OS_LAYER_PLATFORM_EXPORT_PATH(tiomap3/included)
+#define SYMBIAN_H2_SYSTEMINCLUDE(included) SYSTEMINCLUDE SYMBIAN_OS_LAYER_PLATFORM_EXPORT_PATH(h2/included)
+#define SYMBIAN_ASSP_SYSTEMINCLUDE(included) SYSTEMINCLUDE SYMBIAN_OS_LAYER_PLATFORM_EXPORT_PATH(assp/included)
+#define SYMBIAN_OMAP_HRP_SYSTEMINCLUDE(included) SYSTEMINCLUDE SYMBIAN_OS_LAYER_PLATFORM_EXPORT_PATH(omap_hrp/included)
+#define SYMBIAN_WINS_SYSTEMINCLUDE(included) SYSTEMINCLUDE SYMBIAN_OS_LAYER_PLATFORM_EXPORT_PATH(wins/included)
+#define SYMBIAN_8500ED_SYSTEMINCLUDE(included) SYSTEMINCLUDE SYMBIAN_OS_LAYER_PLATFORM_EXPORT_PATH(included)
+#define SYMBIAN_8500_SYSTEMINCLUDE(included) SYSTEMINCLUDE SYMBIAN_OS_LAYER_PLATFORM_EXPORT_PATH(included)
+#define SYMBIAN_INTERNAL_SYSTEMINCLUDE(included) SYSTEMINCLUDE SYMBIAN_OS_LAYER_PLATFORM_EXPORT_PATH(internal/included)
+#define SYMBIAN_CONFIG_SYSTEMINCLUDE(included) SYSTEMINCLUDE SYMBIAN_OS_LAYER_PLATFORM_EXPORT_PATH(included)
+#define SYMBIAN_NDKX_SYSTEMINCLUDE(included) SYSTEMINCLUDE SYMBIAN_OS_LAYER_PLATFORM_EXPORT_PATH(included)
+#else
+#define SYMBIAN_BASE_SYSTEMINCLUDE(included) SYSTEMINCLUDE SYMBIAN_OS_LAYER_PLATFORM_EXPORT_PATH(##included)
+#define SYMBIAN_NE1_TB_SYSTEMINCLUDE(included) SYSTEMINCLUDE SYMBIAN_OS_LAYER_PLATFORM_EXPORT_PATH(ne1_tb/##included)
+#define SYMBIAN_TIOMAP3_SYSTEMINCLUDE(included) SYSTEMINCLUDE SYMBIAN_OS_LAYER_PLATFORM_EXPORT_PATH(tiomap3/##included)
+#define SYMBIAN_H2_SYSTEMINCLUDE(included) SYSTEMINCLUDE SYMBIAN_OS_LAYER_PLATFORM_EXPORT_PATH(h2/##included)
+#define SYMBIAN_ASSP_SYSTEMINCLUDE(included) SYSTEMINCLUDE SYMBIAN_OS_LAYER_PLATFORM_EXPORT_PATH(assp/##included)
+#define SYMBIAN_OMAP_HRP_SYSTEMINCLUDE(included) SYSTEMINCLUDE SYMBIAN_OS_LAYER_PLATFORM_EXPORT_PATH(omap_hrp/##included)
+#define SYMBIAN_WINS_SYSTEMINCLUDE(included) SYSTEMINCLUDE SYMBIAN_OS_LAYER_PLATFORM_EXPORT_PATH(wins/##included)
+#define SYMBIAN_8500ED_SYSTEMINCLUDE(included) SYSTEMINCLUDE SYMBIAN_OS_LAYER_PLATFORM_EXPORT_PATH(##included)
+#define SYMBIAN_8500_SYSTEMINCLUDE(included) SYSTEMINCLUDE SYMBIAN_OS_LAYER_PLATFORM_EXPORT_PATH(##included)
+#define SYMBIAN_INTERNAL_SYSTEMINCLUDE(included) SYSTEMINCLUDE SYMBIAN_OS_LAYER_PLATFORM_EXPORT_PATH(internal/##included)
+#define SYMBIAN_CONFIG_SYSTEMINCLUDE(included) SYSTEMINCLUDE SYMBIAN_OS_LAYER_PLATFORM_EXPORT_PATH(##included)
+#define SYMBIAN_NDKX_SYSTEMINCLUDE(included) SYSTEMINCLUDE SYMBIAN_OS_LAYER_PLATFORM_EXPORT_PATH(##included)
+#endif
+   
+
+/**
+* Temporary macros for Symbian exports.
+*/
+#ifdef SYMBIAN_OLD_EXPORT_LOCATION
+#if __GNUC__ >= 3
+#define SYMBIAN_OS_LAYER_PUBLIC_EXPORT_PATH(exported) OS_LAYER_PUBLIC_EXPORT_PATH(exported)
+#define SYMBIAN_OS_LAYER_PLATFORM_EXPORT_PATH(exported) OS_LAYER_PUBLIC_EXPORT_PATH(exported)
+#define SYMBIAN_MW_LAYER_PUBLIC_EXPORT_PATH(exported) OS_LAYER_PUBLIC_EXPORT_PATH(exported)
+#define SYMBIAN_MW_LAYER_PLATFORM_EXPORT_PATH(exported) OS_LAYER_PUBLIC_EXPORT_PATH(exported)
+#define SYMBIAN_APP_LAYER_PUBLIC_EXPORT_PATH(exported) OS_LAYER_PUBLIC_EXPORT_PATH(exported)
+#define SYMBIAN_APP_LAYER_PLATFORM_EXPORT_PATH(exported) OS_LAYER_PUBLIC_EXPORT_PATH(exported)
+#else
+#define SYMBIAN_OS_LAYER_PUBLIC_EXPORT_PATH(exported) OS_LAYER_PUBLIC_EXPORT_PATH(##exported)
+#define SYMBIAN_OS_LAYER_PLATFORM_EXPORT_PATH(exported) OS_LAYER_PUBLIC_EXPORT_PATH(##exported)
+#define SYMBIAN_MW_LAYER_PUBLIC_EXPORT_PATH(exported) OS_LAYER_PUBLIC_EXPORT_PATH(##exported)
+#define SYMBIAN_MW_LAYER_PLATFORM_EXPORT_PATH(exported) OS_LAYER_PUBLIC_EXPORT_PATH(##exported)
+#define SYMBIAN_APP_LAYER_PUBLIC_EXPORT_PATH(exported) OS_LAYER_PUBLIC_EXPORT_PATH(##exported)
+#define SYMBIAN_APP_LAYER_PLATFORM_EXPORT_PATH(exported) OS_LAYER_PUBLIC_EXPORT_PATH(##exported)
+#endif
+#else // not SYMBIAN_OLD_EXPORT_LOCATION
+#if __GNUC__ >= 3
+#define SYMBIAN_OS_LAYER_PUBLIC_EXPORT_PATH(exported) OS_LAYER_PUBLIC_EXPORT_PATH(exported)
+#define SYMBIAN_OS_LAYER_PLATFORM_EXPORT_PATH(exported) OS_LAYER_PLATFORM_EXPORT_PATH(exported)
+#define SYMBIAN_MW_LAYER_PUBLIC_EXPORT_PATH(exported) MW_LAYER_PUBLIC_EXPORT_PATH(exported)
+#define SYMBIAN_MW_LAYER_PLATFORM_EXPORT_PATH(exported) MW_LAYER_PLATFORM_EXPORT_PATH(exported)
+#define SYMBIAN_APP_LAYER_PUBLIC_EXPORT_PATH(exported) APP_LAYER_PUBLIC_EXPORT_PATH(exported)
+#define SYMBIAN_APP_LAYER_PLATFORM_EXPORT_PATH(exported) APP_LAYER_PLATFORM_EXPORT_PATH(exported)
+#else
+#define SYMBIAN_OS_LAYER_PUBLIC_EXPORT_PATH(exported) OS_LAYER_PUBLIC_EXPORT_PATH(##exported)
+#define SYMBIAN_OS_LAYER_PLATFORM_EXPORT_PATH(exported) OS_LAYER_PLATFORM_EXPORT_PATH(##exported)
+#define SYMBIAN_MW_LAYER_PUBLIC_EXPORT_PATH(exported) MW_LAYER_PUBLIC_EXPORT_PATH(##exported)
+#define SYMBIAN_MW_LAYER_PLATFORM_EXPORT_PATH(exported) MW_LAYER_PLATFORM_EXPORT_PATH(##exported)
+#define SYMBIAN_APP_LAYER_PUBLIC_EXPORT_PATH(exported) APP_LAYER_PUBLIC_EXPORT_PATH(##exported)
+#define SYMBIAN_APP_LAYER_PLATFORM_EXPORT_PATH(exported) APP_LAYER_PLATFORM_EXPORT_PATH(##exported)
+#endif
+#endif
+
 #endif  // end of PLATFORM_PATHS_HRH
+

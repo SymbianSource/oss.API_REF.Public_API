@@ -1,27 +1,34 @@
-# /* **************************************************************************
-#  *                                                                          *
-#  *     (C) Copyright Paul Mensonides 2002.
-#  *     Distributed under the Boost Software License, Version 1.0. (See
-#  *     accompanying file LICENSE_1_0.txt or copy at
-#  *     http://www.boost.org/LICENSE_1_0.txt)
-#  *                                                                          *
-#  ************************************************************************** */
-#
-# /* See http://www.boost.org for most recent version. */
-#
-# ifndef BOOST_PREPROCESSOR_SEQ_POP_FRONT_HPP
-# define BOOST_PREPROCESSOR_SEQ_POP_FRONT_HPP
-#
-# include <boost/preprocessor/config/config.hpp>
-# include <boost/preprocessor/seq/seq.hpp>
-#
-# /* BOOST_PP_SEQ_POP_FRONT */
-#
-# if ~BOOST_PP_CONFIG_FLAGS() & BOOST_PP_CONFIG_EDG()
-#    define BOOST_PP_SEQ_POP_FRONT(seq) BOOST_PP_SEQ_TAIL(seq)
-# else
-#    define BOOST_PP_SEQ_POP_FRONT(seq) BOOST_PP_SEQ_POP_FRONT_I(seq)
-#    define BOOST_PP_SEQ_POP_FRONT_I(seq) BOOST_PP_SEQ_TAIL(seq)
-# endif
-#
-# endif
+
+#ifndef BOOST_MPL_LIST_AUX_POP_FRONT_HPP_INCLUDED
+#define BOOST_MPL_LIST_AUX_POP_FRONT_HPP_INCLUDED
+
+// Copyright Aleksey Gurtovoy 2000-2004
+//
+// Distributed under the Boost Software License, Version 1.0. 
+// (See accompanying file LICENSE_1_0.txt or copy at 
+// http://www.boost.org/LICENSE_1_0.txt)
+//
+// See http://www.boost.org/libs/mpl for documentation.
+
+// $Source: /cvsroot/boost/boost/boost/mpl/list/aux_/pop_front.hpp,v $
+// $Date: 2004/10/24 08:18:08 $
+// $Revision: 1.5 $
+
+#include <boost/mpl/pop_front_fwd.hpp>
+#include <boost/mpl/next_prior.hpp>
+#include <boost/mpl/list/aux_/tag.hpp>
+
+namespace boost { namespace mpl {
+
+template<>
+struct pop_front_impl< aux::list_tag >
+{
+    template< typename List > struct apply
+    {
+        typedef typename mpl::next<List>::type type;
+    };
+};
+
+}}
+
+#endif // BOOST_MPL_LIST_AUX_POP_FRONT_HPP_INCLUDED

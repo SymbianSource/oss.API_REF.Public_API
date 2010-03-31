@@ -2,9 +2,9 @@
 * Copyright (c) 2002-2009 Nokia Corporation and/or its subsidiary(-ies).
 * All rights reserved.
 * This component and the accompanying materials are made available
-* under the terms of the License "Symbian Foundation License v1.0" to Symbian Foundation members and "Symbian Foundation End User License Agreement v1.0" to non-members
+* under the terms of "Eclipse Public License v1.0"
 * which accompanies this distribution, and is available
-* at the URL "http://www.symbianfoundation.org/legal/licencesv10.html".
+* at the URL "http://www.eclipse.org/legal/epl-v10.html".
 *
 * Initial Contributors:
 * Nokia Corporation - initial contribution.
@@ -58,6 +58,11 @@ const TUint KBearerInfo = 9;
 default. Only has meaning if KWlanScanMaxDelay is set to 0.
 */
 const TUint KWlanScanCacheLifetime = 10;
+
+/** Network registration values defined in TConnMonNetworkRegistration_v2.
+*/
+const TUint KNetworkRegistration_v2 = 11;
+
 /** QoS - Not supported.
 */
 const TUint KTrafficClass = 30;
@@ -373,6 +378,24 @@ enum TConnMonNetworkRegistration
     ENetworkRegistrationRoaming
     };
 
+/**
+* Network registration status. Valid for CSD, GPRS and WCDMA.
+* New values will be added to the end of the enumeration.
+*/
+enum TConnMonNetworkRegistration_v2
+    {
+    ENetworkRegistrationExtNotAvailable = 0,
+    ENetworkRegistrationExtUnknown,
+    ENetworkRegistrationExtNoService,
+    ENetworkRegistrationExtEmergencyOnly,
+    ENetworkRegistrationExtSearching,
+    ENetworkRegistrationExtBusy,
+    ENetworkRegistrationExtHomeNetwork,
+    ENetworkRegistrationExtDenied,
+    ENetworkRegistrationExtRoamingNational,
+    ENetworkRegistrationExtRoamingInternational
+    };
+    
 /**
 * QoS. Traffic class.
 */

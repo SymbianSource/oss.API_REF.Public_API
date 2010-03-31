@@ -1,9 +1,9 @@
 // Copyright (c) 1997-2009 Nokia Corporation and/or its subsidiary(-ies).
 // All rights reserved.
 // This component and the accompanying materials are made available
-// under the terms of the License "Symbian Foundation License v1.0" to Symbian Foundation members and "Symbian Foundation End User License Agreement v1.0" to non-members
+// under the terms of "Eclipse Public License v1.0"
 // which accompanies this distribution, and is available
-// at the URL "http://www.symbianfoundation.org/legal/licencesv10.html".
+// at the URL "http://www.eclipse.org/legal/epl-v10.html".
 //
 // Initial Contributors:
 // Nokia Corporation - initial contribution.
@@ -18,7 +18,7 @@
 
 #include <e32base.h>
 
-#if !( defined __SYMBIAN_CNTMODEL_HIDE_DBMS__ && defined __SYMBIAN_CNTMODEL_USE_SQLITE__ )
+#if !( defined __SYMBIAN_CNTMODEL_HIDE_DBMS__ )
 #include <d32dbms.h>
 #else
 #include <s32std.h>
@@ -31,32 +31,32 @@
 // Constants
 
 /**
-@internalTechnology
+@publishedAll 
 @released
 */
 const TInt KSpeedDialPhoneLength = 64;
 
 /**
-@internalTechnology
+@publishedAll
 @released
 */
 const TInt KCntMinSpeedDialIndex = 1;
 
 /**
-@internalTechnology
+@publishedAll
 @released
 */
 const TInt KCntMaxSpeedDialIndex = 9;
 
 /**
 Phone Match Length
-@internalTechnology
+@publishedAll
 @released
 */
 const TInt KMaxPhoneMatchLength = 15;
 
 /**
-@internalTechnology
+@publishedAll
 @released
 */
 const TInt KLowerSevenDigits = 7;
@@ -64,7 +64,7 @@ const TInt KLowerSevenDigits = 7;
 /**
 Used for firstname, lastname, companyname, secondname and their
 associated pronunciation fields and e-mail address
-@internalTechnology
+@publishedAll
 @released
 */
 const TInt KCntMaxTextFieldLength=255;
@@ -72,7 +72,7 @@ const TInt KCntMaxTextFieldLength=255;
 // Type definitions
 
 /**
-@internalTechnology
+@publishedAll
 @released
 */
 typedef TBuf<KSpeedDialPhoneLength> TSpeedDialPhoneNumber;
@@ -486,14 +486,17 @@ const TUid KUidContactFieldICCPhonebook={KUidContactFieldICCPhonebookValue};
 @released
 */
 const TUid KUidContactFieldICCGroup={KUidContactFieldICCGroupValue};
-
 /** Identifies a voice dial field. This is a voice recording associated with a telephone number
 field in the item.
 @publishedAll
 @released
 */
 const TUid KUidContactsVoiceDialField={KUidContactsVoiceDialFieldValue};
-
+/** Identifies a Geo field in the contact item. 
+@publishedAll
+@released
+*/
+const TUid KUidContactFieldGEO={KUidContactFieldGEOValue};
 /** Indicates no field present.
 @publishedAll
 @released
@@ -504,6 +507,10 @@ const TUid KUidContactFieldNone={KUidContactFieldNoneValue};
 @released
 */
 const TInt32 KUidContactFieldMatchAllValue=0x110FFF22;
+/** Used in field type matching to indicate that all field types match.
+@publishedAll
+@released
+*/
 const TUid KUidContactFieldMatchAll={KUidContactFieldMatchAllValue};
 
 /*
@@ -699,6 +706,11 @@ const TUid KUidContactFieldVCardMapPREF={KIntContactFieldVCardMapPREF};
 @released
 */
 const TUid KUidContactFieldVCardMapCELL={KIntContactFieldVCardMapCELL};
+/** Field type maps to vCard property parameter INTERNET.
+@publishedAll
+@released
+*/
+const TUid KUidContactFieldVCardMapINTERNET={KIntContactFieldVCardMapINTERNET};
 /** Field type maps to vCard property parameter PAGER.
 @publishedAll
 @released
@@ -1088,6 +1100,11 @@ _LIT(KVersitParamX509,"X509");
 @released
 */
 _LIT(KVersitParamPGP,"PGP");
+/** Name of the INTERNET property parameter.
+@publishedAll
+@released
+*/
+_LIT(KVersitParamINTERNET,"INTERNET");
 
 /** 8 bit name of the TYPE property parameter.
 @publishedAll
@@ -1254,6 +1271,11 @@ _LIT8(KVersitParam8X509,"X509");
 @released
 */
 _LIT8(KVersitParam8PGP,"PGP");
+/** 8 bit name of the INTERNET property parameter.
+@publishedAll
+@released
+*/
+_LIT8(KVersitParam8Internet,"INTERNET");
 
 /**
 8 bit name of the X-IRMC-N property parameter (family or given

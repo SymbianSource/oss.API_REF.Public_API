@@ -1,9 +1,9 @@
 // Copyright (c) 2003-2009 Nokia Corporation and/or its subsidiary(-ies).
 // All rights reserved.
 // This component and the accompanying materials are made available
-// under the terms of the License "Symbian Foundation License v1.0" to Symbian Foundation members and "Symbian Foundation End User License Agreement v1.0" to non-members
+// under the terms of "Eclipse Public License v1.0"
 // which accompanies this distribution, and is available
-// at the URL "http://www.symbianfoundation.org/legal/licencesv10.html".
+// at the URL "http://www.eclipse.org/legal/epl-v10.html".
 //
 // Initial Contributors:
 // Nokia Corporation - initial contribution.
@@ -12,8 +12,6 @@
 //
 // Description:
 //
-
-
 
 /**
  @file
@@ -154,46 +152,41 @@ public:
 	Flags to suppress the authentication elements of the authentication challenge header.
 	*/
 	enum TObexSuppressedAuthElements
-	{
-	EObexNoSuppressedAuthElements				= 0x00,
-	EObexSuppressChallengeOptionsAuthElement	= 0x01,
-	EObexSuppressRealmAuthElement				= 0x02,
-	EObexSuppressAllAuthElements				= EObexSuppressChallengeOptionsAuthElement | EObexSuppressRealmAuthElement // Must be last
-	};		
-		
+		{
+		EObexNoSuppressedAuthElements				= 0x00,
+		EObexSuppressChallengeOptionsAuthElement	= 0x01,
+		EObexSuppressRealmAuthElement				= 0x02,
+		EObexSuppressAllAuthElements				= EObexSuppressChallengeOptionsAuthElement | EObexSuppressRealmAuthElement // Must be last
+		};
+	
 	virtual ~CObex();
 	IMPORT_C void SetCallBack(MObexAuthChallengeHandler& aCallBack);
 	IMPORT_C TBool IsConnected() const;
 	IMPORT_C TBool IsStrictPeer() const;
 	IMPORT_C const TObexConnectInfo& LocalInfo() const;
-	IMPORT_C TInt SetLocalWho(const TDesC8& aInfo); 
-    IMPORT_C const TObexConnectInfo& RemoteInfo() const;
-   	IMPORT_C void SuppressAuthenticationHeaderElements(TObexSuppressedAuthElements aSuppressedObexAuthElements);
-	    
-	// Implementation of MObexNotify Interface
-	/**
-	@internalTechnology
-	*/
+	IMPORT_C TInt SetLocalWho(const TDesC8& aInfo);
+	IMPORT_C const TObexConnectInfo& RemoteInfo() const;
+	IMPORT_C void SuppressAuthenticationHeaderElements(TObexSuppressedAuthElements aSuppressedObexAuthElements);
+	
+public: // Implementation of MObexNotify Interface (No longer used)
 	virtual void Process(CObexPacket& aPacket);
-	/**
-	@internalTechnology
-	*/
-	virtual void Error(TInt aError) ;
-	/** Call back to start the obex session
-	@internalTechnology
-	*/
+	virtual void Error(TInt aError);
 	virtual void TransportUp();
-	/**
-	@internalTechnology
-	*/
 	virtual void TransportDown(TBool aForceTransportDeletion);
 	
+public:
 	virtual void UserPasswordL( const TDesC& aPassword) = 0; 
 	IMPORT_C void RemoteAddr(TSockAddr& anAddr); 
 
 	TConnectState GetConnectState() const;
 
 	IMPORT_C TBool IsAuthenticating() const;
+	
+	// Handling notified events.
+	void NotifyProcess(CObexPacket& aPacket);
+	void NotifyError(TInt aError);
+	void NotifyTransportUp();
+	void NotifyTransportDown(TBool);
 	
 protected:
 	CObex();
@@ -208,12 +201,12 @@ protected:
 	void ProcessChallengeL(const TObexInternalHeader& hdr);			//process the received challenge
 	void ProcessChallResponseL(const TObexInternalHeader& hdr);		//process the response to challenge
 	TInt GenerateChallenge(CObexPacket& aPacket);					//generate a challenge 
-	void PrepareChallResponseL(const TDesC& aPassword);			//generate a response a respose to challenge
-															//after user Password input
+	void PrepareChallResponseL(const TDesC& aPassword);				//generate a response to challenge
+																		//after user Password input
 	void ForcedTransportDown();
 	void ControlledTransportDown();
 	void RemoteInfoCleanup();
-	void CObex::CancelObexConnection();
+	void CancelObexConnection();
 protected:
 	TConnectState iConnectState;
 	CObexTransportControllerBase* iTransportController;

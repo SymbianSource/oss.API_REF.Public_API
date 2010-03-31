@@ -84,14 +84,14 @@ _STLP_BEGIN_NAMESPACE
 //----------------------------------------------------------------------
 // Implementation for the IRIX C library.
 // Solaris interface looks to be identical.
-#if !defined(_STLP_USE_GLIBC) && \
+#if !defined(_STLP_USE_GLIBC) && !defined(__SYMBIAN32__) &&\
     ( defined(__sgi) || \
       ( defined(__sun) && ! defined (_LP64) )  || \
       defined (__osf__) || defined(__DECCXX) || \
       defined (_STLP_MSVC) || defined (__ICL) || defined (__MINGW32__) || defined(__DJGPP) ||\
       defined (_AIX) || defined (_CRAY))
 
-#if defined ( _MSC_VER ) || defined (__ICL) || defined (__MINGW32__) || defined(__DJGPP)
+#if !defined(__SYMBIAN32_) && (defined ( _MSC_VER ) || defined (__ICL) || defined (__MINGW32__) || defined(__DJGPP))
 typedef  char* _File_ptr_type;
 #else
 typedef  unsigned char* _File_ptr_type;

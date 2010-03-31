@@ -1,6 +1,5 @@
 /*-
 
- * © Portions copyright (c) 2006 Symbian Software Ltd. All rights reserved.
  * Copyright (c) 1990, 1993
  *	The Regents of the University of California.  All rights reserved.
  *
@@ -33,8 +32,7 @@
  *
  *	@(#)stdio.h	8.5 (Berkeley) 4/29/95
  * $FreeBSD: src/include/stdio.h,v 1.56 2004/06/20 10:01:30 tjr Exp $
- *  © Portions copyright (c) 2005-2006  Nokia Corporation.  All rights reserved.
- * © Portions copyright (c) 2007-2008 Symbian Software Ltd. All rights reserved.
+ *  Portions Copyright (c) 2005-2008 Nokia Corporation and/or its subsidiary(-ies). All rights reserved.
  */
 
 #ifndef	_STDIO_H_
@@ -57,6 +55,10 @@ extern "C" {
 
 
 typedef	__off_t		fpos_t;
+
+#if defined(SYMBIAN_OE_LARGE_FILE_SUPPORT) && !defined(SYMBIAN_OE_NO_LFS)
+typedef	__off_t		fpos64_t;
+#endif /* SYMBIAN_OE_LARGE_FILE_SUPPORT && !SYMBIAN_OE_NO_LFS */
 
 #ifndef _SIZE_T_DECLARED
 typedef	__size_t	size_t;
@@ -132,7 +134,7 @@ typedef	struct __sFILE {
 	unsigned char *_p;	/* current position in (some) buffer */
 	int	_r;		/* read space left for getc() */
 	int	_w;		/* write space left for putc() */
-	short	_flags;		/* flags, below; this FILE is free if 0 */
+	short _flags;		/* flags, below; this FILE is free if 0 */
 	short	_file;		/* fileno, if Unix descriptor, else -1 */
 	struct	__sbuf _bf;	/* the buffer (at least 1 byte, if !NULL) */
 	int	_lbfsize;	/* 0 or -_bf._size, for inline putc */
@@ -318,6 +320,12 @@ IMPORT_C int	 rename(const char *, const char *);
 IMPORT_C void	 rewind(FILE *);
 IMPORT_C int	 scanf(const char * __restrict, ...);
 IMPORT_C void	 setbuf(FILE * __restrict, char * __restrict);
+
+#ifdef __SYMBIAN32__
+IMPORT_C int     set_fmode(char mode);
+IMPORT_C char     get_fmode(void);
+#endif
+
 IMPORT_C int	 setvbuf(FILE * __restrict, char * __restrict, int, size_t);
 IMPORT_C int	 sprintf(char * __restrict, const char * __restrict, ...);
 IMPORT_C int	 sscanf(const char * __restrict, const char * __restrict, ...);
@@ -329,6 +337,16 @@ IMPORT_C int	 vfprintf(FILE * __restrict, const char * __restrict,
 IMPORT_C int	 vprintf(const char * __restrict, va_list);
 IMPORT_C int	 vsprintf(char * __restrict, const char * __restrict,
 	    va_list);
+
+
+#if defined(SYMBIAN_OE_LARGE_FILE_SUPPORT) && !defined(SYMBIAN_OE_NO_LFS)
+#define fgetpos64	fgetpos
+#define fopen64		fopen
+#define freopen64	freopen
+#define fsetpos64	fsetpos
+#define tmpfile64	tmpfile
+#endif /* SYMBIAN_OE_LARGE_FILE_SUPPORT && !SYMBIAN_OE_NO_LFS */
+
 
 #if __ISO_C_VISIBLE >= 1999
 IMPORT_C int	 snprintf(char * __restrict, size_t, const char * __restrict,
@@ -386,8 +404,14 @@ IMPORT_C int	 putchar_unlocked(int);
 #endif
 
 #if __POSIX_VISIBLE >= 200112
-int	 fseeko(FILE *, __off_t, int);
-__off_t	 ftello(FILE *);
+IMPORT_C int	 fseeko(FILE *, __off_t, int);
+IMPORT_C __off_t	 ftello(FILE *);
+
+#if defined(SYMBIAN_OE_LARGE_FILE_SUPPORT) && !defined(SYMBIAN_OE_NO_LFS)
+#define fseeko64	fseeko
+#define ftello64	ftello
+#endif /* SYMBIAN_OE_LARGE_FILE_SUPPORT && !SYMBIAN_OE_NO_LFS */
+
 #endif
 
 #if __BSD_VISIBLE || __XSI_VISIBLE > 0 && __XSI_VISIBLE < 600

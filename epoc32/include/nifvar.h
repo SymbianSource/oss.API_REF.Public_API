@@ -2,9 +2,9 @@
 * Copyright (c) 1997-2009 Nokia Corporation and/or its subsidiary(-ies).
 * All rights reserved.
 * This component and the accompanying materials are made available
-* under the terms of the License "Symbian Foundation License v1.0" to Symbian Foundation members and "Symbian Foundation End User License Agreement v1.0" to non-members
+* under the terms of "Eclipse Public License v1.0"
 * which accompanies this distribution, and is available
-* at the URL "http://www.symbianfoundation.org/legal/licencesv10.html".
+* at the URL "http://www.eclipse.org/legal/epl-v10.html".
 *
 * Initial Contributors:
 * Nokia Corporation - initial contribution.
@@ -19,8 +19,6 @@
 
 
 
-
-
 /**
  @file NIFVAR.H
  @publishedAll
@@ -32,6 +30,9 @@
 #define __NIFVAR_H__
 
 #include <e32std.h>
+#ifndef SYMBIAN_ENABLE_SPLIT_HEADERS
+#include <nifvar_internal.h>
+#endif
 
 /**
 Generic Progress Constant
@@ -53,9 +54,17 @@ const TInt KConnectionClosed         = 4500;           // From an Agent
 const TInt KMaxAgtProgress           = 5500;
 
 const TInt KMinNifProgress           = 6000;
+const TInt KMaxNifProgress           = 9000;
+
+/**
+Do no use in new code. Use KConnectionUp or KConnectionDown
+from es_sock.h instead.
+
+@publishedAll
+@deprecated
+*/
 const TInt KLinkLayerOpen            = 7000;           // From a NIF
 const TInt KLinkLayerClosed          = 8000;           // From a NIF
-const TInt KMaxNifProgress           = 9000;
 
 /**
 Additional generic progress constantfrom an agent
@@ -69,6 +78,7 @@ Additional generic progress constantfrom an agent
 const TInt KStartingConnection = 3000;				// from an agent
 const TInt KIncomingConnectionInProgress = 3350;	// from an agent
 const TInt KDataTransferTemporarilyBlocked = 4000;	// eg. suspended (GPRS); from an agent
+//const TInt KDataTransferUnblocked = 4001;           // eg. resume (GPRS); from an agent - declared in nifvar_internal.h
 const TInt KConnectionStartingClose	= 4250;			// from an agent
 
 /**
@@ -141,13 +151,6 @@ const TInt KConfigDaemonUnloaded = 8900;
 const TInt KMaxConfigDaemonProgress = 8900;
  
 /**
-Generic progress notifications from the null configuration daemon.
-@internalComponent
-@released
-**/
-const TInt KNullConfigDaemonConfigureNetwork = 8401;
-
-/**
 New software should use the progress ranges defined above
 
 @publishedAll
@@ -158,24 +161,6 @@ const TInt KAgentUnconnected = 1;
 const TInt KMaxAgentProgress = 999;
 const TInt KMinInterfaceProgress = 1000;
 const TInt KMaxInterfaceProgress = 1999;
-
-/**
-Callback actions
-@internalComponent
-*/
-enum TCallbackAction
-	{
-	ECallbackActionIETFType0	=0,
-	ECallbackActionIETFType1	=1,
-	ECallbackActionIETFType2	=2,
-	ECallbackActionIETFType3	=3,
-	ECallbackActionIETFType4	=4,
-	ECallbackActionIETFType5	=5,
-	//
-	ECallbackActionMSCBCPRequireClientSpecifiedNumber	= 1001,
-	ECallbackActionMSCBCPAcceptServerSpecifiedNumber	= 1002,
-	ECallbackActionMSCBCPOverrideServerSpecifiedNumber	= 1003
-	};
 
 /**
 The type of connection provided by the network interface
@@ -211,15 +196,6 @@ enum TConnectionType
 	EConnectionGPRSRel4,
 	EConnectionGPRSRel5,
 
-	/** Connection values 2500-2999 for subsets of CDMA
-	@todo Check these CDMA values to find which ones affect the interface features
-	*/
-	EConnectionCDMA = 2500,
-
-	EConnectionCDMA20001xRTT,
-	EConnectionCDMA20001xRTTDO,
-	EConnectionCDMA20001xRTTDV,
-	EConnectionCDMA20003xRTT,
 	/** Connection values 3000 for IEEE802.3 (Ethernet)
 	*/
 	EConnectionEthernet = 3000,
@@ -237,20 +213,22 @@ enum TConnectionType
 	};
 
 /**
-The layer to which the call refers
-@note Used by data sent and received to indicate to which layer the byte count refers
-@todo Write about this, add appropriate arguments to interfaces
-@internalTechnology
+Callback actions
+@publishedAll
+@released
 */
-enum TConnectionLayer
+enum TCallbackAction
 	{
-	EPhysicalLayer,
-	EDataLinkLayer = 100,
-	ENetworkLayer = 200,
-	ETransportLayer = 300,
-	ESessionLayer = 400,
-	EPresentationLayer = 500,
-	EApplicationLayer = 600
+	ECallbackActionIETFType0	=0,
+	ECallbackActionIETFType1	=1,
+	ECallbackActionIETFType2	=2,
+	ECallbackActionIETFType3	=3,
+	ECallbackActionIETFType4	=4,
+	ECallbackActionIETFType5	=5,
+	//
+	ECallbackActionMSCBCPRequireClientSpecifiedNumber	= 1001,
+	ECallbackActionMSCBCPAcceptServerSpecifiedNumber	= 1002,
+	ECallbackActionMSCBCPOverrideServerSpecifiedNumber	= 1003
 	};
 
 #endif

@@ -1,9 +1,9 @@
 // Copyright (c) 2004-2009 Nokia Corporation and/or its subsidiary(-ies).
 // All rights reserved.
 // This component and the accompanying materials are made available
-// under the terms of the License "Symbian Foundation License v1.0" to Symbian Foundation members and "Symbian Foundation End User License Agreement v1.0" to non-members
+// under the terms of "Eclipse Public License v1.0"
 // which accompanies this distribution, and is available
-// at the URL "http://www.symbianfoundation.org/legal/licencesv10.html".
+// at the URL "http://www.eclipse.org/legal/epl-v10.html".
 //
 // Initial Contributors:
 // Nokia Corporation - initial contribution.
@@ -16,28 +16,63 @@
 #ifndef __TzLocalizer_H__
 #define __TzLocalizer_H__
 
-#include <e32base.h> //CBase
+#include <e32base.h>
+#include <tz.h>
+#include <tzlocalizationdatatypes.h>
 
-#include <tzlocalizationdatatypes.h> 	//CTzLocalizedCity, CTzLocalizedCityGroup etc
+class CTzLocalizationResourceReader;
+class CTzLocalizationUserDataReader;
 
-// Forward Declarations
-class MTzLocalizationReader;
-class MTzLocalizationWriter;
-
+const TInt KTzCityNotInGroupId = 0;
 /**
-Retrieves localized time zone information based on a time zone ID.
+Retrieves localized time zone information based on a time zone identifier.
 
 Time zone information is available in the following forms:
-- Standard Name, for instance Greenwich Mean Time,
-- Short Standard Name, for instance GMT,
-- Daylight Savings Name, for instance British Summer Time,
-- Short Daylight Savings Name, for instance BST.
+
+- Standard time name, for example "Greenwich Mean Time"
+- Short standard time name, for instance "GMT"
+- Daylight saving time name, for instance "British Summer Time"
+- Short daylight saving time name, for instance "BST"
 
 This information is encapsulated in a CTzLocalizedTimeZone object.
 
-A collection of localizable cities for a specific time zone can also be returned.
-New cities can be added to a time zone.  Cities may also be added to groups, but 
-a city may only be a member of one group.
+A collection of localized cities for a specific time zone is returned as a
+CTzLocalizedCityArray object.  An individual localized city is returned as a
+CTzLocalizedCity object.
+
+A collection of localized city groups for a specific time zone is returned as a
+CTzLocalizedCityGroupArray.  An individual localized city group is returned as a
+CTzLocalizedCityGroup object.
+
+New non-localized cities can be added to an existing time zone.  A new city may
+also be added to a city group, but a city may only be a member of one city
+group.
+
+User-defined time zone names can also be retrieved through this class,
+encapsulated as follows:
+
+- In a CTzLocalizedTimeZone object for long/short standard time and long/short
+daylight saving time user-defined time zone names.
+- In a CTzLocalizedCityArray object or CTzLocalizedCity object for user-defined
+time zone city names.
+- In a CTzLocalizedCityGroupArray object or CTzLocalizedCityGroup object for
+user-defined time zone region names.
+
+All user-defined time zones names’ use the same city group identifier of
+KTzCityNotInGroupId to indicate that they do not belong to a specific group.
+
+For methods that return a single city or single city group, if the given group
+identifier is KTzCityNotInGroupId the methods leave with KErrArgument since it
+is not possible to determine which region name should be used to identify the
+single city group.
+
+For methods that return an array of cities or city groups, if the given group
+identifier is KTzCityNotInGroupId the methods shall return all user-defined city
+names or region names.
+
+The array object forms can contain a combination of system time zone
+localization information and user-defined time zone names.  The client can
+control the combination of data using the SetDataSource() method.
 
 @publishedAll
 @released
@@ -85,17 +120,40 @@ class CTzLocalizer : public CBase
 			ETzAlphaShortDaylightNameDescending
 			};
 
+	    /**
+	    This enumeration indicates the data source(s) to use for CTzLocalizer
+	    methods that return a combination of system time zone localization
+	    information and user-defined time zone names.  The enumeration values
+	    are bit flags which can be combined using the logical OR operator.
+	    */
+		enum TTzLocalizerDataSource
+	        {
+	        /** Use system time zone localization information. */
+	        ETzDataSourceSystem = 0x1,
+	        /** Use non-localized user time zone names. */
+	        ETzDataSourceUser   = 0x2
+	        };
+
 	public:
 		//Construction / Destruction
 		IMPORT_C static CTzLocalizer* NewL();
 		IMPORT_C static CTzLocalizer* NewLC();
 		IMPORT_C ~CTzLocalizer();
 
+	private:
+		CTzLocalizer();
+		void ConstructL();
+        TBool DbNeedsUpdatingL() const;
+        void UpgradeDbVersionL();
+        void FetchCityToUpgradeL(CTzLocalizedTimeZoneArray& aTimeZoneArray, CTzLocalizedCityArray& aCityArray, CTzLocalizedTimeZone::TTzFrequentlyUsedZone aCachedZone);
+        void RecreateDbL();
+
+	public:
 		//Time zones
 		IMPORT_C CTzLocalizedTimeZone* GetLocalizedTimeZoneL(TInt aTimeZoneId) const;
 		IMPORT_C CTzLocalizedTimeZone* GetLocalizedTimeZoneL(const CTzLocalizedCity& aCity) const;
 		IMPORT_C CTzLocalizedTimeZoneArray* GetAllTimeZonesL(const TTzSortOrder aSortOrder = ETzUnsorted);
-		
+
 		IMPORT_C void SetTimeZoneL(TInt aTimeZoneId);
 
 		//City Management
@@ -131,45 +189,55 @@ class CTzLocalizer : public CBase
 		IMPORT_C CTzLocalizedCity* FindCityByNameL(const TDesC& aCityName, const TInt aTimeZoneId = 0);
 		IMPORT_C CTzLocalizedTimeZone* FindTimeZoneByNameL(const TDesC& aTimeZoneName);
 		IMPORT_C CTzLocalizedCityGroup* FindCityGroupByNameL(const TDesC& aCityGroupName);
-		
+
 		IMPORT_C TBool CheckLanguage();
-		
+
 		//Cities and Time Zones with a specified UTC offset
 		IMPORT_C CTzLocalizedCityArray* GetCitiesWithUTCOffsetL(TInt aUTCOffsetInMinutes, const TTzSortOrder aSortOrder = ETzUnsorted);
 		IMPORT_C CTzLocalizedTimeZoneArray* GetTimeZonesWithUTCOffsetL(TInt aUTCOffsetInMinutes, const TTzSortOrder aSortOrder = ETzUnsorted);
-		
+
+		IMPORT_C void SetDataSource(TUint aDataSource);
+
 	private:
-		void ConstructL();
-		CTzLocalizer();
-		
 		TBool PrepareFrequentlyUsedZonesL();
 		void UpdateFrequentlyUsedZonesL();
 		CTzLocalizedTimeZone* GetFrequentlyUsedDefaultZoneL(CTzLocalizedTimeZone::TTzFrequentlyUsedZone aFreqUsedZone);
 		TUint32 GetFrequentlyUsedDefaultZoneCenRepKeyL(CTzLocalizedTimeZone::TTzFrequentlyUsedZone aFreqUsedZone);
-		
-		void GetCitiesL(CTzLocalizedCityArray& aCities, const TTzLocalizedId& aLocalizedId, const TTzSortOrder aSortOrder = ETzUnsorted);
-		
+		void GetCitiesL(CTzLocalizedCityArray& aCities, const TTzLocalizedId& aLocalizedId,
+			TBool aUseDataSource, const TTzSortOrder aSortOrder = ETzUnsorted);
 		TLinearOrder<CTzLocalizedCity> CitySortOrderL(const TTzSortOrder aSortOrder);
 		TLinearOrder<CTzLocalizedTimeZone> TimeZoneSortOrderL(const TTzSortOrder aSortOrder);
 		template <class T> void PrepareForUTCSortL(T& aArray);
-		
 		TInt GetTimeZoneIdFromTzServerL();
 		void DoSetTimeZoneL(TInt aTimeZoneId);
 		void ChangeHomeTimeZoneL(TInt aNewId);
-		
-		void ValidateDbL();
-        void RecreateDbL();
-        TBool DbNeedsUpdatingL() const;
-		TBool DbIsInvalidL() const;
-        void UpgradeDbVersionL();
-        void FetchCityToUpgradeL(CTzLocalizedTimeZoneArray& aTimeZoneArray, CTzLocalizedCityArray& aCityArray, CTzLocalizedTimeZone::TTzFrequentlyUsedZone aCachedZone);
+        TBool FindCityAndSetCityIndexL(CTzLocalizedCity& aLocalizedCity, TTzLocalizerDataSource aDataSource);
+        TBool IsOperateOnUserDbL(TInt aTimeZoneId, TBool aUseDataSource) const;
+        void ReadCitiesL(CTzLocalizedCityArray& aCityArray, TInt aTimeZoneId, TBool aUseDataSource) const;
+        CTzLocalizedCity* ReadDefaultCityL(TInt aTimeZoneId, TBool aUseDataSource) const;
+        void WriteAllFrequentlyUsedZonesL(const CTzLocalizedTimeZoneArray& aTimeZones, const CTzLocalizedCityArray& aCities);
+        void SetFrequentlyUsedZoneL(const CTzLocalizedTimeZone& aTimeZone, const CTzLocalizedCity& aCity,
+        	const CTzLocalizedTimeZone::TTzFrequentlyUsedZone aFrequentlyUsedZone);
+        CTzLocalizedTimeZone* GetLocalizedTimeZoneL(TInt aTimeZoneId, TBool aUseDataSource) const;
+        CTzLocalizedTimeZone* GetLocalizedTimeZoneL(const CTzLocalizedCity& aCity, TBool aUseDataSource) const;
+        static void PopulateCityArrayL(const RPointerArray<CTzLocalizedCityRecord>& aCityRecords,
+        	CTzLocalizedCityArray& aCities);
+        static CTzLocalizedTimeZoneRecord* CreateTimeZoneRecordL(const CTzLocalizedTimeZone& aTimeZone);
+        static CTzLocalizedTimeZoneRecord* CreateTimeZoneRecordLC(const CTzLocalizedTimeZone& aTimeZone);
+        static CTzLocalizedCityRecord* CreateCityRecordL(const CTzLocalizedCity& aCity);
+        static CTzLocalizedCityRecord* CreateCityRecordLC(const CTzLocalizedCity& aCity);
+        static CTzLocalizedTimeZone* CreateTimeZoneL(const CTzLocalizedTimeZoneRecord& aTimeZoneRecord);
+        static CTzLocalizedCity* CreateCityL(const CTzLocalizedCityRecord& aCityRecord);
+        static void CleanupTimeZonePointerArray(TAny* aArray);
+        static void CleanupCityPointerArray(TAny* aArray);
 
-	private:
-		//Member data
-		MTzLocalizationReader* iStaticDataReader;
-		MTzLocalizationReader* iPersistedDataReader;
-		MTzLocalizationWriter* iPersistedDataWriter;
+private:
+		CTzLocalizationResourceReader* iStaticDataReader;
+		CTzLocalizationUserDataReader* iUserDataReader;
+
 		TLanguage iLanguage;
+		TUint iDataSource;
+		RTz iTzSession;
 	};
 
 #endif//__TzLocalizer_H__

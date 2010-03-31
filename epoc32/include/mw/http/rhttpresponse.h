@@ -1,9 +1,9 @@
 // Copyright (c) 2001-2009 Nokia Corporation and/or its subsidiary(-ies).
 // All rights reserved.
 // This component and the accompanying materials are made available
-// under the terms of the License "Symbian Foundation License v1.0" to Symbian Foundation members and "Symbian Foundation End User License Agreement v1.0" to non-members
+// under the terms of "Eclipse Public License v1.0"
 // which accompanies this distribution, and is available
-// at the URL "http://www.symbianfoundation.org/legal/licencesv10.html".
+// at the URL "http://www.eclipse.org/legal/epl-v10.html".
 //
 // Initial Contributors:
 // Nokia Corporation - initial contribution.
@@ -12,8 +12,6 @@
 //
 // Description:
 //
-
-
 
 /**
  @file RHTTPResponse.h
@@ -69,10 +67,10 @@ public:
 	 */
 	//##ModelId=3A3765310382
 	IMPORT_C void SetStatusCode(TInt aStatus);
-	/// Sets the status string
+	// Sets the status string
 	//##ModelId=3A914DF8019F
 	IMPORT_C void SetStatusText(RStringF aStatusString);
-	/// Sets the HTTP version
+	// Sets the HTTP version
 	//##ModelId=3A914DF8016D
 	IMPORT_C void SetVersion(TVersion aVersion);
 	//@}

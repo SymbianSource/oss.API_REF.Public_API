@@ -1,9 +1,9 @@
 // Copyright (c) 2005-2009 Nokia Corporation and/or its subsidiary(-ies).
 // All rights reserved.
 // This component and the accompanying materials are made available
-// under the terms of the License "Symbian Foundation License v1.0" to Symbian Foundation members and "Symbian Foundation End User License Agreement v1.0" to non-members
+// under the terms of the License "ARM EABI LICENCE.txt"
 // which accompanies this distribution, and is available
-// at the URL "http://www.symbianfoundation.org/legal/licencesv10.html".
+// in kernel/eka/compsupp.
 //
 // Initial Contributors:
 // Nokia Corporation - initial contribution.
@@ -11,16 +11,9 @@
 // Contributors:
 //
 // Description:
-// e32\compsupp\symcpp\symcpp.h
-// This is a preinclude file for the symbian cpp specific defintions from RVCT2.2 onwards
+// This is a preinclude file for the Symbian C++ specific defintions for RVCT.
 // 
 //
-
-#ifdef __ARMCC_VERSION
-#if (__ARMCC_VERSION < 220000 || __ARMCC_VERSION >= 230000)
-#error This instantiation of the build requires use of RVCT 2.2
-#endif
-#endif
 
 // Deal with operator new issues here
 #ifdef __cplusplus
@@ -29,19 +22,34 @@ namespace std {
 	extern const nothrow_t nothrow;
 }
 
+#ifndef __OPERATOR_NEW_DECLARED__
+#define __OPERATOR_NEW_DECLARED__
+
+/* e32cmn.h also declares these five overloads, but slightly differently, so use
+ * __OPERATOR_NEW_DECLARED__ to avoid the declarations here (included by compiler-specific
+ * pre-include files) from conflicting.
+ */
+
 IMPORT_C void* operator new(unsigned int aSize) __NO_THROW;
 
 IMPORT_C void* operator new(unsigned int aSize,unsigned int aSize1) __NO_THROW;
 
 IMPORT_C void* operator new[](unsigned int aSize) __NO_THROW;
 
-IMPORT_C void* operator new(unsigned int aSize, const std::nothrow_t& aNoThrow) __NO_THROW;
-
-IMPORT_C void* operator new[](unsigned int aSize, const std::nothrow_t& aNoThrow) __NO_THROW;
-
 IMPORT_C void operator delete(void* aPtr) __NO_THROW;
 
 IMPORT_C void operator delete[](void* aPtr) __NO_THROW;
+
+#endif // !__OPERATOR_NEW_DECLARED__
+
+
+/* The following four overloads are not declared by the generic Symbian headers, so
+ * do not need to be protected by __OPERATOR_NEW_DECLARED__.
+ */
+
+IMPORT_C void* operator new(unsigned int aSize, const std::nothrow_t& aNoThrow) __NO_THROW;
+
+IMPORT_C void* operator new[](unsigned int aSize, const std::nothrow_t& aNoThrow) __NO_THROW;
 
 IMPORT_C void operator delete(void* aPtr, const std::nothrow_t& aNoThrow) __NO_THROW;
 

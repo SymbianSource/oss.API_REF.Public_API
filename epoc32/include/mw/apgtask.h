@@ -1,9 +1,9 @@
 // Copyright (c) 1997-2009 Nokia Corporation and/or its subsidiary(-ies).
 // All rights reserved.
 // This component and the accompanying materials are made available
-// under the terms of the License "Symbian Foundation License v1.0" to Symbian Foundation members and "Symbian Foundation End User License Agreement v1.0" to non-members
+// under the terms of "Eclipse Public License v1.0"
 // which accompanies this distribution, and is available
-// at the URL "http://www.symbianfoundation.org/legal/licencesv10.html".
+// at the URL "http://www.eclipse.org/legal/epl-v10.html".
 //
 // Initial Contributors:
 // Nokia Corporation - initial contribution.
@@ -22,10 +22,13 @@
 class RWsSession;
 struct TKeyEvent;
 
+//gmahe. This is used in the below enum.
 /** @internalTechnology */
 static const TInt KApaSystemEventsWithPowerMgmtCapabilityStart = 100;
+
 /** @internalTechnology */
 static const TInt KApaSystemEventsWithPowerMgmtCapabilityEnd = 199;
+
 
 /** Defines the event types that a TApaTask object can send to its window group.
 

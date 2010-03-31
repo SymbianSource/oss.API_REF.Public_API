@@ -1,9 +1,9 @@
 // Copyright (c) 1997-2009 Nokia Corporation and/or its subsidiary(-ies).
 // All rights reserved.
 // This component and the accompanying materials are made available
-// under the terms of the License "Symbian Foundation License v1.0" to Symbian Foundation members and "Symbian Foundation End User License Agreement v1.0" to non-members
+// under the terms of "Eclipse Public License v1.0"
 // which accompanies this distribution, and is available
-// at the URL "http://www.symbianfoundation.org/legal/licencesv10.html".
+// at the URL "http://www.eclipse.org/legal/epl-v10.html".
 //
 // Initial Contributors:
 // Nokia Corporation - initial contribution.
@@ -24,12 +24,10 @@
 */
 
 #if !defined(SMSUADDR_H__)
-/** @internalComponent */
 #define SMSUADDR_H__
 
 #include <e32property.h>
 #include <es_sock.h>
-#include <etelmm.h>
 
 /** SMS sockets family identifier.*/
 const TUint KSMSAddrFamily = 0x010;
@@ -42,9 +40,6 @@ const TUint KSMSMaxDatagramSize = 255*160; // Based on 7 bit encoding
 /** SMS sockets service flags. */
 const TUint KSMSDatagramServiceInfo = KSIConnectionLess | KSIMessageBased ;
 
-/**
- *  @internalComponent
- */
 _LIT(KSmsDatagram,"SMS Datagram");
 
 /** Specifies SMS sockets protocol level for the provider in the aLevel argument of RSocket::Ioctl(). */
@@ -228,17 +223,17 @@ typedef TPckgBuf<TSmsServiceCenterAddress> TSmsServiceCenterAddressBuf;
  */
 enum TSmsAddrFamily
 	{
-	ESmsAddrUnbound                = 0, ///< Not bound yet.
-	ESmsAddrSendOnly               = 1, ///< Only for sending, no reception.
-	ESmsAddrMessageIndication      = 2, ///< Matches on IEI 0x01 and DCS 0x1100xxxx, 0x1101xxxx and 0x1110xxxx.
-	ESmsAddrMatchIEI               = 3, ///< For matching Information Element Identifiers (IEI)
-	ESmsAddrMatchText              = 4, ///< For matching any text patterns
-	ESmsAddrRecvAny                = 5, ///< Receive all messages. Only one client can use this.
-	ESmsAddrStatusReport           = 6, ///< For receiving Status Reports.
-	ESmsAddrLocalOperation         = 7, ///< For local SIM operations.
-	ESmsAddrApplication8BitPort    = 8, ///< For sock port identification.
-	ESmsAddrApplication16BitPort   = 9, ///< For sock port identification.
-	ESmsAddrEmail			  	   = 10 ///< for matching of email messages.
+	ESmsAddrUnbound                = 0, //< Not bound yet.
+	ESmsAddrSendOnly               = 1, //< Only for sending, no reception.
+	ESmsAddrMessageIndication      = 2, //< Matches on IEI 0x01 and DCS 0x1100xxxx, 0x1101xxxx and 0x1110xxxx.
+	ESmsAddrMatchIEI               = 3, //< For matching Information Element Identifiers (IEI)
+	ESmsAddrMatchText              = 4, //< For matching any text patterns
+	ESmsAddrRecvAny                = 5, //< Receive all messages. Only one client can use this.
+	ESmsAddrStatusReport           = 6, //< For receiving Status Reports.
+	ESmsAddrLocalOperation         = 7, //< For local SIM operations.
+	ESmsAddrApplication8BitPort    = 8, //< For sock port identification.
+	ESmsAddrApplication16BitPort   = 9, //< For sock port identification.
+	ESmsAddrEmail			  	   = 10 //< for matching of email messages.
 	};
 
 

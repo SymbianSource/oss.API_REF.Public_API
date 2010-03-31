@@ -1,6 +1,6 @@
 
-#ifndef BOOST_MPL_VECTOR_VECTOR0_HPP_INCLUDED
-#define BOOST_MPL_VECTOR_VECTOR0_HPP_INCLUDED
+#ifndef BOOST_MPL_VECTOR_AUX_VECTOR0_HPP_INCLUDED
+#define BOOST_MPL_VECTOR_AUX_VECTOR0_HPP_INCLUDED
 
 // Copyright Aleksey Gurtovoy 2000-2004
 //
@@ -10,25 +10,43 @@
 //
 // See http://www.boost.org/libs/mpl for documentation.
 
-// $Source: /cvsroot/boost/boost/boost/mpl/vector/vector0.hpp,v $
+// $Source: /cvsroot/boost/boost/boost/mpl/vector/aux_/vector0.hpp,v $
 // $Date: 2004/09/02 15:41:19 $
 // $Revision: 1.4 $
 
-#include <boost/mpl/vector/aux_/at.hpp>
-#include <boost/mpl/vector/aux_/front.hpp>
-#include <boost/mpl/vector/aux_/push_front.hpp>
-#include <boost/mpl/vector/aux_/pop_front.hpp>
-#include <boost/mpl/vector/aux_/push_back.hpp>
-#include <boost/mpl/vector/aux_/pop_back.hpp>
-#include <boost/mpl/vector/aux_/back.hpp>
-#include <boost/mpl/vector/aux_/clear.hpp>
-#include <boost/mpl/vector/aux_/O1_size.hpp>
-#include <boost/mpl/vector/aux_/size.hpp>
-#include <boost/mpl/vector/aux_/empty.hpp>
-#include <boost/mpl/vector/aux_/item.hpp>
-#include <boost/mpl/vector/aux_/iterator.hpp>
-#include <boost/mpl/vector/aux_/vector0.hpp>
-#include <boost/mpl/vector/aux_/begin_end.hpp>
-#include <boost/mpl/vector/aux_/tag.hpp>
+#include <boost/mpl/long.hpp>
+#include <boost/mpl/void.hpp>
+#include <boost/mpl/aux_/na.hpp>
+#include <boost/mpl/aux_/type_wrapper.hpp>
 
-#endif // BOOST_MPL_VECTOR_VECTOR0_HPP_INCLUDED
+#include <boost/mpl/vector/aux_/iterator.hpp>
+#include <boost/mpl/vector/aux_/tag.hpp>
+#include <boost/mpl/aux_/config/typeof.hpp>
+
+namespace boost { namespace mpl {
+
+template< typename Dummy = na > struct vector0;
+
+template<> struct vector0<na>
+{
+#if defined(BOOST_MPL_CFG_TYPEOF_BASED_SEQUENCES)
+    typedef aux::vector_tag tag;
+    typedef vector0         type;
+    typedef long_<32768>    lower_bound_;
+    typedef lower_bound_    upper_bound_;
+    typedef long_<0>        size;
+
+    static aux::type_wrapper<void_> item_(...);
+#else
+    typedef aux::vector_tag<0> tag;
+    typedef vector0 type;
+    typedef void_ item0;
+    
+    typedef v_iter<vector0<>,0> begin;
+    typedef v_iter<vector0<>,0> end;
+#endif
+};
+
+}}
+
+#endif // BOOST_MPL_VECTOR_AUX_VECTOR0_HPP_INCLUDED

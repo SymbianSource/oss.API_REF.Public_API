@@ -2,31 +2,27 @@
 //  Use, modification and distribution are subject to the
 //  Boost Software License, Version 1.0. (See accompanying file
 //  LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
+//
+// The aim of this header is just to include <complex> but to do
+// so in a way that does not result in recursive inclusion of
+// the Boost TR1 components if boost/tr1/tr1/complex is in the
+// include search path.  We have to do this to avoid circular
+// dependencies:
+//
 
-#ifndef BOOST_MATH_COMPLEX_INCLUDED
-#define BOOST_MATH_COMPLEX_INCLUDED
+#ifndef BOOST_CONFIG_COMPLEX
+#  define BOOST_CONFIG_COMPLEX
 
-#ifndef BOOST_MATH_COMPLEX_ASIN_INCLUDED
-#  include <boost/math/complex/asin.hpp>
-#endif
-#ifndef BOOST_MATH_COMPLEX_ASINH_INCLUDED
-#  include <boost/math/complex/asinh.hpp>
-#endif
-#ifndef BOOST_MATH_COMPLEX_ACOS_INCLUDED
-#  include <boost/math/complex/acos.hpp>
-#endif
-#ifndef BOOST_MATH_COMPLEX_ACOSH_INCLUDED
-#  include <boost/math/complex/acosh.hpp>
-#endif
-#ifndef BOOST_MATH_COMPLEX_ATAN_INCLUDED
-#  include <boost/math/complex/atan.hpp>
-#endif
-#ifndef BOOST_MATH_COMPLEX_ATANH_INCLUDED
-#  include <boost/math/complex/atanh.hpp>
-#endif
-#ifndef BOOST_MATH_COMPLEX_FABS_INCLUDED
-#  include <boost/math/complex/fabs.hpp>
-#endif
+#  ifndef BOOST_TR1_NO_RECURSION
+#     define BOOST_TR1_NO_RECURSION
+#     define BOOST_CONFIG_NO_COMPLEX_RECURSION
+#  endif
 
+#  include <complex>
 
-#endif // BOOST_MATH_COMPLEX_INCLUDED
+#  ifdef BOOST_CONFIG_NO_COMPLEX_RECURSION
+#     undef BOOST_TR1_NO_RECURSION
+#     undef BOOST_CONFIG_NO_COMPLEX_RECURSION
+#  endif
+
+#endif

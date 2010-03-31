@@ -1,9 +1,9 @@
 // Copyright (c) 1997-2009 Nokia Corporation and/or its subsidiary(-ies).
 // All rights reserved.
 // This component and the accompanying materials are made available
-// under the terms of the License "Symbian Foundation License v1.0" to Symbian Foundation members and "Symbian Foundation End User License Agreement v1.0" to non-members
+// under the terms of "Eclipse Public License v1.0"
 // which accompanies this distribution, and is available
-// at the URL "http://www.symbianfoundation.org/legal/licencesv10.html".
+// at the URL "http://www.eclipse.org/legal/epl-v10.html".
 //
 // Initial Contributors:
 // Nokia Corporation - initial contribution.
@@ -13,13 +13,6 @@
 // Description:
 //
 
-#ifndef SYMBIAN_C32_SERCOMMS_V2
-// PLEASE NOTE: This file is part of Version 2 of C32 - that is, the multi-threaded version.
-// The single-threaded C32 version of this file is in c32\Version1\SCOMM
-// All defect fixes should be applied to both versions where appropriate.
-// PLEASE NOTE: This comment is applicable to SercommsV2 but is surrounded by an "#ifndef"
-// to enable the automatic removal of this comment once non-C32 V2 code is removed.
-#endif
 
 
 /**

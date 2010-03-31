@@ -1,9 +1,9 @@
 // Copyright (c) 1997-2009 Nokia Corporation and/or its subsidiary(-ies).
 // All rights reserved.
 // This component and the accompanying materials are made available
-// under the terms of the License "Symbian Foundation License v1.0" to Symbian Foundation members and "Symbian Foundation End User License Agreement v1.0" to non-members
+// under the terms of "Eclipse Public License v1.0"
 // which accompanies this distribution, and is available
-// at the URL "http://www.symbianfoundation.org/legal/licencesv10.html".
+// at the URL "http://www.eclipse.org/legal/epl-v10.html".
 //
 // Initial Contributors:
 // Nokia Corporation - initial contribution.
@@ -15,6 +15,12 @@
 
 #if !defined(__CNTDEF_HRH__)
 #define __CNTDEF_HRH__
+
+/**
+@file
+@publishedAll
+@released
+*/
 
 // contact item uids
 #define KUidContactCardValue			0x10001309
@@ -41,8 +47,8 @@
 // UID's 0x1000401D-0x10004033	UID values
 // UID's 0x10004034-6			Birthday/URL/inline
 // UID's 0x10274DA4-B7      Assistant/Assistant Tel/Anniversary/Spouse/Children/Class
-//			    Currently uids 0x10274DA4-B0 are being used and 
-//			    uids 0x10274DB1-B7 are free and can be used in future
+//			    Currently uids 0x10274DA4-B2 are being used and 
+//			    uids 0x10274DB3-B7 are free and can be used in future
 
 #define KUidContactFieldAddressValue        0x1000130C
 #define KUidContactFieldPostOfficeValue		0x10004DF4
@@ -93,6 +99,7 @@
 #define KUidContactFieldChildrenValue		0x10274DA7
 #define KUidContactFieldClassValue		0x10274DA8
 #define KUidContactFieldDepartmentNameValue	0x10274DA9
+#define KUidContactFieldGEOValue            0x10274DB2
 
 
 #define KIntContactFieldVCardMapWORK    0x100039DA
@@ -178,16 +185,24 @@
 #define KIntContactFieldVCardMapChildren		0x10274DAE
 #define KIntContactFieldVCardMapClass			0x10274DAF
 #define KIntContactFieldVCardMapDepartment		0x10274DB0
-
-
-
-#define KStorageTypeText			0
-#define KStorageTypeStore			1
-#define KStorageTypeContactItemId	2
-#define KStorageTypeDateTime		3
+#define KIntContactFieldVCardMapINTERNET		0x10274DB1
 
 /**
-@internalComponent
+@publishedAll
+@released
+*/
+
+#define KStorageTypeText			0
+
+#define KStorageTypeStore			1
+
+#define KStorageTypeContactItemId	2
+
+#define KStorageTypeDateTime		3
+
+
+/**
+@publishedAll
 @released
 */
 enum EContactFieldCategory
@@ -197,19 +212,33 @@ enum EContactFieldCategory
 	EContactCategoryWork=2,
 	EContactCategoryOther=3
 	};
+	
+/** These values should not be used directly. The EContactFieldFlags enum should be used instead.
+@publishedAll
+@released
+*/
 
 #define KIntFieldFlagHidden			0x001
+
 #define KIntFieldFlagReadOnly		0x002
+
 #define KIntFieldFlagSynchronize	0x004
+
 #define KIntFieldFlagDisabled		0x008
+
 #define KIntFieldFlagFilterable		0x010
+
 #define KIntFieldFlagFilterable1	0x020
+
 #define KIntFieldFlagFilterable2	0x040
+
 #define KIntFieldFlagFilterable3	0x080
+
 #define KIntFieldFlagFilterable4	0x100
 
+
 /**
-@internalComponent
+@publishedAll
 @released
 */	
 enum EContactFieldFlags
@@ -224,5 +253,7 @@ enum EContactFieldFlags
 	EContactFieldFlagFilterable3	=KIntFieldFlagFilterable3,
 	EContactFieldFlagFilterable4	=KIntFieldFlagFilterable4
 	};
+	
+
 
 #endif // __CNTDEF_HRH__

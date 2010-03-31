@@ -3,8 +3,6 @@
 
 /*-
  * Copyright (c) 1994 Adam Glass
- *© Portions copyright (c) 2006 Nokia Corporation.  All rights reserved.
- *© Portions copyright (c) 2006 Symbian Software Ltd. All rights reserved.
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -28,6 +26,8 @@
  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ *
+ *  Portions Copyright (c) 2006 Nokia Corporation and/or its subsidiary(-ies).
  */
 
 /*

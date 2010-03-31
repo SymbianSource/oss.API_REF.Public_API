@@ -1,9 +1,9 @@
 // Copyright (c) 2005-2009 Nokia Corporation and/or its subsidiary(-ies).
 // All rights reserved.
 // This component and the accompanying materials are made available
-// under the terms of the License "Symbian Foundation License v1.0" to Symbian Foundation members and "Symbian Foundation End User License Agreement v1.0" to non-members
+// under the terms of the License "ARM EABI LICENCE.txt"
 // which accompanies this distribution, and is available
-// at the URL "http://www.symbianfoundation.org/legal/licencesv10.html".
+// in kernel/eka/compsupp.
 //
 // Initial Contributors:
 // Nokia Corporation - initial contribution.
@@ -17,8 +17,6 @@
 // 
 //
 
-
-
 /**
  @file
  @publishedAll
@@ -30,11 +28,16 @@
 #endif
 
 // stuff from e32def.h
+
 #define __NO_CLASS_CONSTS__
 #define __NORETURN__ __declspec(noreturn)
 #define __NORETURN_TERMINATOR()
+
 #define IMPORT_C __declspec(dllimport) 
 #define EXPORT_C __declspec(dllexport)
+
+#define IMPORT_D __declspec(dllimport) 
+#define EXPORT_D __declspec(dllexport)
 
 
 
@@ -92,8 +95,9 @@ typedef unsigned short __TText;
 #define __TText_defined
 
 // __NAKED__ from cpudefs.h
-#define __NAKED__ __asm
-#define ____ONLY_USE_NAKED_IN_CIA____ __asm
+#define __NAKED__ __declspec(naked)
+#define ____ONLY_USE_NAKED_IN_CIA____ __declspec(naked)
+#define __WEAK__  __attribute__((weak))
 
 // Int64 and Uint64 from nkern\nklib.h
 typedef long long Int64;
@@ -103,24 +107,29 @@ typedef unsigned long long Uint64;
 // These should be used by e.g. stdlib
 
 #ifdef __cplusplus
-    namespace std {
-        extern "C" {
-#endif  /* __cplusplus */
+    namespace std { extern "C" {
+#endif
 
-typedef struct __va_list { void *__ap; } va_list;
-
+    #if __GNUC__ < 4
+    typedef struct __va_list { void *__ap; } va_list;
+    #else
+    typedef __builtin_va_list va_list;
+    #endif
 
 #ifdef __cplusplus
-	}  /* extern "C" */
-    }  /* namespace std */
-
+	} }
     using ::std::va_list;
 #endif
 
+#if __GNUC__ < 4
 #define va_start(ap, parmN) __builtin_va_start(ap.__ap, parmN)
-#define va_arg(ap, type) __builtin_va_arg(ap.__ap, type)
-#define va_end(ap) __builtin_va_end(ap.__ap)
-
+#define va_arg(ap, type)    __builtin_va_arg(ap.__ap, type)
+#define va_end(ap)          __builtin_va_end(ap.__ap)
+#else
+#define va_start(ap, parmN) __builtin_va_start(ap, parmN)
+#define va_arg(ap, type)    __builtin_va_arg(ap, type)
+#define va_end(ap)          __builtin_va_end(ap)
+#endif
 
 #define VA_LIST va_list
 #define _VA_LIST_DEFINED //To deal with stdarg.h
@@ -151,8 +160,9 @@ typedef va_list __e32_va_list;
 
 //#define __EARLY_DEBUG__
 
-// Deal with operator new issues here
-#include "../symcpp.h"
+#ifndef __SYMBIAN_STDCPP_SUPPORT__
+	#include <symcpp.h>
+#endif
 
 #ifdef __cplusplus
 // Support for throwing exceptions through embedded assembler
@@ -163,3 +173,4 @@ typedef va_list __e32_va_list;
 #define __EH_FRAME_SAVE1(reg,offset) FRAME SAVE {reg}, offset
 
 #endif
+

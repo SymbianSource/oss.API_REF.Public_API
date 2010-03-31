@@ -1292,5 +1292,9 @@ enum TMifAvkon
 	EMbmAvkonQgn_stat_case_cyrillic_small_mask = 17759,
 	EMbmAvkonQgn_stat_case_cyrillic_text = 17760,
 	EMbmAvkonQgn_stat_case_cyrillic_text_mask = 17761,
+	EMbmAvkonQgn_stat_servtab_uni = 17762,
+	EMbmAvkonQgn_stat_servtab_uni_mask = 17763,
+	EMbmAvkonQgn_stat_hdmi_connect = 17764,
+	EMbmAvkonQgn_stat_hdmi_connect_mask = 17765,
 	EMbmAvkonLastElement
 	};

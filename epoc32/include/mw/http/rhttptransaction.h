@@ -1,9 +1,9 @@
 // Copyright (c) 2001-2009 Nokia Corporation and/or its subsidiary(-ies).
 // All rights reserved.
 // This component and the accompanying materials are made available
-// under the terms of the License "Symbian Foundation License v1.0" to Symbian Foundation members and "Symbian Foundation End User License Agreement v1.0" to non-members
+// under the terms of "Eclipse Public License v1.0"
 // which accompanies this distribution, and is available
-// at the URL "http://www.symbianfoundation.org/legal/licencesv10.html".
+// at the URL "http://www.eclipse.org/legal/epl-v10.html".
 //
 // Initial Contributors:
 // Nokia Corporation - initial contribution.
@@ -13,10 +13,8 @@
 // Description:
 //
 
-
-
 /**
- @file RHTTPTransaction.h
+ @file
  @warning : This file contains Rose Model ID comments - please do not delete
 */
 
@@ -67,7 +65,8 @@ created using the session's CreateTransactionL method.
 	//##ModelId=3C4C188600ED
 	IMPORT_C void SubmitL(THTTPFilterHandle aStart = 
 						  THTTPFilterHandle::EClient);
-
+	
+	IMPORT_C TInt Submit(THTTPFilterHandle aStart = THTTPFilterHandle::EClient);
 	/** Notify HTTP of the availability of more request body data,
 		when submitting body data in several parts.
 		
@@ -89,7 +88,8 @@ created using the session's CreateTransactionL method.
 	IMPORT_C void SendEventL(THTTPEvent aStatus, 
 							 THTTPEvent::TDirection aDirection, 
 							 THTTPFilterHandle aStart);
-
+	
+	IMPORT_C TInt SendEvent(THTTPEvent aStatus, THTTPEvent::TDirection aDirection, THTTPFilterHandle aStart);
 	/** Gets the response. Note that the returned response may not be
 		valid if it hasn't been created yet.
 		@see RHTTPMessage::IsValid()
@@ -97,11 +97,11 @@ created using the session's CreateTransactionL method.
 //##ModelId=3C4C188600E1
 	IMPORT_C RHTTPResponse Response() const;
 
-	/// Gets the request.
+	// Gets the request.
 	//##ModelId=3C4C188600DA
 	IMPORT_C RHTTPRequest Request() const;
 
-	/// Returns the session associated with the transaction.
+	// Returns the session associated with the transaction.
 	//##ModelId=3C4C188600D9
 	IMPORT_C RHTTPSession Session() const;
 
@@ -171,6 +171,16 @@ created using the session's CreateTransactionL method.
 	//##ModelId=3C4C188600B9
 	IMPORT_C TInt ServerCert(TCertInfo& aServerCert);
 
+#ifdef SYMBIAN_ENABLE_SPLIT_HEADERS
+	/** Obtain the server certificate information for this transaction.  This function
+		should only be used for HTTP. WSP should use RHttpSession::ServerCert.
+		@see RHttpSession::ServerCert
+		@prototype
+		@return	a CCertificate pointer to an CX509Certificate object.
+		Calling code can safely cast to CX509Certificate if using  "HTTP/TCP".
+		NULL returned if certificate information not found.
+	*/
+#else
 	/** Obtain the server certificate information for this transaction.  This function
 		should only be used for HTTP. WSP should use RHttpSession::ServerCert.
 		@see RHttpSession::ServerCert
@@ -180,28 +190,44 @@ created using the session's CreateTransactionL method.
 		Calling code can safely cast to CX509Certificate if using  "HTTP/TCP".
 		NULL returned if certificate information not found.
 	*/
+#endif	//SYMBIAN_ENABLE_SPLIT_HEADERS
 	IMPORT_C const CCertificate* ServerCert();
-	
+
+
 	/** Obtain the cipher suite information for this transaction.
 		@return RString containing the cipher suite as per RFC2246.
 	*/
 	IMPORT_C RString CipherSuite();
-	
+
+#ifdef SYMBIAN_ENABLE_SPLIT_HEADERS		
+	/**Sets the HTTP data optimiser for the transaction.
+	@param aHttpOptimiser An object of the implementation of interface, MHttpDataOptimiser, supplied by the client.
+	*/
+#else
 	/**Sets the HTTP data optimiser for the transaction.
 	@param aHttpOptimiser An object of the implementation of interface, MHttpDataOptimiser, supplied by the client.
 	@publishedPartner
+	@released
 	*/
+#endif	//SYMBIAN_ENABLE_SPLIT_HEADERS
  	IMPORT_C void SetupHttpDataOptimiser (MHttpDataOptimiser& aHttpOptimiser);
  
+ #ifdef SYMBIAN_ENABLE_SPLIT_HEADERS		
+ 	/**Returns the object of the MHttpDataOptimiser implementation class.
+	*/
+#else
  	/**Returns the object of the MHttpDataOptimiser implementation class.
 	@internalTechnology
 	*/
+#endif	//SYMBIAN_ENABLE_SPLIT_HEADERS
  	IMPORT_C MHttpDataOptimiser* HttpDataOptimiser ();
 
 private:
 	friend class RHTTPSession;
 	friend class CTransaction;
-
+	friend class CProtocolHandler;
+	
+	inline CTransaction* Implementation();
  private:
 	//##ModelId=3C4C188600A7
 	CTransaction* iImplementation;
@@ -221,5 +247,9 @@ inline RHTTPTransaction::RHTTPTransaction()
 	{
 	}
 
+inline CTransaction* RHTTPTransaction::Implementation()
+    {
+    return iImplementation;
+    }
 
 #endif // __RHTTPTRANSACTION_H__

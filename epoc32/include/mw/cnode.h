@@ -1,53 +1,44 @@
-/// Copyright (c) 1998-2009 Nokia Corporation and/or its subsidiary(-ies).
-/// All rights reserved.
-/// This component and the accompanying materials are made available
-/// under the terms of the License "Symbian Foundation License v1.0" to Symbian Foundation members and "Symbian Foundation End User License Agreement v1.0" to non-members
-/// which accompanies this distribution, and is available
-/// at the URL "http://www.symbianfoundation.org/legal/licencesv10.html".
-///
-/// Initial Contributors:
-/// Nokia Corporation - initial contribution.
-///
-/// Contributors:
-///
-/// Description:
-/// All rights reserved.
-/// This component and the accompanying materials are made available
-/// under the terms of the License "Symbian Foundation License v1.0" to Symbian Foundation members and "Symbian Foundation End User License Agreement v1.0" to non-members
-/// which accompanies this distribution, and is available
-/// at the URL "http://www.symbianfoundation.org/legal/licencesv10.html".
-/// Initial Contributors:
-/// Nokia Corporation - initial contribution.
-/// Contributors:
-/// This contains the definitions of CDataDelete, CDataNoDelete, CIntAttribute, CNode, and CTypedNode.
-/// CDataNoDelete is a base class to CDataDelete and are essentially a wrapper around an HBufC16.
-/// The node owns the data that is added to it and therefore is responsible for deleting all its data,
-/// hence theses two classes allow a user to have non deletable data. Internally to the node it is also 
-/// sometimes necessary to change the data into either deletable or non-deletable data api's are provided
-/// for this.
-/// CIntAttribute is wrapper around a TInt, this is provided as the nodes attribute value is a CBase* however
-/// it might be desirable to store integer's in here. Attribute value is owned by the node therefore the node is
-/// responsible for deleting it.
-/// CNode is the basis for constructing a tree. It consists of an array of child nodes, node type, a parent node,
-/// an array of attributes, and a data member. Internally the data member is defined as CDataNoDelete however
-/// to the user all the exported api's take an HBufC16*. Data is owned by the node and is destroyed by the node,
-/// However in certain circumstances this is not desirable hence the api's to make the data non-deletable. The
-/// node type is defined as a TAny* however normal usage would use the templated node - CTypedNode. The node type
-/// is used to identify groups of nodes. The attribute array is fairy simple and consists of AttributeType and 
-/// AttributeValue. AttributeType can be defined by using the templated class and should be a 32bit value. AttributeValue
-/// can be any object derived from CBase and the node takes ownership therefore the node delete's it.
-/// Basic usage should be to use the templated class in order to make use of the templated types (TNodeType,TAttributeType).
-/// Create a node for example:
-/// CTypedNode<CNode*, const TDesC*> *tree = CTypedNode<CNode*, const TDesC*>::NewL(0,0);
-/// add a new child:
-/// CNODE *TestChildNode1 = tree->AppendNodeL(aTempNodeForNodeType);
-/// add some data:
-/// TestChildNode1->SetDataL(aHBufC16);
-/// add an attribute:
-/// TestChildNode1->->AddAttributeL(aTAttributeType,aCBasePointerAttributeValue);
-/// Explanation of individual api's is documented below.
-///
-
+// Copyright (c) 1998-2009 Nokia Corporation and/or its subsidiary(-ies).
+// All rights reserved.
+// This component and the accompanying materials are made available
+// under the terms of "Eclipse Public License v1.0"
+// which accompanies this distribution, and is available
+// at the URL "http://www.eclipse.org/legal/epl-v10.html".
+//
+// Initial Contributors:
+// Nokia Corporation - initial contribution.
+//
+// Contributors:
+//
+// Description:
+// This contains the definitions of CDataDelete, CDataNoDelete, CIntAttribute, CNode, and CTypedNode.
+// CDataNoDelete is a base class to CDataDelete and are essentially a wrapper around an HBufC16.
+// The node owns the data that is added to it and therefore is responsible for deleting all its data,
+// hence theses two classes allow a user to have non deletable data. Internally to the node it is also 
+// sometimes necessary to change the data into either deletable or non-deletable data api's are provided
+// for this.
+// CIntAttribute is wrapper around a TInt, this is provided as the nodes attribute value is a CBase* however
+// it might be desirable to store integer's in here. Attribute value is owned by the node therefore the node is
+// responsible for deleting it.
+// CNode is the basis for constructing a tree. It consists of an array of child nodes, node type, a parent node,
+// an array of attributes, and a data member. Internally the data member is defined as CDataNoDelete however
+// to the user all the exported api's take an HBufC16*. Data is owned by the node and is destroyed by the node,
+// However in certain circumstances this is not desirable hence the api's to make the data non-deletable. The
+// node type is defined as a TAny* however normal usage would use the templated node - CTypedNode. The node type
+// is used to identify groups of nodes. The attribute array is fairy simple and consists of AttributeType and 
+// AttributeValue. AttributeType can be defined by using the templated class and should be a 32bit value. AttributeValue
+// can be any object derived from CBase and the node takes ownership therefore the node delete's it.
+// Basic usage should be to use the templated class in order to make use of the templated types (TNodeType,TAttributeType).
+// Create a node for example:
+// CTypedNode<CNode*, const TDesC*> *tree = CTypedNode<CNode*, const TDesC*>::NewL(0,0);
+// add a new child:
+// CNODE *TestChildNode1 = tree->AppendNodeL(aTempNodeForNodeType);
+// add some data:
+// TestChildNode1->SetDataL(aHBufC16);
+// add an attribute:
+// TestChildNode1->->AddAttributeL(aTAttributeType,aCBasePointerAttributeValue);
+// Explanation of individual api's is documented below.
+//
 
  
 
@@ -61,7 +52,7 @@
 /**
 	@file
 	@publishedAll
-	@released
+	@deprecated
 */
 
 //Granularity of arrays
@@ -291,13 +282,13 @@ public:
 
 	//Adds an attribute, parameters are the type of attribute and its value
 	//WARNING node takes ownership of aAttributeValue
-	////Push aAttributeValue onto the CleanupStack before calling then pop off on return
+	//Push aAttributeValue onto the CleanupStack before calling then pop off on return
 	//##ModelId=3B666BCE002B
 	IMPORT_C void AddAttributeL(TAny* AttributeType, CBase* aAttributeValue);
 
 	//Adds data to the node and also adds an attribute, parameters are the Data to be added, the type of attribute and its value
 	//WARNING node takes ownership of aData and aAttributeValue
-	////Push aAttributeValue and aData onto the CleanupStack before calling then pop off on return
+	//Push aAttributeValue and aData onto the CleanupStack before calling then pop off on return
 	//##ModelId=3B666BCE000D
 	IMPORT_C void AddDataAndAttributeL(HBufC16 *aData, TAny* AttributeType, CBase* aAttributeValue);
 

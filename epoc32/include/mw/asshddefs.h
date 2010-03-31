@@ -1,9 +1,9 @@
 // Copyright (c) 1999-2009 Nokia Corporation and/or its subsidiary(-ies).
 // All rights reserved.
 // This component and the accompanying materials are made available
-// under the terms of the License "Symbian Foundation License v1.0" to Symbian Foundation members and "Symbian Foundation End User License Agreement v1.0" to non-members
+// under the terms of "Eclipse Public License v1.0"
 // which accompanies this distribution, and is available
-// at the URL "http://www.symbianfoundation.org/legal/licencesv10.html".
+// at the URL "http://www.eclipse.org/legal/epl-v10.html".
 //
 // Initial Contributors:
 // Nokia Corporation - initial contribution.
@@ -219,6 +219,7 @@ enum TAlarmRepeatDefinition
 	are no phantom alarm expiries. */
 	EAlarmRepeatDefintionRepeatWeekly,
 
+#ifdef SYMBIAN_ALARM_REPEAT_EXTENSIONS
 	/** The alarm repeats every specified day at the same time. If the user
 	changes the system date or time, this alarm behaves in the same way as a
 	"repeat once" alarm, except that the alarm is not deleted, but rescheduled
@@ -227,6 +228,7 @@ enum TAlarmRepeatDefinition
     If the user changes the system date or time to a point in the past, there
     are no phantom alarm expiries.*/ 
 	EAlarmRepeatDefinitionRepeatDailyOnGivenDays
+#endif
 	};
 
 /** Defines various alarm characteristics. */
@@ -372,6 +374,7 @@ enum TDeleteTypeEnum
 	EExpired = 4
 	};
 
+#ifdef SYMBIAN_ALARM_REPEAT_EXTENSIONS
 /**
 This enumeration indicates which days of the week an alarm with a repeat
 definition of EAlarmRepeatDefinitionRepeatDailyOnGivenDays activates on.  Days
@@ -396,7 +399,9 @@ enum TAlarmDays
     /** Alarm is active on Sunday. */
     EAlarmDaySunday    = 0x40
     };
+#endif
 
+#ifdef SYMBIAN_SKIPPED_CALENDAR_ALARMS
 /** Identifies the type of alarm which was missed.  A UTC offset change will only
 affect floating alarms whereas a system time change may affect either floating
 or fixed alarms.
@@ -410,5 +415,6 @@ enum TASShdAlarmTimeType
 	/** Floating or fixed time alarm. */
 	EFloatingOrFixed
 	};
+#endif
 
 #endif

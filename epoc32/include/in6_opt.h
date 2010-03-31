@@ -1,9 +1,9 @@
 // Copyright (c) 2004-2009 Nokia Corporation and/or its subsidiary(-ies).
 // All rights reserved.
 // This component and the accompanying materials are made available
-// under the terms of the License "Symbian Foundation License v1.0" to Symbian Foundation members and "Symbian Foundation End User License Agreement v1.0" to non-members
+// under the terms of "Eclipse Public License v1.0"
 // which accompanies this distribution, and is available
-// at the URL "http://www.symbianfoundation.org/legal/licencesv10.html".
+// at the URL "http://www.eclipse.org/legal/epl-v10.html".
 //
 // Initial Contributors:
 // Nokia Corporation - initial contribution.
@@ -49,7 +49,7 @@ not implement ECT(1))
 
 See RFC 3168 for more information.
 @publishedAll
-@interim
+@released
 */
 const TUint KSoIpEcn = 0x1010;
 
@@ -84,7 +84,7 @@ const TUint KSoNextHop = 0x1011;
 If set, only full-sized TCP segments are sent before closing the connection. This is like
 Nagle, but stricter.
 @publishedAll
-@interim
+@released
 */
 const TUint KSoTcpCork = 0x1020;
 
@@ -92,7 +92,7 @@ const TUint KSoTcpCork = 0x1020;
 Send only full-sized TCP segments. Separate option in addition to KSoTcpCork is needed for
 BSD compatibility.
 @publishedAll
-@interim
+@released
 */
 const TUint KSoTcpNoPush = 0x1021;
 
@@ -100,7 +100,7 @@ const TUint KSoTcpNoPush = 0x1021;
 Do not return from close immediately, but linger for given maximum time to wait that the
 send buffers are emptied. Socket option parameter is TSoTcpLingerOpt struct.
 @publishedAll
-@interim
+@released
 */
 const TUint KSoTcpLinger = 0x1022;
 
@@ -122,13 +122,13 @@ Parameter struct for KSoTcpLinger socket option. The following combinations are 
 A similar structure is used in BSD Unix sockets, hence porting Unix apps using linger option
 should be straight forward.
 @publishedAll
-@interim
+@released
 */
 class TSoTcpLingerOpt
 	{
 public:
-	TInt	iOnOff;		///< 0=Linger off; nonzero=Linger on.
-	TInt	iLinger;	///< Linger time in seconds.
+	TInt	iOnOff;		//< 0=Linger off; nonzero=Linger on.
+	TInt	iLinger;	//< Linger time in seconds.
 	};
 	
 
@@ -141,21 +141,21 @@ public:
 /**
 Return array of TInetInterfaceInfo objects as the response of GetOptions call.
 @publishedAll
-@interim
+@released
 */
 const TUint KSoInetInterfaceInfo = 0x1001;
 
 /**
 Return array of TInetAddressInfo objects as the response of GetOptions call.
 @publishedAll
-@interim
+@released
 */
 const TUint KSoInetAddressInfo = 0x1002;
 
 /**
 Return array of TInetRouteInfo objects as the response of GetOptions call.
 @publishedAll
-@interim
+@released
 */
 const TUint KSoInetRouteInfo = 0x1003;
 
@@ -163,46 +163,46 @@ const TUint KSoInetRouteInfo = 0x1003;
 Information of an address attached to interface.
 Used by the event service (EClassAddress events) and KSoInetAddressInfo socket option.
 @publishedAll
-@interim
+@released
 */
 class TInetAddressInfo
 	{
 public:
-	TUint32	    iInterface;	    ///< Network interface index to which this address is bound.
-	TIp6Addr    iAddress;	    ///< Prefix or Id part of the address described.
-	TUint8	    iPrefixLen;	    ///< Length of the prefix part in bits.
-	TUint32	    iScopeId;	    ///< ScopeId of this address.
-	TUint32	    iPrefLifetime;  ///< Remaining Preferred lifetime of this address.
-	TUint32	    iValidLifetime; ///< Remaining Valid lifetime of this address.
-	TUint	    iFlags;	    ///< Is address entry for prefix or id, etc. See enum TFlags
-	TUint	    iState;	    ///< Address state, copied from TIp6AddressInfo, see enum TAddressState
-	TUint	    iType;	    ///< Address type copied from TIp6AddressInfo, see enum TAddressType
-	TUint	    iGenerations;   ///< Number of times the address Id is generated (or randomly re-generated)
-	TUint	    iNS;	    ///< Number of neighbour solicitations sent for DAD.
+	TUint32	    iInterface;	    //< Network interface index to which this address is bound.
+	TIp6Addr    iAddress;	    //< Prefix or Id part of the address described.
+	TUint8	    iPrefixLen;	    //< Length of the prefix part in bits.
+	TUint32	    iScopeId;	    //< ScopeId of this address.
+	TUint32	    iPrefLifetime;  //< Remaining Preferred lifetime of this address.
+	TUint32	    iValidLifetime; //< Remaining Valid lifetime of this address.
+	TUint	    iFlags;	    //< Is address entry for prefix or id, etc. See enum TFlags
+	TUint	    iState;	    //< Address state, copied from TIp6AddressInfo, see enum TAddressState
+	TUint	    iType;	    //< Address type copied from TIp6AddressInfo, see enum TAddressType
+	TUint	    iGenerations;   //< Number of times the address Id is generated (or randomly re-generated)
+	TUint	    iNS;	    //< Number of neighbour solicitations sent for DAD.
 
-	/// Values used in iFlags field.
+	// Values used in iFlags field.
 	enum TFlags
 		{
-	    EF_Prefix = 0x1,	///< This address entry specifies prefix
-	    EF_Id = 0x2,    	///< This address entry specifies id part of the address
-	    EF_Deprecated = 0x4 ///< Address is deprecated
+	    EF_Prefix = 0x1,	//< This address entry specifies prefix
+	    EF_Id = 0x2,    	//< This address entry specifies id part of the address
+	    EF_Deprecated = 0x4 //< Address is deprecated
 		};
 
-	/// Values used in iState field. The field is directly copied from iface.cpp.
+	// Values used in iState field. The field is directly copied from iface.cpp.
 	enum TAddressState
 		{
-	    ENoAddress	= 0,	///< 0 0 - unassigned initial state (no address present)
-	    EDuplicate	= 1,	///< 0 1 - address is duplicate
-	    EAssigned	= 2,	///< 1 0 - address fully available
-	    ETentative	= 3	///< 1 1 - address is tentative (DAD in progress)
+	    ENoAddress	= 0,	//< 0 0 - unassigned initial state (no address present)
+	    EDuplicate	= 1,	//< 0 1 - address is duplicate
+	    EAssigned	= 2,	//< 1 0 - address fully available
+	    ETentative	= 3	//< 1 1 - address is tentative (DAD in progress)
 		};
 
-	/// Values used in iType field. The field is directly copied from iface.cpp.
+	// Values used in iType field. The field is directly copied from iface.cpp.
 	enum TAddressType
 		{
-	    EProxy	= 2,	///< Do DAD, is not for me (forward)
-	    EAnycast	= 1,	///< Don't do DAD, is for me address
-	    ENormal	= 0	///< Do DAD, is for me
+	    EProxy	= 2,	//< Do DAD, is not for me (forward)
+	    EAnycast	= 1,	//< Don't do DAD, is for me address
+	    ENormal	= 0	//< Do DAD, is for me
 		};
 	};
 
@@ -211,26 +211,26 @@ public:
 Information of a network interface.
 Used by event service (EClassInterface events) and KSoInetInterfaceInfo socket option.
 @publishedAll
-@interim
+@released
 */
 class TInetInterfaceInfo
 	{
 public:
 	TUint32	    iIndex;
-	TName	    iName;		///< Interface name
-	TInt	    iState;		///< State
-	TInt	    iSMtu;		///< Maximum transmit unit size
-	TInt	    iRMtu;		///< Maximum receive unit size
-	TInt	    iSpeedMetric;	///< Metric - bigger is better
-	TUint	    iFeatures;		///< Feature flags
-	TSockAddr   iHwAddr;		///< Hardware address
+	TName	    iName;		//< Interface name
+	TInt	    iState;		//< State
+	TInt	    iSMtu;		//< Maximum transmit unit size
+	TInt	    iRMtu;		//< Maximum receive unit size
+	TInt	    iSpeedMetric;	//< Metric - bigger is better
+	TUint	    iFeatures;		//< Feature flags
+	TSockAddr   iHwAddr;		//< Hardware address
 
-	/// Possible interface states.
-	/// Can also have negative values when on error state.
+	// Possible interface states.
+	// Can also have negative values when on error state.
 	enum
 		{
-	    IfState_READY   = 0,  ///< Ready to receive data from protocol
-	    IfState_PENDING = 1,  ///< Not ready for data yet
+	    IfState_READY   = 0,  //< Ready to receive data from protocol
+	    IfState_PENDING = 1,  //< Not ready for data yet
 	    IfState_HOLD    = 2
 		};
 	};
@@ -240,28 +240,28 @@ public:
 Information of a route entry in IP stack.
 Used by event service (EClassRoute events) and KSoInetRouteInfo socket option.
 @publishedAll
-@interim
+@released
 */
 class TInetRouteInfo
 	{
 public:
-	TUint32	    iIndex;	///< Route index
-	TUint	    iType;	///< Type of route (kernel generated have 0 at the present)
-	TUint	    iState;	///< State of route (copied from iState in CIp6Route)
-	TInt	    iMetric;	///< Smaller is better (less hops and/or faster link)
-	TUint32	    iInterface; ///< Network interface index of the route
-	TIp6Addr    iGateway;	///< IP address of gateway (might be the interface)
-	TIp6Addr    iDstAddr;	///< Destination network or host
-	TUint8	    iPrefixLen;	///< Length of the route prefix in bits
-	TUint32	    iScopeId;	///< Scope Id of this route
-	TUint32	    iLifetime;  ///< Route lifetime in seconds
+	TUint32	    iIndex;	//< Route index
+	TUint	    iType;	//< Type of route (kernel generated have 0 at the present)
+	TUint	    iState;	//< State of route (copied from iState in CIp6Route)
+	TInt	    iMetric;	//< Smaller is better (less hops and/or faster link)
+	TUint32	    iInterface; //< Network interface index of the route
+	TIp6Addr    iGateway;	//< IP address of gateway (might be the interface)
+	TIp6Addr    iDstAddr;	//< Destination network or host
+	TUint8	    iPrefixLen;	//< Length of the route prefix in bits
+	TUint32	    iScopeId;	//< Scope Id of this route
+	TUint32	    iLifetime;  //< Route lifetime in seconds
 
 	enum
 		{ 
-		EDeprecated = 0x80000000	///< This bit is set in iType if the route is deprecated
+		EDeprecated = 0x80000000	//< This bit is set in iType if the route is deprecated
 		};
 
-	/// Values used in iState field
+	// Values used in iState field
 	enum TState
 	  	{
 	    EIncomplete = 0,
@@ -279,20 +279,21 @@ public:
 /**
 Information on a neighbour cache entry in the IP stack.
 Used by event service (EClassNeighbour events).
+@publishedAll
 @released
 */
 class TInetNeighbourInfo
 	{
 public:
-	TUint32	    iIndex;		///< Route index.
-	TIp6Addr    iDstAddr;	///< Neighbour's IP address.
-	TUint	    iState;		///< State of neigbour entry. @see TInetRouteInfo::TState.
-	TInt	    iMetric;	///< Smaller is better (less hops and/or faster link).
-	TUint32	    iInterface; ///< Network interface index of the route.
-	TUint32	    iScopeId;	///< Scope Id of this neighbour.
-	TUint32	    iLifetime;  ///< Cache entry lifetime in seconds.
+	TUint32	    iIndex;		//< Route index.
+	TIp6Addr    iDstAddr;	//< Neighbour's IP address.
+	TUint	    iState;		//< State of neigbour entry. @see TInetRouteInfo::TState.
+	TInt	    iMetric;	//< Smaller is better (less hops and/or faster link).
+	TUint32	    iInterface; //< Network interface index of the route.
+	TUint32	    iScopeId;	//< Scope Id of this neighbour.
+	TUint32	    iLifetime;  //< Cache entry lifetime in seconds.
 
-	/// Hardware address (e.g. Ethernet MAC).
+	// Hardware address (e.g. Ethernet MAC).
 	TBuf8<KMaxSockAddrSize>	iHwAddr;
 	};
 
@@ -303,7 +304,7 @@ it provides protection against array boundary violations, and some small helpful
 The motivation of this class is to help in handling the information accessed by MNetworkInfo
 interface.
 @publishedAll
-@interim
+@released
 */
 template<class T> class TOverlayArray
 	{
@@ -355,14 +356,14 @@ private:
 Information of a multicast group joined by the IP stack. This class is not currently
 used by socket options, only EClassMulticast events.
 @publishedAll
-@interim
+@released
 */
 class TInetMulticastInfo
 	{
 public:
-	TIp6Addr	iMulticastGroup;	///< IP address of the multicast group.
-	TUint32		iInterface;		///< Interface index of the group.
-	TUint32		iLifetime;		///< Lifetime of the group in seconds.
+	TIp6Addr	iMulticastGroup;	//< IP address of the multicast group.
+	TUint32		iInterface;		//< Interface index of the group.
+	TUint32		iLifetime;		//< Lifetime of the group in seconds.
 	};
 
 
@@ -372,7 +373,7 @@ public:
 Control the use of link-local addresses per interface.
 Argument: TSoInetIpv4LinkLocalInfo  (SetOpt only).
 @publishedAll
-@interim
+@released
 
 @capability ECapabilityNetworkControl Configuring IPv4 Link-local addresses is restricted.
 @ref RSocket::SetOpt()
@@ -382,13 +383,13 @@ const TUint KSoIpv4LinkLocal = 0x1001;
 /**
 Used as a parameter in KSoIpv4LinkLocal.
 @publishedAll
-@interim
+@released
 */
 class TSoInetIpv4LinkLocalInfo
 	{
 public:
-	TUint	iInterface;		///< Interface index to be affected.
-	TUint	iFlag;			///< Indicates whether IPv4 link locals are used  (0='no'; 1='yes').
+	TUint	iInterface;		//< Interface index to be affected.
+	TUint	iFlag;			//< Indicates whether IPv4 link locals are used  (0='no'; 1='yes').
 	};
 
 #endif  // __INSOCK_IN6_ROUTE_H__

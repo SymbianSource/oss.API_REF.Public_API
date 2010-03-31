@@ -1,9 +1,8 @@
-// © Portions copyright (c) 2006 Nokia Corporation.  All rights reserved.
+
 
 /*-
  * Copyright (c) 1982, 1985, 1986, 1988, 1993, 1994
  *	The Regents of the University of California.  All rights reserved.
- * © Portions copyright (c) 2007 Symbian Software Ltd. All rights reserved.
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
  * are met:
@@ -27,7 +26,7 @@
  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY
  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
- *
+ * Portions Copyright (c) 2006-2007  Nokia Corporation and/or its subsidiary(-ies).  All rights reserved.
  *	@(#)socket.h	8.4 (Berkeley) 2/21/94
  * $FreeBSD: src/sys/sys/socket.h,v 1.88.2.1 2005/09/27 21:14:10 rwatson Exp $
  */
@@ -40,7 +39,7 @@
 #include <sys/_types.h>
 #include <sys/_iovec.h>
 #define _NO_NAMESPACE_POLLUTION
-#include <machine/param.h>
+#include <stdapis/machine/param.h>
 #undef _NO_NAMESPACE_POLLUTION
 
 /*
@@ -317,6 +316,7 @@ struct sockproto {
 /*
  * RFC 2553: protocol-independent placeholder for socket addresses
  */
+#ifndef __SYMBIAN32__
 #define	_SS_MAXSIZE	128U
 #define	_SS_ALIGNSIZE	(sizeof(__int64_t))
 #define	_SS_PAD1SIZE	(_SS_ALIGNSIZE - sizeof(unsigned char) - \
@@ -331,7 +331,19 @@ struct sockaddr_storage {
 	__int64_t	__ss_align;	/* force desired struct alignment */
 	char		__ss_pad2[_SS_PAD2SIZE];
 };
+#else
+#define _SS_MAXSIZE 128U
+#define _SS_ALIGNSIZE   (sizeof(__int64_t))
+#define _SS_PAD1SIZE    (_SS_ALIGNSIZE - sizeof(u_short))
+#define _SS_PAD2SIZE    (_SS_MAXSIZE -  sizeof(u_short) - _SS_PAD1SIZE - _SS_ALIGNSIZE)
 
+struct sockaddr_storage {
+    u_short ss_family;  /* address family */
+    char        __ss_pad1[_SS_PAD1SIZE];
+    __int64_t   __ss_align; /* force desired struct alignment */
+    char        __ss_pad2[_SS_PAD2SIZE];
+};
+#endif
 #if __BSD_VISIBLE
 /*
  * Protocol families, same as address families for now.

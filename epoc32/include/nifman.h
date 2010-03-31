@@ -1,9 +1,9 @@
 // Copyright (c) 1997-2009 Nokia Corporation and/or its subsidiary(-ies).
 // All rights reserved.
 // This component and the accompanying materials are made available
-// under the terms of the License "Symbian Foundation License v1.0" to Symbian Foundation members and "Symbian Foundation End User License Agreement v1.0" to non-members
+// under the terms of "Eclipse Public License v1.0"
 // which accompanies this distribution, and is available
-// at the URL "http://www.symbianfoundation.org/legal/licencesv10.html".
+// at the URL "http://www.eclipse.org/legal/epl-v10.html".
 //
 // Initial Contributors:
 // Nokia Corporation - initial contribution.
@@ -15,8 +15,6 @@
 // 
 //
 
-
-
 /**
  @file
 */
@@ -25,11 +23,28 @@
 #if !defined(__NIFMAN_H__)
 #define __NIFMAN_H__
 
-#include <es_prot.h>
 #include <nifvar.h>
-#include <cdbover.h>
+
+#ifndef SYMBIAN_ENABLE_SPLIT_HEADERS
+#include <nifman_internal.h>
+#else
+#include <es_sock_partner.h>
+#endif
+
+/**
+@publishedPartner
+*/
+enum TAgentConnectType 
+	{
+	EAgentStartDialOut,
+	EAgentReconnect,
+	EAgentStartCallBack,
+	EAgentNone,
+	EAgentStartDialIn
+	};
 
 class CNifMan;
+class MNifIfUser;
 class CNifFactory : public CObject
 /**
 Manager classes
@@ -52,46 +67,6 @@ protected:
 	virtual void InstallL()=0;
 	RLibrary iLib;
 	CAsyncCallBack* iAsyncDtor;
-	};
-
-/**
-Static internal API class
-@internalComponent
-*/
-enum TNifSocketState { ENifBuffers2048=-4, ENifBuffers1024, ENifBuffers512, 
-					   ENifSocketNull=-1,
-                       ENifSocketCreated=0, ENifSocketOpen=3, ENifSocketConnected=4,
-					   ENifSocketError=9 };
-
-class MNifIfUser;
-class MNifIfNotify;
-class CNifIfBase;
-class CNifAgentBase;
-class CSockSession;
-class CConnectionProvdBase;
-class Nif
-/**
-@internalTechnology
-*/
-	{
-public:
-	/** Network protocol support */
-	IMPORT_C static void BindL(MNifIfUser& aUser, TAny* aId, TDes& aResult, const TDesC& aName=TPtrC(0,0));
-	IMPORT_C static void NetworkLayerClosed(MNifIfUser& aUser);
-	IMPORT_C static void StartL(TDes& aResult, const TDesC& aName=TPtrC());
-	IMPORT_C static void Stop(const TDesC& aName=TPtrC());
-	IMPORT_C static CNifIfBase* CreateInterfaceL(const TDesC& aName, MNifIfNotify* aNotify);
-	IMPORT_C static CNifAgentBase* CreateAgentL(const TDesC& aAgentName, const TBool aNewInstance = EFalse);
-	IMPORT_C static void CheckInstalledMBufManagerL();
-	IMPORT_C static CProtocolBase* IsProtocolLoaded(const TDesC& aName);
-	IMPORT_C static void CheckInstalledL();
-	IMPORT_C static TInt SetSocketState(TNifSocketState aState, CServProviderBase* aProvd);
-	IMPORT_C static void ProgressL(TNifProgress& aProgress, const TDesC& aName=TPtrC());
-	IMPORT_C static void Stop(TAny* aId, CNifIfBase* aIf=0);
-	IMPORT_C static void ProgressL(TNifProgress& aProgress, TAny* aId, CNifIfBase* aIf=0);
-	IMPORT_C static CConnectionProvdBase* NewConnectionL(MConnectionNotify* aConnection, TUint aId);
-	/** deprecated function */
-	IMPORT_C static CNifIfBase* CreateInterfaceL(const TDesC& aName);
 	};
 
 
@@ -130,15 +105,6 @@ const TUint KCOLAgent     = 200;
 @ref RConnection::Ioctl
 */
 const TUint KCOLConfiguration = 300;
-
-#ifdef _DEBUG
-/**
-Debug-only option level used to pass test-only option names onto PPP.
-@internalTechnology
-*/
-const TUint KCOLLinkLayerTestLevel = 325;
-#endif
-
 
 // RConnection::Control() options
 
@@ -218,35 +184,6 @@ supplied when using this option which will override the default timeout value.
 */
 const TUint KConnAddrRenew = 7;
 
-/**
-@internalTechnology
-@released 9.1
-*/
-const TUint KNifSessionSetConnectionAttempt = KConnInternalOptionBit|8;
-
-/**
-@internalTechnology
-@released 9.1
-*/
-const TUint KNifSessionGetConnectionAttempt = KConnInternalOptionBit|9;
-/**
-@internalTechnology
-@released 9.1
-*/
-const TUint KNifSessionSetBlockProgresses = KConnInternalOptionBit|10;
-
-/**
-@internalTechnology
-@released 9.1
-*/
-const TUint KNifSessionGetBlockProgresses = KConnInternalOptionBit|11;
-
-/**
-@internalTechnology
-@released 9.1
-*/
-const TUint KNifSessionGetStopping = KConnInternalOptionBit|12;
-
 // DHCP specific RConnection::Ioctl options
 /**
 @publishedPartner
@@ -268,16 +205,6 @@ const TUint KConnGetSipServerAddr = KConnWriteUserDataBit|KConnReadUserDataBit|1
 */
 const TUint KConnGetSipServerDomain = KConnWriteUserDataBit|KConnReadUserDataBit|102;
 
-#ifdef SYMBIAN_NETWORKING_DHCPSERVER
-/**
-@internalTechnology
-@released
-@ref RConnection::Ioctl
-*/
-const TUint KConnSetDhcpRawOptionData = KConnWriteUserDataBit|KConnReadUserDataBit|103;
-#endif // SYMBIAN_NETWORKING_DHCPSERVER
-
-#ifdef SYMBIAN_NETWORKING_DHCP_MSG_HEADERS
 /**
 * This constant is used to retrieve the DHCP Header Sname which is the 
 * host name of the next available server. This is sometimes overloaded 
@@ -321,8 +248,6 @@ const TUint KConnGetTftpServerAddr = KConnWriteUserDataBit|KConnReadUserDataBit|
 * @see RConnection::Ioctl()
 */
 const TUint KConnDhcpGetMultipleParams  = KConnWriteUserDataBit|KConnReadUserDataBit|108;
-#endif //SYMBIAN_NETWORKING_DHCP_MSG_HEADERS
-
 
 /**
 @publishedPartner
@@ -340,16 +265,36 @@ public:
 	TUint iIndex;
 	TBuf<KConnMaxInterfaceName> iName;
 	};
+
+
 /**
-@internalTechnology
+* This constant is used to provision hardware address in the DHCP server. This enables DHCP server to assign the only available IP address in
+* its pool to the authorised hardware address as configured by the application.
+* @publishedPartner
+* @released
+* @see RConnection::Ioctl()
 */
-enum TAgentConnectType 
-	{
-	EAgentStartDialOut,
-	EAgentReconnect,
-	EAgentStartCallBack,
-	EAgentNone,
-	EAgentStartDialIn
-	};
+const TUint KConnDhcpSetHwAddressParams = KConnWriteUserDataBit|KConnReadUserDataBit|109;
+ 
+#ifdef SYMBIAN_TCPIPDHCP_UPDATE 
+/**
+ * This constant is used to retrieve list of domain names to be searched during name resolution.
+ * Ref : RFC 3646 sec 4
+ * @publishedPartner
+ * @released
+ * @see RConnection::Ioctl
+*/
+const TUint KConnGetDomainSearchList = KConnWriteUserDataBit|KConnReadUserDataBit|110;
+
+/**
+ * This constant is used to retrieve list of IPv6 addresses of DNS recursive name servers to which a client's DNS
+   resolver will send DNS queries.
+ * Ref: RFC 3646 sec 3
+ * @publishedPartner
+ * @released
+ * @see RConnection::Ioctl
+*/
+const TUint KConnGetDNSServerList = KConnWriteUserDataBit|KConnReadUserDataBit|111;
+#endif //SYMBIAN_TCPIPDHCP_UPDATE 
 
 #endif // __NIFMAN_H__

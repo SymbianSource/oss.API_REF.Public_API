@@ -1,9 +1,9 @@
 // Copyright (c) 1997-2009 Nokia Corporation and/or its subsidiary(-ies).
 // All rights reserved.
 // This component and the accompanying materials are made available
-// under the terms of the License "Symbian Foundation License v1.0" to Symbian Foundation members and "Symbian Foundation End User License Agreement v1.0" to non-members
+// under the terms of "Eclipse Public License v1.0"
 // which accompanies this distribution, and is available
-// at the URL "http://www.symbianfoundation.org/legal/licencesv10.html".
+// at the URL "http://www.eclipse.org/legal/epl-v10.html".
 //
 // Initial Contributors:
 // Nokia Corporation - initial contribution.
@@ -18,7 +18,7 @@
 
 #include <e32base.h>
 #include <s32file.h>
-#include <mda/common/controller.h>
+#include <mmf/common/mmfbase.h>
 
 
 /**
@@ -58,18 +58,6 @@ const TBaSystemSoundUid KSystemSoundMessageUID	= {0x100048AD};
 const TBaSystemSoundUid KUidSystemSoundError={0x1000609E};
 const TBaSystemSoundUid KUidSystemSoundEvent={0x1000609F};
 
-/**
-This is the UID of the repository where the system sound data is stored.
-The UID is published to UI platforms to allow them to use the key value in 
-the CRepository::NotifyRequest() API to monitor for changes in the system
-sound data.
-
-@see CRepository
-@see BaSystemSound::SystemSoundFile
-@publishedPartner
-@released
-*/
-const TUid KSystemSoundRepositoryUID = {0x100048AA};
 
 
 class TBaSystemSoundType
@@ -259,6 +247,10 @@ protected:
 	};
 
 
+#ifndef SYMBIAN_ENABLE_SPLIT_HEADERS
+#include <bassnduid.h>
+#endif
+
 class TBaSoundPriorityEncoder : public TBaSoundPriorityBase
 /**
 Encode TBaSystemSoundInfo::iPriority before persisting a sound preference
@@ -270,16 +262,6 @@ public:
 	IMPORT_C TBaSoundPriorityEncoder(TInt aPriority,TMdaPriorityPreference aPriorityPreference=EMdaPriorityPreferenceTimeAndQuality);
 	};
 
-
-class TBaSoundPriorityDecoder : public TBaSoundPriorityBase
-/**
-Decode a restored TBaSystemSoundInfo::iPriority
-@internalComponent
-*/
-	{
-public:
-	inline TBaSoundPriorityDecoder(TInt aVal);
-	};
 
 
 inline TBool TBaSystemSoundType::IsNull() const
@@ -326,7 +308,5 @@ inline TInt TBaSoundPriorityBase::Int() const
 inline TInt TBaSoundPriorityBase::Priority() const
 	{return (TInt8)iPriority;}
 
-inline TBaSoundPriorityDecoder::TBaSoundPriorityDecoder(TInt aVal)
-	{iPriority=aVal;}
 
 #endif

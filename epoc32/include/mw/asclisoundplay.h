@@ -1,9 +1,9 @@
 // Copyright (c) 1999-2009 Nokia Corporation and/or its subsidiary(-ies).
 // All rights reserved.
 // This component and the accompanying materials are made available
-// under the terms of the License "Symbian Foundation License v1.0" to Symbian Foundation members and "Symbian Foundation End User License Agreement v1.0" to non-members
+// under the terms of "Eclipse Public License v1.0"
 // which accompanies this distribution, and is available
-// at the URL "http://www.symbianfoundation.org/legal/licencesv10.html".
+// at the URL "http://www.eclipse.org/legal/epl-v10.html".
 //
 // Initial Contributors:
 // Nokia Corporation - initial contribution.
@@ -29,9 +29,9 @@
 // Enumerations
 
 
-///////////////////////////////////////////////////////////////////////////////////////
+//
 // ----> TASCliSoundPlayDefinition (header)
-///////////////////////////////////////////////////////////////////////////////////////
+//
 class TASCliSoundPlayDefinition
 /** Defines when alarm sounds are to be played, and for how long. 
 
@@ -48,17 +48,17 @@ The sound play definition is set using class RASCliSession.
 @released
 */
 	{
-///////////////////////////////////////////////////////////////////////////////////////
+//
 public:										// CONSTRUCT
-///////////////////////////////////////////////////////////////////////////////////////
+//
 
 	inline TASCliSoundPlayDefinition();
 
 	inline TASCliSoundPlayDefinition(TTimeIntervalMinutes aOffset, TTimeIntervalSeconds aDuration);
 
-////////////////////////////////////////////////////////////////////////////////////////
+//
 public:										// ACCESS
-///////////////////////////////////////////////////////////////////////////////////////
+//
 
 	inline TTimeIntervalMinutes	Offset() const 
 	/** Retrieves the offset.
@@ -72,9 +72,9 @@ public:										// ACCESS
 	@return The duration in seconds. */
 		{ return iDuration; }
 
-//////////////////////////////////////////////////////////////////////////////////////
+//
 private:									// MEMBER DATA
-///////////////////////////////////////////////////////////////////////////////////////
+//
 
 	/*
 	 * From the time an alarm is first displayed
@@ -90,9 +90,9 @@ private:									// MEMBER DATA
 
 
 
-///////////////////////////////////////////////////////////////////////////////////////
+//
 // ----> TASCliSoundPlayDefinition (inlines)
-///////////////////////////////////////////////////////////////////////////////////////
+//
 inline TASCliSoundPlayDefinition::TASCliSoundPlayDefinition()
 :	iOffset(KDefaultSoundPlayOffsetInSeconds), iDuration(KDefaultSoundPlayDurationInSeconds)
 /** Default constructor. 

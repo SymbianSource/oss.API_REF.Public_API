@@ -1,170 +1,141 @@
-//
 //=======================================================================
-// Copyright 1997-2001 University of Notre Dame.
+// Copyright 2002 Indiana University.
 // Authors: Andrew Lumsdaine, Lie-Quan Lee, Jeremy G. Siek
 //
 // Distributed under the Boost Software License, Version 1.0. (See
 // accompanying file LICENSE_1_0.txt or copy at
 // http://www.boost.org/LICENSE_1_0.txt)
 //=======================================================================
-//
 
-#ifndef BOOST_INCREMENTAL_COMPONENTS_HPP
-#define BOOST_INCREMENTAL_COMPONENTS_HPP
+#ifndef BOOST_GRAPH_DETAIL_INCREMENTAL_COMPONENTS_HPP
+#define BOOST_GRAPH_DETAIL_INCREMENTAL_COMPONENTS_HPP
 
-#include <boost/detail/iterator.hpp>
-#include <boost/graph/detail/incremental_components.hpp>
+#include <boost/operators.hpp>
+#include <boost/pending/disjoint_sets.hpp>
 
 namespace boost {
 
-  // A connected component algorithm for the case when dynamically
-  // adding (but not removing) edges is common.  The
-  // incremental_components() function is a preparing operation. Call
-  // same_component to check whether two vertices are in the same
-  // component, or use disjoint_set::find_set to determine the
-  // representative for a vertex.
+  namespace detail {
 
-  // This version of connected components does not require a full
-  // Graph. Instead, it just needs an edge list, where the vertices of
-  // each edge need to be of integer type. The edges are assumed to
-  // be undirected. The other difference is that the result is stored in
-  // a container, instead of just a decorator.  The container should be
-  // empty before the algorithm is called. It will grow during the
-  // course of the algorithm. The container must be a model of
-  // BackInsertionSequence and RandomAccessContainer
-  // (std::vector is a good choice). After running the algorithm the
-  // index container will map each vertex to the representative
-  // vertex of the component to which it belongs.
-  //
-  // Adapted from an implementation by Alex Stepanov. The disjoint
-  // sets data structure is from Tarjan's "Data Structures and Network
-  // Algorithms", and the application to connected components is
-  // similar to the algorithm described in Ch. 22 of "Intro to
-  // Algorithms" by Cormen, et. all.
-  //  
-  // RankContainer is a random accessable container (operator[] is
-  // defined) with a value type that can represent an integer part of
-  // a binary log of the value type of the corresponding
-  // ParentContainer (char is always enough) its size_type is no less
-  // than the size_type of the corresponding ParentContainer
+    //=========================================================================
+    // Implementation detail of incremental_components
 
-  // An implementation of disjoint sets can be found in
-  // boost/pending/disjoint_sets.hpp
-  
-  template <class EdgeListGraph, class DisjointSets>
-  void incremental_components(EdgeListGraph& g, DisjointSets& ds)
-  {
-    typename graph_traits<EdgeListGraph>::edge_iterator e, end;
-    for (tie(e,end) = edges(g); e != end; ++e)
-      ds.union_set(source(*e,g),target(*e,g));
-  }
-  
-  template <class ParentIterator>
-  void compress_components(ParentIterator first, ParentIterator last)
-  {
-    for (ParentIterator current = first; current != last; ++current) 
-      detail::find_representative_with_full_compression(first, current-first);
-  }
-  
-  template <class ParentIterator>
-  typename boost::detail::iterator_traits<ParentIterator>::difference_type
-  component_count(ParentIterator first, ParentIterator last)
-  {
-    std::ptrdiff_t count = 0;
-    for (ParentIterator current = first; current != last; ++current) 
-      if (*current == current - first) ++count; 
-    return count;
-  }
-  
-  // This algorithm can be applied to the result container of the
-  // connected_components algorithm to normalize
-  // the components.
-  template <class ParentIterator>
-  void normalize_components(ParentIterator first, ParentIterator last)
-  {
-    for (ParentIterator current = first; current != last; ++current) 
-      detail::normalize_node(first, current - first);
-  }
-  
-  template <class VertexListGraph, class DisjointSets> 
-  void initialize_incremental_components(VertexListGraph& G, DisjointSets& ds)
-  {
-    typename graph_traits<VertexListGraph>
-      ::vertex_iterator v, vend;
-    for (tie(v, vend) = vertices(G); v != vend; ++v)
-      ds.make_set(*v);
-  }
 
-  template <class Vertex, class DisjointSet>
-  inline bool same_component(Vertex u, Vertex v, DisjointSet& ds)
-  {
-    return ds.find_set(u) == ds.find_set(v);
-  }
+    //-------------------------------------------------------------------------
+    // Helper functions for the component_index class
+    
+    // Record the representative vertices in the header array.
+    // Representative vertices now point to the component number.
+    
+    template <class Parent, class OutputIterator, class Integer>
+    inline void
+    build_components_header(Parent p, 
+                            OutputIterator header,
+                            Integer num_nodes)
+    {
+      Parent component = p;
+      Integer component_num = 0;
+      for (Integer v = 0; v != num_nodes; ++v) 
+        if (p[v] == v) {
+          *header++ = v;
+          component[v] = component_num++;
+        }
+    }
+    
+    
+    // Pushes x onto the front of the list. The list is represented in
+    // an array.
+    template <class Next, class T, class V>
+    inline void array_push_front(Next next, T& head, V x)
+    {
+      T tmp = head;
+      head = x;
+      next[x] = tmp;
+    }
+    
+    
+    // Create a linked list of the vertices in each component
+    // by reusing the representative array.
+    template <class Parent1, class Parent2, 
+              class Integer>
+    void
+    link_components(Parent1 component, Parent2 header, 
+                    Integer num_nodes, Integer num_components)
+    {
+      // Make the non-representative vertices point to their component
+      Parent1 representative = component;
+      for (Integer v = 0; v != num_nodes; ++v)
+        if (component[v] >= num_components
+            || header[component[v]] != v)
+          component[v] = component[representative[v]];
+      
+      // initialize the "head" of the lists to "NULL"
+      std::fill_n(header, num_components, num_nodes);
+      
+      // Add each vertex to the linked list for its component
+      Parent1 next = component;
+      for (Integer k = 0; k != num_nodes; ++k)
+        array_push_front(next, header[component[k]], k);
+    }
+    
 
-  // considering changing the so that it initializes with a pair of
-  // vertex iterators and a parent PA.
-  
-  template <class IndexT>
-  class component_index
-  {
-  public://protected: (avoid friends for now)
-    typedef std::vector<IndexT> MyIndexContainer;
-    MyIndexContainer header;
-    MyIndexContainer index;
-    typedef typename MyIndexContainer::size_type SizeT;
-    typedef typename MyIndexContainer::const_iterator IndexIter;
-  public:
-    typedef detail::component_iterator<IndexIter, IndexT, SizeT> 
-      component_iterator;
-    class component {
-      friend class component_index;
-    protected:
-      IndexT number;
-      const component_index<IndexT>* comp_ind_ptr;
-      component(IndexT i, const component_index<IndexT>* p) 
-        : number(i), comp_ind_ptr(p) {}
+    
+    template <class IndexContainer, class HeaderContainer>
+    void
+    construct_component_index(IndexContainer& index, HeaderContainer& header)
+    {
+      typedef typename IndexContainer::value_type Integer;
+      build_components_header(index.begin(), 
+                              std::back_inserter(header),
+                              Integer(index.end() - index.begin()));
+      
+      link_components(index.begin(), header.begin(),
+                      Integer(index.end() - index.begin()), 
+                      Integer(header.end() - header.begin()));
+    }
+    
+    
+    
+    template <class IndexIterator, class Integer, class Distance>
+    class component_iterator 
+      : boost::forward_iterator_helper< 
+    component_iterator<IndexIterator,Integer,Distance>,
+              Integer, Distance,Integer*, Integer&>
+    {
     public:
-      typedef component_iterator iterator;
-      typedef component_iterator const_iterator;
-      typedef IndexT value_type;
-      iterator begin() const {
-        return iterator( comp_ind_ptr->index.begin(),
-                         (comp_ind_ptr->header)[number] );
+      typedef component_iterator self;
+      
+      IndexIterator next;
+      Integer node;
+      
+      typedef std::forward_iterator_tag iterator_category;
+      typedef Integer value_type;
+      typedef Integer& reference;
+      typedef Integer* pointer;
+      typedef Distance difference_type;
+      
+      component_iterator() {}
+      component_iterator(IndexIterator x, Integer i) 
+        : next(x), node(i) {}
+      Integer operator*() const {
+        return node;
       }
-      iterator end() const {
-        return iterator( comp_ind_ptr->index.begin(), 
-                         comp_ind_ptr->index.size() );
+      self& operator++() {
+        node = next[node];
+        return *this;
       }
     };
-    typedef SizeT size_type;
-    typedef component value_type;
     
-#if defined(BOOST_NO_TEMPLATED_ITERATOR_CONSTRUCTORS)
-    template <class Iterator>
-    component_index(Iterator first, Iterator last) 
-    : index(std::distance(first, last))
-    { 
-      std::copy(first, last, index.begin());
-      detail::construct_component_index(index, header);
+    template <class IndexIterator, class Integer, class Distance>
+    inline bool 
+    operator==(const component_iterator<IndexIterator, Integer, Distance>& x,
+               const component_iterator<IndexIterator, Integer, Distance>& y)
+    {
+      return x.node == y.node;
     }
-#else
-    template <class Iterator>
-    component_index(Iterator first, Iterator last) 
-      : index(first, last)
-    { 
-      detail::construct_component_index(index, header);
-    }
-#endif
+  
+  } // namespace detail
+  
+} // namespace detail
 
-    component operator[](IndexT i) const {
-      return component(i, this);
-    }
-    SizeT size() const {
-      return header.size();
-    }
-    
-  };
-
-} // namespace boost
-
-#endif // BOOST_INCREMENTAL_COMPONENTS_HPP
+#endif // BOOST_GRAPH_DETAIL_INCREMENTAL_COMPONENTS_HPP

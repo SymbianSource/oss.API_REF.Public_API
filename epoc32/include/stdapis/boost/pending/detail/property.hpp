@@ -3,130 +3,158 @@
 //  accompanying file LICENSE_1_0.txt or copy at
 //  http://www.boost.org/LICENSE_1_0.txt)
 
-#ifndef BOOST_PROPERTY_HPP
-#define BOOST_PROPERTY_HPP
+#ifndef BOOST_DETAIL_PROPERTY_HPP
+#define BOOST_DETAIL_PROPERTY_HPP
 
-#include <boost/pending/ct_if.hpp>
+#include <utility> // for std::pair
+#include <boost/type_traits/same_traits.hpp> // for is_same
 
 namespace boost {
 
-  struct no_property { 
-    typedef no_property tag_type;
-    typedef no_property next_type;
-    typedef no_property value_type;
-    enum { num = 0 };
-    typedef void kind;
-  };
+  namespace detail {
 
-  template <class Tag, class T, class Base = no_property>
-  struct property : public Base {
-    typedef Base next_type;
-    typedef Tag tag_type;
-    typedef T value_type;
-#if BOOST_WORKAROUND (__GNUC__, < 3)
-    property() { }
+    template <class PropertyTag1, class PropertyTag2>
+    struct same_property {
+      enum { value = is_same<PropertyTag1,PropertyTag2>::value };
+    };
+
+    struct error_property_not_found { };
+
+    template <int TagMatched>
+    struct property_value_dispatch {
+      template <class PropertyTag, class T, class Tag>
+      inline static T& get_value(PropertyTag& p, T*, Tag) {
+        return p.m_value; 
+      }
+      template <class PropertyTag, class T, class Tag>
+      inline static const T& const_get_value(const PropertyTag& p, T*, Tag) {
+        return p.m_value; 
+      }
+    };
+
+    template <class PropertyList>
+    struct property_value_end {
+      template <class T> struct result { typedef T type; };
+
+      template <class T, class Tag>
+      inline static T& get_value(PropertyList& p, T* t, Tag tag) {
+        typedef typename PropertyList::next_type Next;
+        typedef typename Next::tag_type Next_tag;
+        enum { match = same_property<Next_tag,Tag>::value };
+        return property_value_dispatch<match>
+          ::get_value(static_cast<Next&>(p), t, tag);
+      }
+      template <class T, class Tag>
+      inline static const T& const_get_value(const PropertyList& p, T* t, Tag tag) {
+        typedef typename PropertyList::next_type Next;
+        typedef typename Next::tag_type Next_tag;
+        enum { match = same_property<Next_tag,Tag>::value };
+        return property_value_dispatch<match>
+          ::const_get_value(static_cast<const Next&>(p), t, tag);
+      }
+    };
+    template <>
+    struct property_value_end<no_property> {
+      template <class T> struct result { 
+        typedef detail::error_property_not_found type; 
+      };
+
+      // Stop the recursion and return error
+      template <class T, class Tag>
+      inline static detail::error_property_not_found&
+      get_value(no_property&, T*, Tag) {
+        static error_property_not_found s_prop_not_found;
+        return s_prop_not_found;
+      }
+      template <class T, class Tag>
+      inline static const detail::error_property_not_found&
+      const_get_value(const no_property&, T*, Tag) {
+        static error_property_not_found s_prop_not_found;
+        return s_prop_not_found;
+      }
+    };
+
+    template <>
+    struct property_value_dispatch<0> {
+      template <class PropertyList, class T, class Tag>
+      inline static typename property_value_end<PropertyList>::template result<T>::type&
+      get_value(PropertyList& p, T* t, Tag tag) {
+        return property_value_end<PropertyList>::get_value(p, t, tag);
+      }
+      template <class PropertyList, class T, class Tag>
+      inline static const typename property_value_end<PropertyList>::template result<T>::type&
+      const_get_value(const PropertyList& p, T* t, Tag tag) {
+        return property_value_end<PropertyList>::const_get_value(p, t, tag);
+      }
+    };
+
+    template <class PropertyList>
+    struct build_property_tag_value_alist
+    {
+      typedef typename PropertyList::next_type NextProperty;
+      typedef typename PropertyList::value_type Value;
+      typedef typename PropertyList::tag_type Tag;
+      typedef typename build_property_tag_value_alist<NextProperty>::type Next;
+      typedef std::pair< std::pair<Tag,Value>, Next> type;
+    };
+    template <>
+    struct build_property_tag_value_alist<no_property>
+    {
+      typedef no_property type;
+    };
+
+#if !defined BOOST_NO_TEMPLATE_PARTIAL_SPECIALIZATION
+    template <class TagValueAList, class Tag>
+    struct extract_value {
+      typedef error_property_not_found type;
+    };
+    template <class Value, class Tag1, class Tag2, class Rest>
+    struct extract_value< std::pair<std::pair<Tag1,Value>,Rest>, Tag2> {
+      typedef typename extract_value<Rest,Tag2>::type type;
+    };
+    template <class Value, class Tag, class Rest>
+    struct extract_value< std::pair<std::pair<Tag,Value>,Rest>, Tag> {
+      typedef Value type;
+    };
 #else
-    property() : m_value() { }
-#endif
-    property(const T& v) : m_value(v) { }
-    property(const T& v, const Base& b) : Base(b), m_value(v) { }
-    // copy constructor and assignment operator will be generated by compiler
+    // VC++ workaround:
+    // The main idea here is to replace partial specialization with
+    // nested template member classes. Of course there is the
+    // further complication that the outer class of the nested
+    // template class cannot itself be a template class.
+    // Hence the need for the ev_selector. -JGS
 
-    T m_value;
-  };
+    struct recursive_extract;
+    struct end_extract;
 
-  // The BGL properties specialize property_kind and
-  // property_num, and use enum's for the Property type (see
-  // graph/properties.hpp), but the user may want to use a class
-  // instead with a nested kind type and num.  Also, we may want to
-  // switch BGL back to using class types for properties at some point.
+    template <class TagValueAList>
+    struct ev_selector { typedef recursive_extract type; };
+    template <>
+    struct ev_selector<no_property> { typedef end_extract type; };
 
-  template <class PropertyTag>
-  struct property_kind {
-    typedef typename PropertyTag::kind type;
-  };
+    struct recursive_extract {
+      template <class TagValueAList, class Tag1>
+      struct bind_ {
+        typedef typename TagValueAList::first_type AListFirst;
+        typedef typename AListFirst::first_type Tag2;
+        typedef typename AListFirst::second_type Value;
+        enum { match = same_property<Tag1,Tag2>::value };
+        typedef typename TagValueAList::second_type Next;
+        typedef typename ev_selector<Next>::type Extractor;
+        typedef typename boost::ct_if< match, Value, 
+          typename Extractor::template bind_<Next,Tag1>::type
+        >::type type;
+      };
+    };
+    struct end_extract {
+      template <class AList, class Tag1>
+      struct bind_ {
+        typedef error_property_not_found type;
+      };
+    };
+#endif //!defined BOOST_NO_TEMPLATE_PARTIAL_SPECIALIZATION
 
-  template <class P>
-  struct has_property { 
-    BOOST_STATIC_CONSTANT(bool, value = true);
-    typedef true_type type;
-  };
-  template <>
-  struct has_property<no_property> { 
-    BOOST_STATIC_CONSTANT(bool, value = false); 
-    typedef false_type type; 
-  };
-
+  } // namespace detail 
 } // namespace boost
 
-#include <boost/pending/detail/property.hpp>
-
-namespace boost {
-
-  template <class PropertyList, class Tag>
-  struct property_value {
-#if !defined BOOST_NO_TEMPLATE_PARTIAL_SPECIALIZATION
-    typedef typename detail::build_property_tag_value_alist<PropertyList>::type AList;
-    typedef typename detail::extract_value<AList,Tag>::type type;
-#else
-    typedef typename detail::build_property_tag_value_alist<PropertyList>::type AList;
-    typedef typename detail::ev_selector<AList>::type Extractor;
-    typedef typename Extractor::template bind_<AList,Tag>::type type;
-#endif  
-  };
-
-  template <class Tag1, class Tag2, class T1, class Base>
-  inline typename property_value<property<Tag1,T1,Base>, Tag2>::type& 
-  get_property_value(property<Tag1,T1,Base>& p, Tag2 tag2) {
-    BOOST_STATIC_CONSTANT(bool, 
-                          match = (detail::same_property<Tag1,Tag2>::value));
-    typedef property<Tag1,T1,Base> Prop;
-    typedef typename property_value<Prop, Tag2>::type T2;
-    T2* t2 = 0;
-    typedef detail::property_value_dispatch<match> Dispatcher;
-    return Dispatcher::get_value(p, t2, tag2);
-  }
-  template <class Tag1, class Tag2, class T1, class Base>
-  inline
-  const typename property_value<property<Tag1,T1,Base>, Tag2>::type& 
-  get_property_value(const property<Tag1,T1,Base>& p, Tag2 tag2) {
-    BOOST_STATIC_CONSTANT(bool, 
-                          match = (detail::same_property<Tag1,Tag2>::value));
-    typedef property<Tag1,T1,Base> Prop;
-    typedef typename property_value<Prop, Tag2>::type T2;
-    T2* t2 = 0;
-    typedef detail::property_value_dispatch<match> Dispatcher;
-    return Dispatcher::const_get_value(p, t2, tag2);
-  }
-
- namespace detail {
-#if !defined(BOOST_NO_TEMPLATE_PARTIAL_SPECIALIZATION)
-   template<typename FinalTag, typename FinalType>
-   struct retag_property_list
-   {
-     typedef property<FinalTag, FinalType> type;
-     typedef FinalType retagged;
-   };
-
-   template<typename FinalTag, typename Tag, typename T, typename Base>
-   struct retag_property_list<FinalTag, property<Tag, T, Base> >
-   {
-   private:
-     typedef retag_property_list<FinalTag, Base> next;
-
-   public:
-     typedef property<Tag, T, typename next::type> type;
-     typedef typename next::retagged retagged;
-   };
-
-   template<typename FinalTag>
-   struct retag_property_list<FinalTag, no_property>
-   {
-     typedef no_property type;
-     typedef no_property retagged;
-   };
-#endif
-  }
-} // namesapce boost
-
-#endif /* BOOST_PROPERTY_HPP */
+#endif // BOOST_DETAIL_PROPERTY_HPP

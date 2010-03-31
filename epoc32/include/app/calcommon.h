@@ -1,9 +1,9 @@
 // Copyright (c) 2005-2009 Nokia Corporation and/or its subsidiary(-ies).
 // All rights reserved.
 // This component and the accompanying materials are made available
-// under the terms of the License "Symbian Foundation License v1.0" to Symbian Foundation members and "Symbian Foundation End User License Agreement v1.0" to non-members
+// under the terms of "Eclipse Public License v1.0"
 // which accompanies this distribution, and is available
-// at the URL "http://www.symbianfoundation.org/legal/licencesv10.html".
+// at the URL "http://www.eclipse.org/legal/epl-v10.html".
 //
 // Initial Contributors:
 // Nokia Corporation - initial contribution.
@@ -40,11 +40,28 @@ typedef TUint32 TCalLocalUid;
 */
 typedef TInt64 TCalFileId;
 
+/** Calendar Collection ID.
+It identifies the same file as TCalFileId does
+@publishedAll
+@released
+*/
+typedef TUint8 TCalCollectionId;
+
+/** Calendar NULL file ID.
+The file ID will be set to KNullFileId if the file is not opened.
+@publishedAll
+@released
+*/
+const TCalFileId KNullFileId = 0;
+
 /** Utility class containing common calendar-related enums.
 
 @publishedAll
 @released
 */
+
+
+
 class CalCommon
 	{
 public:
@@ -226,5 +243,51 @@ public:
 		/** The file is an old version that is not supported. */
 		EUnsupportedFileVersion
 		};
+
+	/** Class to implement a priority range. This is used to set a priority range when using
+	CCalFindInstanceSettings.
+	@publishedAll
+	@prototype
+	*/
+	class TCalPriorityRange
+		{
+	public:
+		IMPORT_C TCalPriorityRange();
+		IMPORT_C TCalPriorityRange(TUint aHighestPriority, TUint aLowestPriority);
+		
+		IMPORT_C TUint LowestPriority() const;
+		IMPORT_C TUint HighestPriority() const;
+		
+	private:
+		TUint iHighestPriority;
+		TUint iLowestPriority;
+		};
+	
+	/** Enumeration to define the sort-able attributes that can be sorted on in the
+	 * instance view 
+	@publishedAll
+	@prototype
+	*/
+	enum TCalSortAttribute
+		{
+		ESortAttrStartTime,
+		ESortAttrEndTime,
+		ESortAttrLastModified,
+		ESortAttrPriority,
+		ESortAttrType
+		};
+	
+	/** Enumeration to define the sort directions that can be used in sort criteria, 
+	@publishedAll
+	@prototype
+	*/
+	enum TCalSortDirection
+		{
+		/** Sort by ascending order  */
+		EAscendingOrder,
+		/** Sort by descending order  */
+		EDescendingOrder
+		};
+
 	};
 #endif // __CALCOMMON_H__

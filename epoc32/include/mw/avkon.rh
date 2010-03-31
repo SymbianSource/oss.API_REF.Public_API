@@ -1,10 +1,10 @@
 /*
-* Copyright (c) 2002-2008 Nokia Corporation and/or its subsidiary(-ies).
+* Copyright (c) 2002-2010 Nokia Corporation and/or its subsidiary(-ies).
 * All rights reserved.
 * This component and the accompanying materials are made available
-* under the terms of the License "Symbian Foundation License v1.0" to Symbian Foundation members and "Symbian Foundation End User License Agreement v1.0" to non-members
+* under the terms of "Eclipse Public License v1.0"
 * which accompanies this distribution, and is available
-* at the URL "http://www.symbianfoundation.org/legal/licencesv10.html".
+* at the URL "http://www.eclipse.org/legal/epl-v10.html".
 *
 * Initial Contributors:
 * Nokia Corporation - initial contribution.
@@ -21,7 +21,7 @@
 #endif
 
 #if !defined(__BADEF_RH__)
-#include <BADEF.RH>
+#include <badef.rh>
 #endif
 
 #if !defined(__UIKON_HRH__)
@@ -261,6 +261,23 @@ STRUCT SLIDER
     LLINK graphical_image=0;
     }
 
+STRUCT SLIDER_WITH_FEEDBACK_STYLE
+    {
+    WORD slidertype=EAknSliderWithFeedbackStyle;
+    WORD feedbackstyle=EAknSliderFbStable;
+    WORD layout;
+    WORD minvalue;
+    WORD maxvalue;
+    WORD step;
+    WORD valuetype=EAknSliderValueBareFigure;
+    WORD decimalplaces=0;
+    LTEXT singular_valuelabel = "";
+    LTEXT minlabel="";
+    LTEXT maxlabel="";
+    LTEXT valuelabel="";
+    LLINK graphical_image=0;
+    }
+
 /** used with CAknVolumeControl
  * see avkon.hrh for the flag definitions
  * This struct uses default values for volume range:
@@ -336,6 +353,18 @@ STRUCT AVKON_SETTING_PAGE
     LLINK editor_resource_id = 0;
     LLINK invalid_contents_softkey_resource = 0;
     LLINK extension = 0;
+    }
+
+// --------------------------------------------------------------------------
+// AVKON_SETTING_PAGE_EXTENSION
+// Resource structure extension for setting page.
+// @since 5.2
+// --------------------------------------------------------------------------
+//
+STRUCT AVKON_SETTING_PAGE_EXTENSION
+    {
+    WORD flags = 0;         // construction flags
+    LLINK extension = 0;    // link to extension
     }
 
 STRUCT AVKON_SETTING_ITEM_LIST
@@ -991,3 +1020,47 @@ STRUCT AVKON_SCT_NAVI_BUTTON
     LLINK button;
     }
 
+// --------------------------------------------------------------------------
+// AVKON_DISCREET_POPUP
+// Resource structure for discreet popup (CAknDiscreetPopup).
+// @since 5.2
+// --------------------------------------------------------------------------
+//
+STRUCT AVKON_DISCREET_POPUP
+    {
+    WORD flags = 0; // popup flags
+    LTEXT titleTxt = ""; // first text line
+    LTEXT bodyTxt = ""; // second text line
+    LTEXT bmpFile = ""; // icon bitmap file
+    WORD bmpId = 0xffff; // icon bitmap id
+    WORD bmpMask = 0xffff; // icon bitmap mask id
+    LLINK majorSkinId = -1; // icon major skin id
+    LLINK minorSkinId = -1; // icon minor skin id
+    LLINK extension = 0; // reserved for future extension
+    }
+
+// --------------------------------------------------------------------------
+// COMBINED_PANE
+// Resource structure for status pane's combined pane.
+// @since 5.2
+// --------------------------------------------------------------------------
+//
+STRUCT COMBINED_PANE
+    {
+    BYTE version = 1;    // Structure version.
+    STRUCT panes[];      // Array of subpanes embedded to the combined pane.
+    LLINK extension = 0; // Extension for future use.
+    }
+
+// --------------------------------------------------------------------------
+// COMBINED_PANE_SUBPANE
+// Resource structure for combined pane's subpane (in status pane).
+// @since 5.2
+// --------------------------------------------------------------------------
+//
+STRUCT COMBINED_PANE_SUBPANE
+    {
+    BYTE version = 1;    // Structure version.
+    LONG uid;            // UID of the subpane, defined in @c avkon.hrh.
+    LLINK extension = 0; // Extension for future use.
+    }

@@ -100,6 +100,14 @@ IMPORT_C void	 rewinddir(DIR *);
 IMPORT_C int	 alphasort(const void *, const void *);
 IMPORT_C int	 scandir(const char *, struct dirent ***,
 	    int (*)(struct dirent *), int (*)(const void *, const void *));
+
+#if defined(SYMBIAN_OE_LARGE_FILE_SUPPORT) && !defined(SYMBIAN_OE_NO_LFS)
+#define readdir64	readdir
+#define alphasort64	alphasort
+#define scandir64	scandir
+#endif /* SYMBIAN_OE_LARGE_FILE_SUPPORT && !SYMBIAN_OE_NO_LFS */
+
+
 #if __XSI_VISIBLE
 IMPORT_C void	 seekdir(DIR *, long);
 IMPORT_C long	 telldir(DIR *);

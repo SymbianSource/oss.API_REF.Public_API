@@ -1,9 +1,9 @@
 // Copyright (c) 2004-2009 Nokia Corporation and/or its subsidiary(-ies).
 // All rights reserved.
 // This component and the accompanying materials are made available
-// under the terms of the License "Symbian Foundation License v1.0" to Symbian Foundation members and "Symbian Foundation End User License Agreement v1.0" to non-members
+// under the terms of "Eclipse Public License v1.0"
 // which accompanies this distribution, and is available
-// at the URL "http://www.symbianfoundation.org/legal/licencesv10.html".
+// at the URL "http://www.eclipse.org/legal/epl-v10.html".
 //
 // Initial Contributors:
 // Nokia Corporation - initial contribution.
@@ -30,9 +30,12 @@ class CRtpSession;
 class CRtpReceiveSource;
 class CRtpSendSource;
 class TRtpPacket;
+class TRtpSendPacket;
 
 class RRtcpRRPart;
 class RRtcpSRPart;
+class TRtcpStatistics;
+class MPrePostProcessingCallback;
 
 /**
 @publishedAll
@@ -107,8 +110,12 @@ enum TRtpEventType
 	When this event occurs, the packet is deleted.
 	*/
 	ERtpUndersizedPacket = 0x105,
- 
- 	
+	
+	/* An event type that indicates that an non RTP packet has been received */
+	ENonRtpDataReceived = 0x106,
+	
+	/* An event type that indicates that an non RTCP packet has been received */
+	ENonRtcpDataReceived = 0x107,
 	/**
 	Not an event type, but defines the upper limit for session event
 	type values.
@@ -289,13 +296,14 @@ enum TRtpOneShotness
 
 /**
 @publishedAll
+@released
 */
 typedef void (*TRtpCallbackFunction)(TAny* aPtr, const TRtpEvent& aEvent);
 
 
 
 /**
-@internalComponent
+@publishedAll
 */
 const TInt KRtpNoParameter = KRequestPending;
 
@@ -320,8 +328,6 @@ RRtpSendSource::NewSendPacketL() or RRtpSendSource::NewSendPacketLC()
 to indicate that no exension is required for the RTP send packet.
 */
 const TInt KRtpNoExtension = -1;
-
-
 
 /**
 @publishedAll
@@ -412,7 +418,7 @@ class RRtpSession
 						const TDesC8& aCNAME = KNullDesC8);
 
     /**
-	@publishedPartner
+	@publishedAll
 	@released
    	
     Opens the session and initialises it.
@@ -436,6 +442,39 @@ class RRtpSession
 	IMPORT_C void OpenL(RSocket& aSocket, TInt aMaxRXSize,
 						TInt aPriority = EPriorityNormal);
 
+   
+    /** 
+	@internalComponent
+    
+	Opens the session and initialises it.
+
+    No events will be generated until after control returns to the
+    active scheduler. The client has this time to initialise the
+    object by adding event callbacks.
+
+	This API uses the RTP Stack implemented as a CF Prorotocol. The SubConnection
+	which is passed to the API should be initialised with the RTP Params. 
+
+    @param aServer         Socket Server. 
+    @param aLocalAddr      The maximum size of a received packet.
+    @param aRemoteAddr     The RTCP socket.
+    @param aMaxRXSize      The maximum size of a received packet.
+    @param aSubConnection  The subconnection with RTP Parametrs set on it.
+    @param aCName          The CNAME. It needs to be same as the one set using the API:
+    					   CSubConRTPGenericParamSet::SetCNAMEL(const TDesC8& aCName).
+    					   If the descriptor is KNullDesC8,the RTCP session is not created.
+                           
+    */
+    
+    #ifndef SYMBIAN_ENABLE_SPLIT_HEADERS
+    IMPORT_C void OpenL(RSocketServ& aServer, TSockAddr& aLocalAddr,
+						TSockAddr& aRemoteAddr,
+						TInt aMaxRXSize, RSubConnection& aSubConnection, TInt aPriority = EPriorityNormal, 
+						const TDesC8& aCNAME = KNullDesC8);
+	#endif
+
+	
+
 	IMPORT_C void Close();
 
 	IMPORT_C void SetMaxRXSize(TInt aMaxRXSize);
@@ -444,7 +483,7 @@ class RRtpSession
     
     
     /** 
-	@publishedPartner
+	@publishedAll
 	@released
 	
     Sets the estimated bandwidth used by the session.
@@ -459,7 +498,7 @@ class RRtpSession
 
 
     /**
-	@publishedPartner
+	@publishedAll
 	@released
    	
    	Supplies information about the profile-specific RTP
@@ -544,7 +583,7 @@ class RRtpSession
 
 
 	/**
-	@publishedPartner
+	@publishedAll
 	@released
 	
 	Gets an array contining the most recent RR (Receiver Report) from
@@ -556,7 +595,7 @@ class RRtpSession
 
 
 	/**
-	@publishedPartner
+	@publishedAll
 	@released
 	
 	Gets the data associated with the specified RTCP SDES (Source Description)
@@ -576,14 +615,18 @@ class RRtpSession
 
 	
 	/**
-	@publishedPartner
+	@publishedAll
 	@released
 	
 	Sets the data associated with the specified RTCP SDES (Source Description)
 	item for sending in the next SDES packet only.
 
 	The function Leaves if duplicate values are set for the same CNAME.
-	
+
+    The SDES Items set by this API is valid only till the stack sends the
+    next RTCP Packet. The list of items(except CNAME and NONE) is flushed 
+	after every RTCP report is sent
+
 	Note a that the PRIV (Private Extensions) SDES item is not supported
 	by this mechanism.
 	
@@ -599,7 +642,7 @@ class RRtpSession
 	IMPORT_C TInt SetSDESL(TInt aType, const TDesC8& aValue);
 
 	/**
-	@publishedPartner
+	@publishedAll
 	@released
 	
 	Sets the data associated with the PRIV (Private Extensions) SDES item.
@@ -615,7 +658,7 @@ class RRtpSession
 
     
 	/**
-	@publishedPartner
+	@publishedAll
 	@released
 	Sends an APP (Application Defined) RTCP Packet.
 	
@@ -631,7 +674,7 @@ class RRtpSession
 
 
 	/**
-	@publishedPartner
+	@publishedAll
 	@released
 	
 	Enables or disables the automatic sending of RTCP SR (Sender Report),
@@ -649,7 +692,7 @@ class RRtpSession
 
 
 	/** 
-	@publishedPartner
+	@publishedAll
 	@released
 	
 	Gets the RTCP Auto Send status. 
@@ -662,7 +705,7 @@ class RRtpSession
 	IMPORT_C TBool RTCPAutoSend() const;
 
 	/** 
-	@publishedPartner
+	@publishedAll
 	@released
 	
 	Sets the RTCP Auto Send interval.
@@ -674,18 +717,17 @@ class RRtpSession
 	IMPORT_C void SetRtcpInterval(TTimeIntervalMicroSeconds32& aInterval);
 	
 	/** 
-	@publishedPartner
+	@publishedAll
 	@released	
 	Enables Receive only option for rtp or rtcp
 
 	@param aRtpOrRtcp Takes the values from the enum TPacketType
 
-	@see RRtpSession::DontReceive()
 	*/
 	IMPORT_C void DontReceive(TInt aRtpOrRtcp);
 	
 	/** 
-	@publishedPartner
+	@publishedAll
 	@released
     Sends an RTCP packet now. 
 
@@ -699,6 +741,16 @@ class RRtpSession
 	                    depending on whether any packets have actually been
 	                    sent, together with all SDES (Source Description) items
 	                    specified by this parameter.
+	                    
+	                    Example:
+	                    
+	                    If every report has go with CNAME,LOC and PRIV...
+	                    then set flags as fallows..
+	                    
+	                    SDES Flags:
+	                    1  2  3  4  5  6  7 8 
+	                    1  0  0  0  1  0  0 1
+	                   
 
     @see TRtpSendPacketType
 	*/
@@ -706,7 +758,7 @@ class RRtpSession
 
 	
 	/**
-	@publishedPartner
+	@publishedAll
 	@released
 	Creates a new send stream, and returns the send stream handle.
 
@@ -727,7 +779,7 @@ class RRtpSession
 
 
 	/**
-	@publishedPartner
+	@publishedAll
 	@released
 	
 	Gets the handle to the send stream object associated with this session.
@@ -744,7 +796,7 @@ class RRtpSession
 
 
     /**
-	@publishedPartner
+	@publishedAll
 	@released
     
     Sets the number of sequential packets that must be received
@@ -770,7 +822,7 @@ class RRtpSession
 	inline TBool operator != (RRtpSession aThat) const;
 
 	/**
-	@publishedPartner
+	@publishedAll
 	@released
 
     The event manager contains a number of callback registrations, each of which 
@@ -796,7 +848,7 @@ class RRtpSession
 										  TInt aParameter);
 
 	/**
-	@publishedPartner
+	@publishedAll
 	@released
 
     The event manager contains a number of callback registrations, each of which 
@@ -817,10 +869,148 @@ class RRtpSession
 	IMPORT_C void PrivRegisterEventCallbackL(TUint aType, 
 										  TRtpCallbackFunction aCallback, 
 										  TAny* aPtr);
+	
+	/**
+	@publishedAll
+	@released
+ 
+	Sets the sampling rate for a Particular Payloadtype
+	@param aPayloadType  PayloadType ( Should be between 96-127 ) see RFC 3551
+	@param asamplingrate Sampling rate is in rtp ticks per msecs. ( eg for AMR-NB give 8000).
+	*/	
+	IMPORT_C TInt SetSamplingRate(TInt aPayloadType, TUint aSamplingRate);
+	/**
+	@publishedAll
+	@released
+
+    Gets a handle to the RTP socket; 
+	it provides a direct access to the functionality of RTP socket.
+
+	@return The RTP socket for the current session
+		
+	*/									  
+    IMPORT_C RSocket* RtpSocket();
+    
+    /**
+	@publishedAll
+	@released
+
+    Gets a handle to the RTCP socket; 
+	it provides a direct access to the functionality of RTCP socket.
+
+	@return The RTCP socket for the current session
+		
+	*/
+	IMPORT_C RSocket* RtcpSocket();
+	
+	/**
+	@publishedAll
+	@released
+
+    Send a non-RTP (control) data packet asynchronously
+    
+    @param aSocketType SocketType that tells whether non RTP data has to go through RTP or RTCP socket
+    
+    @param aData Non RTP data that has to be sent
+    
+	@param aStatus Tells whether the data has been sent successfully
+
+	*/
+ 	IMPORT_C void SendDataL(TBool aSocketType, const TDesC8& aData, TRequestStatus&  aStatus);
+ 	
+ 	/**
+	@publishedAll
+	@released
+
+    Sets the remote RTP address for the current RTP session
+    
+    @param aRemoteAddr Remote RTP address to be set
+    
+    */
+	
+	IMPORT_C void SetRemoteAddress(const TSockAddr &aRemoteAddr);
+
+	/**
+	@publishedAll
+	@released
+
+    Gets the last received non RTP data, If no data found function leaves
+    
+    @return Returns the last received non RTP data
+	*/
+	IMPORT_C const TDesC8& NonRtpDataL();
+	
+	/**
+	@publishedAll
+	@released
+
+    Gets the last received non RTCP data, If no data found function leaves
+    
+    @return Returns the last received non RTCP data
+	*/
+	IMPORT_C TPtr8 NonRtcpDataL();
+	
+	/**
+	@publishedAll
+	@released
+
+    Disables the receipt of non RTP data
+    
+    */
+	
+	IMPORT_C void DisableNonRtpData();
+	
+	/**
+	@publishedAll
+	@released
+
+    Sets the remote RTCP port for the current active RTP session
+    
+    @param Remote RTCP port value to be set
+	*/
+	
+	IMPORT_C void SetRemoteRtcpPort(TUint aPort);
+	
+	/**
+	@internalComponent
+
+    Gets the remote RTCP Statistics for the current RTP session
+    
+    @param SSRC of the sender
+    @param RTCP Statistics class that stores the RTCP statistics for the 
+    current RTP session
+	*/
+	#ifndef SYMBIAN_ENABLE_SPLIT_HEADERS
+    IMPORT_C TInt RtcpStatistics(TUint32 aSsrc, TRtcpStatistics &aRtcpStatistics);
+    #endif
+	
+	/**
+	@internalComponent
+
+    Pre and Post processing function for RTP and RTCP packets
+
+	If a function is registered for a particular event, it will be called when 
+	that event occurs. One callback function can be associated with more than 1
+	callback registration. Callback functions take a pointer argument
+	which was supplied as part of the registration
+
+    @param aType Event type
+		
+	@param aCallback Callback object
+		
+	@param aPtr Pointer to data that needs to be passed to the callback function
+	*/
+	#ifndef SYMBIAN_ENABLE_SPLIT_HEADERS
+	IMPORT_C void SetPrePostProcessingRegisterCallback(MPrePostProcessingCallback* aPrePostProcessingCallback);
+	#endif
 
  private:
 	friend class TRtpEvent;
+	#ifdef SYMBIAN_ENABLE_SPLIT_HEADERS
+		friend class RRtpSession_Internal;
+	#endif
 	CRtpSession* iPtr;
+	
 	// Note: Comments that start with //\ are pseudo-variables used to get
 	// Doxygen collaboration diagrams to look right. Ignore them.
 	//\ RRtpSendSource sndSource_1_01;
@@ -901,7 +1091,7 @@ class RRtpSendSource
 	IMPORT_C void SetPayloadType(TUint aPayloadType);
 	IMPORT_C void SetDefaultPayloadSize(TInt aPayloadSize);
 	/**
-	@publishedPartner
+	@publishedAll
 	@released
 	
 	Sends a Bye RTCP packet.
@@ -918,7 +1108,7 @@ class RRtpSendSource
 	inline TBool operator != (RRtpSendSource aThat) const;
 	
 	/**
-	@publishedPartner
+	@publishedAll
 	@released
 
     The event manager contains a number of callback registrations, each of which 
@@ -944,7 +1134,7 @@ class RRtpSendSource
 										  TInt aParameter);
 
 	/**
-	@publishedPartner
+	@publishedAll
 	@released
 
     The event manager contains a number of callback registrations, each of which 
@@ -965,6 +1155,7 @@ class RRtpSendSource
 	IMPORT_C void PrivRegisterEventCallbackL(TUint aType, 
 										  TRtpCallbackFunction aCallback, 
 										  TAny* aPtr);
+										  
  private:
 	friend class RRtpSession;
 	friend class TRtpEvent;
@@ -1026,7 +1217,7 @@ class RRtpReceiveSource
 	}
 
 	/**
-	@publishedPartner
+	@publishedAll
 	@released
 	
 	Gets the data associated with the specified RTCP SDES (Source Description)
@@ -1043,7 +1234,7 @@ class RRtpReceiveSource
 
 
 	/**
-	@publishedPartner
+	@publishedAll
 	@released
 	
 	Gets the most recent SR ((Sender Report) from this SSRC.
@@ -1054,7 +1245,7 @@ class RRtpReceiveSource
 
 
 	/**
-	@publishedPartner
+	@publishedAll
 	@released
 	
 	Gets the reason for a BYE packet.
@@ -1066,7 +1257,7 @@ class RRtpReceiveSource
 
 
 	/**
-	@publishedPartner
+	@publishedAll
 	@released
 	
 	Parameters from the last APP (Application Defined) packet.
@@ -1080,7 +1271,7 @@ class RRtpReceiveSource
 	IMPORT_C RRtpReceivePacket Packet();
 
 	/**
-	@publishedPartner
+	@publishedAll
 	@released
 	
 	Gets the SSRC of the remote end
@@ -1093,7 +1284,7 @@ class RRtpReceiveSource
 	inline TBool operator != (RRtpReceiveSource aThat) const;
 
 	/**
-	@publishedPartner
+	@publishedAll
 	@released
 
     The event manager contains a number of callback registrations, each of which 
@@ -1118,7 +1309,7 @@ class RRtpReceiveSource
 										  TAny* aPtr, TInt aParameter);
 
 	/**
-	@publishedPartner
+	@publishedAll
 	@released
 
     The event manager contains a number of callback registrations, each of which 
@@ -1140,6 +1331,15 @@ class RRtpReceiveSource
 	IMPORT_C void PrivRegisterEventCallbackL(TUint aType, 
 										  TRtpCallbackFunction aCallback, 
 										  TAny* aPtr);
+	/**
+	@publishedAll
+	@released
+    
+    Returns the payloadtype of the newly arrived packet. Should be called before 
+    the packet() function.
+    If an open Packet is not present the function will leave with KErrNotFound.
+ 	*/
+	IMPORT_C TUint PayLoadTypeL();
  private:
 	friend class RRtpSession;
 	friend class TRtpEvent;
@@ -1206,6 +1406,8 @@ class RRtpSendPacket : public RRtpPacket
 	{
  public:
 	IMPORT_C void Send();
+	IMPORT_C void Close();
+	IMPORT_C TInt SendSync();
 	IMPORT_C TDes8& WritePayload();
 	IMPORT_C void SetTimestamp(TUint aTimestamp);
 	IMPORT_C void SetMarker(TBool aMark);
@@ -1213,6 +1415,8 @@ class RRtpSendPacket : public RRtpPacket
 	IMPORT_C void SetFlags(TUint aFlags);
 
 	friend class RRtpSendSource;
+ private:
+	 void InitRtpPacket(TRtpSendPacket* ptr);
 	};
 
 
@@ -1321,7 +1525,8 @@ class RRtpCSRCs
 
 
 /**
-@publishedPartner
+@publishedAll
+@released
 
 A set of panic codes.
 
@@ -1345,8 +1550,10 @@ enum TRtpPanicCode
 	ERtpCoreController = 100,
 	};
 
+
 GLREF_C void Panic(TRtpPanicCode aPanicCode);
 
 #include "rtp.inl"
 
 #endif // RTP_H
+

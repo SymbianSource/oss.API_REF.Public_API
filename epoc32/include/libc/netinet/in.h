@@ -1,10 +1,11 @@
 /* IN.H
  * 
- * Portions copyright (c) 1997-2006 Symbian Software Ltd.  All rights reserved.
+ * Portions Copyright (c) 1997-2006 Nokia Corporation and/or its subsidiary(-ies).
+ * All rights reserved.
  */
 
 /** @file
-@internalComponent
+@PublishedAll
 */
 
 /*

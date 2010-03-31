@@ -11,7 +11,7 @@
 *
 * Contributors:
 *
-* Description: 
+* Description:
 *
 */
 #ifndef BROWSERUISDKCRKEYS_H
@@ -69,7 +69,7 @@ const TUint32 KBrowserEngineFlags =         0x00000001;
 // Any String value
 const TUint32 KBrowserSelfDownloadContentTypes = 0x0000001D;
 
-enum TBrowserCenRepApSelectionModeValues 
+enum TBrowserCenRepApSelectionModeValues
     {
     EBrowserCenRepApSelModeUserDefined = 0, // User defined
     EBrowserCenRepApSelModeAlwaysAsk = 1,   // Always ask
@@ -99,8 +99,8 @@ const TUint32 KBrowserConfirmedDTMFOnce =  0x00000024;
 *
 */
 
-// Load Content 
-// Valid values: 
+// Load Content
+// Valid values:
 // If flash plugin is present: 0 = Text only, 1 = Images,No flash, 2 = All
 // If flash plugin is not present 0 = Text only, 1 = All
 const TUint32 KBrowserNGImagesEnabled =       	0x00000025;
@@ -129,6 +129,25 @@ const TUint32 KBrowserNGShowSecurityWarnings= 	0x0000002D;
 // Show Page Overview.
 // Valid values: 0 = off 1 = on
 const TUint32 KBrowserNGPageOverview = 		  	0x0000002E;
+
+// Valid values for KBrowserNGHomepageType
+enum TBrowserCenRepHomePageTypeValue
+{
+     EBrowserCenRepAccessPoint = 0,         // AccessPoint
+     EBrowserCenRepUserDefinedHomePage = 1, // User defined home page address
+     EBrowserCenRepCurrentURL = 2,          // Current URL
+     EBrowserCenRepBookmarks = 3            // Bookmarks
+};
+
+// Integer type value to indicate what type of Home Page
+// should be launched when "Home" option is activated.
+// Valid values:
+// AccessPoint = 0,
+// User defined home page address = 1,
+// Current URL = 2,
+// Bookmarks = 3
+// Enums for these valid values are as defined in TBrowserCenRepHomePageTypeValue
+const TUint32 KBrowserNGHomepageType =          0x00000031;
 
 // Mime types for HTTP accept header.
 // Any String value
@@ -161,7 +180,7 @@ const TUint32 KBrowserNGAutomaticUpdating = 	0x00000037;
 // Any String value
 const TUint32 KBrowserNGShortCutFuncHomePg =    0x0000003A;
 
-// Short cut keys for function: Go to bookmark 
+// Short cut keys for function: Go to bookmark
 // Any String value
 const TUint32 KBrowserNGShortCutFuncBkMark =    0x0000003B;
 
@@ -200,12 +219,12 @@ const TUint32 KBrowserNGAutomaticUpdatingAccessPoint =     0x00000043;
 const TUint32 KBrowserNGRotateDisplay =          0x00000044;
 
 // Setting to enable "Open download" menu item
-// Valid value 0 = no, 1 = yes 
+// Valid value 0 = no, 1 = yes
 const TUint32 KBrowserNGOpenDownloads =          0x00000045;
 
 //DEPRECATED/OBSOLETE: Smart Link.
 // Valid values: 0 = off 1 = on
-const TUint32 KBrowserNGSmartLink = 		  	0x00000046;    
+const TUint32 KBrowserNGSmartLink = 		  	0x00000046;
 
 // Setting to enable updating while roaming
 // Valid values: 0 = off 1 = on
@@ -246,7 +265,7 @@ const TUint32 KToolbarButton1Cmd =            0x00000056;
 
 //Setting for Toolbar Button 2 Command
 const TUint32 KToolbarButton2Cmd =            0x00000057;
-             
+
 //Setting for Toolbar Button 3 Command
 const TUint32 KToolbarButton3Cmd =            0x00000058;
 
@@ -308,24 +327,24 @@ const TUint32 KShortcutKeysForQwerty =            0x0000006F;
 // Valid values: 0 = disabled 1 = log to file 1 = log to UI console
 const TUint32 KBrowserNGScriptLog =   	0x00000070;
 
-// KBrowserNGZoomMin represents the minimum percentage zoom level to be 
-// supported by the browser. 
+// KBrowserNGZoomMin represents the minimum percentage zoom level to be
+// supported by the browser.
 // Valid values: 10 to 2000, default value for this field 10
 const TUint32 KBrowserNGZoomMin =   	0x00000071;
 
 // The browser supports zoom levels between 10-2000 percent.
-// KBrowserNGZoomMax represents the maximum percentage zoom level to be 
+// KBrowserNGZoomMax represents the maximum percentage zoom level to be
 // supported by the browser.
 // Valid values: 10 to 2000, default value for this field 200
 const TUint32 KBrowserNGZoomMax =   	0x00000072;
 
-// KBrowserNGZoomDefault represents the default percentage zoom level to be 
+// KBrowserNGZoomDefault represents the default percentage zoom level to be
 // supported by the browser when opening a webpage for the first time.
 // Valid values: 10 to 2000, default value for this field 100
 const TUint32 KBrowserNGZoomDefault =  0x00000073;
 
-// KBrowserNGMaxRecentUrls is the number of Recent URLs to be shown in 
-// the pop up list 
+// KBrowserNGMaxRecentUrls is the number of Recent URLs to be shown in
+// the pop up list
 // Valid values: 1 to 10, default value for this field is 6
 const TUint32 KBrowserNGMaxRecentUrls = 0x00000074;
 
@@ -361,22 +380,22 @@ const TUint32 KBrowserSearchProviderTitle = 0x0000007A;
 const TUint32 KBrowserServiceUrl = 0x0000007B;
 
 // KBrowserFirstBoot
-// Valid values: 1 if browser first boot is not done yet, other 0  
+// Valid values: 1 if browser first boot is not done yet, other 0
 const TUint32 KBrowserFirstBoot = 0x0000007C;
 
-// KBrowserSearch TInt if browser search is present 
+// KBrowserSearch TInt if browser search is present
 // Valid values: 0, 1
 const TUint32 KBrowserSearch = 0x0000007D;
 
 // KBrowserServices TInt if browser service is present
-// Valid values: 0,1 
+// Valid values: 0,1
 const TUint32 KBrowserServices = 0x0000007E;
 
 // KBrowserSearchAppUid - browser Search Application UID
 // Valid values:any positive 32-bit integer value
 const TUint32 KBrowserSearchAppUid= 0x0000007F;
 
-// Search Application View UID for selection of Default 
+// Search Application View UID for selection of Default
 // Search Provider.
 // Valid values:any positive 32-bit integer value.
 const TUint32 KBrowserSearchProviderSettingViewId = 0x00000080;
@@ -384,5 +403,11 @@ const TUint32 KBrowserSearchProviderSettingViewId = 0x00000080;
 // KBrowserSearchProviderUrl Browser Search url
 // Used by Search Scheme Handler.
 const TUint32 KBrowserSearchProviderUrl = 0x00000081;
+
+// Cursormode which defines the cursor display supported status depends on phones.
+const TUint32 KBrowserCursorShowMode =          0x00000082;
+
+// Controls whether enter key can activate a link, ot just has a default behavior. 
+const TUint32 KBrowserEnterKeyMode = 0x00000083;
 
 #endif      // BROWSERUISDKCRKEYS_H

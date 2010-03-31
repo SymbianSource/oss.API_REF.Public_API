@@ -2,9 +2,9 @@
 * Copyright (c) 2003-2009 Nokia Corporation and/or its subsidiary(-ies).
 * All rights reserved.
 * This component and the accompanying materials are made available
-* under the terms of the License "Symbian Foundation License v1.0" to Symbian Foundation members and "Symbian Foundation End User License Agreement v1.0" to non-members
+* under the terms of "Eclipse Public License v1.0"
 * which accompanies this distribution, and is available
-* at the URL "http://www.symbianfoundation.org/legal/licencesv10.html".
+* at the URL "http://www.eclipse.org/legal/epl-v10.html".
 *
 * Initial Contributors:
 * Nokia Corporation - initial contribution.
@@ -28,7 +28,6 @@
 #include <e32base.h>
 #include <in_sock.h>
 #include <stringpool.h>
-#include "_sdpdefs.h"
 
 //  CONSTANTS
 const TInt KMaxAddressLength = 256;
@@ -454,7 +453,8 @@ class CSdpOriginField : public CBase
         // For configuring the address into TInetAddr
         TBuf<KMaxAddressLength> iAddress16;          
 
-		__DECLARE_TEST;
+		void __DbgTestInvariant() const;
+
 	};
 
 #endif // CSDPORIGINFIELD_H

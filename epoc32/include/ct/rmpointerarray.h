@@ -16,8 +16,6 @@
 */
 
 
-
-
 /**
  @file
  @publishedAll
@@ -35,8 +33,6 @@
  * the array. When the array is closed, the objects will be released.
  *
  * @see RMPointerArray
- * @publishedPartner
- * @released
  * @since v7.0 
  */
 template<class T> class RMPointerArray : public RPointerArray<T>

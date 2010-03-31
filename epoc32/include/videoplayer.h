@@ -1,9 +1,9 @@
 // Copyright (c) 2002-2009 Nokia Corporation and/or its subsidiary(-ies).
 // All rights reserved.
 // This component and the accompanying materials are made available
-// under the terms of the License "Symbian Foundation License v1.0" to Symbian Foundation members and "Symbian Foundation End User License Agreement v1.0" to non-members
+// under the terms of "Eclipse Public License v1.0"
 // which accompanies this distribution, and is available
-// at the URL "http://www.symbianfoundation.org/legal/licencesv10.html".
+// at the URL "http://www.eclipse.org/legal/epl-v10.html".
 //
 // Initial Contributors:
 // Nokia Corporation - initial contribution.
@@ -27,7 +27,7 @@
 #include <mda/common/base.h>
 #include <mmf/common/mmfutilities.h>
 #include <mmf/common/mmfcontrollerframeworkbase.h>
-#include <mmf/common/mmcaf.h>
+#include "mmf/common/mmcaf.h"
 #include <mmfclntutility.h>
 
 /**
@@ -108,7 +108,8 @@ public:
 
 	/**
 	Notification that video playback has completed. This is not called if
-	playback is explicitly stopped by calling Stop.
+	playback is explicitly stopped (such as through the use of the Stop or
+	Close commands).
 
 	@param  aError
 	        The status of playback.
@@ -159,6 +160,8 @@ public:
 	};
 
 class CMMFVideoPlayerCallback;
+class CVideoPlayerUtility2;
+class TVideoPlayRateCapabilities;
 
 /**
 @publishedAll
@@ -182,14 +185,13 @@ implementation and is private.
 class CVideoPlayerUtility : public CBase,
 							public MMMFClientUtility
 	{
-	class CBody;
 public:
 
 	~CVideoPlayerUtility();
 
 	IMPORT_C static CVideoPlayerUtility* NewL(MVideoPlayerUtilityObserver& aObserver,
 											  TInt aPriority,
-											  TMdaPriorityPreference aPref,
+											  TInt aPref,
 											  RWsSession& aWs,
 											  CWsScreenDevice& aScreenDevice,
 											  RWindowBase& aWindow,
@@ -217,7 +219,7 @@ public:
 
 	IMPORT_C void PauseL();
 
-	IMPORT_C void SetPriorityL(TInt aPriority, TMdaPriorityPreference aPref);
+	IMPORT_C void SetPriorityL(TInt aPriority, TInt aPref);
 
 	IMPORT_C void PriorityL(TInt& aPriority, TMdaPriorityPreference& aPref) const;
 
@@ -305,50 +307,33 @@ public:
 	
 	IMPORT_C TInt SetInitScreenNumber(TInt aScreenNumber);
 
-	// SetPlayVelocityL() is publishedPartner and prototype as it is not yet used by licensees,
-	// and there is a possibility that it may change on licensee request for a short period.
-	// It will eventually be moved to publishedAll and released.
 	IMPORT_C void SetPlayVelocityL(TInt aVelocity);
 
-	// PlayVelocityL() is publishedPartner and prototype as it is not yet used by licensees,
-	// and there is a possibility that it may change on licensee request for a short period.
-	// It will eventually be moved to publishedAll and released.
 	IMPORT_C TInt PlayVelocityL() const;
 
-	// StepFrameL() is publishedPartner and prototype as it is not yet used by licensees,
-	// and there is a possibility that it may change on licensee request for a short period.
-	// It will eventually be moved to publishedAll and released.
 	IMPORT_C void StepFrameL(TInt aStep);
 	
-	// GetPlayRateCapabilitiesL() is publishedPartner and prototype as it is not yet used by licensees,
-	// and there is a possibility that it may change on licensee request for a short period.
-	// It will eventually be moved to publishedAll and released.
 	IMPORT_C void GetPlayRateCapabilitiesL(TVideoPlayRateCapabilities& aCapabilities) const;
 	
-	// SetVideoEnabledL() is publishedPartner and prototype as it is not yet used by licensees,
-	// and there is a possibility that it may change on licensee request for a short period.
-	// It will eventually be moved to publishedAll and released.
 	IMPORT_C void SetVideoEnabledL(TBool aVideoEnabled);
 
-	// VideoEnabledL() is publishedPartner and prototype as it is not yet used by licensees,
-	// and there is a possibility that it may change on licensee request for a short period.
-	// It will eventually be moved to publishedAll and released.
 	IMPORT_C TBool VideoEnabledL() const;
 
-	// SetAudioEnabledL() is publishedPartner and prototype as it is not yet used by licensees,
-	// and there is a possibility that it may change on licensee request for a short period.
-	// It will eventually be moved to publishedAll and released.
 	IMPORT_C void SetAudioEnabledL(TBool aAudioEnabled);
 
-	// SetAutoScaleL() is publishedPartner and prototype as it is not yet used by licensees,
-	// and there is a possibility that it may change on licensee request for a short period.
-	// It will eventually be moved to publishedAll and released.
 	IMPORT_C void SetAutoScaleL(TAutoScaleType aScaleType);
 
-	// SetAutoScaleL() is publishedPartner and prototype as it is not yet used by licensees,
-	// and there is a possibility that it may change on licensee request for a short period.
-	// It will eventually be moved to publishedAll and released.
-	IMPORT_C void SetAutoScaleL(TAutoScaleType aScaleType, TInt aHorizPos, TInt aVertPos);	
+	IMPORT_C void SetAutoScaleL(TAutoScaleType aScaleType, TInt aHorizPos, TInt aVertPos);
+	
+	IMPORT_C void SetExternalDisplaySwitchingL(TInt aDisplay, TBool aControl);
+	
+private:
+	class CBody;
+	
+	CBody* iBody;
+	
+	friend class CBody;
+	friend class CVideoPlayerUtility2;	
 private:
 	enum TMMFVideoPlayerState
 		{
@@ -357,15 +342,15 @@ private:
 		EPaused,
 		EPlaying		
 		};
-
-private:
-	CBody* iBody;
-
-	friend class CBody;
+private:	
 	friend class CTestStepUnitMMFVidClient;
+#ifdef SYMBIAN_BUILD_GCE
+	friend class CMediaClientVideoDisplayBody;
+#endif // SYMBIAN_BUILD_GCE
 public:
 	class CTestView;
 	friend class CTestView;
 	};
+
 
 #endif

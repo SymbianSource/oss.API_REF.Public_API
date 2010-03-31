@@ -1,5 +1,4 @@
 /* NETDB.H
- * © Portions copyright (c) 2007 Symbian Software Ltd. All rights reserved.
  * Copyright (c) 1980, 1983, 1988, 1993
  *	The Regents of the University of California.  All rights reserved.
  *
@@ -46,6 +45,7 @@
  * ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS
  * SOFTWARE.
  * -
+ * Portions Copyright (c) 2007 Nokia Corporation and/or its subsidiary(-ies). All rights reserved.
  * --Copyright--
  */
 
@@ -98,8 +98,7 @@ typedef	__uint32_t	uint32_t;
 #define	_PATH_SERVICES	"/etc/services"
 #define	h_errno (*__h_error())
 #else
-#define	_PATH_SERVICES	"\\resource\\services"
-#define	_PATH_SERVICES_TARGET	"z:\\resource\\services"
+#define	_PATH_SERVICES	"\\resource\\openc\\services"
 #define h_errno	errno
 #endif
 

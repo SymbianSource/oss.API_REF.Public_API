@@ -1,9 +1,9 @@
 // Copyright (c) 1994-2009 Nokia Corporation and/or its subsidiary(-ies).
 // All rights reserved.
 // This component and the accompanying materials are made available
-// under the terms of the License "Symbian Foundation License v1.0" to Symbian Foundation members and "Symbian Foundation End User License Agreement v1.0" to non-members
+// under the terms of the License "Eclipse Public License v1.0"
 // which accompanies this distribution, and is available
-// at the URL "http://www.symbianfoundation.org/legal/licencesv10.html".
+// at the URL "http://www.eclipse.org/legal/epl-v10.html".
 //
 // Initial Contributors:
 // Nokia Corporation - initial contribution.
@@ -20,7 +20,7 @@
 
 #include <e32err.h>
 #include <e32lang.h>
-
+#include <e32reg.h>
 
 
 /**
@@ -523,7 +523,11 @@ const TInt KDstSouthern=0x08;
 
 A default stack size that can be used when creating threads.
 */
+#ifdef __X86GCC__
+const TInt KDefaultStackSize=0x4000;
+#else
 const TInt KDefaultStackSize=0x2000;
+#endif // __X86GCC__
 
 
 
@@ -1022,6 +1026,13 @@ Defines the state of a battery, if supported.
 enum TBatteryState {EBatNotSupported,EBatGood,EBatLow};
 
 
+/**
+@publishedAll
+@released
+
+Defines the possible connection types used to interface to the media.
+*/
+enum TConnectionBusType {EConnectionBusInternal, EConnectionBusUsb};
 
 
 /**
@@ -1145,10 +1156,18 @@ const TUint KDriveAttHidden=0x400;
 @publishedAll
 @released
 
+Drive attribute - drive is external.
+*/
+const TUint KDriveAttExternal=0x800;
+
+
+/**
+@publishedAll
+@released
+
 Drive attribute - It can be set in a search in order to instruct that all drives should be returned.
 */
 const TUint KDriveAttAll=0x100000;
-
 
 
 /**
@@ -1171,6 +1190,7 @@ Drive attribute - It can be set in combination with other drive attributes in or
 const TUint KDriveAttExclusive=0x80000;
 
 
+
 /**
 @internalTechnology
 
@@ -1180,12 +1200,15 @@ Used as a mask in order to extract the actual drive attributes.
 const TUint KDriveAttMatchedFlags=0xFFF;
 
 
+
 /**
 @internalTechnology
 
 Used as a mask in order to extract the extra(ex KDriveAttAll ,KDriveAttExclude, KDriveAttExclusive ,0) drive attributes.
 */
 const TUint KDriveAttMatchedAtt=0x0FFF0000;
+
+
 
 
 /**
@@ -1664,6 +1687,21 @@ enum TDeviceTimeState // must match TLocale:: version
 	ENITZNetworkTimeSync
 	};
 
+/**
+@internalComponent
+
+Indicates the type of conversion required for FAT filenames
+*/
+enum TFatFilenameConversionType
+	{
+	/** Undefined conversion scheme; conversion obtained is whatever the
+	default policy is for this version of the OS. */
+	EFatConversionDefault = 0,
+	/** x-fat<nnn>.dll is loaded, where <nnn> is the FAT filename conversion number. */
+	EFatConversionNonStandard = 1,
+	/** cp<nnn>.dll is loaded, where <nnn> is the FAT filename conversion number. */
+	EFatConversionMicrosoftCodePage = 2
+	};
 
 
 /**
@@ -1821,16 +1859,6 @@ enum TThreadPriority
 	EPriorityAbsoluteRealTime7=870, 
 	EPriorityAbsoluteRealTime8=880
 	};
-
-
-
-
-/**
-@publishedPartner
-@interim
-*/
-const TText KProtectedServerNamePrefix = '!';
-
 
 
 /**
@@ -2114,7 +2142,7 @@ const TInt KRealFormatCalculator=5;
 
 A bitmask for all flags except those with symbols starting KRealFormat...
 */
-const TInt KRealFormatTypeFlagsMask=0x7C000000;
+const TInt KRealFormatTypeFlagsMask=0x7E000000;
 
 
 
@@ -2209,6 +2237,25 @@ If not set, the precision defaults to KMaxPrecision digits.
 This flag should be ORed into TRealFormat::iType.
 */
 const TInt KGeneralLimit=0x04000000;
+
+
+
+
+/**
+@publishedAll
+@released
+
+A flag that modifies the format of the character representation of a real
+number.
+
+If set, this flag allows enough digits of precision such that the mapping from
+numeric to string form is injective. For a TReal (=double) input argument
+this means KIEEEDoubleInjectivePrecision digits.
+This flag overrides the KGeneralLimit flag if both are set.
+
+This flag should be ORed into TRealFormat::iType.
+*/
+const TInt KRealInjectiveLimit=0x02000000;
 
 
 
@@ -2363,6 +2410,9 @@ enum TChanges
 
 	/**
 	The free memory level has crossed a specified threshold value.
+	
+	On systems that support data paging, this is also generated where the available swap space
+	crosses one of the specified threshold values.
 	*/
 	EChangesFreeMemory=0x20,
 
@@ -2378,6 +2428,16 @@ enum TChanges
 	@see UserSvr::SetMemoryThresholds()
 	*/
 	EChangesLowMemory=0x80,
+
+	/**
+	On systems that support data paging, this is generated where the thrashing level crosses one of
+	the specified threshold values.
+	*/
+	EChangesThrashLevel=0x100,
+
+	/**********************************************************************************
+	**  IF YOU ADD A NEW VALUE HERE, YOU NEED TO UPDATE DChangeNotifier CONSTRUCTOR  **
+	**********************************************************************************/
 	};
 
 
@@ -2997,20 +3057,35 @@ Client/Server Session types.
 */
 enum TIpcSessionType
 	{
-	/**
-	The session is not sharable with other threads.
-	*/
-	EIpcSession_Unsharable=0,
+	// These values are used at session creation time to describe the extent to which
+	// the new session may be shared.
+	//
+	// They are *also* used at server creation time, to specify the *maximum* degree
+	// of session sharability that the server supports. Thus, if a server instance was
+	// created with mode EIpcSession_Sharable, you can open Sharable or Unsharable
+	// sessions with it, but not globally sharable ones.
+	EIpcSession_Unsharable					= 0x00000000,
+	EIpcSession_Sharable					= 0x00000001,	// sharable within one process
+	EIpcSession_GlobalSharable				= 0x00000002	// sharable across processes
+	};
 
-	/**
-	The session is sharable with other threads in the same process.
-	*/
-	EIpcSession_Sharable=1,
+enum TIpcServerRole
+	{
+	EServerRole_Default = 0,								// No role specified; treated as Standalone
+	EServerRole_Standalone,									// Explicitly neither Master nor Slave
+	EServerRole_Master,										// Master: may transfer sessions to a Slave
+	EServerRole_Slave										// Slave: accepts sessions from the Master
+	};
 
-	/**
-	The session is sharable with all other threads in the system.
-	*/
-	EIpcSession_GlobalSharable=2
+enum TIpcServerOpts
+	{
+	// The first few bits specify whether memory referred to by descriptors
+	// passed from the client to the server should automatically be pinned
+	// All other bits are reserved for future expansion ...
+	EServerOpt_PinClientDescriptorsDefault	= 0x00000000,	/**<@internalComponent*/
+	EServerOpt_PinClientDescriptorsEnable 	= 0x00000004,	/**<@internalComponent*/
+	EServerOpt_PinClientDescriptorsDisable	= 0x00000008,	/**<@internalComponent*/
+	EServerOpt_PinClientDescriptorsMask		= 0x0000000c	/**<@internalComponent*/
 	};
 
 
@@ -3021,16 +3096,6 @@ enum TIpcSessionType
 @released
 */
 const TInt KNullDebugPort=-2;
-
-/**
-@internalTechnology
-*/
-const TUint32 KModuleVersionWild=0xfffffffeu;
-/**
-@internalTechnology
-*/
-const TUint32 KModuleVersionNull=0xffffffffu;
-
 
 
 /**
@@ -3068,7 +3133,9 @@ enum TFloatingPointType
 	/** ARM VFPv2 */
 	EFpTypeVFPv2=1,
 	/** ARM VFPv3 */
-	EFpTypeVFPv3=2
+	EFpTypeVFPv3=2,
+	/** ARM VFPv3-D16 (VFP only, no NEON) */
+	EFpTypeVFPv3D16=3,
 	};
 
 
@@ -3136,5 +3203,9 @@ enum TFloatingPointRoundingMode
 
 
 #include <e32capability.h>
+
+#ifndef SYMBIAN_ENABLE_SPLIT_HEADERS
+#include <e32const_private.h>
+#endif
 
 #endif

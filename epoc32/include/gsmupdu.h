@@ -1,9 +1,9 @@
 // Copyright (c) 1999-2009 Nokia Corporation and/or its subsidiary(-ies).
 // All rights reserved.
 // This component and the accompanying materials are made available
-// under the terms of the License "Symbian Foundation License v1.0" to Symbian Foundation members and "Symbian Foundation End User License Agreement v1.0" to non-members
+// under the terms of "Eclipse Public License v1.0"
 // which accompanies this distribution, and is available
-// at the URL "http://www.symbianfoundation.org/legal/licencesv10.html".
+// at the URL "http://www.eclipse.org/legal/epl-v10.html".
 //
 // Initial Contributors:
 // Nokia Corporation - initial contribution.
@@ -14,8 +14,6 @@
 // Contains a class representing the generic interface to a GSM SMS PDU (CSmsPDU) as well as six concrete implementations representing the six types of CSmsPDU, namely CSmsDeliver, CSmsSubmit, CSmsDeliverReport, CSmsSubmitReport, CSmsStatusReport and CSmsCommand
 // 
 //
-
-
 
 /**
  @file
@@ -29,7 +27,7 @@
 
 class TGsmSms;
 class CSmsAddress;
-
+struct TEncodeParams;
 
 /**
  *  A generic interface to a GSM SMS PDU.
@@ -54,23 +52,24 @@ public:
 /** Flags for the 6 basic PDU types in GSM SMS messaging. */
 	enum TSmsPDUType
 		{
-		ESmsDeliver       = 0, ///< SMS-DELIVER, sent from SC to MS
-		ESmsDeliverReport = 1, ///< SMS-DELIVER-REPORT, sent from MS to SC
-		ESmsSubmit        = 2, ///< SMS-SUBMIT, sent from MS to SC
-		ESmsSubmitReport  = 3, ///< SMS-SUBMIT-REPORT, sent from SC to MS
-		ESmsStatusReport  = 4, ///< SMS-STATUS-REQUEST, sent from SC to MS
-		ESmsCommand       = 5  ///< SMS-COMMAND, sent from MS to SC
+		ESmsDeliver       = 0, //< SMS-DELIVER, sent from SC to MS
+		ESmsDeliverReport = 1, //< SMS-DELIVER-REPORT, sent from MS to SC
+		ESmsSubmit        = 2, //< SMS-SUBMIT, sent from MS to SC
+		ESmsSubmitReport  = 3, //< SMS-SUBMIT-REPORT, sent from SC to MS
+		ESmsStatusReport  = 4, //< SMS-STATUS-REQUEST, sent from SC to MS
+		ESmsCommand       = 5  //< SMS-COMMAND, sent from MS to SC
 		};
 public:
 	IMPORT_C static CSmsPDU* NewL(RReadStream &aStream,CCnvCharacterSetConverter& aCharacterSetConverter,RFs& aFs);
 	IMPORT_C static CSmsPDU* NewL(const TGsmSms& aGsmSms,CCnvCharacterSetConverter& aCharacterSetConverter,RFs& aFs,TBool aIsRPError=EFalse,TBool aIsMobileTerminated=ETrue);
 	IMPORT_C static CSmsPDU* NewL(TSmsPDUType aType,CCnvCharacterSetConverter& aCharacterSetConverter,RFs& aFs,TBool aIsRPError=EFalse);
-
+	
 	inline TSmsPDUType Type() const;
 
 	IMPORT_C void ExternalizeL(RWriteStream& aStream) const;
 
 	IMPORT_C void EncodeMessagePDUL(TGsmSms& aGsmSms) const;
+	void EncodeMessagePDUL(TGsmSms& aGsmSms, const TEncodeParams* aEncodeParams) const;	
 
 	IMPORT_C TPtrC ServiceCenterAddress() const;
 	IMPORT_C void SetServiceCenterAddressL(const TDesC& aAddress);
@@ -138,19 +137,21 @@ public:
 	IMPORT_C CSmsUserData& UserData();
 	IMPORT_C const CSmsUserData& UserData() const;
 	virtual void DecodeL(TGsmuLex8& aPdu)=0;
-	void UpdateConcatenationDataL(TGsmSms& aGsmSms, TInt aRef, TInt aPduIndex, TInt aMaxPdu);
-	void UpdateEmailHeaderDataL(TGsmSms& aGsmSms,TInt& aEmailOverallHeaderLength);
+	void UpdateConcatenationDataL(TInt aRef, TInt aPduIndex, TInt aMaxPdu);
+	void UpdateEmailHeaderDataL(TInt& aEmailOverallHeaderLength);
 	
 	//	SMSC Control Parameters
-	TBool UpdateSMSCCtrlParameterL(TGsmSms& aGsmSms, const TUint8 aOctet);
+	TBool UpdateSMSCCtrlParameterL(const TUint8 aOctet);
 	
 	//	TPSRR Scheme
-	TBool UpdateTPSRRL(TGsmSms& aGsmSms, TSmsFirstOctet aSmsReportRequest);
+	TBool UpdateTPSRRL(TSmsFirstOctet aSmsReportRequest);
 	
 	//  National Language Encoding
 	IMPORT_C TSmsEncoding NationalLanguageEncoding() const;
 	IMPORT_C void SetNationalLanguageEncodingL(TSmsEncoding aEncoding);
 		
+	IMPORT_C CSmsPDU* DuplicateL() const;
+
 protected:
 	CSmsPDU(TSmsPDUType aSmsPDUType);
 
@@ -162,6 +163,7 @@ protected:
 
 	virtual void ConstructL(CCnvCharacterSetConverter& aCharacterSetConverter,RFs& aFs)=0;
 	virtual TUint8* EncodeL(TUint8* aPtr) const=0;
+	virtual TUint8* EncodeL(TUint8* aPtr, const TEncodeParams* aEncodeParams) const=0;	
 
 	virtual void InternalizeMessagePDUL(RReadStream& aStream)=0;
 	virtual void ExternalizeMessagePDUL(RWriteStream& aStream) const=0;
@@ -203,6 +205,8 @@ public:
 	IMPORT_C void ServiceCenterTimeStamp(TTime& aTime,TInt& aNumQuarterHours);
 	IMPORT_C void SetServiceCenterTimeStamp(const TTime& aTime,TInt aNumQuarterHours=0);
 	IMPORT_C const TSmsProtocolIdentifier* ProtocolIdentifier() const;
+
+	IMPORT_C CSmsDeliver* DuplicateL() const;
 	
 protected:
 	const TSmsDataCodingScheme* DataCodingScheme() const;
@@ -211,6 +215,7 @@ protected:
 
 	void ConstructL(CCnvCharacterSetConverter& aCharacterSetConverter,RFs& aFs);
 	TUint8* EncodeL(TUint8* aPtr) const;
+	TUint8* EncodeL(TUint8* aPtr, const TEncodeParams* aEncodeParams) const;	
 	void DecodeL(TGsmuLex8& aPdu);
 	void InternalizeMessagePDUL(RReadStream& aStream);
 	void ExternalizeMessagePDUL(RWriteStream& aStream) const;
@@ -253,6 +258,8 @@ public:
 
 	IMPORT_C const TTimeIntervalMinutes& ValidityPeriod() const;
 	IMPORT_C void SetValidityPeriod(const TTimeIntervalMinutes& aTimeIntervalMinutes);
+
+	IMPORT_C CSmsSubmit* DuplicateL() const;
 	
 protected:
 	const TSmsDataCodingScheme* DataCodingScheme() const;
@@ -262,6 +269,7 @@ protected:
 
 	void ConstructL(CCnvCharacterSetConverter& aCharacterSetConverter,RFs& aFs);
 	TUint8* EncodeL(TUint8* aPtr) const;
+	TUint8* EncodeL(TUint8* aPtr, const TEncodeParams* aEncodeParams) const;	
 	void DecodeL(TGsmuLex8& aPdu);
 	void InternalizeMessagePDUL(RReadStream& aStream);
 	void ExternalizeMessagePDUL(RWriteStream& aStream) const;
@@ -294,6 +302,8 @@ public:
 	IMPORT_C TInt FailureCause() const;
 	IMPORT_C void SetFailureCause(TSmsFailureCause::TSmsFailureCauseError aFailureCause);
 
+	IMPORT_C CSmsDeliverReport* DuplicateL() const;
+
 protected:
 	const TSmsDataCodingScheme* DataCodingScheme() const;
 	const TSmsProtocolIdentifier* ProtocolIdentifier() const;
@@ -302,6 +312,7 @@ protected:
 
 	void ConstructL(CCnvCharacterSetConverter& aCharacterSetConverter,RFs& aFs);
 	TUint8* EncodeL(TUint8* aPtr) const;
+	TUint8* EncodeL(TUint8* aPtr, const TEncodeParams* aEncodeParams) const;	
 	void DecodeL(TGsmuLex8& aPdu);
 	void InternalizeMessagePDUL(RReadStream& aStream);
 	void ExternalizeMessagePDUL(RWriteStream& aStream) const;
@@ -335,6 +346,8 @@ public:
 	IMPORT_C TInt FailureCause() const;
 	IMPORT_C void SetFailureCause(TSmsFailureCause::TSmsFailureCauseError aFailureCause);
 
+	IMPORT_C CSmsSubmitReport* DuplicateL() const;
+
 protected:
 	const TSmsDataCodingScheme* DataCodingScheme() const;
 	const TSmsProtocolIdentifier* ProtocolIdentifier() const;
@@ -343,6 +356,7 @@ protected:
 
 	void ConstructL(CCnvCharacterSetConverter& aCharacterSetConverter,RFs& aFs);
 	TUint8* EncodeL(TUint8* aPtr) const;
+	TUint8* EncodeL(TUint8* aPtr, const TEncodeParams* aEncodeParams) const;	
 	void DecodeL(TGsmuLex8& aPdu);
 	void InternalizeMessagePDUL(RReadStream& aStream);
 	void ExternalizeMessagePDUL(RWriteStream& aStream) const;
@@ -392,6 +406,8 @@ public:
 	IMPORT_C TSmsStatus::TSmsStatusValue Status() const;
 	IMPORT_C void SetStatus(TSmsStatus::TSmsStatusValue aValue);
 
+	IMPORT_C CSmsStatusReport* DuplicateL() const;
+
 protected:
 	const TSmsDataCodingScheme* DataCodingScheme() const;
 	const TSmsProtocolIdentifier* ProtocolIdentifier() const;
@@ -401,6 +417,7 @@ protected:
 
 	void ConstructL(CCnvCharacterSetConverter& aCharacterSetConverter,RFs& aFs);
 	TUint8* EncodeL(TUint8* aPtr) const;
+	TUint8* EncodeL(TUint8* aPtr, const TEncodeParams* aEncodeParams) const;	
 	void DecodeL(TGsmuLex8& aPdu);
 	void InternalizeMessagePDUL(RReadStream& aStream);
 	void ExternalizeMessagePDUL(RWriteStream& aStream) const;
@@ -456,12 +473,15 @@ public:
 	IMPORT_C TPtrC8 CommandData() const;
 	IMPORT_C void SetCommandDataL(const TDesC8& aData);
 
+	IMPORT_C CSmsCommand* DuplicateL() const;
+
 protected:
 	const TSmsProtocolIdentifier* ProtocolIdentifier() const;
 	const CSmsAddress* ToFromAddressPtr() const;
 
 	void ConstructL(CCnvCharacterSetConverter& aCharacterSetConverter,RFs& aFs);
 	TUint8* EncodeL(TUint8* aPtr) const;
+	TUint8* EncodeL(TUint8* aPtr, const TEncodeParams* aEncodeParams) const;	
 	void DecodeL(TGsmuLex8& aPdu);
 	void InternalizeMessagePDUL(RReadStream& aStream);
 	void ExternalizeMessagePDUL(RWriteStream& aStream) const;

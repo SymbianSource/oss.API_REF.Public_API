@@ -1,9 +1,9 @@
 // Copyright (c) 1999-2009 Nokia Corporation and/or its subsidiary(-ies).
 // All rights reserved.
 // This component and the accompanying materials are made available
-// under the terms of the License "Symbian Foundation License v1.0" to Symbian Foundation members and "Symbian Foundation End User License Agreement v1.0" to non-members
+// under the terms of "Eclipse Public License v1.0"
 // which accompanies this distribution, and is available
-// at the URL "http://www.symbianfoundation.org/legal/licencesv10.html".
+// at the URL "http://www.eclipse.org/legal/epl-v10.html".
 //
 // Initial Contributors:
 // Nokia Corporation - initial contribution.
@@ -14,8 +14,6 @@
 // contains header file of the SMS settings.
 // 
 //
-
-
 
 /**
  @file
@@ -89,7 +87,7 @@ public:
 private:
 	enum
 		{
-		KDefaultTimeoutMicroSeconds32=60000000 ///<60 sec
+		KDefaultTimeoutMicroSeconds32=60000000 //<60 sec
 		};
 	enum
 		{
@@ -97,19 +95,19 @@ private:
 		};
 	enum
 		{
-		KDefaultReassemblyLifetime=2*1440 ///< two days
+		KDefaultReassemblyLifetime=2*1440 //< two days
 		};
 	enum
 		{
-		KDefaultKSegmentationLifetimeMultiplier=1200  ///< 1.2
+		KDefaultKSegmentationLifetimeMultiplier=1200  //< 1.2
 		};
 	enum
 		{
-		KDefaultModemInitializationTimeoutMicroSeconds32=30000000 ///<30sec
+		KDefaultModemInitializationTimeoutMicroSeconds32=30000000 //<30sec
 		};
 	enum
 		{
-		KDefaultSendTryTimeoutMicroSeconds32=60000000 ///< 60sec
+		KDefaultSendTryTimeoutMicroSeconds32=60000000 //< 60sec
 		};
 	enum
 	    {
@@ -122,17 +120,17 @@ private:
 		ESmsFlagDeletePDUsFromCombinedStores=0x04
 		};
 private:
-	TTimeIntervalMicroSeconds32 iTimeoutMicroSeconds32;	///<TimeOut period in microseconds for sending a PDU
+	TTimeIntervalMicroSeconds32 iTimeoutMicroSeconds32;	//<TimeOut period in microseconds for sending a PDU
 	/**
 	 *  Number of attempts for sending a PDU.
 	 *  	@deprecated 7.0	
 	 */
 	TInt iSendTryLimit;
-	TInt iFlags;								///<Contains TSmsSettingsFlags
-	TTimeIntervalMinutes iReassemblyLifetime;///< Maximum time PDUs making a concatenated message stay in the reassembly store before they have all arrived
-	TInt iKSegmentationLifetimeMultiplier;  ///<  Validity period is multiplied by this fraction, 1000=1:1
-	TTimeIntervalMicroSeconds32 iModemInitializationTimeoutMicroSeconds32;///<TimeOut period in microseconds for initialising the modem
-	TTimeIntervalMicroSeconds32 iSendTryTimeoutMicroSeconds32;///< TimeOut period in microseconds for the send operation
+	TInt iFlags;								//<Contains TSmsSettingsFlags
+	TTimeIntervalMinutes iReassemblyLifetime;//< Maximum time PDUs making a concatenated message stay in the reassembly store before they have all arrived
+	TInt iKSegmentationLifetimeMultiplier;  //<  Validity period is multiplied by this fraction, 1000=1:1
+	TTimeIntervalMicroSeconds32 iModemInitializationTimeoutMicroSeconds32;//<TimeOut period in microseconds for initialising the modem
+	TTimeIntervalMicroSeconds32 iSendTryTimeoutMicroSeconds32;//< TimeOut period in microseconds for the send operation
     TTimeIntervalMicroSeconds32 iBootTimerTimeout32; // TimeOut period in microseconds for the boot timer.
 	};
 

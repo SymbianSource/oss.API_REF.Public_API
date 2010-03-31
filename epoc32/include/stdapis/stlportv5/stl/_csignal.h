@@ -1,4 +1,6 @@
 /*
+ * Portions Copyright (c) 2008 Nokia Corporation and/or its subsidiary(-ies). All rights reserved.
+ *
  * Copyright (c) 1999
  * Boris Fomitchev
  *
@@ -23,6 +25,7 @@
 #    include _STLP_NATIVE_C_HEADER(signal.h)
 #  endif
 
+#ifndef __SYMBIAN32__
 #  if defined (_STLP_IMPORT_VENDOR_CSTD)
 _STLP_BEGIN_NAMESPACE
 #    if !defined (_STLP_NO_CSTD_FUNCTION_IMPORTS)
@@ -34,4 +37,5 @@ _STLP_END_NAMESPACE
 #  endif /* _STLP_IMPORT_VENDOR_CSTD */
 #endif
 
+#endif /* _STLP_INTERNAL_CSIGNAL */
 #endif /* _STLP_INTERNAL_CSIGNAL */

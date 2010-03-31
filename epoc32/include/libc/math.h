@@ -2,9 +2,9 @@
 * Copyright (c) 1997-2009 Nokia Corporation and/or its subsidiary(-ies).
 * All rights reserved.
 * This component and the accompanying materials are made available
-* under the terms of the License "Symbian Foundation License v1.0" to Symbian Foundation members and "Symbian Foundation End User License Agreement v1.0" to non-members
+* under the terms of "Eclipse Public License v1.0"
 * which accompanies this distribution, and is available
-* at the URL "http://www.symbianfoundation.org/legal/licencesv10.html".
+* at the URL "http://www.eclipse.org/legal/epl-v10.html".
 *
 * Initial Contributors:
 * Nokia Corporation - initial contribution.
@@ -14,9 +14,6 @@
 * Description:
 *
 */
-
-
-
 
 
 
@@ -33,8 +30,8 @@ extern "C" {
 #define  _MATH_H
 
 #include <sys/reent.h>
-#include <machine/ieeefp.h>
-#include "_ansi.h"
+#include <libc/machine/ieeefp.h>
+#include <_ansi.h>
 
 void MapSymbianErrorCodeToErrno(int, int);
    
@@ -81,11 +78,14 @@ IMPORT_C int	isinf	(double) __SOFTFP;
 IMPORT_C double	rint	(double) __SOFTFP;
 IMPORT_C double	scalbn	(double, int) __SOFTFP;
 
-/* 
+
+/**
+WARNING: For internal use ONLY. Compatibility is not guaranteed in future releases.
 strtod, atof, etc. may return HUGE_VAL 
 @internalComponent
 */
 #define	HUGE_VAL	1.7976931348623157E+308 /* KMaxTReal from e32math.h */
+
 
 #ifndef _STRICT_ANSI
 

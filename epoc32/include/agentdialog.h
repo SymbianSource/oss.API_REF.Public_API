@@ -1,10 +1,10 @@
-/**
-* Copyright (c) 1997-2009 Nokia Corporation and/or its subsidiary(-ies).
+/*
+* Copyright (c) 1997-2004 Nokia Corporation and/or its subsidiary(-ies). 
 * All rights reserved.
 * This component and the accompanying materials are made available
-* under the terms of the License "Symbian Foundation License v1.0" to Symbian Foundation members and "Symbian Foundation End User License Agreement v1.0" to non-members
+* under the terms of "Eclipse Public License v1.0"
 * which accompanies this distribution, and is available
-* at the URL "http://www.symbianfoundation.org/legal/licencesv10.html".
+* at the URL "http://www.eclipse.org/legal/epl-v10.html".
 *
 * Initial Contributors:
 * Nokia Corporation - initial contribution.
@@ -12,19 +12,9 @@
 * Contributors:
 *
 * Description:
-* Generic Connection Dialog Client
-* 
 *
 */
 
-
-
-
-
-/**
- @file AGENTDIALOG.H
- @internalTechnology
-*/
 
 #ifndef __AGENTDIALOG_H__
 #define __AGENTDIALOG_H__
@@ -32,7 +22,7 @@
 #include <e32std.h>
 #include <cdbcols.h>
 #include <cdblen.h>
-//#include <comms-infras/commsdebugutility.h> Cannot be included because it conflicts with flogger
+//#include <comms-infras\commsdebugutility.h> Cannot be included because it conflicts with flogger
 
 
 /**

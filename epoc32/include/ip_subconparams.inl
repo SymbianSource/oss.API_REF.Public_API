@@ -2,9 +2,9 @@
 * Copyright (c) 2004-2009 Nokia Corporation and/or its subsidiary(-ies).
 * All rights reserved.
 * This component and the accompanying materials are made available
-* under the terms of the License "Symbian Foundation License v1.0" to Symbian Foundation members and "Symbian Foundation End User License Agreement v1.0" to non-members
+* under the terms of "Eclipse Public License v1.0"
 * which accompanies this distribution, and is available
-* at the URL "http://www.symbianfoundation.org/legal/licencesv10.html".
+* at the URL "http://www.eclipse.org/legal/epl-v10.html".
 *
 * Initial Contributors:
 * Nokia Corporation - initial contribution.
@@ -16,8 +16,6 @@
 * 
 *
 */
-
-
 
 
 
@@ -40,9 +38,18 @@ CSubConQosIPLinkR99ParamSet* CSubConQosIPLinkR99ParamSet::NewL(CSubConParameterF
 	return obj;
 	}
 
+CSubConQosIPLinkR99ParamSet* CSubConQosIPLinkR99ParamSet::NewL(RParameterFamily& aFamily, RParameterFamily::TParameterSetType aType)
+	{
+	CSubConQosIPLinkR99ParamSet* obj = NewL();
+	CleanupStack::PushL(obj);
+	aFamily.AddParameterSetL(obj, aType);
+	CleanupStack::Pop(obj);
+	return obj;
+	}
+
 CSubConQosIPLinkR99ParamSet* CSubConQosIPLinkR99ParamSet::NewL()
 	{
-	STypeId typeId(KSubConIPParamsUid, KSubConQosIPLinkR99ParamsType);
+	STypeId typeId = STypeId::CreateSTypeId(KSubConIPParamsUid, KSubConQosIPLinkR99ParamsType);
 	return static_cast<CSubConQosIPLinkR99ParamSet*>(CSubConParameterSet::NewL(typeId));
 	}
 
@@ -225,9 +232,18 @@ CSubConSBLPR5ExtensionParamSet* CSubConSBLPR5ExtensionParamSet::NewL(CSubConPara
 	CleanupStack::Pop(sblpExtn);
 	return sblpExtn;
 	}
+
+CSubConSBLPR5ExtensionParamSet* CSubConSBLPR5ExtensionParamSet::NewL(RParameterFamily& aFamily, RParameterFamily::TParameterSetType aType)
+	{
+	CSubConSBLPR5ExtensionParamSet* sblpExtn = NewL();
+	CleanupStack::PushL(sblpExtn);
+	aFamily.AddParameterSetL(sblpExtn, aType);
+	CleanupStack::Pop(sblpExtn);
+	return sblpExtn;
+	}
 CSubConSBLPR5ExtensionParamSet* CSubConSBLPR5ExtensionParamSet::NewL()
 	{
-	STypeId typeId (KSubConIPParamsUid, KSubConnSBLPR5ExtensionParamsType);
+	STypeId typeId = STypeId::CreateSTypeId(KSubConIPParamsUid, KSubConnSBLPR5ExtensionParamsType);
 	return static_cast<CSubConSBLPR5ExtensionParamSet*>(CSubConParameterSet::NewL(typeId));
 	}
 	
@@ -260,3 +276,4 @@ void CSubConSBLPR5ExtensionParamSet::AddFlowIdL(const TFlowId & aFlowId)
 
 #endif
 // __IP_SUBCONPARAMS_INL__
+

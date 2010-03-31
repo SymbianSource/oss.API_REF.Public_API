@@ -1,25 +1,18 @@
-/*
-* Copyright (c) 2004-2005 Nokia Corporation and/or its subsidiary(-ies). 
-* All rights reserved.
-* This component and the accompanying materials are made available
-* under the terms of the License "Symbian Foundation License v1.0" to Symbian Foundation members and "Symbian Foundation End User License Agreement v1.0" to non-members
-* which accompanies this distribution, and is available
-* at the URL "http://www.symbianfoundation.org/legal/licencesv10.html".
-*
-* Initial Contributors:
-* Nokia Corporation - initial contribution.
-*
-* Contributors:
-*
-* Description:       Node functions implementation
-*
-*/
-
-
-
-
-
-
+// Copyright (c) 2005-2009 Nokia Corporation and/or its subsidiary(-ies).
+// All rights reserved.
+// This component and the accompanying materials are made available
+// under the terms of "Eclipse Public License v1.0"
+// which accompanies this distribution, and is available
+// at the URL "http://www.eclipse.org/legal/epl-v10.html".
+//
+// Initial Contributors:
+// Nokia Corporation - initial contribution.
+//
+// Contributors:
+//
+// Description:
+// Node functions implementation
+//
 
 inline TXmlEngNode::TXmlEngNode()
         : iInternal(NULL) {}
@@ -43,15 +36,9 @@ inline TBool TXmlEngNode::NotNull() const
 inline TBool TXmlEngNode::IsSameNode(TXmlEngNode aOther) const
     {return iInternal == aOther.iInternal;}
 
-// ------------------------------------------------------------------------
-// Moves the node to another part of the tree or another document
-// The node is unliked from current postion (if any) and appended
-// to the its new parent.
-//
-// @note 
-// In many cases this method call should be followed by ReconcileNamespacesL() on the moved node
-// ------------------------------------------------------------------------
-//
+inline TXmlEngNode TXmlEngNode::MoveToL(TXmlEngNode aParent)
+    {return aParent.AppendChildL(Unlink());}
+
 inline TXmlEngNode TXmlEngNode::MoveTo(TXmlEngNode aParent)
     {return aParent.AppendChildL(Unlink());}
 
@@ -85,10 +72,11 @@ inline TXmlEngComment& TXmlEngNode::AsComment() const
 inline TXmlEngCDATASection& TXmlEngNode::AsCDATASection()    const
     {return *reinterpret_cast<TXmlEngCDATASection*>(const_cast<TXmlEngNode*>(this));}
 
-
 inline TXmlEngEntityReference& TXmlEngNode::AsEntityReference() const
     {return *reinterpret_cast<TXmlEngEntityReference*>(const_cast<TXmlEngNode*>(this));}
 
 inline TXmlEngProcessingInstruction& TXmlEngNode::AsProcessingInstruction() const
     {return *reinterpret_cast<TXmlEngProcessingInstruction*>(const_cast<TXmlEngNode*>(this));}
 
+inline TXmlEngDocumentFragment& TXmlEngNode::AsDocumentFragment() const
+    {return *reinterpret_cast<TXmlEngDocumentFragment*>(const_cast<TXmlEngNode*>(this));}

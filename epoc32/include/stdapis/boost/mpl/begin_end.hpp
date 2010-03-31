@@ -1,6 +1,6 @@
 
-#ifndef BOOST_MPL_VECTOR_AUX_BEGIN_END_HPP_INCLUDED
-#define BOOST_MPL_VECTOR_AUX_BEGIN_END_HPP_INCLUDED
+#ifndef BOOST_MPL_BEGIN_END_HPP_INCLUDED
+#define BOOST_MPL_BEGIN_END_HPP_INCLUDED
 
 // Copyright Aleksey Gurtovoy 2000-2004
 //
@@ -10,40 +10,48 @@
 //
 // See http://www.boost.org/libs/mpl for documentation.
 
-// $Source: /cvsroot/boost/boost/boost/mpl/vector/aux_/begin_end.hpp,v $
-// $Date: 2004/09/02 15:41:19 $
+// $Source: /cvsroot/boost/boost/boost/mpl/begin_end.hpp,v $
+// $Date: 2004/09/02 15:40:41 $
 // $Revision: 1.4 $
 
-#include <boost/mpl/aux_/config/typeof.hpp>
-
-#if defined(BOOST_MPL_CFG_TYPEOF_BASED_SEQUENCES)
-
-#   include <boost/mpl/begin_end_fwd.hpp>
-#   include <boost/mpl/vector/aux_/iterator.hpp>
-#   include <boost/mpl/vector/aux_/tag.hpp>
+#include <boost/mpl/begin_end_fwd.hpp>
+#include <boost/mpl/aux_/begin_end_impl.hpp>
+#include <boost/mpl/sequence_tag.hpp>
+#include <boost/mpl/aux_/na_spec.hpp>
+#include <boost/mpl/aux_/lambda_support.hpp>
 
 namespace boost { namespace mpl {
 
-template<>
-struct begin_impl< aux::vector_tag >
+// agurt, 13/sep/02: switched from inheritance to typedef; MSVC is more
+// happy this way (less ETI-related errors), and it doesn't affect 
+// anything else
+template<
+      typename BOOST_MPL_AUX_NA_PARAM(Sequence)
+    >
+struct begin
 {
-    template< typename Vector > struct apply
-    {
-        typedef v_iter<Vector,0> type;
-    };
+    typedef typename sequence_tag<Sequence>::type tag_;
+    typedef typename begin_impl< tag_ >
+        ::template apply< Sequence >::type type;
+
+    BOOST_MPL_AUX_LAMBDA_SUPPORT(1,begin,(Sequence))
 };
 
-template<>
-struct end_impl< aux::vector_tag >
+template<
+      typename BOOST_MPL_AUX_NA_PARAM(Sequence)
+    >
+struct end
 {
-    template< typename Vector > struct apply
-    {
-        typedef v_iter<Vector,Vector::size::value> type;
-    };
+    typedef typename sequence_tag<Sequence>::type tag_;
+    typedef typename end_impl< tag_ >
+        ::template apply< Sequence >::type type;
+
+    BOOST_MPL_AUX_LAMBDA_SUPPORT(1,end,(Sequence))
 };
+
+BOOST_MPL_AUX_NA_SPEC(1, begin)
+BOOST_MPL_AUX_NA_SPEC(1, end)
 
 }}
 
-#endif // BOOST_MPL_CFG_TYPEOF_BASED_SEQUENCES
-
-#endif // BOOST_MPL_VECTOR_AUX_BEGIN_END_HPP_INCLUDED
+#endif // BOOST_MPL_BEGIN_END_HPP_INCLUDED

@@ -1,9 +1,9 @@
 // Copyright (c) 1998-2009 Nokia Corporation and/or its subsidiary(-ies).
 // All rights reserved.
 // This component and the accompanying materials are made available
-// under the terms of the License "Symbian Foundation License v1.0" to Symbian Foundation members and "Symbian Foundation End User License Agreement v1.0" to non-members
+// under the terms of "Eclipse Public License v1.0"
 // which accompanies this distribution, and is available
-// at the URL "http://www.symbianfoundation.org/legal/licencesv10.html".
+// at the URL "http://www.eclipse.org/legal/epl-v10.html".
 //
 // Initial Contributors:
 // Nokia Corporation - initial contribution.
@@ -11,7 +11,13 @@
 // Contributors:
 //
 // Description:
+// MSVAPI.H
 //
+/**
+ * @file 
+ * @publishedAll
+ * @released
+ */
 
 #ifdef _DEBUG
 #undef _NO_SESSION_LOGGING_
@@ -36,6 +42,7 @@
 #include <msvipc.h>
 #include <msvarray.h>
 #include <mclient.h>
+#include <tmsvsystemprogress.h>
 
 // Forward declarations
 class CMsvSession;
@@ -45,6 +52,9 @@ class CMsvClientEntry;
 class CMsvEntryArray;
 class CMsvServer;
 class CMsvServerEntry;
+class CMsvSearchSortOperation;
+
+
 
 // Remove these to remove client logging
 //#define _NO_SESSION_LOGGING_
@@ -484,8 +494,9 @@ public:
 	
 	All clients must close their sessions immediately. */
 							EMsvServerTerminated,
-	/** The Message Server has automatically changed the index location to use the 
-	internal disk.
+	/** This notification is sent whenever Message Server current drive is changed.
+	Upon receiving this event, the client should delete the current context of operations 
+	and refresh its view of messaging.
 	
 	aArg1 is a TDriveNumber value that identifies the drive used by the Message 
 	Server to hold the index prior to the change. 
@@ -526,6 +537,23 @@ public:
 	
 	@see EMsvCorruptedIndexRebuilt */
 							EMsvCorruptedIndexRebuilding
+#if (defined SYMBIAN_MSGS_ENHANCED_REMOVABLE_MEDIA_SUPPORT)
+	/** A media with pre-SQLite message store index has been inserted into a drive in the
+	priority drive list. */
+							,EMsvMessageStoreNotSupported,
+	/** A media with corrupt message store has been inserted into a drive in the priority
+	drive list and will be deleted. */
+							EMsvMessageStoreCorrupt,
+	/** The client needs to refresh its view of messaging either due to a drive with a 
+	valid message store being added or removed from the priority drive list, or a disk with
+	a valid message store being inserted or removed from a drive with priority less than
+	the current drive. */
+							EMsvRefreshMessageView,
+	/** Media is not available in the drive that has been added to the priority drive list. */
+							EMsvDiskNotAvailable,
+	/** A media insertion/removal event is received by server which it is unable to handle. */
+							EMsvUnableToProcessDiskNotification
+#endif
 							};
 public: 
 	/** Indicates an event has occurred. 
@@ -607,6 +635,9 @@ public:
 	IMPORT_C void RemoveObserver(MMsvSessionObserver& aObserver);
 	IMPORT_C TInt SetReceiveEntryEvents(TBool aReceive);
 	// --- Utility functions ---
+#if (defined SYMBIAN_MSGS_ENHANCED_REMOVABLE_MEDIA_SUPPORT)
+    IMPORT_C CMsvEntry* GetEntryL(TMsvId aEntId, TBool aChildrenOfAvailableDrives);
+#endif
 	IMPORT_C CMsvEntry* GetEntryL(TMsvId aEntId);
 	IMPORT_C TInt GetEntry(TMsvId aId, TMsvId& aService, TMsvEntry& aEntry);
 	
@@ -626,7 +657,7 @@ public:
 	IMPORT_C void CleanupEntryPop(TInt aCount=1);
 
 	IMPORT_C void RemoveEntry(TMsvId aId);
-	/// MTM functions
+	// MTM functions
 	IMPORT_C TInt InstallMtmGroup(const TDesC& aFullName);
 	IMPORT_C TInt DeInstallMtmGroup(const TDesC& aFullName); 
 	
@@ -646,7 +677,31 @@ public:
 	IMPORT_C TBool MessageStoreDrivePresentL();
 
 	IMPORT_C TInt ServiceAccessPointId(TMsvId aServiceId, TUint32& aAccessPointId);
+	
+	// Changed for PREQ 557.
+	// ---- Preferred list related APIs.
+#if (defined SYMBIAN_MSGS_ENHANCED_REMOVABLE_MEDIA_SUPPORT)
+	IMPORT_C void CurrentDriveInfoL(TDriveNumber& aDriveNumber, TUint& aPriority);
+	IMPORT_C void DriveListL(RArray<TDriveNumber>& aDriveList);
+	IMPORT_C void AvailableDriveListL(RArray<TDriveNumber>& aDriveList);
+	IMPORT_C void AddDriveL(TDriveNumber aDriveNumber, TUint& aPriority);
+	IMPORT_C void RemoveDriveL(TDriveNumber aDriveNumber);
+	IMPORT_C void UpdateDrivePriorityL(TDriveNumber aDriveNumber, TUint& aPriority);		
+	IMPORT_C void GetChildIdsAllL(TMsvId aId, const CMsvEntryFilter& aFilter, CMsvEntrySelection& aSelection);
 
+#if (defined SYMBIAN_MESSAGESTORE_UNIT_TESTCODE)
+	IMPORT_C void ResetRepositoryL();
+	IMPORT_C void PrintCache();
+#endif
+#endif
+
+    // change for PREQ 2073 Converter
+#if (defined SYMBIAN_MESSAGESTORE_HEADER_BODY_USING_SQLDB)
+	IMPORT_C void GetConvertibleDriveListL(RArray<TDriveNumber>& aDriveList);
+	IMPORT_C void ConvertMessageStore(TDriveNumber aDrive,TRequestStatus& aStatus);
+	IMPORT_C void GetConversionStatusL(TDriveNumber aDrive);
+	IMPORT_C TInt CancelConversion(TDriveNumber aDrive);
+#endif			// #if (defined SYMBIAN_MESSAGESTORE_HEADER_BODY_USING_SQLDB)
 protected:
 	CMsvSession(MMsvSessionObserver& aObserver);
 	CMsvSession(MMsvSessionObserver& aObserver, RFs& aFs);
@@ -673,11 +728,15 @@ private:
  	void HandleNotifyL();
  	void DoHandleNotifyL(TMsvNotifBuffer& aBuffer);
 	void GetMessageFolderL();
+
 	//	
 private:
 	TInt iOperationId;
 	RFs	iFs;
-	RMsvServerSession iSession;
+	RMsvServerSession* iSession;
+	TInt dummy1;
+	TInt dummy2;
+	TInt dummy3;
 	TMsvNotifBuffer iChange;	
 	MMsvSessionObserver&	iMainObserver;
 	CArrayPtrFlat<MMsvSessionObserver>* iObservers;
@@ -705,7 +764,17 @@ friend class CMsvEntry;
 friend class CMsvOperation;
 friend class CMsvEntryOperation;
 friend class CObserverRegistry;
-	//
+friend class CMsvSearchSortOperation;
+friend class CMsvSearchsortOpOnHeaderBody;
+#if (defined SYMBIAN_MESSAGESTORE_HEADER_BODY_USING_SQLDB)
+friend class CMsvHeaderStore;
+#endif
+#if (defined SYMBIAN_MESSAGESTORE_UNIT_TESTCODE)
+	friend class CTestMsvSession;
+#if (defined SYMBIAN_MESSAGESTORE_HEADER_BODY_USING_SQLDB)
+	friend class CTestHeaderEntry;
+#endif
+#endif	
 	};
 
 
@@ -819,7 +888,17 @@ Note that Server-side MTMs do not use this class, but a similar one, CMsvServerE
 */
 	{
 public: // Public member functions
+#if (defined SYMBIAN_MSGS_ENHANCED_REMOVABLE_MEDIA_SUPPORT)
+    IMPORT_C static CMsvEntry* NewL(CMsvSession& aMsvSession, TMsvId aMsvId, const TMsvSelectionOrdering& aOrdering, TBool aChildrenOfAvailableDrives);
+    IMPORT_C void SetStandardFolderEntryL(TMsvId aId);
+    IMPORT_C CMsvEntrySelection* ChildrenOfAvailableDrivesL() const;
+#endif
 	IMPORT_C static CMsvEntry* NewL(CMsvSession& aMsvSession, TMsvId aMsvId, const TMsvSelectionOrdering& aOrdering);
+#if (defined SYMBIAN_MSGS_ENHANCED_REMOVABLE_MEDIA_SUPPORT)
+	IMPORT_C void SetEntryNoCheckL(TMsvId aId, TBool aChildrenOfAvailableDrives=EFalse);
+#else
+	IMPORT_C void SetEntryNoCheckL(TMsvId aId);
+#endif
 	IMPORT_C ~CMsvEntry();
 	//
 	// --- Observer functions ---
@@ -865,6 +944,7 @@ public: // Public member functions
 	IMPORT_C CMsvEntrySelection* ChildrenWithServiceL(TMsvId aServiceId) const;
 	IMPORT_C CMsvEntrySelection* ChildrenWithMtmL(TUid aMtm) const;
 	IMPORT_C CMsvEntrySelection* ChildrenWithTypeL(TUid aType) const;
+	
 	inline TInt Count() const;
 	IMPORT_C const TMsvEntry& ChildDataL(TMsvId aId) const;
 	IMPORT_C const TMsvEntry& operator[](TInt aIndex) const;
@@ -888,12 +968,15 @@ public: // Public member functions
 
 
 	IMPORT_C TBool HasStoreL() const;
-	//
- 	/** @internalTechnology */
- 	IMPORT_C void SetEntryNoCheckL(TMsvId aId);
+	
 	//	
 private: // Private members
+#if (defined SYMBIAN_MSGS_ENHANCED_REMOVABLE_MEDIA_SUPPORT)
+    CMsvEntry(CMsvSession& aMsvSession, const TMsvSelectionOrdering& aOrdering, TBool aChildrenOfAvailableDrives);
+	inline TUint GetDriveId(TMsvId aMaskedId) const;
+#endif
 	CMsvEntry(CMsvSession& aMsvSession, const TMsvSelectionOrdering& aOrdering);
+
 	void ConstructL(TMsvId aMsvId);
 	//
 	void NotifyAllObserversL(MMsvEntryObserver::TMsvEntryEvent aEvent, TAny* aArg1, TAny* aArg2, TAny* aArg3);
@@ -923,6 +1006,7 @@ private: // Private members
 	TInt MoveOneL(TMsvId aMsvId, TMsvId aTargetId);
 	TInt CopyOneL(TMsvId aMsvId, TMsvId aTargetId);
 	TInt DeleteOneL(TMsvId aMsvId);
+
 	//
 private:
 	enum TEntryState {	EValid,
@@ -948,6 +1032,11 @@ private:
 	CArrayFixFlat<TUid>* iMtmList;
 	TMsvId iOwningService;
 	TUint32 iNotifySequence;
+#if (defined SYMBIAN_MSGS_ENHANCED_REMOVABLE_MEDIA_SUPPORT)
+	/* If this flag is set, child entries from all available drives
+	   in the preferred drive list will be fetched. */
+	TBool iChildrenOfAvailableDrives;
+#endif
 	};
 
 //**********************************
@@ -972,6 +1061,9 @@ public:
 	IMPORT_C static TBool DriveContainsStore(RFs& aFs, TInt aDrive);
 	IMPORT_C static TInt CurrentDriveL(RFs& aFs);
 	IMPORT_C static TBool IsMessageStoreDrivePresentL(RFs& aFs);
+#if (defined SYMBIAN_MSGS_ENHANCED_REMOVABLE_MEDIA_SUPPORT)
+	IMPORT_C static TBool IsMessageStoreSupported(TDriveNumber aDrive);
+#endif
 	};
 
 //**********************************
@@ -997,6 +1089,71 @@ public:
     IMPORT_C static TMsvId GetProgressIdL(CMsvOperation& aOperation);
 	};
 
+
+
+
+
+#if (defined SYMBIAN_MESSAGESTORE_HEADER_BODY_USING_SQLDB)
+
+/**
+ * The class allows  client MTMs  to communicate the  header structure 
+ * to the message server. It provides API to add various fields to the
+ * header structure. Finally it provides API to create header store in
+ * the messaging DB.   The store will always be created in the message
+ * server current drive. In order to create store in non-current drive
+ * the user should perform ChangeDrive() operation.
+
+ * The header store should be created immediately after creating the
+ * mail account. The server will create separate header store for each
+ * MTM type. The function does not return an error if the header store
+ * being created already exist.
+
+ @publishedAll
+ @released
+ */
+class CMsvHeaderStore : public CBase
+	{
+public:
+
+	/**
+	 * Common Header Fields
+	 * @publishedAll
+	 * @released
+	 */
+	enum TCommonHeaderField
+		{		
+		EFrom    = 0x001,
+		ETo      = 0x002,
+		ECC      = 0x004,
+		EBCC     = 0x008,
+		ESubject = 0x010
+		};
+
+
+	IMPORT_C static CMsvHeaderStore* NewL(const TUid& aMtmId, CMsvSession& aSession);
+	IMPORT_C static CMsvHeaderStore* NewLC(const TUid& aMtmId, CMsvSession& aSession);
+	~CMsvHeaderStore();
+
+	IMPORT_C void AddFieldL(HBufC* aFieldName, EFieldType aFieldType);
+	IMPORT_C void AddFieldL(TCommonHeaderField aCommonHeaderFieldName);
+	IMPORT_C void CreateStoreL();
+	IMPORT_C static TBool DoesStoreExistsL(const TUid& aMtmId, CMsvSession& aSession);
+	IMPORT_C TPtrC LastErrorMessageL();
+	
+private:
+	CMsvHeaderStore(TUid aMtmId, CMsvSession& aSession);
+	void ConstructL();
+
+private:
+
+	TUid iMtmUid;
+	CMsvSession& iSessionRef;
+	RPointerArray<CFieldPair> iFieldDetails;
+	HBufC* iLastErrorMessage;
+	};
+
+
+#endif    	// #if (defined SYMBIAN_MESSAGESTORE_HEADER_BODY_USING_SQLDB)
 #include <msvapi.inl>
 
 #endif // __MSVAPI_H__

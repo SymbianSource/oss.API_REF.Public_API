@@ -2,9 +2,9 @@
 * Copyright (c) 2009 Nokia Corporation and/or its subsidiary(-ies). 
 * All rights reserved.
 * This component and the accompanying materials are made available
-* under the terms of the License "Symbian Foundation License v1.0" to Symbian Foundation members and "Symbian Foundation End User License Agreement v1.0" to non-members
+* under the terms of "Eclipse Public License v1.0"
 * which accompanies this distribution, and is available
-* at the URL "http://www.symbianfoundation.org/legal/licencesv10.html".
+* at the URL "http://www.eclipse.org/legal/epl-v10.html".
 *
 * Initial Contributors:
 * Nokia Corporation - initial contribution.
@@ -253,7 +253,18 @@ public:
 
 	IMPORT_C TBool IsReadOnly() const;
 	IMPORT_C TBool DeleteAllowed() const;
-
+	/**
+	 
+   * Set Reset Profile lock Not supported for DS profiles
+   * @since 3.23
+   * @param  
+   * aReadWriteValue  EFalse for reading ETrue for writing
+   * aLockValue       EFalse for Unloacking ETrue for Locking the profile
+   * @return  TInt 
+   */
+	
+	
+  IMPORT_C TInt ProfileLocked(TBool aReadWriteValue, TBool aLockValue) const;
 	IMPORT_C void UpdateL();
 
 	IMPORT_C void Close();

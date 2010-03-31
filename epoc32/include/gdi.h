@@ -1,9 +1,9 @@
 // Copyright (c) 1998-2009 Nokia Corporation and/or its subsidiary(-ies).
 // All rights reserved.
 // This component and the accompanying materials are made available
-// under the terms of the License "Symbian Foundation License v1.0" to Symbian Foundation members and "Symbian Foundation End User License Agreement v1.0" to non-members
+// under the terms of "Eclipse Public License v1.0"
 // which accompanies this distribution, and is available
-// at the URL "http://www.symbianfoundation.org/legal/licencesv10.html".
+// at the URL "http://www.eclipse.org/legal/epl-v10.html".
 //
 // Initial Contributors:
 // Nokia Corporation - initial contribution.
@@ -19,14 +19,17 @@
 #include <e32base.h>
 #include <f32file.h>
 #include <s32std.h>
-/**
-The default screen number. 
-@internalComponent
-*/
-const TInt KDefaultScreenNo = 0;
+#include <displaymode.h>
+
+#ifndef SYMBIAN_ENABLE_SPLIT_HEADERS	
+#include <graphics/gdi/glyphsample.h>
+#include <graphics/gdi/gdiconsts.h>
+#endif //SYMBIAN_ENABLE_SPLIT_HEADERS	
 
 class TOpenFontCharMetrics;
 class RShapeInfo;
+class CGraphicsContext;
+class TTextParameters;
 
 /**
 Number of twips per inch. 
@@ -123,17 +126,7 @@ const TSize KMonarchPaperSizeInTwips(5580,10800);
 const TSize KDLPaperSizeInTwips(6236,12472);
 const TSize KC5PaperSizeInTwips(9184,12983);
 #endif
-	
-/**
-Declaration of constant TUids for APIExtension to use as identifiers.
-@internalComponent
-@released
-*/
-const TUid KGetUnderlineMetrics = {0x102827FB};
-const TUid KSetFastBlendDisabled = {0x10285A30};
-const TUid KSetShadowColor = {0x10282DA1};
-const TUid KGetShadowColor = {0x10282DA2};
-const TUid KUidIsFbsBitmapGc = {0x10285BBE};
+
 
 /**
 This enumeration holds the possible panic codes that may be raised 
@@ -149,6 +142,7 @@ enum TGdiPanic
 	/** Internal failure. */
 	EGdiPanic_Invariant				= 3
 	};
+
 
 /** 24-bit RGB colour value with 8 bits each for red, green and blue.
 
@@ -268,6 +262,7 @@ private:
 	TUint32 iValue;
 	};
 
+
 /**
 @publishedAll
 @released
@@ -288,50 +283,7 @@ private:
 #define KRgbCyan		TRgb(0xffff00)
 #define KRgbGray		TRgb(0xaaaaaa)
 #define KRgbWhite		TRgb(0xffffff)
-
-
-/** Display modes. 
-@publishedAll
-@released
-*/
-enum TDisplayMode
-	{
-	/** No display mode */
-	ENone,
-	/** Monochrome display mode (1 bpp) */
-	EGray2,
-	/** Four grayscales display mode (2 bpp) */
-	EGray4,
-	/** 16 grayscales display mode (4 bpp) */
-	EGray16,
-	/** 256 grayscales display mode (8 bpp) */
-	EGray256,
-	/** Low colour EGA 16 colour display mode (4 bpp) */
-	EColor16,
-	/** 256 colour display mode (8 bpp) */
-	EColor256,
-	/** 64,000 colour display mode (16 bpp) */
-	EColor64K,
-	/** True colour display mode (24 bpp) */
-	EColor16M,
-	/** (Not an actual display mode used for moving buffers containing bitmaps) */
-	ERgb,
-	/** 4096 colour display (12 bpp). */
-	EColor4K,
-	/** True colour display mode (32 bpp, but top byte is unused and unspecified) */
-	EColor16MU,
-	/** Display mode with alpha (24bpp colour plus 8bpp alpha) */
-	EColor16MA,
-	/** Pre-multiplied Alpha display mode (24bpp color multiplied with the alpha channel value, plus 8bpp alpha) */
-	EColor16MAP,
-	//Any new display mode should be insterted here!
-	//There might be up to 255 display modes, so value of the last
-	//inserted EColorXXX enum item should be less than 256 -
-	//BC reasons!
-	EColorLast
-	};
-
-
+#define KRgbTransparent	TRgb(0x000000,0x00)
 
 /** A set of static utility functions to get information about a display mode. 
 @publishedAll 
@@ -346,13 +298,6 @@ public:
 	IMPORT_C static TInt NumDisplayModeBitsPerPixel(TDisplayMode aDispMode);
 	};
 
-/** Utility function to check if a display mode has Alpha channel information
-@param aDisplayMode - the display mode being queried
-@return ETrue if display mode contains Alpha information.
-@internalTechnology
-@released
-*/
-inline TBool IsAlphaChannel(TDisplayMode aDisplayMode);
 /** Provides user-definable palette support to the GDI.
 
 A palette is a user-defined set of colours, which is a subset of the full 
@@ -487,7 +432,8 @@ private:
 	TPoint iStart;
 	TRect iBoundingRect;
 	TBool iBoundingRectSet;
-	TBool iInside;
+	TInt16 iInsideX; // boolean, defined as TInt16 to maintain binary compatibility
+	TInt16 iInsideY; // boolean, defined as TInt16 to maintain binary compatibility
 	TLineStatus iStatus;
 	};
 
@@ -651,18 +597,28 @@ enum TGlyphBitmapType
 	If the raterizer supports the outline and shadow fonts, it will set the bitmaptype as 
 	EFourColourBlendGlyphBitmap but only when glyph bitmap type is set as EAntiAliasedGlyphBitmap and 
 	when any of the EDropShadow or EOutline effect is on. Only rasterizer providers can use this enum.
-
-	@publishedPartner
 	*/
 	EFourColourBlendGlyphBitmap,
+	/**
+	This is used for glyphs, and not fonts, and is needed to inform the font drawing routines
+	that the character should be drawn using the overall font setting. 
+	For Internal Use Only.
+	*/
+	EGlyphBitmapTypeNotDefined,
+	/**
+	This is used to inform the rasterizer that the best match should be
+	found for the bitmap type based upon its knowledge.
+	For Internal Use Only.
+	*/
+	EAntiAliasedOrMonochromeGlyphBitmap,
 	};
-
 
 /**
 Defines a set of font effects flags.
 
-@publishedPartner For use by system/UI software.
+@publishedAll 
 @released
+WARNING: This Class is for use by system/UI software ONLY.
 */
 NONSHARABLE_CLASS(FontEffect)
 	{
@@ -687,7 +643,6 @@ public:
 	IMPORT_C static TBool IsEffectOn(TEffect aEffect, TUint32 aFontEffect);
 	IMPORT_C static void SetEffect(TEffect aEffect, TBool aOn, TUint32& aFontEffect);
 	};
-
 
 /** Encapsulates a font style. 
 
@@ -820,8 +775,6 @@ const TInt KSubscriptOffsetPercentage=14;
 
 class CFont;
 
-
-
 /** Typeface store abstract base interface.
 
 This class provides the interface to a store for typefaces.
@@ -935,12 +888,10 @@ protected:
 	IMPORT_C TBool IncrementFontCount(const CFont* aFont);
 private:
 	TBool FindFont(const CFont* aFont, TInt& aIdx) const;
-
 	NONSHARABLE_CLASS(TFontAccess)
 	/**
 	Pairs a font with a count of how many clients of the typeface store 
 	are accessing that font. 
-	@internalTechnology
     */
 		{
 	public:
@@ -1226,10 +1177,16 @@ public:
 
 	/** Sets the device's palette.
 	
+	Setting the palette is only possible if the device has a modifiable palette, 
+	which can be determined by calling PaletteAttributes().
+	
 	@param aPalette The new palette for the device. */
 	virtual void SetPalette(CPalette* aPalette)=0;
 
 	/** Gets the device's current palette.
+	
+	This function is only supported if the device has a modifiable palette, 
+	which can be determined by calling PaletteAttributes().
 	
 	@param aPalette On return, holds the device's current palette.
 	@return KErrNone, if successful; otherwise, another of the system-wide error 
@@ -1256,9 +1213,9 @@ public:
 	};
 
 /**
+WARNING: this Class is for internal use ONLY.  Compatibility is not guaranteed in future releases.
 UIDs corresponding to the CFont API extension functions
 @internalTechnology
-@released
 */
 const TUid KFontCapitalAscent	= {0x1020498E};
 const TUid KFontMaxAscent		= {0x10204B10};
@@ -1516,61 +1473,60 @@ private:
 	// added to convert CFont to a handle-body pattern. SC is kept throught the
 	// new functions and BC is kept by keeping the protected functions in the
 	// same place in the class, and therefore in the same place in the vtable
-	
 	/**
-	This member is internal and not intended for use. Please see derived class for implementation
-	@internalTechnology
+	@publishedAll
+	WARNING: Function for internal use ONLY.  Compatibility is not guaranteed in future releases. Please see derived class for implementation.
 	*/
 	virtual TUid DoTypeUid() const=0;
 	/**
-	This member is internal and not intended for use. Please see derived class for implementation
-	@internalTechnology
+	@publishedAll
+	WARNING: Function for internal use ONLY.  Compatibility is not guaranteed in future releases. Please see derived class for implementation.
 	*/
 	virtual TInt DoHeightInPixels() const=0;
 	/**
-	This member is internal and not intended for use. Please see derived class for implementation
-	@internalTechnology
+	@publishedAll
+	WARNING: Function for internal use ONLY.  Compatibility is not guaranteed in future releases. Please see derived class for implementation.
 	*/
 	virtual TInt DoAscentInPixels() const=0;
 	IMPORT_C virtual TInt DoDescentInPixels() const;
 	/**
-	This member is internal and not intended for use. Please see derived class for implementation
-	@internalTechnology
+	@publishedAll
+	WARNING: Function for internal use ONLY.  Compatibility is not guaranteed in future releases. Please see derived class for implementation.
 	*/
 	virtual TInt DoCharWidthInPixels(TChar aChar) const=0;
 	/**
-	This member is internal and not intended for use. Please see derived class for implementation
-	@internalTechnology
+	@publishedAll
+	WARNING: Function for internal use ONLY.  Compatibility is not guaranteed in future releases. Please see derived class for implementation.
 	*/
 	virtual TInt DoTextWidthInPixels(const TDesC& aText) const=0;
 	/**
-	This member is internal and not intended for use. Please see derived class for implementation
-	@internalTechnology
+	@publishedAll
+	WARNING: Function for internal use ONLY.  Compatibility is not guaranteed in future releases. Please see derived class for implementation.
 	*/
 	virtual TInt DoBaselineOffsetInPixels() const=0;
 	/**
-	This member is internal and not intended for use. Please see derived class for implementation
-	@internalTechnology
+	@publishedAll
+	WARNING: Function for internal use ONLY.  Compatibility is not guaranteed in future releases. Please see derived class for implementation.
 	*/
 	virtual TInt DoTextCount(const TDesC& aText,TInt aWidthInPixels) const=0;
 	/**
-	This member is internal and not intended for use. Please see derived class for implementation
-	@internalTechnology
+	@publishedAll
+	WARNING: Function for internal use ONLY.  Compatibility is not guaranteed in future releases. Please see derived class for implementation.
 	*/
 	virtual TInt DoTextCount(const TDesC& aText,TInt aWidthInPixels,TInt& aExcessWidthInPixels) const=0;
 	/**
-	This member is internal and not intended for use. Please see derived class for implementation
-	@internalTechnology
+	@publishedAll
+	WARNING: Function for internal use ONLY.  Compatibility is not guaranteed in future releases. Please see derived class for implementation.
 	*/
 	virtual TInt DoMaxCharWidthInPixels() const=0;
 	/**
-	This member is internal and not intended for use. Please see derived class for implementation
-	@internalTechnology
+	@publishedAll
+	WARNING: Function for internal use ONLY.  Compatibility is not guaranteed in future releases. Please see derived class for implementation.
 	*/
 	virtual TInt DoMaxNormalCharWidthInPixels() const=0;
 	/**
-	This member is internal and not intended for use. Please see derived class for implementation
-	@internalTechnology
+	@publishedAll
+	WARNING: Function for internal use ONLY.  Compatibility is not guaranteed in future releases. Please see derived class for implementation.
 	*/
 	virtual TFontSpec DoFontSpecInTwips() const=0;
 
@@ -1611,8 +1567,8 @@ public:
 
 	/** Gets the font ascent in pixels.
 	Note that this deprecated function is replaced by the new @c FontMaxAscent()
-	or in some cases @c FontCapitalAscent().
-
+	or in some cases @c FontCapitalAscent().	
+	
 	@return The font ascent in pixels.
 	@see FontCapitalAscent()
 	@see FontMaxAscent()
@@ -1621,7 +1577,7 @@ public:
 	
 	/** Gets the font descent in pixels.
 	Note that this deprecated function is replaced by the new @c FontMaxDescent()
-	or in some cases @c FontStandardDescent().
+	or in some cases @c FontStandardDescent().	
 	
 	@return The font descent in pixels.
 	@see FontStandardDescent() 
@@ -1709,6 +1665,15 @@ public:
 	IMPORT_C static TBool CharactersJoin(TInt aLeftCharacter, TInt aRightCharacter);
 	IMPORT_C TInt ExtendedFunction(TUid aFunctionId, TAny* aParam = NULL) const;
 	IMPORT_C TBool GetCharacterPosition2(TPositionParam& aParam, RShapeInfo& aShapeInfo) const;
+
+	/** Gets the width in pixels of the specified descriptor when displayed in this 
+	font.
+	
+	@param aText The descriptor whose width should be determined.
+	@param aParam Parameter block that controls how much of aText is measured
+	@return The width of the specified descriptor when displayed in this font, 
+	in pixels. */
+	IMPORT_C TInt TextWidthInPixels(const TDesC& aText,const TMeasureTextInput* aParam) const;
 	};
 
 class CFbsBitmap;
@@ -1849,15 +1814,16 @@ public:
 		/** Inverts the colour of each pixel that is drawn over, (pen and 
 		brush attributes are ignored). P=~s, B=~s */
 		EDrawModeNOTSCREEN=EInvertScreen,
-		/** Inverts the pen and brush colours before ORing. P=(~p)|s, 
-		B=(~b)|s */
+		/** Inverts the screen colour before ORing. P=p|(~s), 
+		B=b|(~s) */
 		EDrawModeNOTOR=EInvertScreen|EOr,
 		/** Inverts the pen and brush colours. P=~p, B=~b */
 		EDrawModeNOTPEN=EInvertPen|EPenmode,
-		/** Inverts the screen, pen and brush colours before ORing. P=p|(~s), 
-		B=b|(~s) */
+		/** Inverts the pen and brush colours before ORing. P=(~p)|s, 
+		B=(~b)|s */
 		EDrawModeORNOT=EOr|EInvertPen,
-		/** NOT OR NOT mode. P=(~p)|(~s), B=(~b)|(~s) */
+		/** Inverts the screen and pen and brush colours before ORing.
+		P=(~p)|(~s), B=(~b)|(~s) */
 		EDrawModeNOTORNOT=EInvertScreen|EOr|EInvertPen,
 		/** Writes alpha information in the source directly into the destination, rather than blending. */
 		EDrawModeWriteAlpha=EWriteAlpha,
@@ -1988,6 +1954,30 @@ public:
 		Arabic and Hebrew). EFalse if left-to-right. */
 		TBool iParRightToLeft;	
 		};
+	
+	/**
+	Parameters used in drawing text within supplied context.
+	It is used by CGraphicsContext::DrawText() and CGraphicsContext::DrawTextVertical() family of API's
+	to draw text from iStart to iEnd withing the supplied text descriptor.
+	*/
+	class TTextParameters
+		{
+	public:
+		TTextParameters():
+			iStart(0),
+			iEnd(KMaxTInt),
+			iFlags(0)
+				{
+				}
+		TInt iStart;
+		TInt iEnd;
+		TUint16 iFlags;
+		/* Reserved for future use */
+		TAny* iReserved1;
+		TAny* iReserved2;
+		TAny* iReserved3;
+		TAny* iReserved4;
+		};
 public:
 	/** Gets a pointer to the graphics context's graphics device.
 	
@@ -2054,12 +2044,21 @@ public:
 	@see CGraphicsContext::TDrawModeComponents */
 	virtual void SetDrawMode(TDrawMode aDrawingMode)=0;
 
-	/** Sets the clipping rectangle.
+	/** Sets the clipping rectangle.	 
 	
-	The area of visible drawing depends on the clipping region. The default 
-	clipping rectangle is the full device area.
+	The area of visible drawing depends on the clipping rectangle, any items 
+	that fall outside the extent of the clipping rectangle will not be drawn. 
+	The default clipping rectangle is the full device area.
 	
-	@param aRect The clipping rectangle. */
+	Note that clipping is additive. If a clipping region has been set using SetClippingRegion() 
+	then clipping will be to the intersection of that region and this rectangle.
+		
+	@param aRect The rectangle to be used as the clipping rectangle. Note that 
+	this rectangle is tranformed by the current co-ordinate origin before it is used. 
+	The co-ordinate origin is set using SetOrigin().
+	
+	@see CGraphicsContext::SetClippingRegion() 
+	@see CGraphicsContext::SetOrigin() */
 	virtual void SetClippingRect(const TRect& aRect)=0;
 
 	/** Cancels any clipping rectangle.
@@ -2170,8 +2169,7 @@ public:
 	gap between the space and the beginning of the next word.
 	
 	@param aExcessWidth The width (in pixels) to be distributed between the 
-	specified number of spaces. It may be positive, in which case the text is 
-	stretched, or negative, in which case it is shrunk. 
+	specified number of spaces. 
 	@param aNumGaps The number of word spaces (characters with the code U+0020) 
 	over which the change in width is distributed. */
 	virtual void SetWordJustification(TInt aExcessWidth,TInt aNumGaps)=0;
@@ -2248,7 +2246,8 @@ public:
 	expand a line of characters.
 	
 	@param aExcessWidth The excess width (in pixels) to be distributed between 
-	the specified number of characters. 
+	the specified number of characters. It may be positive, in which case the text is 
+	stretched, or negative, in which case it is shrunk.
 	@param aNumChars The number of characters involved. */
 	virtual void SetCharJustification(TInt aExcessWidth,TInt aNumChars)=0;
 
@@ -2908,10 +2907,20 @@ public:
 	RGB in the pair. */	
 	virtual void MapColors(const TRect &aRect,const TRgb *aColors,TInt aNumPairs,TBool aMapForwards) = 0;
 	
-	/** Sets the clipping region.
-	@param aClippingRegion The new clipping region. 
+	/** Sets the clipping region, any items that fall outside the extent of the clipping 
+	region will not be drawn.
+	
+	Note that clipping is additive. If a clipping rectangle has been set using SetClippingRect() 
+	then clipping will be to the intersection of that rectangle and this region.
+	
+	@param aRegion The new clipping region. Note that clipping region co-ordinates are
+	used as absolute co-ordinates, they are not transformed by the current co-ordinate 
+	origin before use (as occurs in SetClippingRect()).
+	 
 	@return KErrNone if successful; KErrArgument if the TRegion is not valid; KErrNoMemory if there is insufficient memory.
-	@see CGraphicsContext::CancelClippingRegion()*/		
+	
+	@see CGraphicsContext::CancelClippingRegion() 
+	@see CGraphicsContext::SetClippingRect() */		
 	virtual TInt SetClippingRegion(const TRegion &aRegion) = 0;
 	
 	/** Cancels the current clipping region. 
@@ -2944,22 +2953,33 @@ public:
 	@param aShadowColor Shadow colour of the font returned by the funtion.
 	@return KErrNone, if successful; otherwise, another of the system-wide errors. */
 	IMPORT_C TInt GetShadowColor(TRgb& aShadowColor);
-	
+
 	/** Determine if the Gc is a CFbsBitGc
 	@return ETrue, if the Gc is a CFbsBitGc, EFalse otherwise 
-	@internalComponent
+	@publishedAll
+	WARNING: Function for internal use ONLY.  Compatibility is not guaranteed in future releases.
 	*/
 	IMPORT_C TBool IsFbsBitGc() const;
+
+	IMPORT_C void DrawText(const TDesC& aText,const TTextParameters* iParam,const TPoint& aPosition);
+	IMPORT_C void DrawText(const TDesC& aText,const TTextParameters* iParam,const TRect& aBox,TInt aBaselineOffset,TTextAlign aHrz=ELeft,TInt aMargin=0);
+	IMPORT_C void DrawText(const TDesC& aText,const TTextParameters* iParam,const TPoint& aPosition,const TDrawTextParam& aParam);
+
+	IMPORT_C void DrawTextVertical(const TDesC& aText,const TTextParameters* iParam,const TPoint& aPos,TBool aUp);
+	IMPORT_C void DrawTextVertical(const TDesC& aText,const TTextParameters* iParam,const TRect& aBox,TInt aBaselineOffset,TBool aUp,TTextAlign aVert=ELeft,TInt aMargin=0);
+	
+	IMPORT_C TInt DrawTextExtended(const TDesC& aText,const TTextParameters* iParam,const TPoint& aPosition,const TDrawTextExtendedParam& aParam);
 	
 protected:
-	
+
 	/**
 	An APIExtension method to allow the addition of new APIs to retain compatibility 
 	with previous versions of gdi.dll
 	@param aOutput is for output
 	@param aInput is for input
 	@see CGraphicsContext
-	@internalComponent
+	@publishedAll
+	WARNING: Function for internal use ONLY.  Compatibility is not guaranteed in future releases.
 	*/
 	IMPORT_C virtual TInt APIExtension(TUid aUid, TAny*& aOutput, TAny* aInput);	
 	
@@ -3121,8 +3141,7 @@ public:
 	@param aAlphaBmp A pointer to the bitmap used as an alpha blending factor.
 	@param aAlphaPt Position of the first pixel in the alpha bitmap that should be used as a source 
 	                for the alpha blending. The size of the area is the same as the 
-	                source bitmap area - aSrcRect parameter.
-	@return KErrNone, if successful; otherwise, another of the system-wide error codes.*/	
+	                source bitmap area - aSrcRect parameter.*/	
 	
 	virtual TInt AlphaBlendBitmaps(const TPoint& aDestPt, const CFbsBitmap* aSrcBmp, const TRect& aSrcRect, const CFbsBitmap* aAlphaBmp, const TPoint& aAlphaPt) = 0;	
 	
@@ -3136,8 +3155,7 @@ public:
 	@param aAlphaBmp A pointer to the bitmap used as an alpha blending factor.
 	@param aAlphaPt Position of the first pixel in the alpha bitmap that should be used as a source 
 	                for the alpha blending. The size of the area is the same as the 
-	                source bitmap area - aSrcRect parameter.
-	@return KErrNone, if successful; otherwise, another of the system-wide error codes.*/	
+	                source bitmap area - aSrcRect parameter.*/
 	virtual	TInt AlphaBlendBitmaps(const TPoint& aDestPt, const CWsBitmap* aSrcBmp,	const TRect& aSrcRect, const CWsBitmap* aAlphaBmp, const TPoint& aAlphaPt) = 0;
 	
 protected:
@@ -4101,52 +4119,11 @@ private:
 	const MGraphicsDeviceMap* iDevice;
 	};
 
-/**
-Provides methods to map a TLanguage type to some pre-defined glyph samples.
-Samples are defined per writing script, e.g. specifying ELangFrench or
-ELangGerman will return the same set of samples.
-These samples are typically the tallest and 'deep'est characters w.r.t
-various scripts, useful for font rasterizers when calculating metrics.
-@internalTechnology
-*/
-NONSHARABLE_CLASS(GlyphSample)
-	{
-public:
-	/**
-	Writing scripts defined according to Unicode.
-	*/
-	enum TScript
-		{
-		EScriptDefault			= 0x0,	// No script, can't be bothered
-		EScriptNone				= 0x1,	// No script, really
-		EScriptOther			= 0x2,	// Unsupported scripts
-		EScriptLatin			= 0x3,	// European
-		EScriptGreek			= 0x4,	// European
-		EScriptCyrillic			= 0x5,	// European
-		EScriptHebrew			= 0x6,	// Middle Eastern
-		EScriptArabic			= 0x7,	// Middle Eastern
-		EScriptDevanagari		= 0x8,	// Indic
-		EScriptThai				= 0x9,	// SE Asian
-		EScriptHanIdeographs	= 0xA,	// E Asian
-		};
-public:
-	IMPORT_C static TInt TLanguage2TScript(TLanguage aLanguage);
-	IMPORT_C static const TPtrC TScript2GlyphSample(TInt aScript);
-private:
-	static const TInt KTLanguage2TScript[];
-	static const TText* const KTScript2GlyphSample[];
-	};
-	
-/*
-Structure used as a package for GetUnderlineMetrics to pass to the relevant
-section of APIExtension.
-@internalTechnology
-*/
-struct TTwoTInt
-{
-	TInt iTop;
-	TInt iBottom;
-};
-	
+#ifndef SYMBIAN_ENABLE_SPLIT_HEADERS	
+#include <graphics/gdi/gdistructs.h>
+#include <graphics/gdi/gdiinline.inl>
+#endif //SYMBIAN_ENABLE_SPLIT_HEADERS	
+
 #include <gdi.inl>
+
 #endif // __GDI_H__

@@ -1,9 +1,9 @@
 // Copyright (c) 1999-2009 Nokia Corporation and/or its subsidiary(-ies).
 // All rights reserved.
 // This component and the accompanying materials are made available
-// under the terms of the License "Symbian Foundation License v1.0" to Symbian Foundation members and "Symbian Foundation End User License Agreement v1.0" to non-members
+// under the terms of "Eclipse Public License v1.0"
 // which accompanies this distribution, and is available
-// at the URL "http://www.symbianfoundation.org/legal/licencesv10.html".
+// at the URL "http://www.eclipse.org/legal/epl-v10.html".
 //
 // Initial Contributors:
 // Nokia Corporation - initial contribution.
@@ -11,8 +11,8 @@
 // Contributors:
 //
 // Description:
+// smut.h 
 //
-
 #ifndef __SMUT_H__
 #define __SMUT_H__
 
@@ -113,17 +113,6 @@ Mask used to obtain the mesasge indication type from the SMS data.
 */
 		ESpecialMessageTypeMask = 0x7F
 		};
-
-	/**
-	@internalComponent
-	@removed
-	*/
-	IMPORT_C void Dummy_Export_1();
-	/**
-	@internalComponent
-	@removed
-	*/
-	IMPORT_C void Dummy_Export_2();
 
 	IMPORT_C static void ServiceIdL(CMsvServerEntry& aEntry, TMsvId& aFirstId, TUid aMtm = KUidMsgTypeSMS, CMsvEntrySelection* aServiceIds = NULL);
 	IMPORT_C static void ServiceIdL(CMsvEntry& aEntry, TMsvId& aFirstId, TUid aMtm = KUidMsgTypeSMS, CMsvEntrySelection* aServiceIds = NULL);

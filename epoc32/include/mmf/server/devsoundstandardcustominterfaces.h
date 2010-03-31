@@ -1,9 +1,9 @@
 // Copyright (c) 2003-2009 Nokia Corporation and/or its subsidiary(-ies).
 // All rights reserved.
 // This component and the accompanying materials are made available
-// under the terms of the License "Symbian Foundation License v1.0" to Symbian Foundation members and "Symbian Foundation End User License Agreement v1.0" to non-members
+// under the terms of "Eclipse Public License v1.0"
 // which accompanies this distribution, and is available
-// at the URL "http://www.symbianfoundation.org/legal/licencesv10.html".
+// at the URL "http://www.eclipse.org/legal/epl-v10.html".
 //
 // Initial Contributors:
 // Nokia Corporation - initial contribution.
@@ -13,16 +13,19 @@
 // Description:
 //
 
+/**
+ @publishedAll
+ @released
+ @file
+*/
+
 #ifndef __DEVSOUNDSTANDARDCUSTOMINTERFACES_H__
 #define __DEVSOUNDSTANDARDCUSTOMINTERFACES_H__
 
 #include <e32std.h>
 
-/*****************************************************************************/
 /**
 UID associated with the custom interface MMMFDevSoundCustomInterfaceBitRate.
-@publishedAll
-@released
 */
 const TUid KUidCustomInterfaceDevSoundBitRate = {0x101F7DD5};
 
@@ -30,9 +33,6 @@ const TUid KUidCustomInterfaceDevSoundBitRate = {0x101F7DD5};
 
 /**
 This class provides an interface to set and retrive the DevSound bit rate.
-
-@publishedAll
-@released
 */
 class MMMFDevSoundCustomInterfaceBitRate
 	{	
@@ -67,10 +67,6 @@ public:
 /*****************************************************************************/
 /**
 UID associated with the Custom interface MMMFDevSoundCustomInterfaceFileBlockLength.
-
-@publishedPartner
-@prototype
-
 */
 const TUid KUidCustomInterfaceDevSoundFileBlockLength = {0x10273806};
 
@@ -80,9 +76,6 @@ Custom interface class for setting the file's block length on the hwdevice.
 Note also that this interface is just a simple interface to 
 set file's block length. No checking is perfomed on the values sent (hence the
 Set methods do not return an error code).
-
-@publishedPartner
-@prototype
 */
 class MMMFDevSoundCustomInterfaceFileBlockLength
 	{
@@ -98,17 +91,11 @@ public:
 /*****************************************************************************/
 /**
 UID associated with the Custom interface MMMFGsmConfig
-
-@publishedPartner
-@prototype
 */
 const TUid KUidGsmConfig = {0x102825FC};
 
 /**
 This class provides an interface to set and retrive the GSM conversion format.
-
-@publishedPartner
-@prototype
 */
 class MMMFGsmConfig
 	{
@@ -159,9 +146,6 @@ public:
 /*****************************************************************************/
 /**
 UID associated with the Custom interface MSpeechEncoderConfig
-
-@publishedPartner
-@prototype
 */
 const TUid KUidSpeechEncoderConfig = {0x102825FB};
 
@@ -170,10 +154,6 @@ This class provides an interface to those CMMFHwDevices providing speech encodin
 This interface is used for querying and configuring the operational modes of speech 
 encoders as supported by those specific encoders. 
 If a speech encoder does not support a mode provided by the interface, it will return KErrNotSupported.
-
-@publishedPartner
-@prototype
-
 */
 class MSpeechEncoderConfig 
 	{
@@ -207,9 +187,6 @@ public:
 /*****************************************************************************/
 /**
 UID associated with the Custom interface MAacDecoderConfig
-
-@publishedPartner
-@prototype
 */
 const TUid KUidAacDecoderConfig = {0x102825FD};
 
@@ -222,9 +199,6 @@ An extension mechanism will be provided for further functionality as required.
 The CMMFHwDevice does not contain Output channel configuration at time of writing. 
 The HWA decoders to date have been hardcoded for 2ch (left / right) output. 
 Additional configuration information may be provided by using extension mechanisms. 
-
-@publishedPartner
-@prototype
 */
 class MAacDecoderConfig 
 	{
@@ -292,9 +266,6 @@ public:
 /*****************************************************************************/
 /**
 UID associated with the Custom interface MEAacPlusDecoderIntfc
-
-@publishedPartner
-@prototype
 */
 const TUid KUidEAacPlusDecoderIntfc = {0x102825FF};
 
@@ -326,9 +297,6 @@ Calling ApplyConfig() will send these values using a single message to the messa
 ApplyConfig() should fail if it is used during decoding with a KErrInUse (or, as previously stated, 
 KErrUnknown if a value without a default is not set). Since the interface proxy is not aware of decoding state, 
 this check would have to be done in the adaptation implementation for this interface.
-
-@publishedPartner
-@prototype
 */
 class MEAacPlusDecoderIntfc 
 	{
@@ -501,9 +469,6 @@ public:
 /*****************************************************************************/
 /**
 UID associated with the Custom interface MSbcEncoderIntfc
-
-@publishedPartner
-@prototype
 */
 const TUid KUidSbcEncoderIntfc = {0x10282600};
 
@@ -542,9 +507,6 @@ where this is supported (e.g. If GetSupportedChannelModes returns KErrNotSupport
 does not need to be set before ApplyConfig() is called). This check and the parameter values 
 returned will be implemented in the interface proxy and will not query the actual encoder. If 
 multiple instances of the interface are created, each would have this requirement.  
-
-@publishedPartner
-@prototype
 */
 class MSbcEncoderIntfc 
 	{
@@ -834,18 +796,12 @@ public:
 /*****************************************************************************/
 /**
 UID associated with the Custom interface MG711DecoderIntfc
-
-@publishedPartner
-@prototype
 */
 const TUid KUidG711DecoderIntfc = {0x10282601};
 
 /**
 This class provides an interface to the G711 decoder CMMFHwDevice in order to provide 
 additional configuration information.
-
-@publishedPartner
-@prototype
 */
 class MG711DecoderIntfc 
 	{
@@ -946,18 +902,12 @@ public:
 /*****************************************************************************/
 /**
 UID associated with the Custom interface MG711EncoderIntfc
-
-@publishedPartner
-@prototype
 */
 const TUid KUidG711EncoderIntfc = {0x10282602};
 
 /**
 This class provides an interface to the G711 encoder CMMFHwDevice in order to provide 
 additional configuration information.
-
-@publishedPartner
-@prototype
 */
 class MG711EncoderIntfc 
 	{
@@ -1012,18 +962,12 @@ public:
 /*****************************************************************************/
 /**
 UID associated with the Custom interface MG729DecoderIntfc
-
-@publishedPartner
-@prototype
 */
 const TUid KUidG729DecoderIntfc = {0x10282603};
 
 /**
 This class provides an interface to the G729 decoder CMMFHwDevice in order to provide additional 
 configuration information.
-
-@publishedPartner
-@prototype
 */
 class MG729DecoderIntfc
 	{
@@ -1046,18 +990,12 @@ public:
 /*****************************************************************************/
 /**
 UID associated with the Custom interface MG729EncoderIntfc
-
-@publishedPartner
-@prototype
 */
 const TUid KUidG729EncoderIntfc = {0x10282604};
 
 /**
 This class provides an interface to the G729 encoder CMMFHwDevice in order to provide 
 additional configuration information.
-
-@publishedPartner
-@prototype
 */
 class MG729EncoderIntfc
 	{
@@ -1088,18 +1026,12 @@ public:
 /*****************************************************************************/
 /**
 UID associated with the Custom interface MIlbcDecoderIntfc
-
-@publishedPartner
-@prototype
 */
 const TUid KUidIlbcDecoderIntfc = {0x10282605};
 
 /**
 This class provides an interface to the Ilbc decoder CMMFHwDevice in order to provide 
 additional configuration information.
-
-@publishedPartner
-@prototype
 */
 class MIlbcDecoderIntfc
 	{
@@ -1161,18 +1093,12 @@ public:
 /*****************************************************************************/
 /**
 UID associated with the Custom interface MIlbcEncoderIntfc
-
-@publishedPartner
-@prototype
 */
 const TUid KUidIlbcEncoderIntfc = {0x10282606};
 
 /**
 This class provides an interface to the Ilbc encoder CMMFHwDevice in order to provide 
 additional configuration information.
-
-@publishedPartner
-@prototype
 */
 class MIlbcEncoderIntfc
 	{
@@ -1243,9 +1169,6 @@ public:
 /*****************************************************************************/
 /**
 UID associated with the Custom interface MMMFErrorConcealmentIntfc
-
-@publishedPartner
-@prototype
 */
 const TUid KUidErrorConcealmentIntfc = {0x10282607};
 
@@ -1256,9 +1179,6 @@ video data may still be available for playback. If video playback is synchronize
 audio then this API can be used to indicate that audio data is lost so that video 
 playback can continue. It could also be used for an audio-only source to maintain 
 synchronization in time if data is lost.
-
-@publishedPartner
-@prototype
 */
 class MMMFErrorConcealmentIntfc
 	{
@@ -1319,9 +1239,6 @@ public:
 /*****************************************************************************/
 /**
 UID associated with the Custom interface MAudioVibraControl
-
-@publishedPartner
-@prototype
 */
 const TUid KUidAudioVibraControl = {0x10282608};
 
@@ -1339,9 +1256,6 @@ is played, but not the vibra that accompanies that audio. For instance, if audio
 two audio streams are rendered, vibra playback might not be mixed. Vibra playback may be 
 prioritized by adaptation to a single controller. The behavior in these cases would be based 
 on adaptation implementation. The user is not notified if vibra is not played.
-
-@publishedPartner
-@prototype
 */
 class MAudioVibraControl 
 	{
@@ -1364,9 +1278,6 @@ public:
 /*****************************************************************************/
 /**
 UID associated with the Custom interface MMMFSampleBuffering
-
-@publishedPartner
-@prototype
 */
 const TUid KUidSampleBuffering = {0x10282609};
 
@@ -1374,9 +1285,6 @@ const TUid KUidSampleBuffering = {0x10282609};
 Custom interface class to allow DevSound to support buffering of samples before playback begins. 
 This allows playback to be more robust to underflow errors when playback begins at the expense 
 of higher latency before playback starts.
-
-@publishedPartner
-@prototype
 */
 class MMMFSampleBuffering
 	{
@@ -1410,9 +1318,6 @@ public:
 /*****************************************************************************/
 /**
 UID associated with the Custom interface MMMFPlaybackStatus.
-
-@publishedPartner
-@prototype
 */
 const TUid KUidPlaybackStatus = {0x10273811};
 
@@ -1420,9 +1325,6 @@ const TUid KUidPlaybackStatus = {0x10273811};
 Custom interface class to enable access to the DevSound implementation to report the number of 
 consumed input bytes, number of successfully decoded samples, samples played, system time and
 total samples played.
-
-@publishedPartner
-@prototype
 */	
 class MMMFPlaybackStatus
 	{
@@ -1468,17 +1370,11 @@ public:
 /*****************************************************************************/
 /**
 UID associated with the Custom interface MMMFDSPControl
-
-@publishedPartner
-@prototype
 */
 const TUid KUidDSPControl = {0x1028260A};
 
 /**
 Custom interface class to allow control of DSP behaviour.
-
-@publishedPartner
-@prototype
 */		
 class MMMFDSPControl
 	{
@@ -1512,17 +1408,11 @@ public:
 /*****************************************************************************/
 /**
 UID associated with the Custom interface MMMFUnderflowAutoStopControl
-
-@publishedPartner
-@prototype
 */
 const TUid KUidUnderflowAutoStopControl = {0x1028260B};
 
 /**
 Custom interface class to control underflow behaviour.
-
-@publishedPartner
-@prototype
 */	
 class MMMFUnderflowAutoStopControl
 	{	
@@ -1540,17 +1430,11 @@ public:
 /*****************************************************************************/
 /**
 UID associated with the Custom interface MMMFSetDRMProtected
-
-@publishedPartner
-@prototype
 */
 const TUid KUidSetDRMProtected = {0x1028260C};
 
 /**
 This class provides an interface to mark data being played as DRM protected.
-
-@publishedPartner
-@prototype
 */	
 class MMMFSetDRMProtected
 	{
@@ -1567,17 +1451,11 @@ public:
 /*****************************************************************************/
 /**
 UID associated with the Custom interface MMMFBufferFramesConfig.
-
-@publishedPartner
-@prototype
 */
 const TUid KUidBufferFramesConfig = {0x1028260D};
 
 /**
 This class provides an interface to configure and retrive the buffer frames.
-
-@publishedPartner
-@prototype
 */		
 class MMMFBufferFramesConfig
 	{
@@ -1609,17 +1487,11 @@ public:
 /*****************************************************************************/
 /**
 UID associated with the Custom interface MMMFGetTimestamps
-
-@publishedPartner
-@prototype
 */
 const TUid KUidGetTimestamps = {0x1028260E};
 
 /**
 This class provides an interface to configure and retrive time stamps.
-
-@publishedPartner
-@prototype
 */	
 class MMMFGetTimestamps
 	{
@@ -1658,17 +1530,11 @@ public:
 /*****************************************************************************/
 /**
 UID associated with the Custom interface MMMFAdvancedAACEncodeSettings
-
-@publishedPartner
-@prototype
 */
 const TUid KUidAdvancedAACEncoderSettings = {0x102825FE};
 
 /**
 Advanced AAC Encode Bit-rate Configuration
-
-@publishedPartner
-@prototype
 */
 class MMMFAdvancedAACEncodeSettings
 	{

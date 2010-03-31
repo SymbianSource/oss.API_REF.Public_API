@@ -1,23 +1,14 @@
-//  abi_sufffix header  -------------------------------------------------------//
+/////////1/////////2/////////3/////////4/////////5/////////6/////////7/////////8
+// abi_suffix.hpp
 
-// © Copyright John Maddock 2003
-   
-// Use, modification and distribution are subject to the Boost Software License,
-// Version 1.0. (See accompanying file LICENSE_1_0.txt or copy at
-// http://www.boost.org/LICENSE_1_0.txt).
+// (C) Copyright 2002 Robert Ramey - http://www.rrsd.com . 
+// Use, modification and distribution is subject to the Boost Software
+// License, Version 1.0. (See accompanying file LICENSE_1_0.txt or copy at
+// http://www.boost.org/LICENSE_1_0.txt)
 
-// This header should be #included AFTER code that was preceded by a #include
-// <boost/config/abi_prefix.hpp>.
+//  See http://www.boost.org for updates, documentation, and revision history.
 
-#ifndef BOOST_CONFIG_ABI_PREFIX_HPP
-# error Header boost/config/abi_prefix.hpp must only be used after boost/config/abi_prefix.hpp
-#else
-# undef BOOST_CONFIG_ABI_PREFIX_HPP
+#ifdef BOOST_MSVC
+#pragma warning(pop)
 #endif
-
-// the suffix header occurs after all of our code:
-#ifdef BOOST_HAS_ABI_HEADERS
-#  include BOOST_ABI_SUFFIX
-#endif
-
-
+#include <boost/config/abi_suffix.hpp> // pops abi_suffix.hpp pragmas

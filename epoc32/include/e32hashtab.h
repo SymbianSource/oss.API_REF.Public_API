@@ -1,9 +1,9 @@
 // Copyright (c) 2005-2009 Nokia Corporation and/or its subsidiary(-ies).
 // All rights reserved.
 // This component and the accompanying materials are made available
-// under the terms of the License "Symbian Foundation License v1.0" to Symbian Foundation members and "Symbian Foundation End User License Agreement v1.0" to non-members
+// under the terms of the License "Eclipse Public License v1.0"
 // which accompanies this distribution, and is available
-// at the URL "http://www.symbianfoundation.org/legal/licencesv10.html".
+// at the URL "http://www.eclipse.org/legal/epl-v10.html".
 //
 // Initial Contributors:
 // Nokia Corporation - initial contribution.
@@ -501,7 +501,7 @@ class RHashSet : public RHashTableBase
 	{
 private:
 	friend class THashSetIter<T>;
-	/** @internalComponent */
+	
 	struct SFullElement
 		{
 		TUint32 iHash;
@@ -706,7 +706,7 @@ template <class T>
 class THashSetIter : public THashTableIterBase
 	{
 private:
-	/** @internalComponent */
+	
 	struct SFullElement
 		{
 		TUint32 iHash;
@@ -789,7 +789,7 @@ class RPtrHashSet : public RHashTableBase
 	{
 private:
 	friend class TPtrHashSetIter<T>;
-	/** @internalComponent */
+	
 	struct SFullElement
 		{
 		TUint32 iHash;
@@ -995,7 +995,7 @@ template <class T>
 class TPtrHashSetIter : public THashTableIterBase
 	{
 private:
-	/** @internalComponent */
+	
 	struct SFullElement		
 		{
 		TUint32 iHash;
@@ -1079,7 +1079,7 @@ class RHashMap : public RHashTableBase
 	{
 private:
 	friend class THashMapIter<K,V>;
-	/** @internalComponent */
+	
 	struct SFullElement
 		{
 		TUint32 iHash;
@@ -1291,7 +1291,7 @@ template <class K, class V>
 class THashMapIter : public THashTableIterBase
 	{
 private:
-	/** @internalComponent */
+	
 	struct SFullElement
 		{
 		TUint32 iHash;
@@ -1399,7 +1399,7 @@ class RPtrHashMap : public RHashTableBase
 	{
 private:
 	friend class TPtrHashMapIter<K,V>;
-	/** @internalComponent */
+	
 	struct SFullElement
 		{
 		TUint32 iHash;
@@ -1614,7 +1614,7 @@ template <class K, class V>
 class TPtrHashMapIter : public THashTableIterBase
 	{
 private:
-	/** @internalComponent */
+	
 	struct SFullElement
 		{
 		TUint32 iHash;

@@ -32,8 +32,8 @@
  * Defines all STLport settings.
  * This file is actually a wrapper : it includes compiler-specific
  * settings from <config/stlcomp.h>
- * and user-defined settings from <stl_user_config.h>.
- * See <config/stl_mycomp.h> and <stl_user_config.h> for the description
+ * and user-defined settings from <config/user_config.h>.
+ * See <config/stl_mycomp.h> and <config/user_config.h> for the description
  * of those macros
  *
  */
@@ -681,7 +681,7 @@ namespace _STL = _STLP_STD_NAME;
 
 /* boris : it was found out that _STLP_USE_SEPARATE_RELOPS_NAMESPACE
    causes less problems than having relational operator templates in global namespace
-   Please define _STLP_NO_RELOPS_NAMESPACE in stl_user_config.h if your code rely on them. */
+   Please define _STLP_NO_RELOPS_NAMESPACE in config/user_config.h if your code rely on them. */
 #  if !defined (_STLP_NO_RELOPS_NAMESPACE)
 #    define _STLP_USE_SEPARATE_RELOPS_NAMESPACE
 #  endif
@@ -1093,10 +1093,7 @@ typedef int bool;
 #  ifndef _STLP_CLASS_IMPORT_DECLSPEC
 #    define _STLP_CLASS_IMPORT_DECLSPEC
 #  endif
-#  if defined (_STLP_DESIGNATED_DLL) /* This is a lib which will contain STLport exports */
-#    define  _STLP_DECLSPEC        _STLP_EXPORT_DECLSPEC
-#    define  _STLP_CLASS_DECLSPEC  _STLP_CLASS_EXPORT_DECLSPEC
-#  else
+#  if !defined (_STLP_DESIGNATED_DLL) /* This is a lib which will contain STLport exports */
 #    define  _STLP_DECLSPEC        _STLP_IMPORT_DECLSPEC   /* Other modules, importing STLport exports */
 #    define  _STLP_CLASS_DECLSPEC  _STLP_CLASS_IMPORT_DECLSPEC
 #  endif
@@ -1110,11 +1107,15 @@ typedef int bool;
 
 #define _STLP_EXPORT_TEMPLATE_CLASS _STLP_EXPORT template class _STLP_CLASS_DECLSPEC
 
+//#ifndef __SYMBIAN32__
 #if defined (_STLP_MSVC) || defined (__ICL)
 #  define _STLP_STATIC_MEMBER_DECLSPEC
 #else
 #  define _STLP_STATIC_MEMBER_DECLSPEC _STLP_DECLSPEC
 #endif
+//#else
+//#  define _STLP_STATIC_MEMBER_DECLSPEC _STLP_IMPORT_DECLSPEC
+//#endif
 
 #if !defined (_STLP_CALL)
 #  define _STLP_CALL

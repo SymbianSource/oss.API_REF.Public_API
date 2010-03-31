@@ -1,9 +1,9 @@
 // Copyright (c) 1995-2009 Nokia Corporation and/or its subsidiary(-ies).
 // All rights reserved.
 // This component and the accompanying materials are made available
-// under the terms of the License "Symbian Foundation License v1.0" to Symbian Foundation members and "Symbian Foundation End User License Agreement v1.0" to non-members
+// under the terms of the License "Eclipse Public License v1.0"
 // which accompanies this distribution, and is available
-// at the URL "http://www.symbianfoundation.org/legal/licencesv10.html".
+// at the URL "http://www.eclipse.org/legal/epl-v10.html".
 //
 // Initial Contributors:
 // Nokia Corporation - initial contribution.
@@ -18,6 +18,9 @@
 #ifndef __E32EVENT_H__
 #define __E32EVENT_H__
 #include <e32cmn.h>
+#ifdef BTRACE_TRAWEVENT	
+#include <e32btrace.h>
+#endif
 
 /**
 @publishedAll
@@ -288,6 +291,7 @@ public:
 	IMPORT_C TPoint Pos() const;
 	IMPORT_C TInt ScanCode() const;
     IMPORT_C TInt Modifiers() const;
+	IMPORT_C TInt Repeats() const;
     
     /**
     Gets the Cartesian coordinates of the 3D pointer end that is closer to the screen.
@@ -339,7 +343,11 @@ public:
 	@param aTip A Boolean indicating which end of the pointing device is closer to the screen.
 	*/	
 	inline void SetTip(TBool aTip)
-		{iTip = TUint8(aTip);}
+		{iTip = TUint8(aTip);
+#ifdef BTRACE_TRAWEVENT	
+		BTraceContext4(BTrace::ERawEvent, BTrace::ESetTipEvent,(TUint32)aTip);
+#endif
+		}
 
 	IMPORT_C void Set(TType aType,TInt aScanCode);
 	IMPORT_C void Set(TType aType,TInt aX,TInt aY);
@@ -350,18 +358,53 @@ public:
 
 	IMPORT_C void SetTilt(TType aType,TInt aPhi,TInt aTheta);
 	IMPORT_C void SetRotation(TType aType,TInt aAlpha);
+	IMPORT_C void SetRepeat(TType aType,TInt aScanCode,TInt aRepeats);
 
+	/**
+	@return the pointer number of the the event
+	*/
+	inline TUint8 PointerNumber() const
+		{
+		return iPointerNumber;
+		}
+
+
+	/**
+	The pointer number for the event is set
+	The pointer  number should be more or equal 0 and should be less than HALData::EPointerMaxPointers,
+	otherwise WSERV would ignore the event,ie 	0 <= aPointerNumber < HALData::EPointerMaxPointers 
+	@param	aPointerNumber
+	Error conditions: None.
+	*/
+	inline void SetPointerNumber(const TUint8 aPointerNumber)
+		{
+		iPointerNumber=aPointerNumber;	
+#ifdef BTRACE_TRAWEVENT	
+		BTraceContext4(BTrace::ERawEvent, BTrace::ESetPointerNumberEvent,(TUint32)aPointerNumber);
+#endif
+		}
+
+    /**
+	Initialises the event with the supplied information	
+	@param	aType	The event type.
+	@param	aX		The X position.
+	@param	aY		The Y position.
+	@param	aZ		The Z position.
+	@param  aPointerNumber   The pointer number for the event
+	*/
+	IMPORT_C void Set (TType aType, TInt aX, TInt aY, TInt aZ, TUint8 aPointerNumber);
+	
 protected:
 	TUint8 iType;
 	TUint8 iTip;	/**< Indicates whether the tip or head of pointing device is closer to screen.*/
-	TUint8 iSpare2;
+	TUint8 iPointerNumber; //
 	TUint8 iDeviceNumber;
 	TUint iTicks;
 	union
 		{
 		struct {TInt x;TInt y;} pos;
 		struct {TInt x;TInt y;TInt z;TInt phi;TInt theta;TInt alpha;} pos3D;
-		TInt scanCode;
+		struct {TInt scanCode;TInt repeats;} key;
 		TInt modifiers;
 		} iU;
 	};
@@ -388,23 +431,9 @@ public:
 	inline TRawEvent &Event() const {return(*((TRawEvent *)&iBuf[0]));}
 	};
 
-
-
-
-/**
-@publishedPartner
-@released
-
-Encapsulates information about a device's display screen.
-*/
-class TScreenInfoV01
-	{
-public:
-	TBool iWindowHandleValid; /**< Indicates whether the window handle is valid.*/
-	TAny *iWindowHandle;      /**< The window handle.*/
-	TBool iScreenAddressValid;/**< Indicates whether the screen address is valid.*/
-	TAny *iScreenAddress;     /**< The linear address of the screen.*/
-	TSize iScreenSize;        /**< The size of the screen.*/
-	};
-//
+#ifndef SYMBIAN_ENABLE_SPLIT_HEADERS
+#include <e32event_private.h>
 #endif
+
+#endif
+

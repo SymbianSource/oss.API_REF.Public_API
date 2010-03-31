@@ -16,11 +16,9 @@
 */
 
 
-
-
 /**
  @file
- @publishedPartner
+ @publishedAll
  @released
 */
 

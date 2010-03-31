@@ -1,9 +1,9 @@
 // Copyright (c) 2003-2009 Nokia Corporation and/or its subsidiary(-ies).
 // All rights reserved.
 // This component and the accompanying materials are made available
-// under the terms of the License "Symbian Foundation License v1.0" to Symbian Foundation members and "Symbian Foundation End User License Agreement v1.0" to non-members
+// under the terms of "Eclipse Public License v1.0"
 // which accompanies this distribution, and is available
-// at the URL "http://www.symbianfoundation.org/legal/licencesv10.html".
+// at the URL "http://www.eclipse.org/legal/epl-v10.html".
 //
 // Initial Contributors:
 // Nokia Corporation - initial contribution.
@@ -21,7 +21,7 @@
 #include <lbsrequestor.h>
 #include <lbsclasstypes.h>
 #include <lbserrors.h>
-#include <lbs/lbsvariant.h>
+#include <lbsvariant.h>
 
 /** 
 @publishedAll
@@ -157,16 +157,28 @@ public:
 		/** Time in microseconds */
 		ETTimeIntervalMicroSeconds
 		};
-
+	/**
+	Constructor for TPositionQualityItem
+	 */
 	TPositionQualityItem();
-
+	
+	/**
+	Compare  method
+	 */			
 	TInt Compare(const TPositionQualityItem& aItem, TResult& aComparison) const;
-
+	/**
+	Sets Position Quality
+	 */	
 	void Set(TDataType aDataType, TValuePreference aValuePreference,
 			 const TAny* aData, TUint aSizeOfData);
-
+	/**
+	Gets position quality
+	 */	
 	TInt Get(TDataType aDataType, TAny* aData, TUint aSizeOfData) const;
-
+	
+	/**
+	Whether or not this element has a defined state
+	 */
 	TBool IsDefined() const;
 
 private:
@@ -193,8 +205,6 @@ public:
 
 	/**
  	Returns whether an element is defined
-	@publishedAll
-	@released
 	@param aElementId The element Id of that we're interested in.
 	@return TBool if defined
  	*/
@@ -208,8 +218,6 @@ protected:
 
 	/**
 	Sets the data of an element from the array of elements.
-	@publishedAll
-	@released
 	@param aElementId The element Id of that we're interested in.
 	@param aDataType The datatype of the data to be fetched.
 	@param aValuePreference Quality preferences
@@ -222,8 +230,6 @@ protected:
 
 	/**
 	Gets the data of an element from the array of elements.
-	@publishedAll
-	@released
 	@param aElementId The element Id of that we're interested in.
 	@param aDataType The datatype of the data to be fetched.
 	@param aData A pointer to the data to be written into.
@@ -634,7 +640,8 @@ public:
 		{
 		/** Data Quality Unknown
 		This is the unassigned valued. This state should only be reported
-		during an event indicating that a positioning module has been removed
+		during an event indicating that a positioning module has been removed 
+		or is not yet loaded.
  		*/
 		EDataQualityUnknown,
 

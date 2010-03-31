@@ -20,7 +20,7 @@
 /** 
 @file
 
-@publishedPartner
+@publishedAll
 @released
 */
 
@@ -42,8 +42,6 @@ namespace ContentAccess
 	a CDir. It is only when used explicitly as a CDirStreamable that
 	any additional functionality is invoked
 
-	@publishedPartner
-	@released
 	*/
 	class CDirStreamable : public CDir
 		{

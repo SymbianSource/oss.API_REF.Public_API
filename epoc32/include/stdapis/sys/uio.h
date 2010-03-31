@@ -25,7 +25,7 @@
  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY
  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
- * © Portions copyright (c) 2007 Symbian Software Ltd. All rights reserved.
+ * © * Portions Copyright (c) 2007 Nokia Corporation and/or its subsidiary(-ies). All rights reserved.
  *	@(#)uio.h	8.5 (Berkeley) 2/22/94
  * $FreeBSD: src/sys/sys/uio.h,v 1.39 2005/07/07 18:17:55 jhb Exp $
  */

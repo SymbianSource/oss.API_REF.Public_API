@@ -1,9 +1,9 @@
 // Copyright (c) 2004-2009 Nokia Corporation and/or its subsidiary(-ies).
 // All rights reserved.
 // This component and the accompanying materials are made available
-// under the terms of the License "Symbian Foundation License v1.0" to Symbian Foundation members and "Symbian Foundation End User License Agreement v1.0" to non-members
+// under the terms of "Eclipse Public License v1.0"
 // which accompanies this distribution, and is available
-// at the URL "http://www.symbianfoundation.org/legal/licencesv10.html".
+// at the URL "http://www.eclipse.org/legal/epl-v10.html".
 //
 // Initial Contributors:
 // Nokia Corporation - initial contribution.
@@ -13,23 +13,27 @@
 // Description:
 //
 
-
-
 /**
  @file
  @publishedAll
+ @released
 */
 
 #ifndef __CS_SUBCONPARAMS_INL__
 #define __CS_SUBCONPARAMS_INL__
 
 CSubConQosGenericParamSet* CSubConQosGenericParamSet::NewL(CSubConParameterFamily& aFamily, CSubConParameterFamily::TParameterSetType aType)
-/** Creates a generic Qos family parameters sub-connection.
+/** Creates a generic Qos family parameterset.
 
-@param aFamily parameter sets.
-@param aType parameter type (Requested/Acceptable/Granted) 
+Note:
+The aFamily parameter that is passed into this method will take ownership of the newly 
+created CSubConQosGenericParamSet object.  When the family is destroyed, this parameter 
+set object will also be destroyed (along with any other parameter sets owned by the family).
+
+@param aFamily Parameter sets.
+@param aType Parameter type (Requested/Acceptable/Granted)
 @return a CSubConQosGenericParamSet object pointer if successful,
- otherwise leaves with system error code.
+ otherwise leaves with a system error code.
 */
 	{
 	CSubConQosGenericParamSet* obj = NewL();
@@ -39,14 +43,35 @@ CSubConQosGenericParamSet* CSubConQosGenericParamSet::NewL(CSubConParameterFamil
 	return obj;
 	}
 
-CSubConQosGenericParamSet* CSubConQosGenericParamSet::NewL()
-/** Creates a generic Qos family parameters sub-connection.
+CSubConQosGenericParamSet* CSubConQosGenericParamSet::NewL(RParameterFamily& aFamily, RParameterFamily::TParameterSetType aType)
+/** Creates a generic Qos family parameterset.
 
+Note:
+The aFamily parameter that is passed into this method will take ownership of the newly 
+created CSubConQosGenericParamSet object.  When the family is destroyed, this parameter 
+set object will also be destroyed (along with any other parameter sets owned by the family).
+
+@param aFamily Parameter sets.
+@param aType Parameter type (Requested/Acceptable/Granted)
 @return a CSubConQosGenericParamSet object pointer if successful,
- otherwise leaves with system error code.
+ otherwise leaves with a system error code.
 */
 	{
-	STypeId typeId(KSubConnGenericParamsImplUid, KSubConnQosGenericParamsType);
+	CSubConQosGenericParamSet* obj = NewL();
+	CleanupStack::PushL(obj);
+	aFamily.AddParameterSetL(obj, aType);
+	CleanupStack::Pop(obj);
+	return obj;
+	}
+
+CSubConQosGenericParamSet* CSubConQosGenericParamSet::NewL()
+/** Creates a generic Qos family parameterset.
+
+@return a CSubConQosGenericParamSet object pointer if successful,
+ otherwise leaves with a system error code.
+*/
+	{
+	STypeId typeId = STypeId::CreateSTypeId(CSubConQosGenericParamSet::EUid, CSubConQosGenericParamSet::EType);
 	return static_cast<CSubConQosGenericParamSet*>(CSubConParameterSet::NewL(typeId));
 	}
 
@@ -187,7 +212,7 @@ TInt CSubConQosGenericParamSet::GetUpLinkPriority() const
 TBool CSubConQosGenericParamSet::GetHeaderMode() const
 /** Gets header mode.
 
-@return boolean value indicating whether the header size 
+@return boolean value indicating whether the header size
 should be calculated by the QoS module or specified by the client. */
 	{
 	return iHeaderMode;
@@ -316,7 +341,7 @@ void CSubConQosGenericParamSet::SetUpLinkPriority(TInt aUpLinkPriority)
 void CSubConQosGenericParamSet::SetHeaderMode(TBool aHeaderMode)
 /** Sets header mode.
 
-@param aHeaderMode boolean value indicating whether the header size 
+@param aHeaderMode boolean value indicating whether the header size
 should be calculated by the QoS module or specified by the client. */
 	{
 	iHeaderMode = aHeaderMode;
@@ -332,12 +357,18 @@ void CSubConQosGenericParamSet::SetName(const TName& aName)
 
 //=============
 CSubConAuthorisationGenericParamSet* CSubConAuthorisationGenericParamSet::NewL(CSubConParameterFamily& aFamily, CSubConParameterFamily::TParameterSetType aType)
-/** Creates a generic Authorisation family parameters sub-connection.
+/** Creates a generic Authorisation family parameterset.
+
+Note:
+The aFamily parameter that is passed into this method will take ownership of the newly 
+created CSubConAuthorisationGenericParamSet object.  When the family is destroyed, this 
+parameter set object will also be destroyed (along with any other parameter sets owned 
+by the family).
 
 @param aFamily parameter sets.
-@param aType parameter type (Requested/Acceptable/Granted) 
+@param aType parameter type (Requested/Acceptable/Granted)
 @return a CSubConAuthorisationGenericParamSet object pointer if successful,
- otherwise leaves with system error code.
+ otherwise leaves with a system error code.
 */
 	{
 	CSubConAuthorisationGenericParamSet* obj = NewL();
@@ -347,19 +378,41 @@ CSubConAuthorisationGenericParamSet* CSubConAuthorisationGenericParamSet::NewL(C
 	return obj;
 	}
 
-CSubConAuthorisationGenericParamSet* CSubConAuthorisationGenericParamSet::NewL()
-/** Creates a generic Authorisation family parameters sub-connection.
+CSubConAuthorisationGenericParamSet* CSubConAuthorisationGenericParamSet::NewL(RParameterFamily& aFamily, RParameterFamily::TParameterSetType aType)
+/** Creates a generic Authorisation family parameterset.
 
+Note:
+The aFamily parameter that is passed into this method will take ownership of the newly 
+created CSubConAuthorisationGenericParamSet object.  When the family is destroyed, this 
+parameter set object will also be destroyed (along with any other parameter sets owned 
+by the family).
+
+@param aFamily parameter sets.
+@param aType parameter type (Requested/Acceptable/Granted)
 @return a CSubConAuthorisationGenericParamSet object pointer if successful,
- otherwise leaves with system error code.
+ otherwise leaves with a system error code.
 */
 	{
-	STypeId typeId(KSubConnGenericParamsImplUid, KSubConnAuthorisationGenericParamsType);
+	CSubConAuthorisationGenericParamSet* obj = NewL();
+	CleanupStack::PushL(obj);
+	aFamily.AddParameterSetL(obj, aType);
+	CleanupStack::Pop(obj);
+	return obj;
+	}
+
+CSubConAuthorisationGenericParamSet* CSubConAuthorisationGenericParamSet::NewL()
+/** Creates a generic Authorisation family parameterset.
+
+@return a CSubConAuthorisationGenericParamSet object pointer if successful,
+ otherwise leaves with a system error code.
+*/
+	{
+	STypeId typeId = STypeId::CreateSTypeId(CSubConAuthorisationGenericParamSet::EUid, CSubConAuthorisationGenericParamSet::EType);
 	return static_cast<CSubConAuthorisationGenericParamSet*>(CSubConParameterSet::NewL(typeId));
 	}
 
 CSubConAuthorisationGenericParamSet::CSubConAuthorisationGenericParamSet()
-	: CSubConGenericParameterSet(), 
+	: CSubConGenericParameterSet(),
 	iId(0)
 /** Empty CSubConAuthorisationGenericParamSet constructor
 */
@@ -381,4 +434,6 @@ void CSubConAuthorisationGenericParamSet::SetId(TInt aId)
 	{
 	iId = aId;
 	}
+
 #endif	// __CS_SUBCONPARAMS_INL__
+

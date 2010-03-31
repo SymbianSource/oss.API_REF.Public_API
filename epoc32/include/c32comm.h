@@ -1,9 +1,9 @@
 // Copyright (c) 1997-2009 Nokia Corporation and/or its subsidiary(-ies).
 // All rights reserved.
 // This component and the accompanying materials are made available
-// under the terms of the License "Symbian Foundation License v1.0" to Symbian Foundation members and "Symbian Foundation End User License Agreement v1.0" to non-members
+// under the terms of "Eclipse Public License v1.0"
 // which accompanies this distribution, and is available
-// at the URL "http://www.symbianfoundation.org/legal/licencesv10.html".
+// at the URL "http://www.eclipse.org/legal/epl-v10.html".
 //
 // Initial Contributors:
 // Nokia Corporation - initial contribution.
@@ -13,13 +13,6 @@
 // Description:
 //
 
-#ifndef SYMBIAN_C32_SERCOMMS_V2
-// PLEASE NOTE: This file is part of Version 2 of C32 - that is, the multi-threaded version.
-// The single-threaded C32 version of this file is in c32\Version1\SCOMM
-// All defect fixes should be applied to both versions where appropriate.
-// PLEASE NOTE: This comment is applicable to SercommsV2 but is surrounded by an "#ifndef"
-// to enable the automatic removal of this comment once non-C32 V2 code is removed.
-#endif
 
 
 #ifndef C32COMM_H
@@ -41,26 +34,6 @@ Defines the main interface to C32, RCommServ and RComm
 IMPORT_C TInt StartC32();
 IMPORT_C TInt StartC32WithCMISuppressions(const TDesC& aCMISuppressionList);
 
-/**
-C32 major version number.
-@internalAll
-*/
-const TUint KEC32MajorVersionNumber = 1;  
-/**
-C32 minor version number.
-@internalAll
-*/
-const TUint KEC32MinorVersionNumber = 0;  
-/**
-C32 build version number.
-@internalAll
-*/
-const TUint KEC32BuildVersionNumber = 605;
-
-/**
-@internalComponent
-*/
-const TDesC& KCommServerName(void);
 
 /** Specifies the mode in which a port is opened.
 
@@ -109,7 +82,7 @@ const TUint KCommBufferPartial = 0x0001;
 
 /**
 trace flags for debugging purposes
-@internalComponent
+@publishedAll
 */
 enum TC32Trace 
 	{
@@ -139,9 +112,9 @@ data to the serial driver. When a port is opened, the default is full buffering.
 struct TCommServerConfigV01
 	{
 	/** Buffering option: either KCommBufferFull or KCommBufferPartial */
-	TUint iBufFlags; ///< contains buffer flags e.g for partial read/write
+	TUint iBufFlags; //< contains buffer flags e.g for partial read/write
 	/** Size of server buffer if partial buffering is being used */
-	TUint iBufSize;  ///< size of the Tx/Rx buffer
+	TUint iBufSize;  //< size of the Tx/Rx buffer
 	};
 
 /** Package buffer for a server configuration object. TCommServerConfig is used 
@@ -170,13 +143,13 @@ const TInt KMaxPortName = 0x10;
 @publishedAll	
 @released
 */
-const TUint KCommResetRx = 0x00000001;  ///< to by used as flag by RComm::ResetBuffers
+const TUint KCommResetRx = 0x00000001;  //< to by used as flag by RComm::ResetBuffers
 /** Reset the transmit buffer 
 
 @publishedAll	
 @released
 */
-const TUint KCommResetTx = 0x00000002;  ///< to by used as flag by RComm::ResetBuffers
+const TUint KCommResetTx = 0x00000002;  //< to by used as flag by RComm::ResetBuffers
 /** Port name. Used by TSerialInfo::iName. 
 
 @publishedAll	
@@ -214,12 +187,12 @@ Notes:
 public:
 	/** Description of the CSY meant only for human reading. It
 	can be up to KMaxPortDescription (48) characters long. */
-	TPortDescription iDescription; ///< description of the port (CSY)
+	TPortDescription iDescription; //< description of the port (CSY)
 	/** The short name of the port (Port Prefix). This is used in calls to RComm::Open(). It can be up to 
 	KMaxPortName (i.e. 16) characters long. */
-	TPortName iName;               ///< name of the port
-	TUint iLowUnit;                ///< The lowest port number supported by the serial module
-	TUint iHighUnit;               ///< the highest port number supported by the serial module
+	TPortName iName;               //< name of the port
+	TUint iLowUnit;                //< The lowest port number supported by the serial module
+	TUint iHighUnit;               //< the highest port number supported by the serial module
 	};
 
 /**
@@ -357,10 +330,15 @@ public:
 	IMPORT_C TInt RComm::DebugInfo(TDes8& aDes);
 #endif
 private:
-	TPtr8 iSignalsNotification; ///< pointer to the signals to be changed during notification
-	TPtr8 iFlowNotification;    ///< pointer to the flow control to be changed during notification
+	TPtr8 iSignalsNotification; //< pointer to the signals to be changed during notification
+	TPtr8 iFlowNotification;    //< pointer to the flow control to be changed during notification
 	};
 	
+
+#ifndef SYMBIAN_ENABLE_SPLIT_HEADERS
+#include <c32comm_internal.h>
+#endif
+
 #include <c32comm.inl>
 
 #endif // C32COMM_H

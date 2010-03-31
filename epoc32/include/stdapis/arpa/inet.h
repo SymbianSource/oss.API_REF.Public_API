@@ -27,7 +27,6 @@
  * SUCH DAMAGE.
  * -
  * Portions Copyright (c) 1993 by Digital Equipment Corporation.
-* © Portions copyright (c) 2007 Symbian Software Ltd. All rights reserved.
  * Permission to use, copy, modify, and distribute this software for any
  * purpose with or without fee is hereby granted, provided that the above
  * copyright notice and this permission notice appear in all copies, and that
@@ -43,7 +42,8 @@
  * PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS
  * ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS
  * SOFTWARE.
- *
+ * 
+ * Portions Copyright (c) 2007 Nokia Corporation and/or its subsidiary(-ies). All rights reserved.
  *	@(#)inet.h	8.1 (Berkeley) 6/2/93
  *	From: Id: inet.h,v 8.5 1997/01/29 08:48:09 vixie Exp $
  * $FreeBSD: src/include/arpa/inet.h,v 1.25 2002/08/21 16:19:56 mike Exp $
@@ -58,7 +58,7 @@
 #include <sys/_types.h>
 
 /* Required for byteorder(3) functions. */
-#include <machine/endian.h>
+#include <stdapis/machine/endian.h>
 
 #ifdef __cplusplus
 extern "C" {

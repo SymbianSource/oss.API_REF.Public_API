@@ -1,9 +1,9 @@
 // Copyright (c) 1999-2009 Nokia Corporation and/or its subsidiary(-ies).
 // All rights reserved.
 // This component and the accompanying materials are made available
-// under the terms of the License "Symbian Foundation License v1.0" to Symbian Foundation members and "Symbian Foundation End User License Agreement v1.0" to non-members
+// under the terms of "Eclipse Public License v1.0"
 // which accompanies this distribution, and is available
-// at the URL "http://www.symbianfoundation.org/legal/licencesv10.html".
+// at the URL "http://www.eclipse.org/legal/epl-v10.html".
 //
 // Initial Contributors:
 // Nokia Corporation - initial contribution.
@@ -11,22 +11,18 @@
 // Contributors:
 //
 // Description:
+// smutsimparam.h
 //
-
+/**
+ * @file 
+ * @publishedAll
+ * @released
+ */
 #ifndef __SMUTSIMPARAM_H__
 #define __SMUTSIMPARAM_H__
 
 #include <msvapi.h>
 #include <smcmmain.h>
-
-/**
-The UID for the stream into which the SIM parameters are stored.
-
-@internalComponent
-@deprecated
-Should be moved to the cpp file for this class.
-*/
-const TUid KUidMsvSimSmsParams = {0x100081BC};
 
 class CMobilePhoneSmspList;
 class TSmsProgress;
@@ -38,7 +34,7 @@ This is used by CSmsSimParamOperation.
 
 @see CSmsSimParamOperation::ProgressL()
 
-@internalComponent
+@publishedAll
 @released
 */
 typedef TPckgBuf<TInt> TIntBuf;
@@ -59,7 +55,7 @@ CSmsClientMtm::InvokeAsyncFunctionL API should not be used for these operations.
 @publishedAll
 @released
 */
-class CSmsSimParamOperation : public CMsvOperation
+NONSHARABLE_CLASS (CSmsSimParamOperation) : public CMsvOperation
 	{
 public:
 

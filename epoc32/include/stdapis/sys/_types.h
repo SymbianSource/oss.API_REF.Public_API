@@ -30,7 +30,7 @@
 #define _SYS__TYPES_H_
 
 #include <sys/cdefs.h>
-#include <machine/_types.h>
+#include <stdapis/machine/_types.h>
 
 /*
  * Standard type definitions.
@@ -44,6 +44,11 @@ typedef	__uint64_t	__fsfilcnt_t;
 typedef	__uint32_t	__gid_t;
 typedef	__int64_t	__id_t;		/* can hold a gid_t, pid_t, or uid_t */
 typedef	__uint32_t	__ino_t;	/* inode number */
+
+#if defined(SYMBIAN_OE_LARGE_FILE_SUPPORT) && !defined(SYMBIAN_OE_NO_LFS)
+typedef __uint64_t	__ino64_t;	/* 64 bit inode number */
+#endif /* SYMBIAN_OE_LARGE_FILE_SUPPORT && !SYMBIAN_OE_NO_LFS */
+
 typedef	long		__key_t;	/* IPC key (for Sys V IPC) */
 typedef	__int32_t	__lwpid_t;	/* Thread ID (a.k.a. LWP) */
 typedef	__uint16_t	__mode_t;	/* permissions */

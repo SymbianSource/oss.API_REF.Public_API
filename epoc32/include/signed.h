@@ -16,11 +16,10 @@
 */
 
 
-
-
 /**
  @file 
- @internalAll
+ @publishedAll
+ @released
 */
  
 #ifndef __SIGNED_H__
@@ -38,8 +37,6 @@ class CDSAParameters;
 
 /**  Enumerates the identity of the algorithm.
  *
- * @publishedAll
- * @released
  */
 enum TAlgorithmId
 	{
@@ -54,14 +51,20 @@ enum TAlgorithmId
 	/** A MD5 algorithm. */
 	EMD5,
 	/** A SHA-1 algorithm. */
-	ESHA1
+	ESHA1,
+	/** A SHA-224 algorithm. */
+	ESHA224,
+	/** A SHA-256 algorithm. */
+	ESHA256,
+	/** A SHA-384 algorithm. */
+	ESHA384,
+	/** A SHA-512 algorithm. */
+	ESHA512
 	};
 
 class CValidityPeriod : public CBase
 /** The period for which the certificate is valid. 
 * 
-* @publishedAll
-* @released
 * @since v6.0 */
 	{
 public:
@@ -104,8 +107,6 @@ class CAlgorithmIdentifier : public CBase
 * An object of this type creates and owns a heap descriptor to contain the encoded 
 * parameters. 
 * 
-* @publishedAll
-* @released
 * @since v6.0 */
 	{
 public:
@@ -193,8 +194,6 @@ class CSigningAlgorithmIdentifier : public CBase
 * 
 * Implements an equality operator. 
 * 
-* @publishedAll
-* @released
 * @since v6.0 */
 	{
 public:
@@ -254,8 +253,6 @@ class CSubjectPublicKeyInfo : public CBase
 * 
 * It contains the algorithm ID, the encoded public key and the encoded parameters. 
 * 
-* @publishedAll
-* @released
 * @since v6.0 
 */
 //algorithm ID + encoded public key + encoded parameters
@@ -316,8 +313,6 @@ class CRSASignatureResult : public CBase
 *
 * @see TKeyFactory::RSASignatureResultL()
 *
-* @publishedAll
-* @released
 * @since v6.0 */
 	{
 public:
@@ -351,8 +346,6 @@ class TKeyFactory
 /** Constructs the public key objects used for signature verification from their 
 * encoded binary form. 
 * 
-* @publishedAll
-* @released
 * @since v6.0 */
 	{
 public:
@@ -397,8 +390,6 @@ class CSigningKeyParameters : public CBase
 * The DSA signing algorithm needs parameters as well as a key. Currently, this 
 * class only contains DSA parameters. 
 * 
-* @publishedAll
-* @released
 * @since v6.0 */
 	{
 public:
@@ -452,8 +443,6 @@ private:
 class CSignedObject : public CBase
 /** Base class for certificates. 
 * 
-* @publishedAll
-* @released
 * @since v6.0 */
 	{
 public:	
@@ -578,8 +567,6 @@ class CCertificate : public CSignedObject
 * 
 * This is a base class for classes that implement certificates of particular types. 
 * 
-* @publishedAll
-* @released
 * @since v6.0 */
 	{
 public:

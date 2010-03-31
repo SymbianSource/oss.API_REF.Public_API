@@ -1,9 +1,9 @@
 // Copyright (c) 1999-2009 Nokia Corporation and/or its subsidiary(-ies).
 // All rights reserved.
 // This component and the accompanying materials are made available
-// under the terms of the License "Symbian Foundation License v1.0" to Symbian Foundation members and "Symbian Foundation End User License Agreement v1.0" to non-members
+// under the terms of "Eclipse Public License v1.0"
 // which accompanies this distribution, and is available
-// at the URL "http://www.symbianfoundation.org/legal/licencesv10.html".
+// at the URL "http://www.eclipse.org/legal/epl-v10.html".
 //
 // Initial Contributors:
 // Nokia Corporation - initial contribution.
@@ -11,7 +11,15 @@
 // Contributors:
 //
 // Description:
-//
+// BIODB.H
+// 
+/**
+ * @file 
+ * BIO information file (BIF) database.
+ *
+ * @publishedAll
+ * @released
+ */
 
 #ifndef __BIODB_H__
 #define __BIODB_H__
@@ -19,13 +27,11 @@
 #include <bif.h>				// the bif reader
 #include <f32file.h>
 
+#ifndef SYMBIAN_ENABLE_SPLIT_HEADERS 
+#include <bifchangeobserver.h>
+#endif
+
 class CBifEntry;
-
-/** UID of the BIODB.DLL. */
-const TUid KUidBioDBDll ={0x10005542};	
-
-/** Buffer to hold BIF identification text. */
-typedef TBuf<KMaxBioIdText> TBioMsgIdText;
 
 /** BIO information file (BIF) database.
 
@@ -145,77 +151,5 @@ private:
 	CArrayPtrFlat<CBioInfoFileReader>* iBifReaders;
 
 };
-
-/** Callback interface implemented by classes to receive notifications of BIF files 
-changes from CBifChangeObserver. 
-
-@publishedPartner
-@released
-*/
-class MBifChangeObserver 
-	{
-public:
-	/** BIF change events. */
-	enum TBifChangeEvent
-		{
-		/** Unknown change. */
-		EBifChangeUnknown = 0,
-		/** BIF added. */
-		EBifAdded,
-		/** BIF deleted. */
-		EBifDeleted,
-		/** BIF changed. */
-		EBifChanged
-		};
-
-public: 
-	/** Called when a BIF change occurs.
-	
-	@param aEvent Change event type
-	@param aBioID BIO message type of changed BIF */
-	virtual void HandleBifChangeL(TBifChangeEvent aEvent, TUid aBioID)=0;
-	};
-
-/** Active object that watches for changes made to the installed BIF files. 
-
-@publishedPartner
-@released
-*/
-class CBifChangeObserver : public CActive
-	{
-public: 
-	IMPORT_C static CBifChangeObserver* NewL(MBifChangeObserver& aObserver, RFs& aFs);
-	IMPORT_C void Start();
-	~CBifChangeObserver();
-	
-	static void CleanupBifArray(TAny* aBifArray);
-
-private:
-	// from CActive
-	virtual void RunL();
-	virtual void DoCancel();
-
-private:
-	CBifChangeObserver(MBifChangeObserver& aObserver, RFs& aFs);
-	void ConstructL();
-	
-	void NotifyObserverL();
-	void WaitForFileNotification();
-	void DoRunL();
-	void CopyEntriesL(const CDir& aDir, CArrayFixFlat<TEntry>& aEntries);
-	TBool CompareReaders(const CBioInfoFileReader& aReader1, const CBioInfoFileReader& aReader2) const;
-	
-	TInt FindEntry(const CBifEntry& aBifEntry, const RPointerArray<CBifEntry>& aEntries, TInt& aIndex) const;
-	
-private:
-	MBifChangeObserver&	iChangeObserver;
-	RFs&			iFs;
-
-	RPointerArray<CBifEntry> iEntries;
-
-	CBIODatabase*	iBioDB;
-	RTimer	iTimer;
-	TInt iRetryCount;
-	};
 
 #endif	// __BIODB_H__

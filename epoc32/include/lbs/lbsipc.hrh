@@ -1,43 +1,23 @@
-/*
-* Copyright (c) 2002-2009 Nokia Corporation and/or its subsidiary(-ies).
-* All rights reserved.
-* This component and the accompanying materials are made available
-* under the terms of the License "Symbian Foundation License v1.0" to Symbian Foundation members and "Symbian Foundation End User License Agreement v1.0" to non-members
-* which accompanies this distribution, and is available
-* at the URL "http://www.symbianfoundation.org/legal/licencesv10.html".
-*
-* Initial Contributors:
-* Nokia Corporation - initial contribution.
-*
-* Contributors:
-*
-* Description:
-* Name        : lbsipc.hrh
-* Part of     : Mobile Location Framework/Location FW
-* Interface   : Location Acquisition API
-* Client-Server Request codes
-* Version     :
-* This material, including documentation and any related
-* computer programs, is protected by copyright controlled by
-* Nokia Corporation. All rights are reserved. Copying,
-* including reproducing, storing, adapting or translating, any
-* or all of this material requires the prior written consent of
-* Nokia Corporation. This material also contains confidential
-* information which may not be disclosed to others without the
-* prior written consent of Nokia Corporation.
-*
-*/
-
-
-
+// Copyright (c) 2007-2009 Nokia Corporation and/or its subsidiary(-ies).
+// All rights reserved.
+// This component and the accompanying materials are made available
+// under the terms of "Eclipse Public License v1.0"
+// which accompanies this distribution, and is available
+// at the URL "http://www.eclipse.org/legal/epl-v10.html".
+//
+// Initial Contributors:
+// Nokia Corporation - initial contribution.
+//
+// Contributors:
+// 
 
 /**
  @file
  @publishedAll
  @released
 */
- 
- // Following added to maintain compatibility with Symbian Loc Server	
+
+// Following added to maintain compatibility with Symbian Lbs	
 #define EPositioningCancelOffset		500
 #define EPositioningCompleteOffset		600
 #define IPC_LOCATION_START				1000
@@ -87,7 +67,7 @@ enum TPositionIpcId
     EPositionerGetLastKnownPosition,
     EPositionerNotifyPositionUpdate,
 
- 	// Following added to maintain compatibility with Symbian Loc Server	
+ 	// Following added to maintain compatibility with Symbian Lbs	
 	EPositionerOpenServer							= EPositionerRedundentOffset,
 	EPositionCustomCodesBegin,
 	EPositionCancelIpcsBegin,

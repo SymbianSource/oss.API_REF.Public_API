@@ -1,9 +1,9 @@
 // Copyright (c) 2003-2009 Nokia Corporation and/or its subsidiary(-ies).
 // All rights reserved.
 // This component and the accompanying materials are made available
-// under the terms of the License "Symbian Foundation License v1.0" to Symbian Foundation members and "Symbian Foundation End User License Agreement v1.0" to non-members
+// under the terms of "Eclipse Public License v1.0"
 // which accompanies this distribution, and is available
-// at the URL "http://www.symbianfoundation.org/legal/licencesv10.html".
+// at the URL "http://www.eclipse.org/legal/epl-v10.html".
 //
 // Initial Contributors:
 // Nokia Corporation - initial contribution.
@@ -19,6 +19,11 @@
 #include <lbsposition.h>
 #include <lbscommon.h>
 #include <lbsfields.h>
+
+#ifdef SYMBIAN_ENABLE_SPLIT_HEADERS
+class TPositionFieldIndex;
+#endif // SYMBIAN_ENABLE_SPLIT_HEADERS
+
 
 /**
 The default size for a HPositionGenericInfo position information buffer
@@ -222,7 +227,7 @@ public:
     /**
      * Used to store position information.
      * @param aFieldId Standard position field identifier. See _TPositionFieldId
-     * @param[in] aValue The parameter aValue can be of the type 
+     * @param [in] aValue The parameter aValue can be of the type 
      * TInt8, TInt16, TInt32, TInt64, TUint8, TUint16, TUint32, 
      * TReal32, TReal64, TTime, TTimeIntervalMicroSeconds, Des8, or Des16.
      * @return a symbian OS error code.
@@ -237,7 +242,7 @@ public:
     /**
      * Used to retrieve position information.
      * @param aFieldId Standard position field identifier. See _TPositionFieldId
-     * @param[out] aValue The parameter aValue can be of the type 
+     * @param [out] aValue The parameter aValue can be of the type 
      * TInt8, TInt16, TInt32, TInt64, TUint8, TUint16, TUint32, 
      * TReal32, TReal64, TTime, TTimeIntervalMicroSeconds, Des8, or Des16.
      * Panics with EPositionGenericInfoMismatchDataType if there is a 

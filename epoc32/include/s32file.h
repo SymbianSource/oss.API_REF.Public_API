@@ -1,9 +1,9 @@
 // Copyright (c) 1998-2009 Nokia Corporation and/or its subsidiary(-ies).
 // All rights reserved.
 // This component and the accompanying materials are made available
-// under the terms of the License "Symbian Foundation License v1.0" to Symbian Foundation members and "Symbian Foundation End User License Agreement v1.0" to non-members
+// under the terms of "Eclipse Public License v1.0"
 // which accompanies this distribution, and is available
-// at the URL "http://www.symbianfoundation.org/legal/licencesv10.html".
+// at the URL "http://www.eclipse.org/legal/epl-v10.html".
 //
 // Initial Contributors:
 // Nokia Corporation - initial contribution.
@@ -22,18 +22,9 @@
 #include <s32stor.h>
 #endif
 
-#ifndef DEFAULT_FILE_BUF_SIZE
-	#define DEFAULT_FILE_BUF_SIZE 4096
-#else
-	#if DEFAULT_FILE_BUF_SIZE < 1536
-		#error "DEFAULT_FILE_BUF_SIZE macro value can't be less than 1536"
-	#endif
+#ifndef SYMBIAN_ENABLE_SPLIT_HEADERS 
+	#include <s32filebufsize.h>
 #endif
-/** 
-The default size of the file buffer. 
-@internalComponent
-*/
-const TInt KDefaultFileBufSize=DEFAULT_FILE_BUF_SIZE;
 
 template <class T>
 class TCapture;

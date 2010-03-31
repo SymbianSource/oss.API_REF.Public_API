@@ -1,9 +1,9 @@
 // Copyright (c) 2004-2009 Nokia Corporation and/or its subsidiary(-ies).
 // All rights reserved.
 // This component and the accompanying materials are made available
-// under the terms of the License "Symbian Foundation License v1.0" to Symbian Foundation members and "Symbian Foundation End User License Agreement v1.0" to non-members
+// under the terms of "Eclipse Public License v1.0"
 // which accompanies this distribution, and is available
-// at the URL "http://www.symbianfoundation.org/legal/licencesv10.html".
+// at the URL "http://www.eclipse.org/legal/epl-v10.html".
 //
 // Initial Contributors:
 // Nokia Corporation - initial contribution.
@@ -14,8 +14,6 @@
 // Constants for use in storing comms data via CommsDat
 // 
 //
-
-
 
 /**
  @file
@@ -31,75 +29,6 @@
 #include <e32property.h>
 
 
-namespace Meta
-    {
-
-	/**
-	Visitor factory functions
-	@internalComponent
-	*/
-    MMetaType* TMDBNumBaseVisitorFactoryL(const TAny* mem, const TAny* data);
-   	/**     
-   	@internalComponent
-   	*/
-    MMetaType* TMDBTextBaseVisitorFactoryL(const TAny* mem, const TAny* data);
-    /**     
-   	@internalComponent
-   	*/
-    MMetaType* TMDBBinBaseVisitorFactoryL(const TAny* mem, const TAny* data);
-    /**     
-   	@internalComponent
-   	*/
-    MMetaType* TMDBDeprecatedVisitorFactoryL(const TAny* mem, const TAny* data);
-	/**
-    @publishedPartner
-    @released
-    */
-    IMPORT_C MMetaType* TMDBNumVisitorFactoryL(const TAny* mem, const TAny* data);
-    /**
-    @publishedPartner
-    @released
-    */
-    IMPORT_C MMetaType* TMDBLinkNumVisitorFactoryL(const TAny* mem, const TAny* data);
-    /**
-    @publishedPartner
-    @released
-    */
-    IMPORT_C MMetaType* TMDBTextVisitorFactoryL(const TAny* mem, const TAny* data);
-    /**
-    @publishedPartner
-    @released
-    */
-    IMPORT_C MMetaType* TMDBMedTextVisitorFactoryL(const TAny* mem, const TAny* data);
-    /**
-    @publishedPartner
-    @released
-    */
-    IMPORT_C MMetaType* TMDBLongTextVisitorFactoryL(const TAny* mem, const TAny* data);
-    /**
-    @publishedPartner
-    @released
-    */
-    IMPORT_C MMetaType* TMDBBinVisitorFactoryL(const TAny* mem, const TAny* data);
-    /**
-    @publishedPartner
-    @released
-    */
-    IMPORT_C MMetaType* TMDBLinkVisitorFactoryL(const TAny* mem, const TAny* data);
-    /**
-    @publishedPartner
-    @released
-    */
-    IMPORT_C MMetaType* TMDBRecordSetVisitorFactoryL(const TAny* mem, const TAny* data);
-    /**
-    @publishedPartner
-    @released
-    */
-    IMPORT_C MMetaType* TMDBGenericRecordVisitorFactoryL(const TAny* mem, const TAny* data);
-
-    }
-
-
 namespace CommsDat
 {
 
@@ -107,6 +36,7 @@ namespace CommsDat
 Use this constant for Debug panic calls
 
 @publishedAll
+@released
 */
 _LIT(KCommsDatName,"CommsDat");
 
@@ -114,42 +44,48 @@ _LIT(KCommsDatName,"CommsDat");
 Use this constant for Debug panic calls
 
 @publishedAll
+@released
 */
 enum
 	{
 	ECommitBeforeOpenTransaction = 1,
 	ERollBackBeforeOpenTransaction = 2,
 	ESessionClosed = 3,
-    EWrongAPPrioritySelPolRecord = 4,
-    EWrongIAPServiceType = 5
+	ENotifierNotCreated = 4,
+    EWrongAPPrioritySelPolRecord = 5,
+    EWrongIAPServiceType = 6,
+    EInvalidIAP = 7
 	};
 	
 using namespace Meta;
 
-//////////////////////////////////////////////////
+//
 // VERSION INFO
 //
-
-/**
-Use this constant when starting a session to ask to use the latest version of the data set
-Do not use this constant if want option to keep using particular version after update
-Using this constant will require the client to keep up to date with any changes in the current dataset
-Use specific version constants to avoid changing until a deprecated version is no longer supported.
-
-@publishedAll
-*/
-#define KCDLatestVersion            TVersion(0,0,0)
-
+/* Please note:
+ * ------------ 
+ * Concrete schema version should be used in the client applicaiton (curently available
+ * KCDVersion1_1 or KCDVersion1_2). 
+ * 
+ * Until the 9.5 release there was only one schema version, KCDVersion1_1, which was 
+ * available. From the 9.5 relase there is a possibility to use other schema version,
+ * KCDVersion1_2. Important that it's still possible to use the KCVersion1_1 
+ * constant, and use the deprecated records/tables, - CommsDat will invoke it's 
+ * mapping functionality in this case to be backward compatible. 
+ * 
+ * For backward compatibility reason the KCDLatestVersion and KCDCurrentVersion 
+ * constants are mapped to the KCDVersion1_1 constant. These constants are 
+ * deprecated.
+ * 
+ * ! PLEASE USE EXPLICIT SCHEMA VERSION WHEN CREATING A COMMSDAT SESSION OBJECT !
+ */
 
 /**
 Versions of the dataset in use
-NB These versions will change as data set is updated
-All versions apart from the one defined as KCDCurrentVersion are deprecated
-*/
 
-/*
 Initial Version 
 @publishedAll
+@released
 */
 
 #define KCDVersion1_1               TVersion(1,1,1)
@@ -159,32 +95,32 @@ Initial Version
 Some elements in Version KCDVersion1_1 now deprecated
 These elements will be mapped if the client starts a session with KCDVersion1_1
 They will be ignored or rejected as not supported if client starts a session with 
-KCDVersion1_2 or KCDLatestVersion
+KCDVersion1_2
 
 @publishedAll
+@released
 */
 #define KCDVersion1_2               TVersion(1,2,1)
 #endif
+
 /**
-The version of the dataset supported by default
-NB This version will change as data set is updated
+For BC reasons this constant maps to the KCDVersion1_1 dataschema version.
 
 @publishedAll
+@deprecated
 */
-#ifdef SYMBIAN_NON_SEAMLESS_NETWORK_BEARER_MOBILITY
+#define KCDLatestVersion            KCDVersion1_1
 
-#define KCDCurrentVersion           KCDVersion1_2
+/**
+For BC reasons this constant maps to the KCDVersion1_1 dataschema version.
 
-#else
-
+@publishedAll
+@deprecated
+*/
 #define KCDCurrentVersion           KCDVersion1_1
 
-#endif
 
-
-
-
-////////////////////////////////////////////////////
+//
 //  Attribute Flags
 //
 
@@ -195,6 +131,7 @@ When they are CLEARED from the mask, the attribute is ignored
 By default attributes are obeyed.
 
 @publishedAll
+@released
 */
 typedef enum
 {
@@ -208,56 +145,7 @@ typedef enum
                                        //                                   Policed at storage server API with platsec capability
 } TCDAttributeFlags;
 
-
-/////////////////////////////////////////////////////
-// Field types
 //
-/**
-@publishedPartner
-@released
-*/
-typedef enum
-{
-	EText,          ///< Text field - descriptor with a maximum length of 50 unicode characters.
- 	EDesC8,         ///< Buffer of TUInt8. Maximum length is 1024 * 8. 
- 	EUint32,		///< Unsigned 32 bit integer field.
- 	EInt,			///< Signed integer field
- 	EBool,			///< Boolean field
- 	EMedText,       ///< Text field - descriptor with a maximum length of 256 unicode characters.
- 	ELongText, 		///< Text field - descriptor with a maximum length of 1024 unicode characters.
-    ELink			///< This field is an integer that identifies a record in another table.
-
-} TCDFieldValueTypes;
-
-/**
-@publishedPartner
-@released
-*/
-const TInt KMaxTextLength		= 50; 		///< Specifies the max length (characters) for short text.
-/**
-@publishedPartner
-@released
-*/
-const TInt KMaxMedTextLength	= 255; 		///< Specifies the max length (characters) for medium text.
-/**
-@publishedPartner
-@released
-*/
-const TInt KMaxLongTextLength	= 1024;		///< Specifies the max length (characters) for long text.
-/**
-@publishedPartner
-@released
-*/
-const TInt KMaxNumLength		= 1;		///< Specifies the max length for an integer and a boolean.
-
-// Length override on a normal text field
-/**
-@publishedPartner
-@released
-*/
-const TInt KShortTextLength		= 32;
-
-////////////////////////////////////////////////////
 // Masks for Element Type info
 //
 
@@ -266,6 +154,7 @@ const TInt KShortTextLength		= 32;
 Mask to use to hide attribute reserved bits
 
 @publishedAll
+@released
 */
 #define KCDMaskHideAttrAndRes       0xffffff00
 
@@ -274,6 +163,7 @@ Mask to use to hide attribute reserved bits
 Mask to use to show reserved bits
 
 @publishedAll
+@released
 */
 #define KCDMaskShowRes              0x8000000f
 
@@ -282,6 +172,7 @@ Mask to use to show reserved bits
 Mask to use to hide reserved bits
 
 @publishedAll
+@released
 */
 #define KCDMaskHideRes              0x7ffffff0
 
@@ -290,6 +181,7 @@ Mask to use to hide reserved bits
 T x x   Mask to show Table Type info
 
 @publishedAll
+@released
 */
 #define KCDMaskShowRecordType       0x7f800000
 
@@ -298,6 +190,7 @@ T x x   Mask to show Table Type info
 x C x   Mask to show Column Type 
 
 @publishedAll
+@released
 */
 #define KCDMaskShowFieldType        0x007f0000
 
@@ -306,6 +199,7 @@ x C x   Mask to show Column Type
 T C x   Mask to show Table and Column Type 
 
 @publishedAll
+@released
 */
 #define KCDMaskShowType             0x7fff0000
 
@@ -314,6 +208,7 @@ T C x   Mask to show Table and Column Type
 T x R   Mask to show Record id
 
 @publishedAll - don't use this.  Replace with KCDMaskShowRecordId
+@deprecated
 */
 #define KCDMaskShowInstance         0x0000ff00
 
@@ -322,6 +217,7 @@ T x R   Mask to show Record id
 T x R   Mask to show Record id
 Use in place of KCDMaskShowInstance
 @publishedAll
+@released
 */
 #define KCDMaskShowRecordId         0x0000ff00
 
@@ -330,21 +226,16 @@ Use in place of KCDMaskShowInstance
 T C R   Mask to show Field instance without attributes or reserved bits
 
 @publishedAll
+@released
 */
 #define KCDMaskShowField            0x7fffff00
 
 
 /**
-T C R   Mask for Central Repository to find a single field
-
-@internalComponent
-*/
-#define KCDMaskFindSingleField		0x7FFFFFFE
-
-/**
 T x R   Mask to show Record Type and Record Id without column type, attributes or reserved bits
 
 @publishedAll
+@released
 */
 #define KCDMaskShowRecordTypeAndId  (KCDMaskShowRecordType | KCDMaskShowRecordId)
 
@@ -352,6 +243,7 @@ T x R   Mask to show Record Type and Record Id without column type, attributes o
 x C R   Mask to show Column Type and Record Id without Record type, attributes or reserved bits
 
 @publishedAll
+@released
 */
 #define KCDMaskShowColumnTypeAndRecordId  (KCDMaskShowFieldType |  KCDMaskShowRecordId)
 
@@ -360,40 +252,15 @@ x C R   Mask to show Column Type and Record Id without Record type, attributes o
 Mask to show Attributes
 
 @publishedAll
-*/
-#define KCDMaskShowAttributes       0x000000f0
-
-
-/**
-Mask for all attribute settings that apply to read and write operations
-see TCDAttributeFlags
-
-  ECDNoWriteButDelete = 0x0000010                             
-  ECDHidden           = 0x0000020
-  ECDPrivate          = 0x0000040
-  ECDProtectedWrite   = 0x0000080
-
-@publishedPartner
 @released
 */
-#define KCDMaskShowReadWriteAttributes  (ECDNoWriteButDelete |ECDHidden | ECDPrivate | ECDProtectedWrite)
-
-/**
-Mask for all attribute settings that apply to read operations
-see TCDAttributeFlags
-                          
-  ECDHidden           = 0x0000020
-  ECDPrivate          = 0x0000040
-  
-@publishedPartner
-@released  
-*/
-#define KCDMaskShowReadAttributes       (ECDHidden| ECDPrivate)     
+#define KCDMaskShowAttributes       0x000000f0
 
 /**
 Mask to use to show attributes and reserved bits
 
 @publishedAll
+@released
 */
 #define KCDMaskShowAttrAndRes       0x000000ff
 
@@ -402,6 +269,7 @@ Mask to use to show attributes and reserved bits
 Id for the Initial record in a record set
 
 @publishedAll
+@released
 */
 #define KCDInitialRecordId			0x00000100
 
@@ -410,6 +278,7 @@ Id for the Initial record in a record set
 Id for the Initial table in the database
 
 @publishedAll
+@released
 */
 #define KCDInitialTableId			0x00800000
 
@@ -419,6 +288,7 @@ Id for the Initial User defined table in the database
 clients have 64 table ids available to them
 
 @publishedAll
+@released
 */
 #define KCDInitialUDefRecordType   0x5F800000
 
@@ -427,6 +297,7 @@ clients have 64 table ids available to them
 Id for the Last User defined table in the database.
 
 @publishedAll
+@released
 */
 #define KCDLastUDefRecordType      0x7F800000
 
@@ -435,6 +306,7 @@ Id for the Last User defined table in the database.
 Id for the Initial column in a record set
 
 @publishedAll
+@released
 */
 #define KCDInitialColumnId			0x00010000
 
@@ -443,6 +315,7 @@ Id for the Initial column in a record set
 T C 0   location for default field values
 
 @publishedAll
+@released
 */
 #define KCDDefaultRecord            0x00000000
 
@@ -451,42 +324,9 @@ T C 0   location for default field values
 Combine with table id and Column id to give the location of column type info
 
 @publishedAll
+@released
 */
 #define KCDColumnTypeInfo           0x0000ff00
-
-/**
-Combine with table id to give the location of table type info
-
-@publishedPartner
-@released
-*/
-#define KCDTableTypeInfo            0x007fff00
-
-/*
-Combine with table id to give location of record type info
-*/
-//#define KCDRecordTypeInfo			0x007f0000
-
-
-/**
-Use to request allocation of a new table id.
-Should only be called when creating a new user-defined table
-
-@publishedPartner
-@released
-*/
-#define KCDNewTableRequest          0x007fff00
-
-
-/**
-Combine with table id to give request for a new column in a table.
-The table must already exist.  New columns should only normally be 
-requested when creating a new user-defined table
-
-@publishedPartner
-@released
-*/
-#define KCDNewColumnRequest			0x0000ff01
 
 
 
@@ -495,6 +335,7 @@ Combine with table id to give request for a new record in a table.
 The table must already exist.
 
 @publishedAll
+@released
 */
 #define KCDNewRecordRequest			0x807f0001
 
@@ -503,8 +344,9 @@ The table must already exist.
 Combined with CMDBField, it finds the TableId given the table name
 
 @publishedAll
+@released
 */
-#define KCDMaskGenericTableName			KCDNewTableRequest
+#define KCDMaskGenericTableName			0x007fff00
 
 
 
@@ -512,6 +354,7 @@ Combined with CMDBField, it finds the TableId given the table name
 Maximum number of tables that can be created in one repository
 
 @publishedAll
+@released
 */
 #define KCDMaxTables                254
 
@@ -520,6 +363,7 @@ Maximum number of tables that can be created in one repository
 Maximum number of User defined tables that can be created in one repository
 
 @publishedAll
+@released
 */
 #define KCDMaxUserDefTables         64
 
@@ -528,6 +372,7 @@ Maximum number of User defined tables that can be created in one repository
 Maximum number of columns that can be created in one table
 
 @publishedAll
+@released
 */
 #define KCDMaxColumns               126  
 
@@ -536,6 +381,7 @@ Maximum number of columns that can be created in one table
 Maximum number of records that can be stored in one table
 
 @publishedAll
+@released
 */
 #define KCDMaxRecords               254
 
@@ -544,175 +390,15 @@ Maximum number of records that can be stored in one table
 Maximum number of characters in a field name
 
 @publishedAll
+@released
 */
 #define KCDMaxFieldNameLength        64
-
-
-
-/**
-Flag to indicate change in field
-Not for use in database.  Just with fields
-
-@internalComponent
-*/
-#define KCDChangedFlag      0x00000001
-
-/**
-@publishedPartner
-@released
-*/
-#define KCDMaxRecordId     0x0000ff00
-/**
-@publishedPartner
-@released
-*/
-#define KCDMaxColumnId     0x007f0000
-/**
-@publishedPartner
-@released
-*/
-#define KCDMaxTableId      0x7f800000
-
-
-
-/*
-Mask to show only basic type info, 
-Masks out all info on links
-@internalComponent
-*/
-#define KCDShowBasicTypeInfo  0x000000ff
-/**
-Typedefs for convenience in meta data definitions
-@internalComponent
-*/
-using namespace Meta;
-
-template <class TYPE> class TMDBVisitor;
-class TMDBRecordLinkVisitor;
-class TMDBRecordSetVisitor;
-class TMDBGenericRecordVisitor;
-class CMDBElement;
-
-/*
-Visitors for field values
-*/
-
-/**
-Typedefs for convenience in meta data definitions
-@internalComponent
-*/
- typedef TMDBVisitor<TInt>                           TMDBNum;
-
-/**
-Typedefs for convenience in meta data definitions
-@internalComponent
-*/	
- typedef TMDBVisitor<TInt>                           TMDBBool;
- 
-/**
-Typedefs for convenience in meta data definitions
-@internalComponent
-*/	
- typedef TMDBVisitor<TDesC>                          TMDBDes;	
- 
-/**
-Typedefs for convenience in meta data definitions
-@internalComponent
-*/
- typedef TMDBVisitor<TDesC8>                         TMDBDes8;	
-
-/*
-Visitors for containers
-*/
-
-/**
-Typedefs for convenience in meta data definitions
-@internalComponent
-*/
-typedef TMDBRecordLinkVisitor						TMDBLink;	
-
-/**
-Typedefs for convenience in meta data definitions
-@internalComponent
-*/		
-typedef TMDBRecordSetVisitor                        TMDBRecordSet;
-
-/**
-Typedefs for convenience in meta data definitions
-@internalComponent
-*/		
-typedef TMDBGenericRecordVisitor                    TMDBGenRecord;		
-
-/** UIDs for CommDB event notification */
-/**
-@publishedPartner
-@released
-*/
-const TUid KUidCommDbNotificationEvent = {0x1020762E};
-/**
-@publishedPartner
-@released
-*/
-const TUid KUidCommsDatStatusEvent = {KUidSystemCategoryValue};
-/**
-@publishedPartner
-@released
-*/
-const TInt KCommsDatStatusEventCommitSeq = 0x1020762F;
-
-/**
-Metadatabase container type ids
-
-@internalComponent
-*/
-#define KCDTIdMDBElement            123
-
-/**
-Metadatabase container type ids
-
-@internalComponent
-*/
-#define KCDTIdMDBNumFieldBase       223
-
-/**
-Metadatabase container type ids
-
-@internalComponent
-*/
-#define KCDTIdMDBTextFieldBase      224
-
-/**
-Metadatabase container type ids
-
-@internalComponent
-*/
-#define KCDTIdMDBBinFieldBase       225
-
-/**
-Metadatabase container type ids
-
-@internalComponent
-*/
-#define KCDTIdMDBRecordLinkBase     323
-
-/**
-Metadatabase container type ids
-
-@internalComponent
-*/
-#define KCDTIdMDBRecordSetBase      523
-
-/**
-Metadatabase container type ids
-
-@internalComponent
-*/
-#define KCDTIdMDBGenericRecord      585
 
 
 /**
 Macro for interaction with netmeta
 @publishedAll
+@released
 */
 #define X_REGISTER_ATTRIBUTE( thisMetaClass, var, metaType ) \
  { _FOFF( thisMetaClass, var ), Meta::metaType##VisitorFactoryL },
@@ -728,6 +414,7 @@ Macro for interaction with netmeta
 /**
 Macros used to implement virtual functions from MMetaData interface and construct the v data table
 @publishedAll
+@released
 */
 #define EXP_START_ATTRIBUTE_TABLE( thisMetaClass, uid, typeId ) \
  EXPORT_C Meta::SVDataTableEntry const* thisMetaClass::GetVDataTable() const { return &iVDataTable[0]; };	\
@@ -737,9 +424,36 @@ Macros used to implement virtual functions from MMetaData interface and construc
  { uid, reinterpret_cast<Meta::TMetaTypeNewL>(typeId) },
 
 
-#define END_ATTRIBUTE_TABLE_BASE_N( baseMetaClass, baseId, entry ) \
- { (TInt)((TAny*)(baseMetaClass::GetVDataTableStatic() + entry)), NULL }};
+/**
+@publishedAll
+@released
+*/
+typedef enum
+{
+	EText,          //< Text field - descriptor with a maximum length of 50 unicode characters.
+ 	EDesC8,         //< Buffer of TUInt8. Maximum length is 1024 * 8. 
+ 	EUint32,		//< Unsigned 32 bit integer field.
+ 	EInt,			//< Signed integer field
+ 	EBool,			//< Boolean field
+ 	EMedText,       //< Text field - descriptor with a maximum length of 256 unicode characters.
+ 	ELongText, 		//< Text field - descriptor with a maximum length of 1024 unicode characters.
+    ELink			//< This field is an integer that identifies a record in another table.
 
+} TCDFieldValueTypes;
 
+/**
+Flag to indicate change in field
+Not for use in database.  Just with fields
+
+@publishedAll
+*/
+#define KCDChangedFlag      0x00000001
+    
 } //end namespace CommsDat
+
+#ifndef SYMBIAN_ENABLE_SPLIT_HEADERS
+#include <commsdat_internal.h>
+#include <commsdat_partner.h>
+#endif
+
 #endif

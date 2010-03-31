@@ -2,9 +2,9 @@
 * Copyright (c) 1997-1999 Nokia Corporation and/or its subsidiary(-ies).
 * All rights reserved.
 * This component and the accompanying materials are made available
-* under the terms of the License "Symbian Foundation License v1.0" to Symbian Foundation members and "Symbian Foundation End User License Agreement v1.0" to non-members
+* under the terms of "Eclipse Public License v1.0"
 * which accompanies this distribution, and is available
-* at the URL "http://www.symbianfoundation.org/legal/licencesv10.html".
+* at the URL "http://www.eclipse.org/legal/epl-v10.html".
 *
 * Initial Contributors:
 * Nokia Corporation - initial contribution.
@@ -37,6 +37,7 @@
 
 class CEikHotKeyTable;
 class CEikMenuBarExtension;
+class CAknItemActionMenu;
 
 
 /**
@@ -567,6 +568,52 @@ public: // new functions
     * @param aMenuType One of values of CEikMenuBar::TMenuType enumeration. 
     */
     IMPORT_C void SetMenuType(TMenuType aMenuType);
+    
+    /**
+    * Gets type of the menu. 
+    * 
+    * @since S60 5.2
+    * @return the type defined in CEikMenuBar::TMenuType of menu.
+    */    
+    IMPORT_C CEikMenuBar::TMenuType GetMenuType() const;    
+
+    /**
+     * Returns ETrue when item specific commands are enabled in menu
+     * bar (main pane collection has a highlight) and EFalse when they are
+     * disabled (main pane collection does not have a highlight). 
+     * 
+     * @since S60 5.2
+     * @return ETrue when item specific commands are enabled.
+     */
+    IMPORT_C TBool ItemSpecificCommandsEnabled() const;
+    
+    /**
+     * Sets item action menu instance to menu bar.
+     * 
+     * @internal
+     * @since S60 v5.2
+     * @param aItemActionMenu Pointer to item action menu.
+     */
+    void SetItemActionMenu( CAknItemActionMenu* aItemActionMenu );
+
+    /**
+     * Provides pointer to item action menu.
+     * 
+     * @internal
+     * @since S60 v5.2
+     * @return Pointer to item action menu.
+     */
+    CAknItemActionMenu* ItemActionMenu() const;
+
+    /**
+     * Populates item action menu.
+     * 
+     * @internal
+     * @since S60 v5.2
+     * @param aItemActionMenu Reference to item action menu.
+     * @return Created menu pane. Ownership transfers to caller.
+     */
+    CEikMenuPane* PopulateItemActionMenuL( CAknItemActionMenu& aItemActionMenu );
 
 private: // from MAknIntermediateState
 

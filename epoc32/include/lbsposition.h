@@ -1,9 +1,9 @@
 // Copyright (c) 2003-2009 Nokia Corporation and/or its subsidiary(-ies).
 // All rights reserved.
 // This component and the accompanying materials are made available
-// under the terms of the License "Symbian Foundation License v1.0" to Symbian Foundation members and "Symbian Foundation End User License Agreement v1.0" to non-members
+// under the terms of "Eclipse Public License v1.0"
 // which accompanies this distribution, and is available
-// at the URL "http://www.symbianfoundation.org/legal/licencesv10.html".
+// at the URL "http://www.eclipse.org/legal/epl-v10.html".
 //
 // Initial Contributors:
 // Nokia Corporation - initial contribution.
@@ -17,7 +17,7 @@
 #define __LBSPOSITION_H__
 
 #include <e32std.h>
-#include <lbs/lbsvariant.h>
+#include <lbsvariant.h>
 
 /**
 @publishedAll
@@ -75,11 +75,11 @@ private:
 	void NormalizeCoordinate();
 
 protected:
-	/** Latitude, defaults to WGS-84 format. */
+	/** Latitude, defaults to WGS-84 format. Represented in degree. */
 	TReal64 iLatitude;
-	/** Longitude, defaults to WGS-84 format. */
+	/** Longitude, defaults to WGS-84 format. Represented in degree. */
 	TReal64 iLongitude;
-	/** Altitude, defaults to WGS-84 format. */
+	/** Altitude, defaults to WGS-84 format. Represented in meters. */
 	TReal32 iAltitude;
 	/** The ID of the datum the coordinate is in, defaults to WGS-84 format. */
 	TPositionDatumId iDatum;
@@ -200,36 +200,49 @@ public:
 	IMPORT_C TCourse();
 
 	IMPORT_C TReal32 Speed() const;
+	IMPORT_C TReal32 VerticalSpeed() const;
 	IMPORT_C TReal32 Heading() const;
     IMPORT_C TReal32 Course() const;
-	IMPORT_C TReal32 SpeedAccuracy() const;
-	IMPORT_C TReal32 HeadingAccuracy() const;
+    
+    IMPORT_C TReal32 SpeedAccuracy() const;
+    IMPORT_C TReal32 VerticalSpeedAccuracy() const;
+    IMPORT_C TReal32 HeadingAccuracy() const;
     IMPORT_C TReal32 CourseAccuracy() const;
-
-	IMPORT_C void SetSpeed(TReal32 aSpeed);
-	IMPORT_C void SetHeading(TReal32 aHeading);
+    
+	
+    IMPORT_C void SetSpeed(TReal32 aSpeed);
+    IMPORT_C void SetVerticalSpeed(TReal32 aVerticalSpeed);
+    IMPORT_C void SetHeading(TReal32 aHeading);
 	IMPORT_C void SetSpeedAccuracy(TReal32 aSpeedAccuracy);
+	IMPORT_C void SetVerticalSpeedAccuracy(TReal32 aVerticalSpeedAccuracy);
 	IMPORT_C void SetHeadingAccuracy(TReal32 aHeadingAccuracy);
 	IMPORT_C void SetCourse(TReal32 aCourse);
 	IMPORT_C void SetCourseAccuracy(TReal32 aCourseAccuracy);
+	
+	
+
 
 protected:
 	/** Speed, in metres per second. */
 	TReal32 iSpeed;
-	/** Heading, in degrees. */
+	/** True Heading, in degrees. */
 	TReal32 iHeading;
 	/** Speed accuracy, in metres per second. */
 	TReal32 iSpeedAccuracy;
 	/** Heading accuracy, in degrees. */
 	TReal32 iHeadingAccuracy;
-	/** Course, in degrees. */
+	/** True Course, in degrees. */
 	TReal32 iCourse;
 	/** Course accuracy, in degrees. */
 	TReal32 iCourseAccuracy;
-
+	/** Vertical Speed, in metres per second. */
+	TReal32 iVerticalSpeed;
+	/** Vertical Speed accuracy, in metres per second. */
+	TReal32 iVerticalSpeedAccuracy;
+	
 private:
 	/** Unused variable for future expansion. */
-	TUint8 iReserved[__LBS_TCOURSE_RESERVED_SIZE];
+	TUint8 iReserved[8];
 	};
 
 #endif //__LBSPOSITION_H__

@@ -25,13 +25,13 @@
  * SUCH DAMAGE.
  *
  * $FreeBSD: src/include/inttypes.h,v 1.8 2002/09/22 08:06:45 tjr Exp $
- * © Portions copyright (c) 2007 Symbian Software Ltd. All rights reserved.
+ * © Portions Copyright (c) 2007 Nokia Corporation and/or its subsidiary(-ies). All rights reserved.
  */
 
 #ifndef _INTTYPES_H_
 #define	_INTTYPES_H_
 
-#include <machine/_inttypes.h>
+#include <stdapis/machine/_inttypes.h>
 #include <sys/stdint.h>
 
 #include <_ansi.h>

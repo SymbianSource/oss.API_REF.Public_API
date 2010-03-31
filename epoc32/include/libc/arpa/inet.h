@@ -1,6 +1,7 @@
 /* INET.H
  * 
- * Portions copyright (c) 1993-2006 Symbian Software Ltd.  All rights reserved.
+ * Portions Copyright (c) 1993-2006 Nokia Corporation and/or its subsidiary(-ies).
+ * All rights reserved.
  */
 
 /** @file

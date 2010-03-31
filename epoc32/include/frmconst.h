@@ -1,44 +1,26 @@
-// Copyright (c) 1997-2009 Nokia Corporation and/or its subsidiary(-ies).
-// All rights reserved.
-// This component and the accompanying materials are made available
-// under the terms of the License "Symbian Foundation License v1.0" to Symbian Foundation members and "Symbian Foundation End User License Agreement v1.0" to non-members
-// which accompanies this distribution, and is available
-// at the URL "http://www.symbianfoundation.org/legal/licencesv10.html".
-//
-// Initial Contributors:
-// Nokia Corporation - initial contribution.
-//
-// Contributors:
-//
-// Description:
-// FOR INFORMATION ONLY (CONTAINS PANIC NUMBERS, ETC.) - NOT PART OF INTERFACE
-// 
-//
+/*
+* Copyright (c) 1997-2009 Nokia Corporation and/or its subsidiary(-ies).
+* All rights reserved.
+* This component and the accompanying materials are made available
+* under the terms of "Eclipse Public License v1.0"
+* which accompanies this distribution, and is available
+* at the URL "http://www.eclipse.org/legal/epl-v10.html".
+*
+* Initial Contributors:
+* Nokia Corporation - initial contribution.
+*
+* Contributors:
+*
+* Description: 
+* FOR INFORMATION ONLY (CONTAINS PANIC NUMBERS, ETC.) - NOT PART OF INTERFACE
+*
+*/
+
 
 #ifndef __FRMCONST_H__
 #define __FRMCONST_H__
 
 #include <w32std.h>
-
-/** 
-Visible versions of control characters.
-@internalComponent
-*/
-const TText KVisibleParagraphBreak = 0x00B6;		// paragraph sign (pilcrow)
-const TText KVisibleLineBreak = 0x2193;				// down arrow
-const TText KVisibleNonBreakSpace = 0x00B0;			// degree sign
-const TText KVisiblePotentialHyphen = 0x00AC;		// not sign
-const TText KVisibleNonBreakHyphen = 0x007E;		// spacing tilde
-const TText KVisibleSpace = 0x00B7;					// middle dot
-const TText KVisibleTab = 0x2192;					// right arrow
-const TText KVisiblePicture = 0x25A3;				// white square containing small black square
-
-/**
-Control characters to allow or inhibit line breaks.
-@internalComponent
-*/
-const TText KZeroWidthSpace = 0x200B;
-const TText KZeroWidthNoBreakSpace = 0xFEFF;
 
 /**
 @publishedAll
@@ -202,46 +184,9 @@ enum TFormPanic
 	EFSystemConstantsChanged	
 	};
 
-/**
-@internalComponent
-*/
-void FormPanic(TFormPanic aPanic);
-
-
-enum TCursorMove
-/**
-This enum holds all the allowed movements of the document cursor by this
-cursor positioning framework.
-@publishedPartner
-@released
-*/
-	{
-	/** No cursor movement 
-	*/
-	ECursNoMovement,
-    /** Single character cursor movement to the left 
-    */
-    ECursLeft,
-    /** Single character cursor movement to the right 
-    */
-    ECursRight,
-    /** Line up cursor movement 
-    */
-    ECursLineUp,
-    /** Line down cursor movement 
-    */
-    ECursLineDown,
-    /** Not used, present for backwards compatibility for page movement 
-    */
-    ECursReserved1,
-    ECursReserved2,
-    /** Cursor movement to line start 
-    */
-    ECursLineBegin,
-    /** Cursor movement to line end 
-    */
-    ECursLineEnd
-	};
-
+#ifndef SYMBIAN_ENABLE_SPLIT_HEADERS
+#include <frmconst_internal.h>
+#include <frmconst_partner.h>
+#endif
 
 #endif // __FRMCONST_H__

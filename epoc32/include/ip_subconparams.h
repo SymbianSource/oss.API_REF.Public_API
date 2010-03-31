@@ -1,10 +1,10 @@
 /**
-* Copyright (c) 2005-2009 Nokia Corporation and/or its subsidiary(-ies).
+* Copyright (c) 2004-2009 Nokia Corporation and/or its subsidiary(-ies).
 * All rights reserved.
 * This component and the accompanying materials are made available
-* under the terms of the License "Symbian Foundation License v1.0" to Symbian Foundation members and "Symbian Foundation End User License Agreement v1.0" to non-members
+* under the terms of "Eclipse Public License v1.0"
 * which accompanies this distribution, and is available
-* at the URL "http://www.symbianfoundation.org/legal/licencesv10.html".
+* at the URL "http://www.eclipse.org/legal/epl-v10.html".
 *
 * Initial Contributors:
 * Nokia Corporation - initial contribution.
@@ -19,8 +19,6 @@
 
 
 
-
-
 /**
  @file ip_subconparams.h
 */
@@ -29,15 +27,13 @@
 #define __IP_SUBCONPARAMS_H__
 
 #include <es_sock.h>
-#include <comms-infras/metadata.h>
-#include <comms-infras/metatype.h>
-#include <etelqos.h>
+#include <networking/Qos3GPP_subconparams.h>
 
-
+ 
 // NOTE: This Uid may be changed - See #ifdef at bottom of the file
 const TInt KSubConIPParamsUid = 0x10204309;
-const TInt KSubConQosIPLinkR99ParamsType = 1;
 
+const TInt KSubConQosIPLinkR99ParamsType = 1;
 
 #ifdef SYMBIAN_NETWORKING_3GPPDEFAULTQOS
 #include <networking/qos3gpp_subconparams.h>
@@ -45,38 +41,32 @@ const TInt KSubConQosIPLinkR99ParamsType = 1;
 #else
 const TInt KSubConnSBLPR5ExtensionParamsType = 2;
 
-
 /** Constant definitions particular to the Generic Parameters. */
 const TInt KMAuthTokenLength = 255;
 /** Typedef for the AuthToken Holder. */
 typedef TBuf8<KMAuthTokenLength> TAuthToken;
-
-#if defined(SYMBIAN_NETWORKING_UMTSR5) && !defined(SYMBIAN_NETWORKING_3GPPDEFAULTQOS)
-#pragma message("SYMBIAN_NETWORKING_UMTSR5 cannot be defined without SYMBIAN_NETWORKING_3GPPDEFAULTQOS")
 #endif
-// SYMBIAN_NETWORKING_UMTSR5 
-
-
-#endif
-
 
 #ifdef SYMBIAN_NETWORKING_3GPPDEFAULTQOS
 /** Provides Implementation of IP QoS Parameters
 
 @publishedAll
 @released since v9.1
-@deprecated from v9.2 onwards. Use CSubConQosR99ParamSet from Qos3GPP_Subconparams.h instead.
+@deprecated Since Intulo. Use CSubConQosR99ParamSet from Qos3GPP_Subconparams.h instead.
 */
 #else
 /** Provides Implementation of IP QoS Parameters
 
 @publishedAll
 @released since v9.1
-*/#endif
+*/
+#endif
+
 class CSubConQosIPLinkR99ParamSet : public CSubConExtensionParameterSet
 {
 public:
 	inline static CSubConQosIPLinkR99ParamSet* NewL(CSubConParameterFamily& aFamily, CSubConParameterFamily::TParameterSetType aType);
+	inline static CSubConQosIPLinkR99ParamSet* NewL(RParameterFamily& aFamily, RParameterFamily::TParameterSetType aType);
 	inline static CSubConQosIPLinkR99ParamSet* NewL();
 
 	inline CSubConQosIPLinkR99ParamSet();
@@ -125,8 +115,9 @@ protected:
 	TInt									iGuaBitrateDownlink;	// Guaranteed bit rate for downlink
 	};
 
-#ifndef SYMBIAN_NETWORKING_3GPPDEFAULTQOS
 
+
+#ifndef SYMBIAN_NETWORKING_3GPPDEFAULTQOS
 
 /** Flow Identifires
 ECOM Implementation Id for SBLP Extension parameters.
@@ -158,6 +149,7 @@ class CSubConSBLPR5ExtensionParamSet : public CSubConExtensionParameterSet
 	{
 public:
 	inline static CSubConSBLPR5ExtensionParamSet* NewL(CSubConParameterFamily& aFamily, CSubConParameterFamily::TParameterSetType aType);
+	inline static CSubConSBLPR5ExtensionParamSet* NewL(RParameterFamily& aFamily, RParameterFamily::TParameterSetType aType);
 	inline static CSubConSBLPR5ExtensionParamSet* NewL();
 
 	/**	Media Authorization Token setter and getter functions. */
@@ -186,10 +178,6 @@ protected:
 	};
 #endif
 
-
-
-
-
 /**
 Factory used to create instances of IP SubConnection Parameters.
 
@@ -204,8 +192,6 @@ public:
 
 #include <ip_subconparams.inl>
 
-
-
 #ifdef SYMBIAN_NETWORKING_3GPPDEFAULTQOS
 /*
  Umts QoS extension classes have been relocated to the UmtsGprsSCPR component.
@@ -217,7 +203,6 @@ public:
 #define CSubConQosIPLinkR99ParamSet CSubConQosR99ParamSet
 #endif
 // SYMBIAN_NETWORKING_3GPPDEFAULTQOS
-
 
 #endif
 // __IP_SUBCONPARAMS_H__

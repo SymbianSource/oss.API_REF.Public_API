@@ -1,9 +1,9 @@
 // Copyright (c) 2005-2009 Nokia Corporation and/or its subsidiary(-ies).
 // All rights reserved.
 // This component and the accompanying materials are made available
-// under the terms of the License "Symbian Foundation License v1.0" to Symbian Foundation members and "Symbian Foundation End User License Agreement v1.0" to non-members
+// under the terms of "Eclipse Public License v1.0"
 // which accompanies this distribution, and is available
-// at the URL "http://www.symbianfoundation.org/legal/licencesv10.html".
+// at the URL "http://www.eclipse.org/legal/epl-v10.html".
 //
 // Initial Contributors:
 // Nokia Corporation - initial contribution.
@@ -16,11 +16,10 @@
 // 
 //
 
-
-
 /**
  @file
  @publishedAll
+ @released
 */
 
 
@@ -42,14 +41,14 @@ inline TInt CSubConSIPResponseEvent::GetResponse() const
 	
 inline CSubConSIPResponseEvent* CSubConSIPResponseEvent::NewL()
 	{
-	STypeId typeId(KSubConSIPEventsUid, KSubConSIPResponseEventType);
+	STypeId typeId = STypeId::CreateSTypeId(KSubConSIPEventsUid, KSubConSIPResponseEventType);
 	return static_cast<CSubConSIPResponseEvent*>(CSubConNotificationEvent::NewL(typeId));
 	}
 
         
 inline CSubConSIPAuthenticationRequiredEvent* CSubConSIPAuthenticationRequiredEvent::NewL()
 	{
-	STypeId typeId(KSubConSIPEventsUid, KSubConSIPAuthenticationRequiredEventType);
+	STypeId typeId = STypeId::CreateSTypeId(KSubConSIPEventsUid, KSubConSIPAuthenticationRequiredEventType);
 	return static_cast<CSubConSIPAuthenticationRequiredEvent*>(CSubConNotificationEvent::NewL(typeId));
 	}
 
@@ -86,6 +85,7 @@ inline const TPtrC8& CSubConSIPNotificationEvent::GetNotification() const
 	
 inline CSubConSIPNotificationEvent* CSubConSIPNotificationEvent::NewL()
 	{
-	STypeId typeId(KSubConSIPEventsUid, KSubConSIPNotificationEventType);
+	STypeId typeId = STypeId::CreateSTypeId(KSubConSIPEventsUid, KSubConSIPNotificationEventType);
 	return static_cast<CSubConSIPNotificationEvent*>(CSubConNotificationEvent::NewL(typeId));
 	}
+

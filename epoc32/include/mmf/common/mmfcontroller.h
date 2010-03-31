@@ -1,9 +1,9 @@
 // Copyright (c) 2002-2009 Nokia Corporation and/or its subsidiary(-ies).
 // All rights reserved.
 // This component and the accompanying materials are made available
-// under the terms of the License "Symbian Foundation License v1.0" to Symbian Foundation members and "Symbian Foundation End User License Agreement v1.0" to non-members
+// under the terms of "Eclipse Public License v1.0"
 // which accompanies this distribution, and is available
-// at the URL "http://www.symbianfoundation.org/legal/licencesv10.html".
+// at the URL "http://www.eclipse.org/legal/epl-v10.html".
 //
 // Initial Contributors:
 // Nokia Corporation - initial contribution.
@@ -21,7 +21,7 @@
 #include <mmf/server/mmfdatasink.h>
 #include <mmf/common/mmfcontrollerframework.h>
 #include <mmf/common/mmfcontrollerpluginresolver.h>
-#include <mmfplugininterfaceuids.hrh>
+#include <mmf/plugin/mmfplugininterfaceuids.hrh>
 
 #include <caf/caf.h>
 
@@ -47,61 +47,6 @@ Error category denoting playback complete i.e. due to EOF or error condition
 @since 7.0s
 */
 const TUid KMMFEventCategoryPlaybackComplete = {0x101f7ea0};
-
-/**
-@internalComponent
-*/
-const TUid KUidInterfaceMMFDataSinkHolder = {0x101F76D4};
-/**
-@internalComponent
-*/
-const TUid KUidInterfaceMMFDataSourceHolder = {0x101F76D5};
-/**
-@internalComponent
-*/
-const TUid KUidMMFControllerExtendedDataHolder = {0x102834AC};
-
-/**
-@internalComponent
-
-Create a const TUid with the same values as the controller
-ECOM plugin interface UID
-*/
-const TUid KUidInterfaceMMFController = {KMmfUidPluginInterfaceController};
-
-/**
-@internalComponent
-
-IPC messages for interface KUidInterfaceMMFController in the controller framework.
-*/
-enum TMMFControllerMessages
-	{
-	EMMFControllerAddDataSource,
-	EMMFControllerAddDataSink,
-	EMMFControllerRemoveDataSource,
-	EMMFControllerRemoveDataSink,
-	EMMFControllerReset,
-	EMMFControllerPrime,
-	EMMFControllerPlay,
-	EMMFControllerPause,
-	EMMFControllerStop,
-	EMMFControllerGetPosition,
-	EMMFControllerSetPosition,
-	EMMFControllerGetDuration,
-	EMMFControllerGetNumberOfMetaDataEntries,
-	EMMFControllerGetSizeOfMetaDataEntry,//use internally
-	EMMFControllerGetMetaDataEntry,
-	EMMFControllerSetPrioritySettings,
-	EMMFControllerCancelAddDataSource,
-	EMMFControllerCancelAddDataSink,
-	EMMFControllerAddFileHandleDataSource,
-	EMMFControllerAddFileHandleDataSink,
-	EMMFControllerSourceSinkInitDataPreload,
-	EMMFControllerAddFileHandleDataSourceWithInitData,
-	EMMFControllerAddFileHandleDataSinkWithInitData
-	};
-
-
 
 /**
 @publishedAll
@@ -253,7 +198,6 @@ private:
 private:
 	TMMFMessageDestination iHandle;
 	};
-
 
 /**
 @publishedAll
@@ -470,75 +414,14 @@ private:
 	TUid iInterfaceId;
 	};
 
-/**
-@publishedPartner
-@released
-
-Class to manage custom command parsers.
-
-An object of this type is owned by the controller framework to contain all the custom command
-parsers for the controller plugin.
-
-@since 7.0s
-*/
-class CMMFCustomCommandParserManager : public CBase
-	{
-public:
-	/**
-	Factory constructor.
-
-	@return A pointer to the newly created object.
-
-	@since 7.0s
-	*/
-	IMPORT_C static CMMFCustomCommandParserManager* NewL();
-
-	/**
-	Destructor.
-
-	Deletes all custom command parsers added to the manager.
-
-	@since 7.0s
-	*/
-	IMPORT_C ~CMMFCustomCommandParserManager();
-
-	/**
-	Attempts to find a custom command parser capable of handling the message.
-
-	@param  aMessage
-            The message to be handled.
-
-	@return A boolean indicating in the message has been handled. ETrue if the message has been handled, EFalse
-	        if it has not.
-
-	@since 7.0s
-	*/
-	IMPORT_C TBool HandleRequest(TMMFMessage& aMessage);
-
-	/**
-	Adds a custom command parser to the manager.  The manager takes ownership of the parser.
-
-	Note:
-	This method will leave if it fails to add the parser. If it does leave, ownership
-	of the parser will remain with the caller.
-
-	@param  aParser
-	        A reference to the parser to be added to the manager.
-
-	@since 7.0s
-	*/
-	IMPORT_C void AddCustomCommandParserL(CMMFCustomCommandParserBase& aParser);
-private:
-	CMMFCustomCommandParserManager();
-private:
-	/**
-	The array of custom command parsers.
-	*/
-	RPointerArray<CMMFCustomCommandParserBase> iParsers;
-	};
+#ifndef SYMBIAN_ENABLE_SPLIT_HEADERS
+#include <mmf/common/mmfcontrollerextendeddata.h>
+#include <mmf/common/mmfcustomcommandparsermanager.h>
+#endif
 
 
 class CMMFControllerExtendedData;
+class CMMFCustomCommandParserManager;
 /**
 @publishedAll
 @released
@@ -829,9 +712,6 @@ protected:
 
 	@since  7.0s
 
-	@capability MultimediaDD
-	            A process requesting or using this method that has MultimediaDD capability will
-				always have precedence over a process that does not have MultimediaDD.
 	*/
 	virtual void SetPrioritySettings(const TMMFPrioritySettings& aPrioritySettings) = 0;
 
@@ -1166,58 +1046,6 @@ private:
 	RMMFController* iMMFController;
 	HBufC8* iSourceSinkInitData;
 	TMMFUidPckg iSourceSinkUidPckg;
-	};
-
-/**
-@internalComponent
-
-The controller proxy session.
-
-Only one session can be connected to a controller proxy server.
-
-*/
-NONSHARABLE_CLASS(CMMFControllerExtendedData) : public CMMFObject
-	{
-public:
-	CMMFControllerExtendedData();
-	
-	~CMMFControllerExtendedData();
-	
-	// Set/Get the source/sink initialization data used by CMMFController
-	// Ownership of aSourceSinkInitData is transferred (NULL pointer is allow)
-	// If source/sink initialization data is already set, previous one will be destroyed
-	void SetSourceSinkInitData(HBufC8* aSourceSinkInitData);
-	HBufC8* SourceSinkInitData() const;
-	void ResetSourceSinkInitData();
-
-	// Set/Get the client thread ID used by CMMFController
-	void SetClientThreadId(TThreadId aClientThreadId);
-	TThreadId ClientThreadId() const;
-	
-	// Set/Get the Secure DRM mode of CMMFController
-	void SetSecureDrmMode(TBool aSecureDrmMode);
-	TBool SecureDrmMode() const;
-		
-	//from CMMFObject
-	void HandleRequest(TMMFMessage& aMessage);
-private:
-	/**
-	Extended data uses by CMMFController: Source/Sink initialization data
-	It serves as a temporary storage for Source/Sink initialization
-	Client should request the server to use and cleanup this variable ASAP
-	once it is being loaded
-	*/
-	HBufC8*	iSourceSinkInitData;
-	
-	/**
-	Extended data uses by CMMFController: The client thread Id
-	*/
-	TThreadId iClientThreadId;
-	
-	/**
-	Extended data uses by CMMFController: Controller Scecure DRM Mode
-	*/
-	TBool iSecureDrmMode;
 	};
 
 #endif

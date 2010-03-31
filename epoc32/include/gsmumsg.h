@@ -1,9 +1,9 @@
 // Copyright (c) 1999-2009 Nokia Corporation and/or its subsidiary(-ies).
 // All rights reserved.
 // This component and the accompanying materials are made available
-// under the terms of the License "Symbian Foundation License v1.0" to Symbian Foundation members and "Symbian Foundation End User License Agreement v1.0" to non-members
+// under the terms of "Eclipse Public License v1.0"
 // which accompanies this distribution, and is available
-// at the URL "http://www.symbianfoundation.org/legal/licencesv10.html".
+// at the URL "http://www.eclipse.org/legal/epl-v10.html".
 //
 // Initial Contributors:
 // Nokia Corporation - initial contribution.
@@ -16,9 +16,9 @@
 //
 
 
-
 /**
  @file
+ @publishedAll
 */
 
 #ifndef __GSMUMSG_H__
@@ -34,7 +34,7 @@
 #include <emsinformationelement.h>
 
 /**
- *  @internalComponent
+ *  @publishedAll
  */
 const TUint IoctlWriteSMSBufferSize = 256;
 const TUint KMaxMobileNameSize = 32;
@@ -43,15 +43,15 @@ class CSmsBufferBase;
 class CSmsCompressedBuffer;
 class TSmsUserDataSettings;
 class CSmsEMSBufferSegmenter;
-class CGsmCompressionBase;
 class CEmsUserPrompt;
 class CEmsObjectDistribution;
 class CSmsIEOperation;
 class CSmsNonIEOperation;
+class CSmsMessageAdditionalAttributes;
 
 /**
  *  This class is used in CSmsMessage only.
- *  @internalComponent
+ *  @publishedAll
  */
 class TGsmSmsSlotEntry
 	{
@@ -65,6 +65,11 @@ public:
 	void ExternalizeL(RWriteStream& aStream) const;
     };
 
+struct TEncodeParams
+	{
+	const TTime* iTimeStamp;
+	const TTimeIntervalSeconds* iTimeIntervalInSeconds;		
+	};
 
 /**
  *  Represents a complete SMS message.
@@ -225,7 +230,7 @@ public:
  	IMPORT_C void InternalizeVersionL(RReadStream& aStream);
 	IMPORT_C void ExternalizeVersionL(RWriteStream& aStream) const;
 
-    void* AdditionalInfo() {return iAdditionalInfo;};
+    void* AdditionalInfo() {return (void*)iAdditionalInfo;};
     IMPORT_C CSmsIEOperation& GetOperationsForIEL(CSmsInformationElement::TSmsInformationElementIdentifier) const;
     IMPORT_C CSmsNonIEOperation& GetOperationsForNonIEL(TSmsNonIEIdentifier) const;
     
@@ -258,12 +263,15 @@ private:
 	void InstallEmsInformationElementsL(CSmsCommand& aCommand, TInt aStartPosition);
 	void InstallControlInformationElementsL(CSmsUserData& aUserData, TInt aSegmentSequenceNum);
 	void InstallControlInformationElementsL(CSmsCommand& aCommand);
-	TBool AddEMSInformationElementsToMultiSegmentMessageL(CArrayFix<TGsmSms>& aSmsArray,CSmsEMSBufferSegmenter& aSegmenter,TUint& aCharsAdded,TBool aDoEncode,TSmsEncoding& aEncoding,RPointerArray<CEmsInformationElement>& aCorrectedFormatingIEArray,TUint& aCurEMSIEno,TUint& aBaseAddr);
+	TBool AddEMSInformationElementsToMultiSegmentMessageL(CSmsEMSBufferSegmenter& aSegmenter, TUint& aCharsAdded,
+			                                              TBool aDoEncode, TSmsEncoding& aEncoding,
+			                                              RPointerArray<CEmsInformationElement>& aCorrectedFormatingIEArray,
+			                                              TUint& aCurEMSIEno, TUint& aBaseAddr);
 	TBool AddEMSInformationElementsToSingleSegmentMessageL(CSmsEMSBufferSegmenter& aSegmenter,
 			                                               TSmsEncoding aEncoding);
-	void AddControlInformationElementsToMultiSegmentMessageL(CArrayFix<TGsmSms>& aSmsArray);
-	void AddControlInformationElementsToMultiSegmentMessageL(TSmsInformationElementCategories::TInformationElementCategory aCategory, TBool aMandatoryInPDU, CArrayFix<TGsmSms>& aSmsArray);
-	void AddCurrentPDUToSmsArrayL(CArrayFix<TGsmSms>& aSmsArray,TBool aDoEncode);
+	void AddControlInformationElementsToMultiSegmentMessageL(TBool aDoEncode);
+	void AddControlInformationElementsToMultiSegmentMessageL(TSmsInformationElementCategories::TInformationElementCategory aCategory, TBool aMandatoryInPDU, TBool aDoEncode);
+	void AddCurrentPDUToPDUArrayL(TBool aDoEncode);
 	TBool AddIEToUserDataL(CEmsInformationElement* aIe, TInt aCharsAlreadyAdded,TUint& aCharsAddedToCurrentPDU,CSmsEMSBufferSegmenter& aSeg);
 	TInt FillPduL(CSmsEMSBufferSegmenter& aSeg, TInt aNumChars, TSmsEncoding aEncoding);
 	TInt NumMessageEmsPDUsL();
@@ -275,7 +283,7 @@ private:
 	void AddEmsObjectDistributionL(const CEmsObjectDistribution& aObjectDistributionIE);
 	void UpdateUserPromptAndODIElementsStartPosition();
 	TInt AddReceivedEmsInformationElement(CEmsInformationElement* aIE);
-	TSmsStatusReportScheme FindScheme(const CArrayPtr<CSmsPDU>& aSmsPDUArray);
+	TSmsStatusReportScheme FindSchemeL(const CArrayPtr<CSmsPDU>& aSmsPDUArray);
 	void InstallTPSRRInformationL(const CArrayPtr<CSmsPDU>& aSmsPDUArray, TInt aSegmentSequenceNum);
 	void EncodingTPSRRFromSchemesIntoSinglePDUL();
 	void DecodeOnlyTextL(CArrayPtr<CSmsPDU>& aSmsPDUArray,CSmsBufferBase& aBuffer);
@@ -325,7 +333,7 @@ private:
 	CCnvCharacterSetConverter* iCharacterSetConverter;
 
 public:
-	CArrayFixFlat<TGsmSmsSlotEntry> iSlotArray; ///< Array for slots
+	CArrayFixFlat<TGsmSmsSlotEntry> iSlotArray; //< Array for slots
 /**
  *  SMS versions
  */
@@ -347,19 +355,19 @@ public:
 
 protected:
 
-/**
- *  iVersion is the version of CSmsMessage. This parameter will be
- *  used to identify what iAdditionalInfo points to for that particular
- *  version of CSmsMessage
- */
+	/**
+	 *  iVersion is the version of CSmsMessage. This parameter will be
+	 *  used to identify what iAdditionalInfo points to for that particular
+	 *  version of CSmsMessage
+	 */
 	TInt iVersion;
 
-/**
- *  iAdditionalInfo would point to any new added data structure.
- *  iVersion would identify which data structure is valid for that
- *   *  particular version of CSmsMessage 
- */
-	void* iAdditionalInfo;
+	/**
+	 *  iAdditionalInfo would point to any new added data structure.
+	 *  iVersion would identify which data structure is valid for that
+	 *   *  particular version of CSmsMessage 
+	 */
+	CSmsMessageAdditionalAttributes*  iAdditionalInfo;
 	};
 
 #include <gsmumsg.inl>

@@ -1,6 +1,7 @@
 /* NETDB.H
  * 
- * Portions copyright (c) 1993-1999 Symbian Ltd.  All rights reserved.
+ * Portions Copyright (c) 1993-1999 Nokia Corporation and/or its subsidiary(-ies).
+ * All rights reserved.
  */
 
 /*-
@@ -127,58 +128,6 @@ Error return codes from gethostbyname() and gethostbyaddr()
 #define	NO_RECOVERY	ECOMM		/* Non recoverable errors, FORMERR, REFUSED, NOTIMP */
 #define	NO_DATA		4		/* Valid name, no data record of requested type */
 #define	NO_ADDRESS	NO_DATA		/* no address, look for MX record */
-
-#if 0
-/* not supported on EPOC32 */
-/**
-@internalComponent
-*/
-void		sethostent (int);
-/**
-@internalComponent
-*/
-struct hostent	*gethostent (void);
-/**
-@internalComponent
-*/
-void		endhostent (void);
-/**
-@internalComponent
-*/
-void		setnetent (int);
-/**
-@internalComponent
-*/
-struct netent	*getnetent (void);
-/**
-@internalComponent
-*/
-void		endnetent (void);
-/**
-@internalComponent
-*/
-void		setprotoent (int);
-/**
-@internalComponent
-*/
-struct protoent	*getprotoent (void);
-/**
-@internalComponent
-*/
-void		endprotoent (void);
-/**
-@internalComponent
-*/
-void		setservent (int);
-/**
-@internalComponent
-*/
-struct servent	*getservent (void);
-/**
-@internalComponent
-*/
-void		endservent (void);
-#endif
 
 IMPORT_C struct hostent	*gethostbyaddr (const char *, int, int);
 IMPORT_C struct hostent	*gethostbyname (const char *);

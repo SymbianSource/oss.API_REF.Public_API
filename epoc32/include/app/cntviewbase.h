@@ -1,9 +1,9 @@
 // Copyright (c) 2001-2009 Nokia Corporation and/or its subsidiary(-ies).
 // All rights reserved.
 // This component and the accompanying materials are made available
-// under the terms of the License "Symbian Foundation License v1.0" to Symbian Foundation members and "Symbian Foundation End User License Agreement v1.0" to non-members
+// under the terms of "Eclipse Public License v1.0"
 // which accompanies this distribution, and is available
-// at the URL "http://www.symbianfoundation.org/legal/licencesv10.html".
+// at the URL "http://www.eclipse.org/legal/epl-v10.html".
 //
 // Initial Contributors:
 // Nokia Corporation - initial contribution.
@@ -305,11 +305,9 @@ public:
 	static TBool HintFieldMatchesFilter(TInt aHintField, TInt aFilter);
 	TPtrC FindFirstPopulatedField(TInt aOffset, TInt& aFoundPosition) const;
 	
-#ifdef __SYMBIAN_CNTMODEL_USE_SQLITE__	
     IMPORT_C void  ChangeToLightweightObject();
     TBool IsLightweightObject() const;	
     void  CopyL(const CViewContact& aContact);
-#endif //__SYMBIAN_CNTMODEL_USE_SQLITE__	
 
 private: 
 	void ConstructL(TInt aLength = 0);
@@ -416,18 +414,7 @@ public:
 			/** List of contacts matching the criteria. */
 			RArray<TContactIdWithMapping>& iMatchingContacts;
 		};
-	class TVirtualFunction3Params
-	/** Holds the two parameters passed to the method InsertContactInView() from the 
-	reserved function CContactViewBase_Reserved_1(). It has an inline 
-	constructor to initialise the data members.
 
-	@internalAll */
-		{
-		public:
-			inline TVirtualFunction3Params(RPointerArray<CViewContact>& aContacts, const CViewContact* aNewContact) :iContacts(aContacts), iNewContact(aNewContact){};
-			RPointerArray<CViewContact>&	iContacts;
-			const CViewContact*				iNewContact;
-		};
 	/** Search type.
 
 	This controls whether a search term can occur anywhere in a contact item field, 
@@ -469,6 +456,17 @@ protected:
 		/** The view is not ready to be used, for instance immediately after the sort order 
 		has changed, or after an error has occurred. */
 		ENotReady
+		};
+	class TVirtualFunction3Params
+		/** Holds the two parameters passed to the method InsertContactInView() from the 
+		reserved function CContactViewBase_Reserved_1(). It has an inline 
+		constructor to initialise the data members.
+		*/
+		{
+		public:
+			inline TVirtualFunction3Params(RPointerArray<CViewContact>& aContacts, const CViewContact* aNewContact) :iContacts(aContacts), iNewContact(aNewContact){};
+			RPointerArray<CViewContact>&	iContacts;
+			const CViewContact*				iNewContact;
 		};
 public:
 	IMPORT_C void OpenL(MContactViewObserver& aObserver);
@@ -579,6 +577,7 @@ private:
 		TContactViewEvent iAsyncEvent;
 		MContactViewObserver* iObserverToNotify;
 		};
+	
 protected:
 	// Reference to CContactDatabase class.
 	const CContactDatabase& iDb;
@@ -592,22 +591,9 @@ private:
 	RArray<TObserverAndEvent> iOutstandingNotifications;
 	};
 
-inline TInt CContactViewBase::GetErrorValueFromExtensionClass()
-	{
-	return iExtension->iError;
-	}
 	
 class MLplPersistenceLayerFactory;
-
-#ifdef __SYMBIAN_CNTMODEL_USE_SQLITE__
-
 class CViewContactManager;
-
-#else //__SYMBIAN_CNTMODEL_USE_SQLITE__
-
-class CViewIterator;
-
-#endif //__SYMBIAN_CNTMODEL_USE_SQLITE__
 
 class CContactLocalView : public CContactViewBase, public MContactDbObserver
 /** An instantiable base class for contact views.
@@ -656,23 +642,11 @@ private: // From MContactDbObserver.
 	virtual void HandleDatabaseEventL(TContactDbObserverEvent aEvent);
 	
 private:
-
-#ifdef __SYMBIAN_CNTMODEL_USE_SQLITE__
 	void SortComplete(TInt aSortErr);	
 	void SetSortOrderL(const RContactViewSortOrder& aSortOrder);
 	void SortL();
 	void SafeResort();
 	friend class CViewContactManager;
-#else //__SYMBIAN_CNTMODEL_USE_SQLITE__
-	TInt SortCallBack();
-	TInt DoReadIncrementL();
-	void ResetSortL();
-	void InitialiseSortL(const RContactViewSortOrder& aSortOrder, TBool aChangingSortOrder);
-	void SortL();
-	void SafeResort();
-	void ContactsArraySortL();
-	TBool ContactCorrectType(TUid aType,TContactViewPreferences aTypeToInclude);
-#endif //__SYMBIAN_CNTMODEL_USE_SQLITE__	
 
 private: // Metheds for event handling
 	void HandleOutstandingEvents();
@@ -692,13 +666,7 @@ private:
 	RPointerArray<CViewContact>	iUnSortedContacts;
 	RArray<TContactDbObserverEvent> iOutstandingEvents;
 	CIdleContactSorter* iAsyncSorter;
-	
-#ifdef __SYMBIAN_CNTMODEL_USE_SQLITE__
 	CViewContactManager* iViewCntMgr;
-#else //__SYMBIAN_CNTMODEL_USE_SQLITE__
-	CViewIterator*		iViewIterator;
-#endif //__SYMBIAN_CNTMODEL_USE_SQLITE__	
-
 	CContactTextDef*	iTextDef;
 	TContactViewPreferences iViewPreferences;
 	TBool iSpare0;
@@ -710,7 +678,7 @@ class RContactRemoteView : public RSubSessionBase
 server side view object.
 
 @see CContactRemoteViewBase 
-@internalComponent
+@publishedAll
 @released
 */
 	{

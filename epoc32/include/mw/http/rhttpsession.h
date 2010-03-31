@@ -1,9 +1,9 @@
 // Copyright (c) 2001-2009 Nokia Corporation and/or its subsidiary(-ies).
 // All rights reserved.
 // This component and the accompanying materials are made available
-// under the terms of the License "Symbian Foundation License v1.0" to Symbian Foundation members and "Symbian Foundation End User License Agreement v1.0" to non-members
+// under the terms of "Eclipse Public License v1.0"
 // which accompanies this distribution, and is available
-// at the URL "http://www.symbianfoundation.org/legal/licencesv10.html".
+// at the URL "http://www.eclipse.org/legal/epl-v10.html".
 //
 // Initial Contributors:
 // Nokia Corporation - initial contribution.
@@ -13,10 +13,8 @@
 // Description:
 //
 
-
-
 /**
- @file RHTTPSession.h
+ @file
  @warning : This file contains Rose Model ID comments - please do not delete
 */
 
@@ -216,7 +214,16 @@ is actually to do anything.
 	//##ModelId=3C4C187B02AA
 	IMPORT_C TInt ServerCert(TCertInfo& aServerCert);
 
-
+	#ifdef SYMBIAN_ENABLE_SPLIT_HEADERS
+	/** Obtain the server certificate information for this session.  This function
+		should only be used for WSP. HTTP should use RHttpTransaction::ServerCert.
+		@see RHttpSession::ServerCert
+		@prototype
+		@return	a CCertificate pointer to an CWTLSCertificate object.
+		Calling code can safely cast to CWTLSCertificate if using  "WSP/WSP".
+		NULL returned if certificate information not found.
+	*/
+	#else
 	/** Obtain the server certificate information for this session.  This function
 		should only be used for WSP. HTTP should use RHttpTransaction::ServerCert.
 		@see RHttpSession::ServerCert
@@ -226,7 +233,8 @@ is actually to do anything.
 		Calling code can safely cast to CWTLSCertificate if using  "WSP/WSP".
 		NULL returned if certificate information not found.
 	*/
-	IMPORT_C const CCertificate* RHTTPSession::ServerCert();
+	#endif	//SYMBIAN_ENABLE_SPLIT_HEADERS
+	IMPORT_C const CCertificate* ServerCert();
 
 	/** Connect this WSP session. This function does nothing when called for text-mode.
 	*/
@@ -237,22 +245,37 @@ is actually to do anything.
 	*/
 	//##ModelId=3C4C187B02A8
 	IMPORT_C void DisconnectL();
-	
+
+	#ifndef SYMBIAN_ENABLE_SPLIT_HEADERS
 	/**Set the default Proxy for Http Session. This function reads default proxy information,if available, from CommsDat
 	and uses it for the current Session.
 	@internalAll
 	*/
 	IMPORT_C void SetupDefaultProxyFromCommsDatL();
 
+	#endif	//SYMBIAN_ENABLE_SPLIT_HEADERS
+
+	#ifdef SYMBIAN_ENABLE_SPLIT_HEADERS	
+	/**Sets the HTTP data optimiser for the session.
+	@param aHttpOptimiser An object of the implementation of interface, MHttpDataOptimiser, supplied by the client.
+	*/
+	#else
 	/**Sets the HTTP data optimiser for the session.
 	@param aHttpOptimiser An object of the implementation of interface, MHttpDataOptimiser, supplied by the client.
 	@publishedPartner
+	@released
 	*/
+	#endif	//SYMBIAN_ENABLE_SPLIT_HEADERS
 	IMPORT_C void SetupHttpDataOptimiser (MHttpDataOptimiser& aHttpOptimiser);
- 
+ 	
+	#ifdef SYMBIAN_ENABLE_SPLIT_HEADERS	
+ 	/**Returns the object of the MHttpDataOptimiser implementation class.
+	*/
+	#else
  	/**Returns the object of the MHttpDataOptimiser implementation class.
 	@internalTechnology
 	*/
+	#endif	//SYMBIAN_ENABLE_SPLIT_HEADERS
  	IMPORT_C MHttpDataOptimiser* HttpDataOptimiser ();
 
 private:

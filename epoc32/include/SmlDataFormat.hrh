@@ -1,0 +1,46 @@
+/*
+* Copyright (c) 2009 Nokia Corporation and/or its subsidiary(-ies). 
+* All rights reserved.
+* This component and the accompanying materials are made available
+* under the terms of "Eclipse Public License v1.0"
+* which accompanies this distribution, and is available
+* at the URL "http://www.eclipse.org/legal/epl-v10.html".
+*
+* Initial Contributors:
+* Nokia Corporation - initial contribution.
+*
+* Contributors:
+*
+* Description: For adding content to be synchronized.
+*
+*/
+/**
+@publishedPartner
+*/
+
+
+#define KSmlDataProperty_HasMaxSize		0x00000001
+#define KSmlDataProperty_HasMaxOccur	0x00000002
+#define KSmlDataProperty_FieldReplace	0x00000004
+#define KSmlDataProperty_RecordFilter	0x00000008
+#define KSmlDataProperty_NoTruncate		0x00000010
+
+
+#define KSmlDataStore_HasMaxSize		0x00000001
+#define KSmlDataStore_HasMaxItems		0x00000002
+#define KSmlDataStore_FieldFilter		0x00000004
+#define KSmlDataStore_RecordFilter		0x00000008
+#define KSmlDataStore_Hierarchical		0x00000010
+
+
+#define KSmlSyncType_TwoWay				0x0001
+#define KSmlSyncType_OneWayFromSvr		0x0002
+#define KSmlSyncType_OneWayFromClnt		0x0004
+#define KSmlSyncType_SlowSync			0x0008
+#define KSmlSyncType_RefreshFromSvr		0x0010
+#define KSmlSyncType_RefreshFromClnt	0x0020
+
+
+
+
+

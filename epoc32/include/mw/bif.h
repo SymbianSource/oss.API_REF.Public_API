@@ -1,9 +1,9 @@
 // Copyright (c) 1997-2009 Nokia Corporation and/or its subsidiary(-ies).
 // All rights reserved.
 // This component and the accompanying materials are made available
-// under the terms of the License "Symbian Foundation License v1.0" to Symbian Foundation members and "Symbian Foundation End User License Agreement v1.0" to non-members
+// under the terms of "Eclipse Public License v1.0"
 // which accompanies this distribution, and is available
-// at the URL "http://www.symbianfoundation.org/legal/licencesv10.html".
+// at the URL "http://www.eclipse.org/legal/epl-v10.html".
 //
 // Initial Contributors:
 // Nokia Corporation - initial contribution.
@@ -11,46 +11,42 @@
 // Contributors:
 //
 // Description:
+// BIF.H
 //
-
+/**
+ * @file 
+ * BIO information file (BIF)
+ *
+ * @publishedAll
+ * @released
+ */
 #ifndef __BIF_H__
 #define __BIF_H__
 
 #include <apmrec.h>
 
 class CBifEntry;
-
-//
-// Constants
-/** 2nd UID of BIF file stores. */
-const TUid KUidBioInfoFile={0x10005233};		// unicode Uid, used as 2nd Uid of file store
-/** Indicates that when opening the message no application should be launched. */
-const TUid KUidBioUseNoApp={0x00000000};			
-/** Indicates that when opened the message is to be viewed by the default application. */
-const TUid KUidBioUseDefaultApp={0x100052b2};		
-/** Maximum length of BIO_INFO_FILE description field. */
-const TInt KMaxBioDescription=128;
-/** Maximum length of ID text field. */
+		
+/** 
+ * Maximum length of ID text field.
+ * @publishedAll
+ * @released
+ */
 const TInt KMaxBioIdText=128;
-/** Unused from v7.0.
 
-Previously, it specified the maximum length of a command line to BIFTOOL. */
-const TInt KMaxBioCommandLine=256;
-/** Maximum length of BIO_INFO_FILE file_extension field. */
-const TInt KMaxBioFileExtension=10;
-
-//
-// Data types
-/** Buffer to hold a BIF ID identifier text field. */
+/** Data types.
+ * Buffer to hold a BIF ID identifier text field.
+ * @publishedAll
+ * @released
+ */
 typedef TBuf<KMaxBioIdText> TBioMsgIdText;
-/** Unused from v7.0.
 
-Previously, it held a command line to BIFTOOL. */
-typedef TBuf<KMaxBioCommandLine> TBioCommand;
-
-/** Identifies bearers for the BIF ID type field.
-
-It is the C++ equivalent of the resource enum ID_TYPE. */
+/** Identifies bearers for the BIF ID type field. 
+ * It is the C++ equivalent of the resource enum ID_TYPE.
+ *
+ * @publishedAll
+ * @released
+ */
 enum TBioMsgIdType 
 	{
 	/** Unknown.
@@ -90,10 +86,11 @@ enum TBioMsgIdType
 	EBioMsgIdWspSecure
 	};
 
-/** Encapsulates an ID from a BIF (BIO_INFO_FILE). 
-@internalTechnology
-@released
-*/
+/** Encapsulates an ID from a BIF (BIO_INFO_FILE).
+ *
+ * @publishedAll
+ * @released
+ */
 class TBioMsgId 
 	{
 public:

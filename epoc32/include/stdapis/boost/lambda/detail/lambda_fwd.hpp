@@ -1,57 +1,74 @@
+//  lambda_fwd.hpp - Boost Lambda Library -------------------------------
 
-#ifndef BOOST_MPL_LAMBDA_FWD_HPP_INCLUDED
-#define BOOST_MPL_LAMBDA_FWD_HPP_INCLUDED
-
-// Copyright Aleksey Gurtovoy 2001-2004
+// Copyright (C) 1999, 2000 Jaakko Järvi (jaakko.jarvi@cs.utu.fi)
 //
-// Distributed under the Boost Software License, Version 1.0. 
-// (See accompanying file LICENSE_1_0.txt or copy at 
+// Distributed under the Boost Software License, Version 1.0. (See
+// accompanying file LICENSE_1_0.txt or copy at
 // http://www.boost.org/LICENSE_1_0.txt)
 //
-// See http://www.boost.org/libs/mpl for documentation.
+// For more information, see www.boost.org
 
-// $Source: /cvsroot/boost/boost/boost/mpl/lambda_fwd.hpp,v $
-// $Date: 2004/09/02 15:40:41 $
-// $Revision: 1.7 $
+// -------------------------------------------------------
 
-#include <boost/mpl/void_fwd.hpp>
-#include <boost/mpl/aux_/na.hpp>
-#include <boost/mpl/aux_/config/lambda.hpp>
+#ifndef BOOST_LAMBDA_FWD_HPP
+#define BOOST_LAMBDA_FWD_HPP
 
-#if !defined(BOOST_MPL_CFG_NO_FULL_LAMBDA_SUPPORT)
+namespace boost { 
+namespace lambda { 
 
-#   include <boost/mpl/int.hpp>
-#   include <boost/mpl/aux_/lambda_arity_param.hpp>
-#   include <boost/mpl/aux_/template_arity_fwd.hpp>
+namespace detail {
 
-namespace boost { namespace mpl {
+template<class T> struct generate_error;
 
-template< 
-      typename T = na
-    , typename Tag = void_
-    BOOST_MPL_AUX_LAMBDA_ARITY_PARAM(
-          typename Arity = int_< aux::template_arity<T>::value >
-        )
-    >
-struct lambda;
+}   
+// -- placeholders --------------------------------------------
 
-}}
+template <int I> struct placeholder;
 
-#else // BOOST_MPL_CFG_NO_FULL_LAMBDA_SUPPORT
+// function_adaptors
+template <class Func> 
+struct function_adaptor;
 
-#   include <boost/mpl/bool.hpp>
+template <int I, class Act> class action;
 
-namespace boost { namespace mpl {
+template <class Base> 
+class lambda_functor;
 
-template< 
-      typename T = na
-    , typename Tag = void_
-    , typename Protect = true_
-    > 
-struct lambda;
+template <class Act, class Args> 
+class lambda_functor_base;
 
-}}
+} // namespace lambda
+} // namespace boost
+
+
+//  #define CALL_TEMPLATE_ARGS class A, class Env
+//  #define CALL_FORMAL_ARGS A& a, Env& env
+//  #define CALL_ACTUAL_ARGS a, env
+//  #define CALL_ACTUAL_ARGS_NO_ENV a
+//  #define CALL_REFERENCE_TYPES A&, Env&
+//  #define CALL_PLAIN_TYPES A, Env
+#define CALL_TEMPLATE_ARGS class A, class B, class C, class Env
+#define CALL_FORMAL_ARGS A& a, B& b, C& c, Env& env
+#define CALL_ACTUAL_ARGS a, b, c, env
+#define CALL_ACTUAL_ARGS_NO_ENV a, b, c
+#define CALL_REFERENCE_TYPES A&, B&, C&, Env&
+#define CALL_PLAIN_TYPES A, B, C, Env
+
+namespace boost {
+namespace lambda {
+namespace detail {
+
+template<class A1, class A2, class A3, class A4>
+void do_nothing(A1&, A2&, A3&, A4&) {}
+
+} // detail
+} // lambda
+} // boost
+
+// prevent the warnings from unused arguments
+#define CALL_USE_ARGS \
+::boost::lambda::detail::do_nothing(a, b, c, env)
+
+
 
 #endif
-
-#endif // BOOST_MPL_LAMBDA_FWD_HPP_INCLUDED

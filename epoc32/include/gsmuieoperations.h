@@ -1,9 +1,9 @@
 // Copyright (c) 1999-2009 Nokia Corporation and/or its subsidiary(-ies).
 // All rights reserved.
 // This component and the accompanying materials are made available
-// under the terms of the License "Symbian Foundation License v1.0" to Symbian Foundation members and "Symbian Foundation End User License Agreement v1.0" to non-members
+// under the terms of "Eclipse Public License v1.0"
 // which accompanies this distribution, and is available
-// at the URL "http://www.symbianfoundation.org/legal/licencesv10.html".
+// at the URL "http://www.eclipse.org/legal/epl-v10.html".
 //
 // Initial Contributors:
 // Nokia Corporation - initial contribution.
@@ -16,8 +16,6 @@
 // of control information elements.
 // 
 //
-
-
 
 /**
  @file
@@ -55,6 +53,7 @@
  *  them become stale. Each instance of the CSmsIEOperation Class is an attributes of the CSmsMessage itself.
  *  
  *  @publishedAll
+ *  @released
  */
 class CSmsIEOperation : public CBase
 {
@@ -90,6 +89,7 @@ protected:
  *  Clients use this class to configure a CSmsMessage with hyperlinks per 23.040 v6.5.0 section 9.2.3.24.12.
  *  
  *  @publishedAll
+ *  @released
  */
 class CSmsHyperLinkOperations : public CSmsCtrlOperation
 {
@@ -112,6 +112,7 @@ protected:
  *  Clients use this class to configure a CSmsMessage with a reply address per 23.040 v6.5.0 section 9.2.3.24.10.1.17.
  *  
  *  @publishedAll
+ *  @released
  */
 class CSmsReplyAddressOperations : public CSmsCtrlOperation
 {
@@ -143,6 +144,7 @@ protected:
  *  section 9.2.3.24.2.
  *  
  *  @publishedAll
+ *  @released
  */
 class CSmsSpecialSMSMessageOperations : public CSmsCtrlOperation
 {
@@ -177,6 +179,7 @@ protected:
  *  only the Enhanced Voice Mail Information Element and no other information elements or text.
  *  
  *  @publishedAll
+ *  @released
  */
 class CSmsEnhancedVoiceMailOperations : public CSmsCtrlOperation
 {

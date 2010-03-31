@@ -2,9 +2,9 @@
 * Copyright (c) 1997-2009 Nokia Corporation and/or its subsidiary(-ies).
 * All rights reserved.
 * This component and the accompanying materials are made available
-* under the terms of the License "Symbian Foundation License v1.0" to Symbian Foundation members and "Symbian Foundation End User License Agreement v1.0" to non-members
+* under the terms of "Eclipse Public License v1.0"
 * which accompanies this distribution, and is available
-* at the URL "http://www.symbianfoundation.org/legal/licencesv10.html".
+* at the URL "http://www.eclipse.org/legal/epl-v10.html".
 *
 * Initial Contributors:
 * Nokia Corporation - initial contribution.
@@ -135,7 +135,7 @@ public:
         ENoExtendedSelection        = SLafListBox::ENoExtendedSelection,
         
         /**
-         * Construction flag that sets the list box to match user’s keystrokes 
+         * Construction flag that sets the list box to match user?s keystrokes 
          * incrementally.
          */
         EIncrementalMatching        = SLafListBox::EIncrementalMatching,
@@ -236,7 +236,12 @@ public:
         /**
          * Construction flag for enabling S60 style markable items.
          */
-        ES60StyleMarkable           = SLafListBox::ES60StyleMarkable
+        ES60StyleMarkable           = SLafListBox::ES60StyleMarkable,
+
+        /**
+         * Construction flag for disabling item specific stylus popup menu.
+         */
+        EDisableItemSpecificMenu    = 0x00040000
         };
     enum {KEikMaxMatchingBufferLength = 2};
 
@@ -773,7 +778,7 @@ public: // from CCoeControl
     /**
      * From @c CCoeControl
      *
-     * Handles a change to the list box’s resources of type @c aType which are 
+     * Handles a change to the list box?s resources of type @c aType which are 
      * shared across the environment, colours or fonts for example.
      *
      * @param aType The type of resources that have changed.
@@ -944,7 +949,7 @@ protected:
 
     // functions needed for supporting scrollbars
     /**
-     * Updates the position of this list box’s scroll bars’ thumbs to reflect 
+     * Updates the position of this list box?s scroll bars? thumbs to reflect 
      * the horizontal and vertical position of the list view within the list.
      */
     IMPORT_C virtual void UpdateScrollBarThumbs() const;
@@ -1033,7 +1038,7 @@ protected:
     IMPORT_C virtual void ConstructL(const CCoeControl* aParent, TInt aFlags = 0);
     
     /**
-     * Completes the list box view’s construction.
+     * Completes the list box view?s construction.
      *
      * This function is called by @c ConstructL() to complete construction 
      * of the resource view, calling its @c ConstructL() with appropriate 
@@ -1219,11 +1224,11 @@ protected:
      * @c CListBoxView::DrawMatcherCursor() after scrolling to make the current 
      * item visible.
      * 
-     * A list box control’s matcher cursor is an on-screen cursor which is 
+     * A list box control?s matcher cursor is an on-screen cursor which is 
      * drawn to indicate to the user the location of the current text. Whether 
      * the cursor is drawn is dependent on the 
      * @c CListBoxView::TFlags::EHasMatcherCursor flag, which may be set on the 
-     * list box’s view.
+     * list box?s view.
      *
      * Note, that CListBoxView::DrawMatcherCursor() is not implemented in S60. 
      */
@@ -1260,7 +1265,7 @@ protected:
 
 protected:	// functions which deal with extension
     /**
-     * Sets the reason for the list box’s loss of focus.
+     * Sets the reason for the list box?s loss of focus.
      *
      * This is required so the list box can determine whether 
      * loss of focus is due to an external control or an internal component.
@@ -1270,7 +1275,7 @@ protected:	// functions which deal with extension
     IMPORT_C void SetReasonForFocusLostL( TReasonForFocusLost aReasonForFocusLost );
 
     /**
-     * Gets the reason for the list box’s loss of focus.
+     * Gets the reason for the list box?s loss of focus.
      *
      * @return The reason for the loss of focus.
      */
@@ -1431,6 +1436,15 @@ public:
 	* @param aItems Number of items in one grid line.
 	*/
     IMPORT_C void SetItemsInSingleLine(TInt aItems);
+    
+    /**
+    * Gets the number of list items in one line. This is more than one for
+    * grids only.
+	*
+	* @since S60 5.2
+	* @return The number of list items in one line.
+	*/
+    IMPORT_C TInt ItemsInSingleLine() const;
 	
     /**
     * Removes pointer event filtering for list items.
@@ -1485,6 +1499,26 @@ public:
      */
     IMPORT_C void SuspendEffects( TBool aSuspend );
 
+    /**
+     * Disables the single click functionality in the list.
+     * By default the feature is enabled.
+     *
+     * @since S60 5.2
+     * 
+     * @param  aDisabled @c ETrue to disable single click
+     *                   @c EFalse does currently nothing
+     */
+    IMPORT_C void DisableSingleClick( TBool aDisabled );
+    
+    /**
+     * Disables item specific menu from the list. This has the same effect as
+     * construction time flag @c EAknListBoxItemSpecificMenuDisabled and
+     * calling this method also turns that flag on.
+     *
+     * @since S60 5.2
+     */
+    IMPORT_C void DisableItemSpecificMenu();
+    
 private:
     IMPORT_C virtual void CEikListBox_Reserved(); // listbox use only
     void HorizontalScroll(TInt aScrollAmountInPixels);
@@ -1527,7 +1561,17 @@ private:
      * @since 5.0
      */
     void UpdateHighlightL( TInt aItemIndex );
-    
+
+public:
+    /**
+     * Sets this control as visible or invisible.
+     * 
+     * @param aVisible ETrue to make the control visible, EFalse to make
+     *                 it invisible.
+     * @since 5.2
+     */
+    IMPORT_C virtual void MakeVisible( TBool aVisible );
+
 protected:
     /** Flags for this list box  */
     TInt iListBoxFlags;
@@ -1583,7 +1627,7 @@ private:
 * This is a list box that scrolls horizontally, displaying its items 
 * in as many vertical columns as needed. Columns are arranged across 
 * the control from left to right; within columns, items are arranged 
-* from top to bottom. The flow of items or text ‘snakes’ across the 
+* from top to bottom. The flow of items or text ?snakes? across the 
 * face of the control.
 *
 * This is a flexible control class that makes good use of short, wide 
@@ -1621,14 +1665,14 @@ public:
     IMPORT_C virtual CListBoxView* MakeViewClassInstanceL();
     
     /**
-     * Sets the top item’s index.
+     * Sets the top item?s index.
      *
      * @param aItemIndex Index of the item to set as the top item.
      */
     IMPORT_C virtual void SetTopItemIndex(TInt aItemIndex) const;
     
     /**
-     * Gets the width of this list box’s columns. 
+     * Gets the width of this list box?s columns. 
      *
      * @return Width of each column.
      */
@@ -1783,7 +1827,7 @@ protected: //from CCoeControl
     /**
      * From @c CCoeControl.
      *
-     * Handles a change to the list box’s resources of type @c aType which are 
+     * Handles a change to the list box?s resources of type @c aType which are 
      * shared across the environment, colours or fonts for example.
      *
      * @param aType The type of resources that have changed.

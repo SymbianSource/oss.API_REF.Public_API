@@ -2,9 +2,9 @@
 * Copyright (c) 2002-2007 Nokia Corporation and/or its subsidiary(-ies).
 * All rights reserved.
 * This component and the accompanying materials are made available
-* under the terms of the License "Symbian Foundation License v1.0" to Symbian Foundation members and "Symbian Foundation End User License Agreement v1.0" to non-members
+* under the terms of "Eclipse Public License v1.0"
 * which accompanies this distribution, and is available
-* at the URL "http://www.symbianfoundation.org/legal/licencesv10.html".
+* at the URL "http://www.eclipse.org/legal/epl-v10.html".
 *
 * Initial Contributors:
 * Nokia Corporation - initial contribution.
@@ -25,7 +25,7 @@
 #include <lafpublc.h>
 #include <uikon.hrh>
 
-#include <akncontrol.h>
+#include <AknControl.h>
 
 class MEikCommandObserver;
 class CEikButtonGroupStack;
@@ -100,7 +100,9 @@ public:
         {
         EAddToStack      = 0x01, ///< Not used.
         EDelayActivation = 0x02, ///< If set, the container is not activated during construction.
-        EUseMaxSize      = 0x04  ///< Not used.
+        EUseMaxSize      = 0x04,  ///< Not used.
+        EIsEmbedded      = 0x08, ///< Embedded in a dialog or popup.
+        EParentIsControl = 0x10  ///< Parent window group is treated as CCoeControl.
         };
         
     /**
@@ -1050,7 +1052,7 @@ private:
     TDblQueLink iBtLink;
     CEikListBox* iMSKObserverOwner;
     TInt iSpare;
-
+    TInt iValid;
 private:
     friend class CCmdObserverArray;
     friend class CEikButtonGroupStack;

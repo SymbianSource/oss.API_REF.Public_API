@@ -1,9 +1,9 @@
 // Copyright (c) 2004-2009 Nokia Corporation and/or its subsidiary(-ies).
 // All rights reserved.
 // This component and the accompanying materials are made available
-// under the terms of the License "Symbian Foundation License v1.0" to Symbian Foundation members and "Symbian Foundation End User License Agreement v1.0" to non-members
+// under the terms of "Eclipse Public License v1.0"
 // which accompanies this distribution, and is available
-// at the URL "http://www.symbianfoundation.org/legal/licencesv10.html".
+// at the URL "http://www.eclipse.org/legal/epl-v10.html".
 //
 // Initial Contributors:
 // Nokia Corporation - initial contribution.
@@ -15,14 +15,11 @@
 // 
 //
 
-
-
 /**
  @file
- @publishedPartner
+ @publishedAll
  @released
 */
-
 
 #if (!defined METADATABASE_H)
 #define       METADATABASE_H
@@ -32,6 +29,10 @@
 // NetMeta headers
 #include <comms-infras/metadata.h>
 #include <comms-infras/metatype.h>
+
+#ifndef SYMBIAN_ENABLE_SPLIT_HEADERS
+#include <metadatabase_partner.h>
+#endif
 
 // CommsDat headers
 #include <commsdat.h>
@@ -157,8 +158,7 @@ Attributes describe access rights to the data in the database
 @publishedAll
 @released
 */
-typedef TUint32         TMDBAttributeFlags;	
-
+typedef TUint32         TMDBAttributeFlags;
 
 /**
 The identifier for any entry in the MetaDatabase.
@@ -174,8 +174,46 @@ This identifies
 */
 typedef TUint32         TMDBElementId;
 
+
+//
+// COMMSDAT RECORD BASE CLASS
+// Contains fields common to all records
+//
+
+	// Element Type Ids
+
+    /** 
+    Field will contain a user-defined numeric tag for a record.
+    Useful for user searches and cheaper to search on a numeric tag than a string name.
+    Can be null.
+    This tag is not automatically connected with the record id itself,
+    which is contained within the ElementId for the record and not in any field.
+
+    @publishedAll
+    @released
+    */
+	const TMDBElementId KCDTIdRecordTag			 = 0x00010000; 
+
+    /**
+    Field will contain a user-defined string tag for a record. 
+    This is used to uniquely identify business level information within a record.
+    
+    This field is useful for user searches, however it should be noted that it would be more efficient to use the KCDTIdRecordTag field instead
+    as it is quicker and cheaper to search for a number than for a string.
+
+    @publishedAll
+    @released
+    */
+    const TMDBElementId KCDTIdRecordName		 = 0x00020000; 
+
+
+	// Element Type Names
+	#define	KCDTypeNameRecordTag				_S("Id")
+	#define	KCDTypeNameRecordName		        _S("Name")
+    
+    
 class CMDBSession : public CBase
-/*
+/**
 A session with the underlying storage server
 @publishedAll
 @released
@@ -202,28 +240,24 @@ public:
     @pre    None
     @post   on success a session has been created and initialised
 
-    @publishedAll
 	*/
 	IMPORT_C static CMDBSession* NewL(TVersion aRequiredVersion);
 
 	/**
 	As NewL and adds Session to the CleanupStack
 
-	@publishedAll
 	*/
 	IMPORT_C static CMDBSession* NewLC(TVersion aRequiredVersion);
 
 	/**
 	Virtual Destructor
 
-	@publishedAll
 	*/
 	IMPORT_C ~CMDBSession();
 
 
 	/**
 	Close session with storage server.
-
 	@publishedAll
 	@deprecated v9.1 Destructor is all that is required
 	*/
@@ -231,11 +265,17 @@ public:
 
 
 	/**
-	Lookup latest data format version
-
+	Returns the KCDCurrentVersion constant which maps to the KCDVersion1_1 
+	constant for backward compatibility reason. Please avoid using this method 
+	when creating a CommsDat session object and use explicit schema version 
+	instead.
+	
 	@pre   None
     @post  None
+    
 	@publishedAll
+	@deprecated
+
 	*/
 	IMPORT_C static TVersion LatestVersion();
 
@@ -243,7 +283,7 @@ public:
 	/**
 	Lookup data format version currently in use by client
 
-	@publishedAll
+
 	*/
 	IMPORT_C TVersion VersionInUse();
 
@@ -260,7 +300,7 @@ public:
 	@pre    None
     @post   on success the session has exclusive write access to the database
 
-	@publishedAll
+
 	*/
 	IMPORT_C void OpenTransactionL();
 
@@ -275,20 +315,17 @@ public:
 
 	@post   On success the database is updated with data added, modified or deleted during the transaction
     @post   On failure, any open data containers may not be in sync with the database and should be discarded or reloaded
-	@publishedAll
 	*/
 	IMPORT_C void CommitTransactionL();
 
 
 	/**
 	Cancel Transaction with database and rollback all associated changes
-        Will not make any changes to the client's containers
 
     @leave	Will fail with KErrNotFound if not in transaction
 
     @pre    None - though for correct usage, ensure a transaction is already open
 	@post   Any open data containers may not be in sync with the database and should be discarded or reloaded
-	@publishedAll
 	*/
 	IMPORT_C void RollbackTransactionL();
 
@@ -298,9 +335,7 @@ public:
 		Not in transaction,
 		Already in transaction for this session,
 		Write-lock not available.  Another session has it.
-
     @pre None
-	@publishedAll
 	*/
 	IMPORT_C TInt IsInTransaction();
 
@@ -313,7 +348,6 @@ public:
 	        providing the client has enough platform security capabilities to back up the request
 	
     @pre None
-	@publishedAll
 	*/
 	IMPORT_C void SetAttributeMask(TMDBAttributeFlags aAttributeFlags);
 
@@ -331,7 +365,7 @@ public:
             This means that the attribute is obeyed in all database interactions for this session
 
     @pre None
-	@publishedAll
+	
 	*/
 	IMPORT_C TBool IsSetAttributeMask(TMDBAttributeFlags aAttributeFlags);
 
@@ -348,7 +382,7 @@ public:
         
     @pre None
 	
-	@publishedAll
+	
 	*/
 	IMPORT_C void ClearAttributeMask(TMDBAttributeFlags aAttributeFlags);
 
@@ -363,7 +397,6 @@ public:
     
     @pre  None
 
-	@publishedAll
 	*/
 	IMPORT_C TInt CancelAllNotifications();
 
@@ -379,7 +412,6 @@ public:
     	
     @pre None
 
-    @internalComponent
 	*/	
 	IMPORT_C TInt PublishProperties();
 
@@ -394,6 +426,7 @@ private:
 	CMDBSessionImpl* iMDBSessionImpl;
 	
 	friend class MMetaDatabase;
+	friend class CommsDatSchema;
 };
 
 
@@ -401,10 +434,11 @@ private:
 
 
 class MMetaDatabase : public Meta::MMetaData
-/*
+/**
 Interface for interaction with a database server
 Inherited by each data set type that can be stored
 @publishedAll
+@released
 */
 {
 public:
@@ -440,7 +474,6 @@ public:
         Ensure that the session object has been initialised with the correct dataset version
         Ensure that the session object has appropriate access control attributes to manage the target data in the database
 
-	@publishedAll
 	*/
 	IMPORT_C void LoadL(CMDBSession& aSession);
 
@@ -461,7 +494,9 @@ public:
         May also leave with KErrGeneral or other general error codes.
 
         On failure, the container should be discarded or repopulated before it is used again
-
+		
+		Please note - a case insensitive search is done in the case of text based fields
+		
     @pre
 
         Populate this container where necessary with valid data to match during the find operation
@@ -469,7 +504,6 @@ public:
             <Table><Column>
         Ensure that the session object has been initialised with the correct dataset version
         Ensure that the session object has appropriate access control attributes to manage the target data in the database
-	@publishedAll
 	 */
 	IMPORT_C TBool FindL(CMDBSession& aSession);
 
@@ -499,7 +533,6 @@ public:
             <Table><Column><Record>
         Ensure that the session object has been initialised with the correct dataset version
         Ensure that the session object has appropriate access control attributes to manage the target data in the database
-	@publishedAll
 	*/
 	IMPORT_C void RefreshL(CMDBSession& aSession);
 
@@ -528,7 +561,8 @@ public:
         May also leave with other general error codes if there are unexpected 
         problems (e.g. KErrNoMemory when out of memory)
 
-
+		Store will be atomic - all fields stored after success.  No fields stored if the function leaves
+		
         If StoreL fails or the later commit is not successful, The data in the container will not
         match the data in the database.  
 
@@ -542,15 +576,12 @@ public:
         Ensure that the session object has been initialised with the correct dataset version
         Ensure that the session object has appropriate access control attributes to manage the target data in the database
         
-	@publishedAll
 	*/
 	IMPORT_C void StoreL(CMDBSession& aSession);
 
 
 	/**
 	Modify all fields in the database that have been changed in this container by the caller
-        
-        Only modifies existing data in the database, won't create new fields  VCT - is this true?? don't think so
 	
         Modification is atomic for this container.  It uses an internal transaction even if 
         no overall transaction set by client.
@@ -562,9 +593,7 @@ public:
 		However, only fields that the client has capabilities to alter will be modified.in the database
 		A request to modify data in an unauthorised area will cause the function to leave.with 
             KErrPermissionDenied
-
-        If field does not exist, the function will leave with 
-            KErrNotFound [VCT - surely not]
+		
 
 		May also leave with other general error codes if there are unexpected 
         problems (e.g. KErrNoMemory when out of memory)
@@ -578,7 +607,6 @@ public:
             <Table><Column><Record>
         Ensure that the session object has been initialised with the correct dataset version
         Ensure that the session object has appropriate access control attributes to manage the target data in the database
-	@publishedAll
 	*/
 	IMPORT_C void ModifyL(CMDBSession& aSession);
 
@@ -601,7 +629,6 @@ public:
             Ensure that the session object has appropriate access control attributes to manage the target data in the database
             Ensure the ElementId for this container correcty identifies the target data in the database
 
-	@publishedAll
 	*/
 	IMPORT_C void DeleteL(CMDBSession& aSession);
 
@@ -631,8 +658,6 @@ public:
     
     @pre    None
     @post   A notification request will be outstanding
-
-	@publishedAll
 	*/
 	IMPORT_C TInt RequestNotification(CMDBSession&          aSession,
 									  TRequestStatus&        aRequestStatus);
@@ -648,7 +673,6 @@ public:
          
         There is an outstanding notification request
 
-	@publishedAll
 	*/
 	IMPORT_C TInt CancelNotification(CMDBSession&       aSession,
 									 TRequestStatus&     aRequestStatus);
@@ -657,19 +681,19 @@ public:
 protected:
 
 
-	explicit MMetaDatabase();
+	IMPORT_C explicit MMetaDatabase();
 
 private:
 
     /*
     @internalComponent
     */
-    void DoLoadL(CMDBSessionImpl* aSession, CMDBElement* aElement, CMDBElement* aMapper, TInt& aErr, TMDBElementId aRecordId, TMDBElementId aAttributes);
+    void DoLoadL(CMDBSessionImpl* aSession, CMDBElement* aElement, CMDBElement* aMapper, TInt& aErr, TMDBElementId aRecordId, TMDBElementId aAttributes, TBool isTheLoadForMapper = EFalse);
 
     /*
     @internalComponent
     */
-    void DoLoadL(CMDBSessionImpl* aSession, CMDBElement* aElement, CMDBElement* aMapper, TInt& aErr, TMDBElementId aRecordId, TMDBElementId aAttributes, RArray<TUint32>& aMatches);
+    void DoLoadL(CMDBSessionImpl* aSession, CMDBElement* aElement, CMDBElement* aMapper, TInt& aErr, TMDBElementId aRecordId, TMDBElementId aAttributes, RArray<TUint32>& aMatches, TBool isTheLoadForMapper = EFalse);
 
     /*
     @internalComponent
@@ -698,7 +722,7 @@ private:
 
 
 class CMDBElement : public CBase, public MMetaDatabase
-/*
+/**
 Every item stored in the database is represented as a CMDBElement
 This class contains the id and attributes of every item in the database
 and for individual fields it also contains the value.
@@ -712,24 +736,18 @@ public:
 
 	/**
 	Default Constructor
-
-	@publishedAll
 	*/
 	IMPORT_C CMDBElement();
 
 
 	/**
 	Constructor
-
-	@publishedAll
 	*/
 	IMPORT_C CMDBElement(TMDBElementId aElementId);
 	
 	
 	/**
 	Destructor
-
-	@publishedAll
 	*/
 	IMPORT_C ~CMDBElement();
 
@@ -747,7 +765,6 @@ public:
 	It also identifies the type of the data stored in this element
 	and the instance of the type
 
-	@publishedAll
 	*/
 	IMPORT_C TMDBElementId ElementId() const;
 
@@ -765,7 +782,6 @@ public:
     For an element that is a Table or a Record, the ColumnId field will be set to 
 
     KCDMaxColumnId
-	@publishedAll
 	*/
 	IMPORT_C TMDBElementId  TypeId() const;
 
@@ -779,7 +795,6 @@ public:
 
 	It identifies the table in the database that holds the data contained in this element
 
-	@publishedAll
 	*/
 	IMPORT_C TMDBElementId  TableId() const;
 
@@ -791,7 +806,6 @@ public:
 
 	It identifies a particular instance of this type of Element in the database
 
-	@publishedAll
 	*/
 	IMPORT_C TInt RecordId() const;
 
@@ -801,7 +815,6 @@ public:
 
 	Attributes express database access rights for the data of this element
 
-	@publishedAll
 	*/
 	IMPORT_C TMDBAttributeFlags Attributes() const;
 
@@ -810,7 +823,6 @@ public:
 	/**
 	Sets the ElementId
 
-	@publishedAll
 	*/
 	IMPORT_C void SetElementId(TMDBElementId aElementId);
 
@@ -818,7 +830,6 @@ public:
 	/**
 	Sets the TypeId
 
-	@publishedAll
 	*/
 	IMPORT_C void SetTypeId(TMDBElementId aElementId);
 
@@ -826,7 +837,6 @@ public:
 	/**
 	Sets the RecordId
 
-	@publishedAll
 	*/
 	IMPORT_C void SetRecordId(TInt aRecordId);
 
@@ -834,7 +844,6 @@ public:
 	/**
 	Sets one or more attributes
 
-	@publishedAll
 	*/
 	IMPORT_C void SetAttributes(TMDBAttributeFlags aAttributes);
 
@@ -842,7 +851,6 @@ public:
 	/**
 	Clears one or more attributes
 
-	@publishedAll
 	*/
 	IMPORT_C void ClearAttributes(TMDBAttributeFlags aAttributes);
 
@@ -852,8 +860,6 @@ public:
 
 	Returns ETrue if all queried attributes are set
 	Returns EFalse if any queried attribute is not set.
-
-	@publishedAll
 	*/
 	IMPORT_C TBool IsSetAttribute(TMDBAttributeFlags aAttributes) const;
 
@@ -864,7 +870,6 @@ public:
 	Returns ETrue if the value of the element is not set
 	Returns EFalse if the element contains a value
 
-	@publishedAll
 	*/
 	IMPORT_C TBool IsNull() const;	
 	
@@ -877,7 +882,6 @@ public:
 
 	Returns the enumeration TCDFieldValueTypes that represents the value that can be stored in this element
 
-	@publishedAll
 	*/
 
 	virtual TCDFieldValueTypes Type()=0;
@@ -886,13 +890,6 @@ public:
 	@internalComponent
 	*/
     TMDBElementId* Data(){return &iElementId;}
-    
-	/**
-	@internalComponent
-	*/
-    const TMDBElementId* CData(){return &iElementId;}
-    
-
 	
 protected:
 
@@ -905,13 +902,13 @@ protected:
 
 
 
-///////////////////////////////////////////////////////////////////////////////////////
+//
 //  COMMSDAT CONTAINERS
 //
 
 /**
 Commsdat Container classes qualifying numeric values
-@internalComponent 
+@publishedAll 
 */
 class CMDBNumFieldBase : public CMDBElement
 {
@@ -926,7 +923,7 @@ public:
 	Constructor setting Field's ElementId
 	*/
 	IMPORT_C CMDBNumFieldBase(TMDBElementId aFieldId);
-		
+
 
     /**
 	Assignment operator for field value
@@ -937,7 +934,9 @@ public:
     TMDBElementId GetL();
 	     
     EXP_DATA_VTABLE
+        
 
+private:
 	virtual TCDFieldValueTypes Type()
 		{
 		return EInt;
@@ -952,14 +951,13 @@ A thin template that guards typed data access in a single CMDBElement
 This class describes a single numeric field in the database
 
 @publishedAll
+@released
 */
 {
 public:
 
 	/**
 	Default Constructor
-
-	@publishedAll
 	*/
 	inline CMDBField()
 		{
@@ -967,8 +965,6 @@ public:
 
 	/**
 	Constructor setting Field's ElementId
-
-	@publishedAll
 	*/
 	inline CMDBField(TMDBElementId aFieldId)
 		: CMDBNumFieldBase(aFieldId)
@@ -978,8 +974,6 @@ public:
 
 	/**
 	Assignment operator for field value
-
-	@publishedAll
 	*/
 	inline CMDBField<TYPE>& operator=(const TYPE& aValue)
 	{
@@ -994,8 +988,6 @@ public:
 	
 	/**
 	Conversion operator for field value
-
-	@publishedAll
 	*/
 	inline operator TYPE&()
 	{
@@ -1004,8 +996,6 @@ public:
 	
 	/**
 	Conversion operator for field value
-
-	@publishedAll
 	*/
 	inline CMDBField<TYPE>& GetL()
 	{
@@ -1019,8 +1009,6 @@ public:
 	
 	/**
 	Function for setting a value
-
-	@publishedAll
 	*/
 	inline void SetL(const TYPE& aValue)
 	{
@@ -1031,10 +1019,10 @@ public:
 
 
 
-//////////////////
+//
 /**
 Base Container class qualifying a text field
-@internalComponent
+@publishedAll
 */
 class CMDBTextFieldBase : public CMDBElement
 {
@@ -1065,7 +1053,8 @@ public:
     IMPORT_C void SetMaxLengthL(TInt aLength);
 
     EXP_DATA_VTABLE
-    
+
+private:
 	virtual TCDFieldValueTypes Type()
 		{
 		return EText;
@@ -1086,14 +1075,13 @@ A thin template that guards typed data access in a single CMDBElement
 This class describes a single field in the database
 
 @publishedAll
+@released
 */
 {
 public:
 
 	/**
 	Default Constructor
-
-	@publishedAll
 	*/
 	inline CMDBField()
 		{
@@ -1101,8 +1089,6 @@ public:
 
 	/**
 	Constructor setting Field's ElementId
-
-	@publishedAll
 	*/
 	inline CMDBField(TMDBElementId aFieldId)
 		: CMDBTextFieldBase(aFieldId)
@@ -1130,8 +1116,6 @@ public:
 
 	/**
 	Conversion operator for field value
-
-	@publishedAll
 	*/
 	inline operator const TDesC&()
 	{
@@ -1143,8 +1127,6 @@ public:
 	
 	/**
 	Conversion operator for field value
-
-	@publishedAll
 	*/
 	inline TDesC& GetL()
 	{
@@ -1158,8 +1140,6 @@ public:
 	
 	/**
 	Function for setting a value
-
-	@publishedAll
 	*/
 	inline void SetL(const TDesC& aValue)
 	{
@@ -1171,10 +1151,10 @@ public:
 };
 
 
-//////////////////
+//
 /**
 Container class for qualifying binary values
-@internalComponent 
+@publishedAll 
 */
 class CMDBBinFieldBase : public CMDBElement
 {
@@ -1208,7 +1188,8 @@ public:
 	IMPORT_C void SetMaxLengthL(TInt aLength);
 
     EXP_DATA_VTABLE
-    
+
+private:
 	virtual TCDFieldValueTypes Type()
 		{
 		return EDesC8;
@@ -1223,14 +1204,13 @@ A thin template that guards typed data access in a single CMDBElement
 This class describes a single field in the database
 
 @publishedAll
+@released
 */
 {
 public:
 
 	/**
 	Default Constructor
-
-	@publishedAll
 	*/
 	inline CMDBField()
 		{
@@ -1238,8 +1218,6 @@ public:
 
 	/**
 	Constructor setting Field's ElementId
-
-	@publishedAll
 	*/
 	inline CMDBField(TMDBElementId aFieldId)
 		: CMDBBinFieldBase(aFieldId)
@@ -1268,8 +1246,6 @@ public:
 
 	/**
 	Conversion operator for field value
-
-	@publishedAll
 	*/
 	inline operator const TDesC8&()
     	{
@@ -1281,8 +1257,6 @@ public:
     	
     /**
 	Conversion operator for field value
-
-	@publishedAll
 	*/
 	inline TDesC8& GetL()
 	{
@@ -1296,8 +1270,6 @@ public:
 	
 	/**
 	Function for setting a value
-
-	@publishedAll
 	*/
 	inline void SetL(const TDesC8& aValue)
 	{
@@ -1309,11 +1281,11 @@ public:
 
 
 
-///////////////////////////////////////////////////////////////////////////////////////////////
+//
 
 /**
 Base class for CMDBRecordLink
-@internalComponent 
+@publishedAll 
 */
 class CMDBRecordLinkBase : public CMDBNumFieldBase
 {
@@ -1341,15 +1313,16 @@ public :
 	*/
 	IMPORT_C operator TMDBElementId();
 
-    TCDFieldValueTypes Type()
-		{
-		return ELink;
-		}    
 
 protected:
 
 	EXP_DATA_VTABLE
 
+private:
+    TCDFieldValueTypes Type()
+		{
+		return ELink;
+		}    
 public:
     
 	// the record referenced by the link id stored in the value of this field.
@@ -1368,9 +1341,13 @@ class CMDBRecordLink : public CMDBRecordLinkBase
 
  The linked record itself can be viewed via the iLinkedRecord member and its accessors
  
- iLinkedRecord must be created explicitly by the client - either on construction, 
- or by use of the CreateLinkL or SetLinkL functions. Often the linked record is not 
- required by a caller.  So creating it automatically would just waste memory
+ If a record is loaded then the iLinkedRecord must be created explicitly 
+ by the client - either on construction, or by use of the CreateLinkL or 
+ SetLinkL functions. Often the linked record is not required by a caller.  
+ So creating it automatically would just waste memory
+ 
+ However in the case of an explicit load of a LinkedRecord field the ILinkedRecord
+ is created.
  
  When instantiating iLinkedRecord directly take care to match the object's type to the Type 
  ID that will be found at the linking element.  It is better to use the CreateLinkL or 
@@ -1385,8 +1362,6 @@ class CMDBRecordLink : public CMDBRecordLinkBase
 public :
 	/**
 	Constructor/Destructor
-
-	@publishedAll
 	*/
 
 	inline CMDBRecordLink()
@@ -1394,23 +1369,16 @@ public :
 
 	/**
 	Constructor
-
-	@publishedAll
 	*/
 	inline CMDBRecordLink(TMDBElementId aLinkingFieldId)
 		: CMDBRecordLinkBase(aLinkingFieldId) {}
 
 	/**
 	Constructor
-
-	@publishedAll
 	*/
 	inline CMDBRecordLink(TMDBElementId aLinkingFieldId, RECORD_TYPE* aLinkedRecord)
 		: CMDBRecordLinkBase(aLinkingFieldId, (CMDBElement*)aLinkedRecord) {}
 
-	/**
-	@publishedAll
-	*/
 	inline CMDBRecordLink& operator=(const TMDBElementId aValue)
 	{
 		return (CMDBRecordLink&)CMDBRecordLinkBase::operator=(aValue);
@@ -1421,8 +1389,6 @@ public :
 
 	/**
 	Set the field value (this will be validated on StoreL)
-
-	@publishedAll
 	*/
 	inline void SetL(const TMDBElementId aValue)
 		{
@@ -1434,8 +1400,6 @@ public :
 
 	/**
 	conversion operator for linked record of this type
-
-	@publishedAll
 	*/
 	inline operator RECORD_TYPE*()
 	{
@@ -1447,25 +1411,21 @@ public :
 enum TFieldTypeAttributes
 /**
 To express type information for all MetaDatabase fields
-@publishedAll
-@released
 */
 	{
-	ENoAttrs,	///< No attributes associated with this field.
-	ENotNull, 	///< Ensures the field contains a value and must not be null.	
+	ENoAttrs,	//< No attributes associated with this field.
+	ENotNull, 	//< Ensures the field contains a value and must not be null.	
 	};
 
 typedef struct
 /**
 To express type information for all MetaDatabase fields
-@publishedAll
-@released
 */
 	{
-		const TMDBElementId	        iTypeId;		///< Identifier for the field.	
-		const TInt                  iValType;		///< The field type value e.g.EText, EMedText.
-	    const TFieldTypeAttributes	iTypeAttr;		///< The field attribute, either ENoAttrs or ENotNull.
-        const TText * const         iTypeName;		///< Name of the field type.
+		const TMDBElementId	        iTypeId;		//< Identifier for the field.	
+		const TInt                  iValType;		//< The field type value e.g.EText, EMedText.
+	    const TFieldTypeAttributes	iTypeAttr;		//< The field attribute, either ENoAttrs or ENotNull.
+        const TText * const         iTypeName;		//< Name of the field type.
 	    
 	} SRecordTypeInfo;
 
@@ -1477,8 +1437,6 @@ typedef TBuf<64> TGenericTypeName;
 typedef struct SGenericRecordTypeInfoTag
 /**
 To express type information for all MetaDatabase fields
-@publishedAll
-@released
 */
 	{
 	     SGenericRecordTypeInfoTag()
@@ -1508,10 +1466,10 @@ To express type information for all MetaDatabase fields
     	     : iTypeId(aId), iValType(aVal), iTypeAttr(aAttrType), iTypeName(aTypeName) {}
 
 
-		 TMDBElementId	       iTypeId;			///< Identifier for the field type.	
-		 TInt                  iValType;		///< The field type value e.g.EText, EMedText.
-	     TFieldTypeAttributes  iTypeAttr;		///< The type's attribute, either ENoAttrs or ENotNull
-         TGenericTypeName	   iTypeName;		///< Name of the field type.
+		 TMDBElementId	       iTypeId;			//< Identifier for the field type.	
+		 TInt                  iValType;		//< The field type value e.g.EText, EMedText.
+	     TFieldTypeAttributes  iTypeAttr;		//< The type's attribute, either ENoAttrs or ENotNull
+         TGenericTypeName	   iTypeName;		//< Name of the field type.
 	} SGenericRecordTypeInfo;
 	
 	
@@ -1600,19 +1558,10 @@ Records can be ordered using the standard RPointerArray functions
 */
     {
     public:
-		/**
-		@internalComponent
-		*/
     	IMPORT_C CMDBRecordSetBase();
 
-		/**
-		@internalComponent
-		*/
     	IMPORT_C CMDBRecordSetBase(TMDBElementId aElementId);
 
-		/**
-		@internalComponent
-		*/
     	IMPORT_C ~CMDBRecordSetBase();
 
         inline CMDBRecordSetBase& operator=(const TPtrC& aValue)
@@ -1639,6 +1588,7 @@ Use this class to express a list of records of a particular MetaDatabase Element
 Records can be ordered using the standard RPointerArray functions
 
 @publishedAll
+@released
 */
 {
 public:
@@ -1661,9 +1611,6 @@ public:
 private:
 
 };
-
-
-
 
 } //end namespace CommsDat
 

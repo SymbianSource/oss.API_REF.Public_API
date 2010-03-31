@@ -1,9 +1,9 @@
 // Copyright (c) 2004-2009 Nokia Corporation and/or its subsidiary(-ies).
 // All rights reserved.
 // This component and the accompanying materials are made available
-// under the terms of the License "Symbian Foundation License v1.0" to Symbian Foundation members and "Symbian Foundation End User License Agreement v1.0" to non-members
+// under the terms of "Eclipse Public License v1.0"
 // which accompanies this distribution, and is available
-// at the URL "http://www.symbianfoundation.org/legal/licencesv10.html".
+// at the URL "http://www.eclipse.org/legal/epl-v10.html".
 //
 // Initial Contributors:
 // Nokia Corporation - initial contribution.
@@ -21,6 +21,13 @@
 #include <e32std.h>
 #include <animationframe.h>
 #include <animationmixins.h>
+
+#ifndef SYMBIAN_ENABLE_SPLIT_HEADERS
+// For phase2 CICLAnimationDataProvider needs refactoring to convert it's derivation from
+// MICLAnimationDataLoaderObserver to having a CAnimationDataLoaderObserver* member
+#include <animationdataloaderobserver.h>
+#endif //SYMBIAN_ENABLE_SPLIT_HEADERS
+
 
 _LIT8(KBitmapAnimationDataType, "bitmap");
 
@@ -67,3 +74,4 @@ private:
 	};
 
 #endif //__ICLANIMATIONDATAPROVIDER_H__
+

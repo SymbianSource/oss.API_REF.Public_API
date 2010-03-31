@@ -1,6 +1,4 @@
 /*-
- * © Portions copyright (c) 2006 Nokia Corporation.  All rights reserved.
- * © Portions copyright (c) 2006 Symbian Software Ltd. All rights reserved.
  * Copyright (c) 1991, 1993, 1994
  *	The Regents of the University of California.  All rights reserved.
  *
@@ -27,7 +25,8 @@
  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY
  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
- * © Portions copyright (c) 2007 Symbian Software Ltd. All rights reserved.
+ *
+ * Portions Copyright (c) 2006-2008 Nokia Corporation and/or its subsidiary(-ies). All rights reserved.
  *	@(#)unistd.h	8.12 (Berkeley) 4/27/95
  * $FreeBSD: src/include/unistd.h,v 1.78 2005/05/13 16:27:30 delphij Exp $
  */
@@ -359,6 +358,11 @@ IMPORT_C int	 link(const char *, const char *);
 #ifndef _LSEEK_DECLARED
 #define	_LSEEK_DECLARED
 IMPORT_C off_t	 lseek(int, off_t, int);
+
+#if defined(SYMBIAN_OE_LARGE_FILE_SUPPORT) && !defined(SYMBIAN_OE_NO_LFS)
+#define lseek64  lseek
+#endif /* SYMBIAN_OE_LARGE_FILE_SUPPORT && !SYMBIAN_OE_NO_LFS */
+
 #endif
 IMPORT_C long	 pathconf(const char *, int);
 IMPORT_C int pipe(int *);
@@ -409,6 +413,11 @@ IMPORT_C int fdatasync(int);
 #ifndef _FTRUNCATE_DECLARED
 #define	_FTRUNCATE_DECLARED
 IMPORT_C int	 ftruncate(int, off_t);
+
+#if defined(SYMBIAN_OE_LARGE_FILE_SUPPORT) && !defined(SYMBIAN_OE_NO_LFS)
+#define ftruncate64 ftruncate
+#endif /* SYMBIAN_OE_LARGE_FILE_SUPPORT && !SYMBIAN_OE_NO_LFS */
+
 #endif
 #endif
 
@@ -461,10 +470,17 @@ void	 swab(const void * __restrict, void * __restrict, ssize_t);
 void	 sync(void);
 IMPORT_C int	 usleep(useconds_t);
 
+IMPORT_C unsigned int	alarm(unsigned int seconds);
+
 /* See comment at ftruncate() above. */
 #ifndef _TRUNCATE_DECLARED
 #define	_TRUNCATE_DECLARED
 IMPORT_C int	 truncate(const char *, off_t);
+
+#if defined(SYMBIAN_OE_LARGE_FILE_SUPPORT) && !defined(SYMBIAN_OE_NO_LFS)
+#define truncate64 truncate
+#endif /* SYMBIAN_OE_LARGE_FILE_SUPPORT && !SYMBIAN_OE_NO_LFS */
+
 #endif
 #endif /* __XSI_VISIBLE */
 
@@ -489,6 +505,11 @@ int	 mknod(const char *, mode_t, dev_t);
 #endif
 #ifndef _MKSTEMP_DECLARED
 IMPORT_C int	 mkstemp(char *);
+
+#if defined(SYMBIAN_OE_LARGE_FILE_SUPPORT) && !defined(SYMBIAN_OE_NO_LFS)
+#define mkstemp64	mkstemp
+#endif /* SYMBIAN_OE_LARGE_FILE_SUPPORT && !SYMBIAN_OE_NO_LFS */
+
 #define	_MKSTEMP_DECLARED
 #endif
 

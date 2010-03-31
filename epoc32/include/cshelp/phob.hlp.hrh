@@ -1,0 +1,41 @@
+/*
+* Copyright (c) 2009 Nokia Corporation and/or its subsidiary(-ies).
+* All rights reserved.
+* This component and the accompanying materials are made available
+* under the terms of "Eclipse Public License v1.0"
+* which accompanies this distribution, and is available
+* at the URL "http://www.eclipse.org/legal/epl-v10.html".
+*
+* Initial Contributors:
+* Nokia Corporation - initial contribution.
+*
+* Contributors:
+*
+* Description:
+*
+*/
+//
+// _phob.hlp.hrh
+//
+
+//
+// File generated on 14:42:3 11/12/2003
+// by cshlpcmp Version 010
+//
+
+#ifndef ___PHOB_HLP_HRH__
+#define ___PHOB_HLP_HRH__
+
+
+_LIT(KPHOB_HLP_ADD_ENTRY,"PHOB_HLP_ADD_ENTRY"); //Adding an entry
+_LIT(KPHOB_HLP_EDIT_ENTRY,"PHOB_HLP_EDIT_ENTRY"); //editing an entry
+_LIT(KPHOB_HLP_NAME_LIST,"PHOB_HLP_NAME_LIST"); //Names list
+_LIT(KPHOB_HLP_SUBSCRIBED,"PHOB_HLP_SUBSCRIBED"); //Subscribed contacts view
+_LIT(KPHOB_HLP_PRESDET,"PHOB_HLP_PRESDET"); //Presence details view
+_LIT(KPHOB_HLP_GROUP_LIST,"PHOB_HLP_GROUP_LIST"); //Group list
+_LIT(KPHOB_HLP_GROUP_MEMBER_LIST,"PHOB_HLP_GROUP_MEMBER_LIST"); //Group members list
+_LIT(KPHOB_HLP_SETTINGS,"PHOB_HLP_SETTINGS"); //Contact settings view
+_LIT(KPHOB_HLP_CONTACT_INFO_VIEW,"PHOB_HLP_CONTACT_INFO_VIEW"); //Contact info view
+_LIT(KVOTAG_HLP_LIST,"VOTAG_HLP_LIST"); //Voice tags list
+
+#endif

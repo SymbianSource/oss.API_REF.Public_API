@@ -1,9 +1,9 @@
 // Copyright (c) 2001-2009 Nokia Corporation and/or its subsidiary(-ies).
 // All rights reserved.
 // This component and the accompanying materials are made available
-// under the terms of the License "Symbian Foundation License v1.0" to Symbian Foundation members and "Symbian Foundation End User License Agreement v1.0" to non-members
+// under the terms of "Eclipse Public License v1.0"
 // which accompanies this distribution, and is available
-// at the URL "http://www.symbianfoundation.org/legal/licencesv10.html".
+// at the URL "http://www.eclipse.org/legal/epl-v10.html".
 //
 // Initial Contributors:
 // Nokia Corporation - initial contribution.
@@ -18,8 +18,6 @@
 // 
 //
 
-
-
 /**
  @file Uri8.h
  @publishedAll
@@ -32,7 +30,7 @@
 // System includes
 //
 #include <e32base.h>
-#include <f32fsys.h>
+#include <f32file.h>
 #include <uricommon.h>
 
 
@@ -92,13 +90,20 @@ protected:	// Attributes
 	@since		6.0
  */
 	friend class CUri8;
-
+#ifdef SYMBIAN_ENABLE_SPLIT_HEADERS
+/**
+	A friend class used for testing.
+	@see		TUriC8StateAccessor
+	@since		6.0	
+ */
+#else
 /**
 	A friend class used for testing.
 	@see		TUriC8StateAccessor
 	@since		6.0
 	@internalComponent
  */
+#endif	//SYMBIAN_ENABLE_SPLIT_HEADERS
 	friend class TUriC8StateAccessor;
 
 	};
@@ -181,13 +186,21 @@ private:	// Attributes
 	/** The parsed uri object.
 	 */
 	TUriC8	iUri;
-
+	
+#ifdef SYMBIAN_ENABLE_SPLIT_HEADERS
+/**
+	A friend class used for testing.
+	@see		TUri8StateAccessor
+	@since		6.0
+	*/
+#else
 /**
 	A friend class used for testing.
 	@see		TUri8StateAccessor
 	@since		6.0
 	@internalComponent
  */
+#endif	//SYMBIAN_ENABLE_SPLIT_HEADERS
 	friend class TUri8StateAccessor;
 
 	};

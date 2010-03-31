@@ -1,6 +1,7 @@
 /* STDIO_R.H
  * 
- * Portions copyright (c) 1990-1999 Symbian Ltd.  All rights reserved.
+ * Portions Copyright (c) 1990-1999 Nokia Corporation and/or its subsidiary(-ies).
+ * All rights reserved.
  */
 
 /*

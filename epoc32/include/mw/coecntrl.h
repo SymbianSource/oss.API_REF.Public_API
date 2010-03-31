@@ -1,9 +1,9 @@
 // Copyright (c) 1997-2009 Nokia Corporation and/or its subsidiary(-ies).
 // All rights reserved.
 // This component and the accompanying materials are made available
-// under the terms of the License "Symbian Foundation License v1.0" to Symbian Foundation members and "Symbian Foundation End User License Agreement v1.0" to non-members
+// under the terms of "Eclipse Public License v1.0"
 // which accompanies this distribution, and is available
-// at the URL "http://www.symbianfoundation.org/legal/licencesv10.html".
+// at the URL "http://www.eclipse.org/legal/epl-v10.html".
 //
 // Initial Contributors:
 // Nokia Corporation - initial contribution.
@@ -35,7 +35,7 @@
 class TResourceReader;
 class CCoeEnv;
 class MCoeControlContext;
-class RCoeDynamicDataStorage;
+class CCoeControlStorage;
 
 class MCoeLayoutManager;
 class TCoeZoomWithType; 
@@ -227,6 +227,7 @@ public:
 	// Pointer events
 	IMPORT_C void SetPointerCapture(TBool aCapture=ETrue);
 	IMPORT_C void ClaimPointerGrab(TBool aSendUpEvent=ETrue);
+	IMPORT_C TInt ClaimPointerGrab(TInt aPointerNumber, TBool aSendUpEvent);
 	IMPORT_C void IgnoreEventsUntilNextPointerUp();
 	IMPORT_C void SetGloballyCapturing(TBool aGlobal);
 	// Pointer hit test
@@ -303,6 +304,7 @@ protected:
 	IMPORT_C void HandleRedrawEvent(const TRect& aRect) const;
 	IMPORT_C void SetAllowStrayPointers();
 	IMPORT_C CCoeControl* GrabbingComponent() const;
+	IMPORT_C CCoeControl* GrabbingComponent(TInt aPointer) const;
 	IMPORT_C TBool CapturesPointer() const;
 	// Drawing	
 	IMPORT_C TBool IsReadyToDraw() const;
@@ -360,8 +362,8 @@ private:
 	void DrawComponents(const TRect& aRect) const;	
 	void DrawWindowOwningComponentsNow() const;
 	void DrawWindowOwningComponentsNow(const TRect &aRect) const;	
-	void SetGrabbed(TBool aGrabbed);
-	TBool IsGrabbed() const;
+	void SetGrabbed(TBool aGrabbed, TInt aPointerNumber);
+	TBool IsGrabbed(TInt aPointerNumber = 0) const;
 	void DoMakeVisible(TBool aVisible);
 	void CheckPointerEventPurge() const;
 	void RecursivelyMergeTextDrawers(CCoeTextDrawerBase*& aTextDrawer, const CCoeControl* aDrawingControl, TInt aKey) const;
@@ -376,6 +378,8 @@ private:
 	void ActivateGcRecursive() const;
 	void DeactivateGcRecursive() const;
 	void ReportControlStateChange(MCoeControlStateObserver::TCoeState aType);
+	TInt ValidateAdvancedPointerNumber( const TPointerEvent& aPointerEvent ) const;
+	void ControlClaimPointerGrab(TInt aPointerNumber);
 public:	
 	IMPORT_C void EnableReportControlStateChange(TBool aState);
 
@@ -387,7 +391,7 @@ protected:
 private:
 	TInt iFlags;
 	RDrawableWindow* iWin;
-	RCoeDynamicDataStorage* iData;
+	CCoeControlStorage* iData;
 	MObjectProvider* iMopParent;
 	};
 

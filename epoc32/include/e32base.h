@@ -1,9 +1,9 @@
 // Copyright (c) 1994-2009 Nokia Corporation and/or its subsidiary(-ies).
 // All rights reserved.
 // This component and the accompanying materials are made available
-// under the terms of the License "Symbian Foundation License v1.0" to Symbian Foundation members and "Symbian Foundation End User License Agreement v1.0" to non-members
+// under the terms of the License "Eclipse Public License v1.0"
 // which accompanies this distribution, and is available
-// at the URL "http://www.symbianfoundation.org/legal/licencesv10.html".
+// at the URL "http://www.eclipse.org/legal/epl-v10.html".
 //
 // Initial Contributors:
 // Nokia Corporation - initial contribution.
@@ -1095,33 +1095,9 @@ private:
 	__DECLARE_TEST;
 	};
 
-
-
-
-/**
-@internalComponent
-*/
-		struct	TObjectDataStr	//In use if this slot contains pointer to object.
-			{			
-			TInt16 instance;  
-			TUint16 uniqueID;
-			};		
-/**
-@internalComponent
-*/
-struct SObjectIxRec
-	{
-	union
-	{
-		TObjectDataStr str;	//This is in use if the slot contains pointer to CObject.	
-		TInt nextEmpty;		//This is in use if the slot is empty. Points to the next empty slot ...
-							//... in the list. 16 bits would be enough but ARM prefers 32 bytes.
-	};
-	CObject* obj;
-	};
+//Forward declaration of SObjectIxRec
+struct SObjectIxRec;
 	
-
-
 class CObjectIx : public CBase
 /**
 @publishedAll
@@ -1218,11 +1194,6 @@ Note that this class is not intended for user derivation.
 @see CObjectConIx
 */
 	{
-protected:
-    /**
-    @internalComponent
-    */
-	enum {ENotOwnerID};
 public:
 	IMPORT_C static CObjectCon* NewL();
 	IMPORT_C ~CObjectCon();
@@ -1274,6 +1245,14 @@ types, are created.
 @see CObject
 */
 	{
+#ifndef	SYMBIAN_ENABLE_SPLIT_HEADERS
+protected:
+    /**
+    @internalComponent
+    */
+	enum {ENotOwnerID};
+#endif
+	
 public:
 	IMPORT_C static CObjectConIx* NewL();
 	IMPORT_C ~CObjectConIx();
@@ -1295,41 +1274,6 @@ private:
 	TAny* iSpare2;
 	};
 
-
-/**
-@internalTechnology
-@deprecated
-*/
-class CBitMapAllocator : public CBase
-	{
-public:
-	IMPORT_C static CBitMapAllocator* New(TInt aSize);
-	IMPORT_C static CBitMapAllocator* NewL(TInt aSize);
-	IMPORT_C ~CBitMapAllocator();
-	IMPORT_C TInt Alloc();
-	IMPORT_C TInt AllocFrom(TInt aPos);
-	IMPORT_C TInt Alloc(TInt aCount, TInt& aConsecutive);
-	IMPORT_C TInt AllocAligned(TInt anAlignment);
-	IMPORT_C TInt AllocAlignedBlock(TInt anAlignment);
-	IMPORT_C TInt AllocFromTop();
-	IMPORT_C TInt AllocFromTopFrom(TInt aPos);
-	IMPORT_C void AllocAt(TInt aPos);
-	IMPORT_C void AllocAt(TInt aPos, TInt aCount);
-	IMPORT_C TBool IsFree(TInt aPos);
-	IMPORT_C TBool IsFree(TInt aPos, TInt aCount);
-	IMPORT_C void Free(TInt aPos);
-	IMPORT_C void Free(TInt aPos, TInt aCount);
-	IMPORT_C TInt Avail();
-	IMPORT_C TInt Size();
-	IMPORT_C TInt ExtractRamPages(TInt aConsecutive,TInt& aPageNo);
-protected:
-	IMPORT_C CBitMapAllocator(TInt aSize,TInt aLength);
-protected:
-	TInt iAvail;
-	TInt iSize;
-	TInt iLength;
-	TUint iMap[1];
-	};
 // Forward Declaration of TCleanupStackItem
 class TCleanupStackItem;
 
@@ -1574,9 +1518,9 @@ class CCirBuffer : public CCirBuf<TUint8>
 @publishedAll
 @released
 
-Circular buffer of unsigned integers. 
+Circular buffer of unsigned 8-bit integers. 
 
-The integer values range from -128 to +127.
+The integer values range from 0 to 255.
 */
 	{
 public:
@@ -1853,7 +1797,7 @@ when the associated timed event expires.
 	{
 	friend class CDeltaTimer;
 public:
-	inline TDeltaTimerEntry(TCallBack& aCallback);
+	inline TDeltaTimerEntry(const TCallBack& aCallback);
 	inline TDeltaTimerEntry();
 	inline void Set(TCallBack& aCallback);
 private:
@@ -2211,10 +2155,12 @@ protected:
 	IMPORT_C virtual void Disconnect(const RMessage2& aMessage);
 	IMPORT_C virtual TInt Extension_(TUint aExtensionId, TAny*& a0, TAny* a1);
 public:
+	IMPORT_C void SetServer(const CServer2* aServer);
     /**
     @internalComponent
     */
 	enum TPanicNo {ESesCountResourcesNotImplemented=1,ESesFoundResCountHeaven};
+
 private:
 	TInt iResourceCountMark;
 	TDblQueLink iLink;
@@ -2239,33 +2185,25 @@ A server must define and implement a derived class.
 class CServer2 : public CActive
 	{
 public:
-    /**
-    Defines the set of session types that the server can create.
-    
-    A specific session type is specified when the CServer2 object is created. 
-    */
+
+	/**
+	This enumeration defines the maximum sharability of sessions opened
+	with this server; for backwards compatibilty, these should be have
+	the same values as the corresponding EIpcSessionType enumeration
+	*/
 	enum TServerType
 		{
-		/**
-		The session is not sharable with other threads.
-		*/
-		EUnsharableSessions = EIpcSession_Unsharable,
-
-		/**
-		The session is sharable with other threads in the same process.
-		*/
-		ESharableSessions = EIpcSession_Sharable,
-
-		/**
-		The session is sharable with all other threads in the system.
-		*/
-		EGlobalSharableSessions = EIpcSession_GlobalSharable,
+		EUnsharableSessions					= EIpcSession_Unsharable,
+		ESharableSessions					= EIpcSession_Sharable,
+		EGlobalSharableSessions				= EIpcSession_GlobalSharable,
 		};
+
 public:
 	IMPORT_C virtual ~CServer2() =0;
 	IMPORT_C TInt Start(const TDesC& aName);
 	IMPORT_C void StartL(const TDesC& aName);
 	IMPORT_C void ReStart();
+	IMPORT_C void SetPinClientDescriptors(TBool aPin);
 	
 	/**
 	Gets a handle to the server.
@@ -2314,7 +2252,8 @@ private:
 	void Connect(const RMessage2& aMessage);
 	void DoConnectL(const RMessage2& aMessage,CSession2* volatile& aSession);
 public:
-	
+	IMPORT_C void SetMaster(const CServer2* aServer);
+
 	/**
     @internalComponent
     */
@@ -2325,12 +2264,16 @@ public:
 		ESessionAlreadyConnected,
 		EClientDoesntHaveRequiredCaps,
 		};
+
 private:
-	TInt iSessionType;
+	TUint8 iSessionType;
+	TUint8 iServerRole;
+	TUint16 iServerOpts;
 	RServer2 iServer;
 	RMessage2 iMessage;
 	TAny* iSpare;
 	TDblQue<CSession2> iSessionQ;
+	
 protected:
 	TDblQueIter<CSession2> iSessionIter;
 private:
@@ -3265,5 +3208,9 @@ public:
 	};
 
 #include <e32base.inl>
+
+#ifndef SYMBIAN_ENABLE_SPLIT_HEADERS
+#include <e32base_private.h>
+#endif
 
 #endif //__E32BASE_H__

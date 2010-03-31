@@ -32,11 +32,9 @@
 */
 
 
-
-
 /**
  @file 
- @internalAll
+ @publishedAll
  @released
 */
 
@@ -47,14 +45,41 @@
 #include <e32std.h>
 #include <x509gn.h>
 
+#ifndef SYMBIAN_ENABLE_SPLIT_HEADERS
+#include <x509bitstring.h>
+#endif
 
 class RReadStream;
 class RWriteStream;
+class CX509BitString;
+/** A list of values that defines what an X.509 key can be used for.
+* These values can be ANDed together if a key has several usages. 
+* 
+* @since v7.0 */
+enum TX509KeyUsage
+	{
+	/** A digital signature. */
+	EX509DigitalSignature,
+	/** Non repudiation. */
+	EX509NonRepudiation,
+	/** Key encipherment. */
+	EX509KeyEncipherment,
+	/** Data encipherment. */
+	EX509DataEncipherment,
+	/** Key agreement. */
+	EX509KeyAgreement,
+	/** Key certificate sign. */
+	EX509KeyCertSign,
+	/** CRL sign. */
+	EX509CRLSign,
+	/** Encipher only. */
+	EX509EncipherOnly,
+	/** Decipher only. */
+	EX509DecipherOnly
+	};
 
 /** X509 Extension OIDs
 * 
-* @publishedAll
-* @released
 * @since v9.5 */
 
 //OIDS for the extensions we define here...
@@ -98,8 +123,6 @@ _LIT(KCapabilitiesConstraint,"1.2.826.0.1.1796587.1.1.1.6");
 class CX509ExtensionBase : public CBase
 /** A certificate extension base class. 
 * 
-* @publishedAll
-* @released
 * @since v6.0 */
 	{
 protected:
@@ -126,8 +149,6 @@ class CX509BasicConstraintsExt : public CX509ExtensionBase
 * It indicates whether the certificate belongs to a Certificate Authority or 
 * an end Entity. 
 * 
-* @publishedAll
-* @released
 * @since v6.0 */
 	{
 public:
@@ -197,8 +218,6 @@ class CX509AltNameExt : public CX509ExtensionBase
 * 
 * It consists of an array of X.509 General Names.
 *
-* @publishedAll
-* @released
 * @since v6.0 */
 	{
 public:
@@ -259,71 +278,9 @@ private:
 	CArrayPtrFlat<CX509GeneralName>* iAuthorityName;
 	};
 
-//3) key usage
-
-class CX509BitString : public CBase
-/** An X.509 bit string. 
-*
-* @internalTechnology
-* @released
-* @since v6.0 */
-	{
-public:
-	/** Destructor.
-	* 
-	* Frees all resources owned by the object. */
-	~CX509BitString();
-	
-	/** Tests whether the specified bit is set.
-	* 
-	* @param aBit	The offset of the bit to be tested. This is a value relative to 
-	* 				zero. Any value greater than or equal to the length of the bit 
-	*				string will always cause EFalse to be returned.
-	* @return		ETrue, if the bit is set; EFalse, otherwise. */
-	TBool IsSet(TInt aBit) const;
-	
-	/** Creates the X.509 bit string.
-	* 
-	* @param aData				A heap descriptor representing the bit string data.
-	* @param aEffectiveLength	The number of bits in the string. */
-	CX509BitString(HBufC8* aData, TInt aEffectiveLength);
-private:
-	HBufC8* iData;
-	TInt iLength;
-	};
-
-/** A list of values that defines what an X.509 key can be used for.
-* These values can be ANDed together if a key has several usages. 
-* 
-* @internalTechnology
-* @since v7.0 */
-enum TX509KeyUsage
-	{
-	/** A digital signature. */
-	EX509DigitalSignature,
-	/** Non repudiation. */
-	EX509NonRepudiation,
-	/** Key encipherment. */
-	EX509KeyEncipherment,
-	/** Data encipherment. */
-	EX509DataEncipherment,
-	/** Key agreement. */
-	EX509KeyAgreement,
-	/** Key certificate sign. */
-	EX509KeyCertSign,
-	/** CRL sign. */
-	EX509CRLSign,
-	/** Encipher only. */
-	EX509EncipherOnly,
-	/** Decipher only. */
-	EX509DecipherOnly
-	};
-
 class CX509KeyUsageExt : public CX509ExtensionBase
 /** An X.509 certificate extension that defines the uses to which a key may be put.
 * 
-* @publishedAll
-* @released
 * @since v6.0 */
 	{
 public:
@@ -366,7 +323,7 @@ public:
 	
 	/** Tests whether a particular usage is set in the extension.
 	* 
-	* @internalTechnology
+	* 
 	* @param aUsage	The usage.
 	* @return		ETrue, if the specific usage is set in the extension; EFalse, otherwise. */
 	IMPORT_C TBool IsSet(TX509KeyUsage aUsage) const;
@@ -381,8 +338,6 @@ private:
 class CX509GeneralSubtree : public CBase
 /** Provides access to the general name and the min/max lengths of the subtree. 
 * 
-* @publishedAll
-* @released
 * @since v6.0 */
 	{
 public:
@@ -465,8 +420,7 @@ class CX509NameConstraintsExt : public CX509ExtensionBase
 * This extension allows Certification Authorities to restrict or prevent the issuing 
 * of certificates to entities whose names lie within a defined name space. 
 *
-* @publishedAll
-* @released */
+*/
 	{
 public:
 	/** Creates a new CX509NameConstraintsExt object from the specified 
@@ -544,8 +498,6 @@ class TX509PolicyConstraint
 * the appearance of explicit certificate policies in subsequent certificates, 
 * and prevent policy mapping from being performed. 
 *
-* @publishedAll
-* @released
 */
 	{
 public:
@@ -591,8 +543,6 @@ class CX509PolicyConstraintsExt : public CX509ExtensionBase
 * @li to enforce the appearance of explicit certificate policies in subsequent certificates
 * @li to prevent policy mapping from being performed.
 * 
-* @publishedAll
-* @released
 * @since v6.0 */
 	{
 public:
@@ -654,8 +604,6 @@ private:
 class CX509PolicyQualifierInfo : public CBase
 /** Gets X.509 policy qualifier information. 
 * 
-* @publishedAll
-* @released
 * @since v6.0 */
 	{
 public:
@@ -809,8 +757,6 @@ class CX509CertPolicyInfo : public CBase
 * of these specific policies.
 * 
 * @see CX509CertPoliciesExt 
-* @publishedAll
-* @released
 * @since v6.0 */
 	{
 public:
@@ -941,8 +887,6 @@ class CX509CertPoliciesExt : public CX509ExtensionBase
 *
 * Contains further information on a client's signature.
 *
-* @publishedAll
-* @released
 * @since v6.0 */
 	{
 public:
@@ -998,8 +942,6 @@ private:
 class CX509PolicyMapping : public CBase
 /** A set of policy mappings. 
 * 
-* @publishedAll
-* @released
 * @since v6.0 */
 	{
 public:
@@ -1086,8 +1028,6 @@ class CX509PolicyMappingExt : public CX509ExtensionBase
 * A policy mapping allows a Certification Authority to declare that two certificate 
 * policies are equivalent.
 *
-* @publishedAll
-* @released
 * @since v6.0 */
 	{
 public:
@@ -1149,8 +1089,6 @@ class CX509AuthorityKeyIdExt : public CX509ExtensionBase
 * serial number, or by a key identifier value either derived from the public 
 * key or by some method of generating unique IDs. 
 * 
-* @publishedAll
-* @released
 * @since v6.0 */
 	{
 public:
@@ -1226,8 +1164,6 @@ class CX509SubjectKeyIdExt : public CX509ExtensionBase
 * It consists of a key identifier value either derived from the public key or
 * by some method of generating unique IDs.
 * 
-* @publishedAll
-* @released
 * @since v6.0 */
 	{
 public:
@@ -1284,8 +1220,6 @@ class CX509ExtendedKeyUsageExt : public CX509ExtensionBase
 * 
 * This is referred to as the extended key usage extension. 
 * 
-* @publishedAll
-* @released
 * @since v6.0 */
 	{
 public:
@@ -1345,8 +1279,6 @@ class CX509AccessDescription : public CBase
 /** This class provides the access method OID and access location as used by X.509 private internet extensions
  * (authority information access).
  *
- * @publishedAll
- * @released 
  */
 	{
 public:
@@ -1426,8 +1358,6 @@ class CX509AuthInfoAccessExt : public CX509ExtensionBase
 /** An X.509 certificate extension that defines the authority information access.
  * 
  * 
- * @publishedAll
- * @released
  */
 
 	{

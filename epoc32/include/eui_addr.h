@@ -1,9 +1,9 @@
 // Copyright (c) 2004-2009 Nokia Corporation and/or its subsidiary(-ies).
 // All rights reserved.
 // This component and the accompanying materials are made available
-// under the terms of the License "Symbian Foundation License v1.0" to Symbian Foundation members and "Symbian Foundation End User License Agreement v1.0" to non-members
+// under the terms of "Eclipse Public License v1.0"
 // which accompanies this distribution, and is available
-// at the URL "http://www.symbianfoundation.org/legal/licencesv10.html".
+// at the URL "http://www.eclipse.org/legal/epl-v10.html".
 //
 // Initial Contributors:
 // Nokia Corporation - initial contribution.
@@ -30,7 +30,7 @@
 #include "es_sock.h"	// TSockAddr
 
 /**  Address family ID */
-const TUint KAfEui64	= 0x0F64;	///< TODO
+const TUint KAfEui64	= 0x0F64;	//< TODO
 
 /**  Panic codes.
 @publishedAll
@@ -56,17 +56,17 @@ enum TEuiPanic
 class TE64Addr
 {
  public:
-	IMPORT_C TE64Addr();					///< Constructs an address with zero value
-	IMPORT_C TE64Addr(const TE64Addr& aAddr);		///< Constructs an address with given value
-	IMPORT_C TE64Addr(const TInt64& aAddr);			///< Constructs an address with given value
-	IMPORT_C TE64Addr(const TUint8* aPtr, TUint aLength);	///< Constructs an address with given value
+	IMPORT_C TE64Addr();					//< Constructs an address with zero value
+	IMPORT_C TE64Addr(const TE64Addr& aAddr);		//< Constructs an address with given value
+	IMPORT_C TE64Addr(const TInt64& aAddr);			//< Constructs an address with given value
+	IMPORT_C TE64Addr(const TUint8* aPtr, TUint aLength);	//< Constructs an address with given value
 
-	IMPORT_C void SetAddr(const TE64Addr& aAddr);			///< Sets the address value
-	IMPORT_C void SetAddr(const TInt64& aAddr);			///< Sets the address value
-	IMPORT_C void SetAddr(const TUint8* aPtr, TUint aLength);	///< Sets the address value
+	IMPORT_C void SetAddr(const TE64Addr& aAddr);			//< Sets the address value
+	IMPORT_C void SetAddr(const TInt64& aAddr);			//< Sets the address value
+	IMPORT_C void SetAddr(const TUint8* aPtr, TUint aLength);	//< Sets the address value
 
 
-	IMPORT_C void SetAddrZero();	///< Creates a zero address
+	IMPORT_C void SetAddrZero();	//< Creates a zero address
 
 	/**
 	 * Creates a random address.
@@ -90,22 +90,22 @@ class TE64Addr
 	IMPORT_C void SetAddrRandomNZButNot(const TE64Addr& aAddr);
 
 	// Really should define TE48Addr for this... -tom
-	IMPORT_C void SetAddrFromEUI48(const TUint8* aPtr);	///< Reads and converts a value from EUI-48 (6 bytes)
+	IMPORT_C void SetAddrFromEUI48(const TUint8* aPtr);	//< Reads and converts a value from EUI-48 (6 bytes)
 
-	IMPORT_C void SetGroupBit(TBool aBit = 1);		///< Sets the Group bit to 1 by default
-	IMPORT_C void SetUniversalBit(TBool aBit = 1);		///< Sets the Universal bit to 1 by default
+	IMPORT_C void SetGroupBit(TBool aBit = 1);		//< Sets the Group bit to 1 by default
+	IMPORT_C void SetUniversalBit(TBool aBit = 1);		//< Sets the Universal bit to 1 by default
 
-	IMPORT_C TBool Match(const TE64Addr& aAddr) const;	///< TRUE if the address matches given address
-	IMPORT_C TBool IsZero() const;				///< TRUE if the address is a zero address
-	IMPORT_C TBool IsGroup() const;				///< TRUE if the Group bit is set in the address
-	IMPORT_C TBool IsUniversal() const;			///< TRUE if the Universal bit is set in the address
+	IMPORT_C TBool Match(const TE64Addr& aAddr) const;	//< TRUE if the address matches given address
+	IMPORT_C TBool IsZero() const;				//< TRUE if the address is a zero address
+	IMPORT_C TBool IsGroup() const;				//< TRUE if the Group bit is set in the address
+	IMPORT_C TBool IsUniversal() const;			//< TRUE if the Universal bit is set in the address
 
-//	IMPORT_C TInt Input(const TDesC& aBuf);			///< Reads a value for the address from a string
-	IMPORT_C void Output(TDes& aBuf) const;			///< Writes the address into a string
+//	IMPORT_C TInt Input(const TDesC& aBuf);			//< Reads a value for the address from a string
+	IMPORT_C void Output(TDes& aBuf) const;			//< Writes the address into a string
 	
-	IMPORT_C static TUint AddrLen();			///< Returns the size of raw KAfEui64 content format
-	IMPORT_C TUint8* AddrPtr();				///< Returns a pointer to raw KAfEui64 content format
-	IMPORT_C const TUint8* AddrPtrC() const;		///< Returns a const pointer to raw KAfEui64 content format
+	IMPORT_C static TUint AddrLen();			//< Returns the size of raw KAfEui64 content format
+	IMPORT_C TUint8* AddrPtr();				//< Returns a pointer to raw KAfEui64 content format
+	IMPORT_C const TUint8* AddrPtrC() const;		//< Returns a const pointer to raw KAfEui64 content format
 
  private:
 	union
@@ -117,7 +117,7 @@ class TE64Addr
 };
 
 struct SE64Addr {
-	TE64Addr iAddr;		///< 8 bytes of Modified EUI-64 address (64 bits)
+	TE64Addr iAddr;		//< 8 bytes of Modified EUI-64 address (64 bits)
 };
 
 /**
@@ -174,17 +174,17 @@ class TEui64Addr : public TSockAddr
 	 * The other TSockAddr fields are not touched.
 	 */
 	IMPORT_C void SetAddress(const TE64Addr& aAddr);
-	IMPORT_C TE64Addr& Address() const;	///< Accesses the address bytes
+	IMPORT_C TE64Addr& Address() const;	//< Accesses the address bytes
 
-	IMPORT_C TBool Match(const TEui64Addr& aAddr) const;	///< TRUE if the address bytes match the parameter's
-	IMPORT_C TBool IsZero() const;				///< TRUE if the address bytes are all zeros
+	IMPORT_C TBool Match(const TEui64Addr& aAddr) const;	//< TRUE if the address bytes match the parameter's
+	IMPORT_C TBool IsZero() const;				//< TRUE if the address bytes are all zeros
 
-	IMPORT_C static TEui64Addr& Cast(const TSockAddr& aAddr);	///< Unsafely casts a TSockAddr to TEui64Addr
-	IMPORT_C static TEui64Addr& Cast(const TSockAddr* aAddr);	///< Unsafely casts a TSockAddr to TEui64Addr
+	IMPORT_C static TEui64Addr& Cast(const TSockAddr& aAddr);	//< Unsafely casts a TSockAddr to TEui64Addr
+	IMPORT_C static TEui64Addr& Cast(const TSockAddr* aAddr);	//< Unsafely casts a TSockAddr to TEui64Addr
 
  protected:
-	IMPORT_C SE64Addr* AddrPtr() const;	///< Returns a pointer to KAfEui64 content format
-	IMPORT_C static TUint AddrLen();	///< Returns the size of the KAfEui64 content format
+	IMPORT_C SE64Addr* AddrPtr() const;	//< Returns a pointer to KAfEui64 content format
+	IMPORT_C static TUint AddrLen();	//< Returns the size of the KAfEui64 content format
 };
 
 inline TEui64Addr::TEui64Addr(const TE64Addr& aAddr) : TSockAddr()

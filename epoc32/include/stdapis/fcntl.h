@@ -1,6 +1,4 @@
 /*-
- * © Portions copyright (c) 2005 Nokia Corporation.  All rights reserved.
- * © Portions copyright (c) 2006 Symbian Software Ltd. All rights reserved.
  * Copyright (c) 1983, 1990, 1993
  *	The Regents of the University of California.  All rights reserved.
  * (c) UNIX System Laboratories, Inc.
@@ -32,6 +30,7 @@
  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY
  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
+ * Portions Copyright (c) 2005-2006 Nokia Corporation and/or its subsidiary(-ies). All rights reserved.
  */
  
 #ifndef	_FCNTL_H_

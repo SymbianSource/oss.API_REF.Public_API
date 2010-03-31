@@ -1,9 +1,9 @@
 // Copyright (c) 1998-2009 Nokia Corporation and/or its subsidiary(-ies).
 // All rights reserved.
 // This component and the accompanying materials are made available
-// under the terms of the License "Symbian Foundation License v1.0" to Symbian Foundation members and "Symbian Foundation End User License Agreement v1.0" to non-members
+// under the terms of "Eclipse Public License v1.0"
 // which accompanies this distribution, and is available
-// at the URL "http://www.symbianfoundation.org/legal/licencesv10.html".
+// at the URL "http://www.eclipse.org/legal/epl-v10.html".
 //
 // Initial Contributors:
 // Nokia Corporation - initial contribution.
@@ -21,21 +21,27 @@ inline TRgb::TRgb():
 	/**  Constructs a TRgb initialised to KRgbWhite.*/
 	{}
 
- 
+
 inline TRgb::TRgb(TUint32 aValue):
 	iValue(((aValue & 0xff0000) >> 16) | (aValue & 0x00ff00) | ((aValue & 0x0000ff) << 16) | (0xff000000 - (aValue & 0xff000000)))
 /** Constructs a TRgb directly from a single 32-bit integer.
 
-The integer is of the form 0xaabbggrr, where bb is the hex number of blue, 
-gg is the hex number for green, and rr is the hex number for red, aa is the hex number of 
-alpha (0 means opaque, 255 means transparent). 
+The integer is of the form 0xaabbggrr, where bb is the hex number for blue,
+gg is the hex number for green, rr is the hex number for red, and aa is the hex number for
+"transparency" alpha (0 means opaque, 255 means transparent).
 
-For example, TRgb(2,4,8) using the 3 colour constructor is equal to TRgb(0x00080402) using 
-this constructor.
+This constructor is deprecated. The byte order of Red ,Green and Blue
+does not match other constructors and methods in this class,
+and the meaning of alpha is reversed compared to current convention.
 
-The constructor is deprecated. Use others constructor or SetInternal() instead.
+For example, TRgb(0x00080402) using this constructor
+can be replaced with the 3 colour constructor TRgb(2,4,8).
+The equivalent explicit alpha constructors are TRgb(0x020408,0xff) and TRgb(2,4,8,255).
+The equivalent call to SetInternal is SetInternal(0xff020408).
 
-@param aValue Integer representing colour value. Takes form 0x00bbggrr. 
+This constructor is deprecated. Use other constructors or SetInternal() instead.
+
+@param aValue Integer representing colour value. Takes form 0x00bbggrr.
 @deprecated  */
 	{}
 
@@ -43,15 +49,16 @@ inline TRgb::TRgb(TUint32 aInternalValue, TInt aAlpha) :
 	iValue((aInternalValue & 0x00ffffff) | (aAlpha << 24))
 /** Constructs a TRgb from a 32-bit integer (which corresponds to a colour) and from an alpha value.
 
-The first parameter is of the form 0x00rrggbb, where rr is the hex number for red, 
-gg is the hex number for green, and bb is the hex number of blue. 
+The first parameter is of the form 0x00rrggbb, where rr is the hex number for red,
+gg is the hex number for green, and bb is the hex number for blue.
 
 The second parameter corresponds to an alpha channel (0 means transparent, 255 means opaque).
 
-For example, TRgb(2,4,8,255) using the 3 colour constructor is equal to TRgb(0x00020408, 255) using 
+For example, TRgb(2,4,8,255) using the 3 colour+alpha constructor is equal to TRgb(0x00020408, 255) using
 this constructor.
 
-The constructor is a replacement for TRgb(TUint32 aValue).
+This constructor, which implements alpha in the conventional way,
+replaces TRgb( TUint32 aValue ) which is deprecated.
 
 @param aInternalValue	Integer representing a colour value, which takes the form 0x00rrggbb.
 @param aAlpha		Alpha component of the colour (0 - 255).*/
@@ -63,9 +70,10 @@ inline TRgb::TRgb(TInt aRed,TInt aGreen,TInt aBlue):
 /** Constructs a TRgb from its three component colours.
 
 Each colour has a value between 0 and 255.
+The alpha component is always set to opaque (255)
 
-@param aRed Red component of the colour (0 - 255). 
-@param aGreen Green component of the colour (0 -  255). 
+@param aRed Red component of the colour (0 - 255).
+@param aGreen Green component of the colour (0 -  255).
 @param aBlue Blue component of the colour (0 - 255). */
 	{}
 
@@ -73,6 +81,9 @@ Each colour has a value between 0 and 255.
 
 Each component has a value between 0 and 255.
 The fourth parameter corresponds to an alpha channel (0 means transparent, 255 means opaque).
+
+This constructor, which implements alpha in the conventional way,
+replaces TRgb( TUint32 aValue ) which is deprecated.
 
 @param aRed Red component of the colour (0 - 255). 
 @param aGreen Green component of the colour (0 -  255). 
@@ -173,30 +184,33 @@ drawing primitives which operate in the device colour domain.
 @return First operand  contains result of logical Exclusive OR. */
 	{iValue^=aColor.iValue;iValue^=0xff000000; return(*this);}
 
- 
-inline TUint32 TRgb::Value() const
-/** Gets the 32-bit value of the TRgb as an integer. 
-This function is deprecated. Use Internal() instead.
 
-@return The 32 bit value of the TRgb. Has the form 0xaabbggrr, where bb is the hex number of blue, 
-gg is the hex number for green, rr is the hex number for red and aa is the hex number of 
-alpha (0 means opaque, 255 means transparent). 
-@deprecated */			
+inline TUint32 TRgb::Value() const
+/** Gets the 32-bit value of the TRgb as an integer.
+This function is deprecated. Use Internal() instead.
+Note: the order of Red, Green and Blue components returned by this method
+is reversed compared to all other methods. The alpha value is also reversed in meaning
+compared to current convention, such that 0 represents opaque and 0xff represents transparent.
+
+@return The 32 bit value of the TRgb. Has the form 0xaabbggrr, where bb is the hex number for blue,
+gg is the hex number for green, rr is the hex number for red, and aa is the hex number for
+"transparency" alpha (0 means opaque, 255 means transparent).
+@deprecated */
 		//					rr							gg						bb								aa
 		{return (((iValue & 0xff0000) >> 16) | (iValue & 0x00ff00) | ((iValue & 0x0000ff) << 16) | (0xff000000 - (iValue & 0xff000000)));}
 
 inline TUint32 TRgb::Internal() const
-/** Gets the 32-bit value of the TRgb as an integer. 
+/** Gets the 32-bit value of the TRgb as an integer.
 
 @return The 32 bit value of the TRgb. Has the form 0xaarrggbb. */
 		{return (iValue);}
 
 inline void TRgb::SetInternal(TUint32 aInternal)
 /** Sets the 32-bit value of the TRgb as a 32-bit integer.
-@param aInternal Colour internal representation. Has the form 0xaarrggbb. 
+@param aInternal Colour internal representation. Has the form 0xaarrggbb.
 */
 		{iValue = aInternal;}
- 
+
 inline TRgb TRgb::operator~() const
 /** Bitwise logical inversion operator.
 
@@ -638,81 +652,4 @@ inline TInt CFont::FontMaxHeight() const
 	{
 	return FontMaxAscent() + FontMaxDescent();
 	}
-	
-/** Utility function to check if a display mode has Alpha channel information
-@param aDisplayMode - the display mode being queried
-@return ETrue if display mode contains Alpha information.
-@internalTechnology
-@released
-*/
-inline TBool IsAlphaChannel(TDisplayMode aDisplayMode)
-	{
-	if(aDisplayMode == EColor16MAP || aDisplayMode == EColor16MA) 
-		return ETrue;
-	else
-		return EFalse;
-	}
 
-/**
-@internalTechnology
-@released
-*/
-inline TUint QuoteOrBracketPair(TUint code)
-	{
-	// given the opening/closing quote or bracket, return the corresponding closing/opening quote or bracket
-	switch(code)
-		{
-		case 0x0022: return 0x0022; // "..."
-		case 0x0027: return 0x0027; // '...'
-		case 0x0028: return 0x0029; // (...)
-		case 0x003c: return 0x003e; // <...>
-		case 0x005b: return 0x005d; // [...]
-		case 0x007b: return 0x007d; // {...}
-		case 0x2018: return 0x2019; // Single quotation marks
-		case 0x201b: return 0x2019; // Single high-reversed-9 quotation mark
-		case 0x201c: return 0x201d; // Double quotation marks
-		case 0x201f: return 0x201d; // Double high-reversed-9 quotation mark
-		case 0x2035: return 0x2032; // Single primes
-		case 0x2036: return 0x2033; // Double primes
-		case 0x2037: return 0x2034; // Triple primes
-		case 0x2039: return 0x203a; // Single left/right-pointing angle quotation marks
-		case 0x2045: return 0x2046; // Square brackets with quill
-		
-		case 0x0029: return 0x0028; // (...)
-		case 0x003e: return 0x003c; // <...>
-		case 0x005d: return 0x005b; // [...]
-		case 0x007d: return 0x007b; // {...}
-		case 0x2019: return 0x2018; // Single quotation marks
-		case 0x201d: return 0x201c; // Double quotation marks
-		case 0x2032: return 0x2035; // Single primes
-		case 0x2033: return 0x2036; // Double primes
-		case 0x2034: return 0x2037; // Triple primes
-		case 0x203a: return 0x2039; // Single left/right-pointing angle quotation marks
-		case 0x2046: return 0x2045; // Square brackets with quill
-				
-		default: return 0;
-		}
-	}
-
-/**
-@internalTechnology
-@released
-*/	
-inline TBool IsIgnoredCharacterForLocalisedProcFunc(TChar aCode)
-	{
-	// All Devanagari characters should be ignored until DrawTextWithContext is implemented
-	// The current GDI only implementation for localised punctuation only works for some
-	// Devanagari characters. Hence this function 'blocks' all Devanagari characters, for now.
-	if (aCode >= 0x0900 && aCode <= 0x0965)
-		return ETrue;
-	
-	TChar::TBdCategory cat = aCode.GetBdCategory();
-
-	if ((cat == TChar::ELeftToRight ||
-		cat == TChar::ERightToLeft ||
-		cat == TChar::ERightToLeftArabic))
-		return EFalse;
-	
-	return ETrue;
-	
-	}

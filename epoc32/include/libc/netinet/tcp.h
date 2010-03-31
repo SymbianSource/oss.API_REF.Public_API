@@ -1,6 +1,7 @@
 /* TCP.H
  * 
- * Portions copyright (c) 1997-1999 Symbian Ltd.  All rights reserved.
+ * Portions Copyright (c) 1997-1999 Nokia Corporation and/or its subsidiary(-ies).
+ * All rights reserved.
  */
 
 /** @file
@@ -25,7 +26,7 @@ typedef	u_long	tcp_seq;
 /**
 TCP header.
 Per RFC 793, September, 1981.
-@internalComponent
+@PublishedAll
 */
 struct tcphdr {
 	u_short	th_sport;		/* source port */
@@ -41,27 +42,27 @@ struct tcphdr {
 #endif
 	u_char	th_flags;
 /**
-@internalComponent
+@PublishedAll
 */
 #define	TH_FIN	0x01
 /**
-@internalComponent
+@PublishedAll
 */
 #define	TH_SYN	0x02
 /**
-@internalComponent
+@PublishedAll
 */
 #define	TH_RST	0x04
 /**
-@internalComponent
+@PublishedAll
 */
 #define	TH_PUSH	0x08
 /**
-@internalComponent
+@PublishedAll
 */
 #define	TH_ACK	0x10
 /**
-@internalComponent
+@PublishedAll
 */
 #define	TH_URG	0x20
 	u_short	th_win;			/* window */

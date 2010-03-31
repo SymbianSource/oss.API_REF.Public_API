@@ -1,9 +1,9 @@
 // Copyright (c) 2003-2009 Nokia Corporation and/or its subsidiary(-ies).
 // All rights reserved.
 // This component and the accompanying materials are made available
-// under the terms of the License "Symbian Foundation License v1.0" to Symbian Foundation members and "Symbian Foundation End User License Agreement v1.0" to non-members
+// under the terms of "Eclipse Public License v1.0"
 // which accompanies this distribution, and is available
-// at the URL "http://www.symbianfoundation.org/legal/licencesv10.html".
+// at the URL "http://www.eclipse.org/legal/epl-v10.html".
 //
 // Initial Contributors:
 // Nokia Corporation - initial contribution.
@@ -19,131 +19,55 @@
 #include <e32base.h>
 #include <f32file.h>
 #include <barsc2.h> // For CResourceFile
-#include <logcntdef.h>
 #include <d32dbms.h>
+#include <logwrapconst.h>
+
+#ifndef SYMBIAN_ENABLE_SPLIT_HEADERS 
+	#include <logwraplimits.h>
+	#include "logcntdef.h"
+#endif
 
 #ifndef __WINC__
 #include <logwrap.rsg>
 #endif
 
-/**
-String lengths
-@internalAll
-*/
-const TInt KLogMaxRemotePartyLength = 64;
-const TInt KLogMaxDirectionLength = 64;
-const TInt KLogMaxStatusLength = 64;
-const TInt KLogMaxSubjectLength = 64;
-const TInt KLogMaxDescriptionLength = 64;
-const TInt KLogMaxSharedStringLength = 64;
-const TInt KLogMaxNumberLength = 100;
-
+#ifdef SYMBIAN_ENABLE_SPLIT_HEADERS 
 /** 
-Big enough to contain any of the above strings
-Defines a modifiable buffer descriptor into which a standard string from the 
-resource in the logwrap.dll resource file can be safely put.
-
-@see CLogClient::GetString()
+Contact item ID. These are used to uniquely identify contact items within a contacts database.
 @publishedAll
-@released
+@released 
 */
-typedef TBuf<64> TLogString;
+typedef TInt32 TLogContactItemId;
 
-/** 
-Type definitions
-The unique event ID associated with a log event.
-
-@see CLogEvent
-@see CLogViewDuplicate
-@see CLogViewRecent
-@see CLogClient
-@see CLogBase 
-@publishedAll
-@released
-*/
-typedef TInt32	TLogId;
-/** 
-The duration type of an event.
-
-@see CLogEvent
-@see CLogFilter
-@publishedAll
-@released
-*/
-typedef TInt8	TLogDurationType;
-typedef TInt8	TLogRecentList;
-typedef TUint16 TLogSize;
-typedef TUint8	TLogRecentSize;
-/** 
-Duration of an event, expressed as the number of seconds since the time of 
-the event.
-
-@see CLogEvent
-@publishedAll
-@released
-*/
-typedef TUint32	TLogDuration;
-typedef TUint32	TLogAge;
-/** 
-Link value relating a log event to an entity in another application.
-
-@see CLogEvent
-@publishedAll
-@released
-*/
-typedef TUint32	TLogLink;
-typedef TInt16	TLogStringId;
-typedef TInt16	TLogTypeId;
-/** 
-The duration type of an event.
-
-@see CLogEvent
-@see CLogFilter
-@publishedAll
-@released
-*/
-typedef TInt8	TLogDurationType;
-/** 
-Event flags.
-
-@see CLogEvent
-@see CLogFilter
-@publishedAll
-@released
-*/
-typedef TUint8	TLogFlags;
+#endif
 
 /**
-@internalAll
+@publishedAll
+@released
 */
 typedef TUint32	TLogViewId;
 
-/**
-Limits
-@internalAll
-*/
-const TLogId KLogNullId = -1;
-const TLogDurationType KLogNullDurationType = -1;
-const TLogDuration KLogNullDuration = 0;
-const TLogLink KLogNullLink = 0;
-const TLogRecentList KLogNullRecentList = -1;
-const TLogStringId KLogNullStringId = -1;
-const TLogTypeId KLogNullTypeId = -1;
+
 const TLogFlags KLogNullFlags = 0;
 const TLogFlags KLogFlagsMask = 0xF;
-const TInt KLogFlagsCount = 4;
-const TInt KLogNeverUsedId = -2;
 
+
+#ifndef SYMBIAN_ENABLE_SPLIT_HEADERS 
 /**
 @internalAll
 */
 const TInt KLogActiveDoNotCompleteIfActive = KMaxTInt-1;
+#endif
+
+//SimId typedef. Probably the final version will import it from different header. 
+typedef TUint32 TSimId;
+//"Null" SimId value.
+const TSimId KLogNullSimId = 0;
 
 //**********************************
 // CLogActive
 //**********************************
 
-class CLogActive : public CActive
 /** 
 Common active object behaviour.
 
@@ -152,6 +76,7 @@ the log engine classes.
 @publishedAll
 @released
 */
+class CLogActive : public CActive
 	{
 public:
 	IMPORT_C ~CLogActive();
@@ -176,7 +101,6 @@ private:
 // CLogEvent
 //**********************************
 
-class CLogEvent : public CBase
 /** 
 Encapsulates the details of an event.
 
@@ -185,6 +109,7 @@ Where time is used, it must be specified as UTC rather than local time.
 @publishedAll
 @released
 */
+class CLogEvent : public CBase
 	{
 public:
 	IMPORT_C static CLogEvent* NewL();
@@ -242,7 +167,9 @@ public:
 
 	IMPORT_C void InternalizeL(RReadStream& aStream);
 	IMPORT_C void ExternalizeL(RWriteStream& aStream) const;
-
+	//
+	IMPORT_C void SetSimId(TSimId aSimId);
+	IMPORT_C TSimId SimId() const;
 	//
 private:
 	CLogEvent();
@@ -265,13 +192,15 @@ private:
 	HBufC* iSubject;
 	HBufC* iNumber;
 	HBufC8* iData;
+#ifdef SYMBIAN_ENABLE_EVENTLOGGER_DUALSIM	
+	TSimId	iSimId;
+#endif	
 	};
 
 //**********************************
 // CLogBase
 //**********************************
 
-class CLogBase : public CLogActive
 /** 
 Base class for the log engine implementation.
 
@@ -294,6 +223,7 @@ An instance of this class is never constructed by clients.
 @publishedAll
 @released
 */
+class CLogBase : public CLogActive
 	{
 public:
 	IMPORT_C CLogBase(TInt aPriority);
@@ -326,7 +256,6 @@ private:
 // CLogWrapper
 //**********************************
 
-class CLogWrapper : public CBase
 /** 
 The log wrapper.
 
@@ -350,6 +279,7 @@ event handling requests and functions.
 @publishedAll
 @released
 */
+class CLogWrapper : public CBase
 	{
 public:
 	IMPORT_C static CLogWrapper* NewL(RFs& aFs, TInt aPriority = CActive::EPriorityStandard);

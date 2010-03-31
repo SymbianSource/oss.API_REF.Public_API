@@ -1315,7 +1315,7 @@ operator+(const basic_string<_CharT,_Traits,_Alloc>& __s,
 {
   typedef basic_string<_CharT,_Traits,_Alloc> _Str;
   typedef typename _Str::_Reserve_t _Reserve_t;
-# ifdef __GNUC__
+# if defined( __GNUC__ ) || defined (__GCCXML__)
   // gcc counts this as a function
   _Str __result  = _Str(_Reserve_t(),__s.size() + __y.size());
 # else

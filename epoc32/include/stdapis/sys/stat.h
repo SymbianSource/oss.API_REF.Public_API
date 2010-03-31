@@ -30,7 +30,7 @@
  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY
  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
- * © Portions copyright (c) 2007 Symbian Software Ltd. All rights reserved.
+ * © * Portions Copyright (c) 2007 Nokia Corporation and/or its subsidiary(-ies). All rights reserved.
  *	@(#)stat.h	8.12 (Berkeley) 6/16/95
  * $FreeBSD: src/sys/sys/stat.h,v 1.41 2005/03/22 01:19:18 das Exp $
  */
@@ -48,6 +48,11 @@ typedef	__blksize_t	blksize_t;
 
 #ifndef _BLKCNT_T_DECLARED
 typedef	__blkcnt_t	blkcnt_t;
+
+#if defined(SYMBIAN_OE_LARGE_FILE_SUPPORT) && !defined(SYMBIAN_OE_NO_LFS)
+typedef __blkcnt_t blkcnt64_t;
+#endif /* SYMBIAN_OE_LARGE_FILE_SUPPORT && !SYMBIAN_OE_NO_LFS */
+
 #define	_BLKCNT_T_DECLARED
 #endif
 
@@ -68,6 +73,11 @@ typedef	__gid_t		gid_t;
 
 #ifndef _INO_T_DECLARED
 typedef	__ino_t		ino_t;
+
+#if defined(SYMBIAN_OE_LARGE_FILE_SUPPORT) && !defined(SYMBIAN_OE_NO_LFS)
+typedef __ino64_t	ino64_t;
+#endif /* SYMBIAN_OE_LARGE_FILE_SUPPORT && !SYMBIAN_OE_NO_LFS */
+
 #define	_INO_T_DECLARED
 #endif
 
@@ -173,6 +183,10 @@ struct stat {
 	unsigned int :(8 / 2) * (16 - (int)sizeof(struct __timespec));
 #endif
 };
+
+#if defined(SYMBIAN_OE_LARGE_FILE_SUPPORT) && !defined(SYMBIAN_OE_NO_LFS)
+#define stat64 stat 
+#endif /* SYMBIAN_OE_LARGE_FILE_SUPPORT && !SYMBIAN_OE_NO_LFS */
 
 #if __BSD_VISIBLE
 struct nstat {
@@ -324,6 +338,20 @@ IMPORT_C int	mkdir(const char *, mode_t);
 IMPORT_C int	mkfifo(const char *, mode_t);
 IMPORT_C int	stat(const char * __restrict, struct stat * __restrict);
 IMPORT_C mode_t	umask(mode_t);
+
+#if defined(SYMBIAN_OE_LARGE_FILE_SUPPORT) && !defined(SYMBIAN_OE_NO_LFS)
+
+#define fstat64	fstat
+#define stat64	stat
+#define __lxstat64	__lxstat
+#define __xstat64	__xstat
+
+#if __POSIX_VISIBLE >= 200112
+#define lstat64 lstat
+#endif /* __POSIX_VISIBLE >= 200112 */
+
+#endif /* SYMBIAN_OE_LARGE_FILE_SUPPORT && !SYMBIAN_OE_NO_LFS */
+
 __END_DECLS
 #endif /* !_KERNEL */
 

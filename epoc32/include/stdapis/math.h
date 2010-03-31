@@ -1,7 +1,4 @@
-/*--------------------------------------------------------------------
- *© Portions copyright (c) 2006 Nokia Corporation.  All rights reserved.
- *--------------------------------------------------------------------
-*/
+
 /*
  * ====================================================
  * Copyright (C) 1993 by Sun Microsystems, Inc. All rights reserved.
@@ -11,7 +8,7 @@
  * software is freely granted, provided that this notice
  * is preserved.
  * ====================================================
- * © Portions copyright (c) 2007 Symbian Software Ltd. All rights reserved.
+ *  Portions Copyright (c) 2006-2007 Nokia Corporation and/or its subsidiary(-ies). All rights reserved.
  */
 
 /*
@@ -48,7 +45,7 @@
 
 #include <sys/cdefs.h>
 #include <sys/_types.h>
-#include <machine/_limits.h>
+#include <stdapis/machine/_limits.h>
 
 #ifdef  __SYMBIAN32__
 #include <libm_aliases.h>

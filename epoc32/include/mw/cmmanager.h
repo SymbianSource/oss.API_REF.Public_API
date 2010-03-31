@@ -2,9 +2,9 @@
 * Copyright (c) 2006 Nokia Corporation and/or its subsidiary(-ies). 
 * All rights reserved.
 * This component and the accompanying materials are made available
-* under the terms of the License "Symbian Foundation License v1.0" to Symbian Foundation members and "Symbian Foundation End User License Agreement v1.0" to non-members
+* under the terms of "Eclipse Public License v1.0"
 * which accompanies this distribution, and is available
-* at the URL "http://www.symbianfoundation.org/legal/licencesv10.html".
+* at the URL "http://www.eclipse.org/legal/epl-v10.html".
 *
 * Initial Contributors:
 * Nokia Corporation - initial contribution.
@@ -23,6 +23,7 @@
 #include <e32base.h>
 #include <e32cmn.h>
 #include <cmdefconnvalues.h>
+#include <cmgenconnsettings.h>
 
 // Forward Declarations
 class RCmConnectionMethod;
@@ -273,6 +274,21 @@ NONSHARABLE_CLASS(RCmManager)
         IMPORT_C void WriteDefConnL( const TCmDefConnValue& aDCSetting );  
 
 
+        /**
+        * Returns the general connection settings.
+        *
+        * @since S60 9.2
+        */
+        IMPORT_C void ReadGenConnSettingsL( TCmGenConnSettings& aGenConnSettings );
+
+        /**
+        * Writes the general connection settings.
+        *
+        * @since S60 9.2
+        */
+        IMPORT_C void WriteGenConnSettingsL( const TCmGenConnSettings& aGenConnSettings );
+        
+        
         /** Open session and create tables if they don't exist*/
         IMPORT_C void CreateTablesAndOpenL();    
 

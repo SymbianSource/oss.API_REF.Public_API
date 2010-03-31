@@ -1,9 +1,9 @@
 // Copyright (c) 2001-2009 Nokia Corporation and/or its subsidiary(-ies).
 // All rights reserved.
 // This component and the accompanying materials are made available
-// under the terms of the License "Symbian Foundation License v1.0" to Symbian Foundation members and "Symbian Foundation End User License Agreement v1.0" to non-members
+// under the terms of "Eclipse Public License v1.0"
 // which accompanies this distribution, and is available
-// at the URL "http://www.symbianfoundation.org/legal/licencesv10.html".
+// at the URL "http://www.eclipse.org/legal/epl-v10.html".
 //
 // Initial Contributors:
 // Nokia Corporation - initial contribution.
@@ -13,10 +13,8 @@
 // Description:
 //
 
-
-
 /**
- @file RHTTPHeaders.h
+ @file
  @warning : This file contains Rose Model ID comments - please do not delete
 */
 
@@ -75,7 +73,7 @@ values described using THTTPHdrVal.
 	//##ModelId=3C4C18800079
 	IMPORT_C TInt GetField(RStringF aFieldName, 
 								  TInt aPartIdx, THTTPHdrVal& aHeaderValue) const;
-
+	
 	/** Obtain an Raw representation of the named header
 		field's value.  Note that general client use of this method is
 		strongly discouraged since it exposes the Raw representation of particular headers.  
@@ -91,7 +89,9 @@ values described using THTTPHdrVal.
 	//##ModelId=3C4C18800076
 	IMPORT_C TInt GetRawField(RStringF aFieldName, 
 							   TPtrC8& aRawFieldData) const;
-
+	
+	IMPORT_C void GetRawFieldL(RStringF aFieldName, TPtrC8& aRawFieldData) const;
+	
 	/** Obtain the value of a named parameter, associated with the
 		named header field.  An optional index to a part within the
 		header field may be supplied, if not it is assumed that it is
@@ -131,7 +131,8 @@ values described using THTTPHdrVal.
 		@param aFieldValue The field value, e.g. 'text/html' */
 	//##ModelId=3C4C18800060
 	IMPORT_C void SetFieldL(RStringF aFieldName, THTTPHdrVal aFieldValue);
-
+	IMPORT_C TInt SetField(RStringF aFieldName, THTTPHdrVal aFieldValue);
+	
 	/** Set a named field in the header, and associate with it the
 		supplied parameter. If the field doesn't already exist it will
 		be created along with a parameter; if it does exist, then a
@@ -143,7 +144,8 @@ values described using THTTPHdrVal.
 	//##ModelId=3C4C18800063
 	IMPORT_C void SetFieldL(RStringF aFieldName, THTTPHdrVal aFieldValue,
 							RStringF aParamName, THTTPHdrVal aParamValue);
-
+	IMPORT_C TInt SetField(RStringF aFieldName, THTTPHdrVal aFieldValue,
+                            RStringF aParamName, THTTPHdrVal aParamValue);
 	/** Set a parameter in an existing header. 
 		@param aFieldName The field name, e.g. 'Accept'
 		@param aPartIdx The part of the header to add the parameter to
@@ -171,7 +173,8 @@ values described using THTTPHdrVal.
 	IMPORT_C void SetRawFieldL(RStringF aFieldName, 
 							   const TDesC8& aRawFieldData,
 							   const TDesC8& aFieldSeparator);
-
+	
+	IMPORT_C TInt SetRawField(RStringF aFieldName, const TDesC8& aRawFieldData, const TDesC8& aFieldSeparator);
 	/** Remove, entirely, the named header field from the header
 		collection. All its parts and associated parameters (where
 		they exist) are also removed.
@@ -200,6 +203,8 @@ values described using THTTPHdrVal.
 
 private:
 	friend class CHeaders;
+	friend class CHttpClientTransaction;
+	friend class CHttpClientTransactionImpl;
 	//##ModelId=3C4C1880003A
 	CHeaders* iImplementation;
 	};

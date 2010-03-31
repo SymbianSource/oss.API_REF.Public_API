@@ -1,119 +1,86 @@
-// Boost enable_if library
-
-// Copyright 2003 © The Trustees of Indiana University.
-
-// Use, modification, and distribution is subject to the Boost Software
-// License, Version 1.0. (See accompanying file LICENSE_1_0.txt or copy at
+// (C) Copyright David Abrahams 2002.
+// (C) Copyright Jeremy Siek    2002.
+// (C) Copyright Thomas Witt    2002.
+// Distributed under the Boost Software License, Version 1.0. (See
+// accompanying file LICENSE_1_0.txt or copy at
 // http://www.boost.org/LICENSE_1_0.txt)
+#ifndef BOOST_ENABLE_IF_23022003THW_HPP
+#define BOOST_ENABLE_IF_23022003THW_HPP
 
-//    Authors: Jaakko Järvi (jajarvi at osl.iu.edu)
-//             Jeremiah Willcock (jewillco at osl.iu.edu)
-//             Andrew Lumsdaine (lums at osl.iu.edu)
+#include <boost/detail/workaround.hpp>
+#include <boost/mpl/identity.hpp>
 
+#include <boost/iterator/detail/config_def.hpp>
 
-#ifndef BOOST_UTILITY_ENABLE_IF_HPP
-#define BOOST_UTILITY_ENABLE_IF_HPP
-
-#include "boost/config.hpp"
-
-// Even the definition of enable_if causes problems on some compilers,
-// so it's macroed out for all compilers that do not support SFINAE
-
-#ifndef BOOST_NO_SFINAE
+//
+// Boost iterators uses its own enable_if cause we need
+// special semantics for deficient compilers.
+// 23/02/03 thw
+//
 
 namespace boost
 {
- 
-  template <bool B, class T = void>
-  struct enable_if_c {
-    typedef T type;
-  };
 
-  template <class T>
-  struct enable_if_c<false, T> {};
+  namespace iterators
+  {
+    //
+    // Base machinery for all kinds of enable if
+    //
+    template<bool>
+    struct enabled
+    {
+      template<typename T>
+      struct base
+      {
+        typedef T type;
+      };
+    };
+    
+    //
+    // For compilers that don't support "Substitution Failure Is Not An Error"
+    // enable_if falls back to always enabled. See comments
+    // on operator implementation for consequences.
+    //
+    template<>
+    struct enabled<false>
+    {
+      template<typename T>
+      struct base
+      {
+#ifdef BOOST_NO_SFINAE
 
-  template <class Cond, class T = void> 
-  struct enable_if : public enable_if_c<Cond::value, T> {};
+        typedef T type;
 
-  template <bool B, class T>
-  struct lazy_enable_if_c {
-    typedef typename T::type type;
-  };
-
-  template <class T>
-  struct lazy_enable_if_c<false, T> {};
-
-  template <class Cond, class T> 
-  struct lazy_enable_if : public lazy_enable_if_c<Cond::value, T> {};
-
-
-  template <bool B, class T = void>
-  struct disable_if_c {
-    typedef T type;
-  };
-
-  template <class T>
-  struct disable_if_c<true, T> {};
-
-  template <class Cond, class T = void> 
-  struct disable_if : public disable_if_c<Cond::value, T> {};
-
-  template <bool B, class T>
-  struct lazy_disable_if_c {
-    typedef typename T::type type;
-  };
-
-  template <class T>
-  struct lazy_disable_if_c<true, T> {};
-
-  template <class Cond, class T> 
-  struct lazy_disable_if : public lazy_disable_if_c<Cond::value, T> {};
-
-} // namespace boost
-
-#else
-
-namespace boost {
-
-  namespace detail { typedef void enable_if_default_T; }
-
-  template <typename T>
-  struct enable_if_does_not_work_on_this_compiler;
-
-  template <bool B, class T = detail::enable_if_default_T>
-  struct enable_if_c : enable_if_does_not_work_on_this_compiler<T>
-  { };
-
-  template <bool B, class T = detail::enable_if_default_T> 
-  struct disable_if_c : enable_if_does_not_work_on_this_compiler<T>
-  { };
-
-  template <bool B, class T = detail::enable_if_default_T> 
-  struct lazy_enable_if_c : enable_if_does_not_work_on_this_compiler<T>
-  { };
-
-  template <bool B, class T = detail::enable_if_default_T> 
-  struct lazy_disable_if_c : enable_if_does_not_work_on_this_compiler<T>
-  { };
-
-  template <class Cond, class T = detail::enable_if_default_T> 
-  struct enable_if : enable_if_does_not_work_on_this_compiler<T>
-  { };
-
-  template <class Cond, class T = detail::enable_if_default_T> 
-  struct disable_if : enable_if_does_not_work_on_this_compiler<T>
-  { };
-
-  template <class Cond, class T = detail::enable_if_default_T> 
-  struct lazy_enable_if : enable_if_does_not_work_on_this_compiler<T>
-  { };
-
-  template <class Cond, class T = detail::enable_if_default_T> 
-  struct lazy_disable_if : enable_if_does_not_work_on_this_compiler<T>
-  { };
-
-} // namespace boost
-
-#endif // BOOST_NO_SFINAE
-
+        // This way to do it would give a nice error message containing
+        // invalid overload, but has the big disadvantage that
+        // there is no reference to user code in the error message.
+        //
+        // struct invalid_overload;
+        // typedef invalid_overload type;
+        //
 #endif
+      };
+    };
+
+
+    template <class Cond,
+              class Return>
+    struct enable_if
+# if !defined(BOOST_NO_SFINAE) && !defined(BOOST_NO_IS_CONVERTIBLE)
+      : enabled<(Cond::value)>::template base<Return>
+# else
+      : mpl::identity<Return>
+# endif 
+    {
+# if BOOST_WORKAROUND(BOOST_MSVC, < 1300)
+        typedef Return type;
+# endif 
+    };
+
+  } // namespace iterators
+
+} // namespace boost
+
+#include <boost/iterator/detail/config_undef.hpp>
+
+#endif // BOOST_ENABLE_IF_23022003THW_HPP

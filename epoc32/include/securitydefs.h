@@ -17,11 +17,10 @@
 */
 
 
-
-
 /**
  @file 
- @internalAll
+ @publishedAll
+ @released
 */
  
 #ifndef __SECURITYDEFS_H__
@@ -29,6 +28,10 @@
 
 #include <e32std.h>
 #include <e32base.h>
+
+#ifndef SYMBIAN_ENABLE_SPLIT_HEADERS
+#include <securitydefsconst.h>
+#endif
 
 /** General Security Definitions */
 
@@ -38,7 +41,6 @@
  * What a key can be used for.
  * The values this can take are defined in TKeyUsageVals.
  *
- * @publishedAll
  * @deprecated
  */
 typedef TInt TKeyUsage;
@@ -50,7 +52,6 @@ typedef TInt TKeyUsage;
  * is used when searching for all keys, rather than ones with a particular
  * usage.  As these can be combined, TKeyUsage is used to store them.
  *
- * @publishedAll
  * @deprecated
  */
 enum TKeyUsageVals
@@ -72,8 +73,6 @@ enum TKeyUsageVals
 /**
  * What a key can be used for - PKCS#15 scheme.
  *
- * @publishedAll
- * @released
  */
 enum TKeyUsagePKCS15
 	{
@@ -107,8 +106,6 @@ inline const TKeyUsagePKCS15& operator&=(TKeyUsagePKCS15& aLeft, TKeyUsagePKCS15
 /**
  * What a key can be used for - X.509 scheme.
  *
- * @publishedAll
- * @released
  */
 enum TKeyUsageX509
 	{
@@ -163,8 +160,6 @@ IMPORT_C TKeyUsagePKCS15 KeyUsageX509ToPKCS15Public(TKeyUsageX509 aUsage);
  * Supported types of certificate format. Note these must be only 1 byte long as
  * the file cert store only seralises them as 1 byte.
  * 
- * @publishedAll
- * @released
  */
 enum TCertificateFormat
 	{
@@ -180,8 +175,6 @@ enum TCertificateFormat
 /**
  * The owner of a certificate.
  * 
- * @publishedAll
- * @released
  */
 enum TCertificateOwnerType
 	{
@@ -192,16 +185,12 @@ enum TCertificateOwnerType
 
 /** The length of a SHA-1 hash 
  * 
- * @publishedAll
- * @released
  */
 const TInt KSHA1HashLengthBytes = 20;
 
 /**
  * A SHA-1 hash.
  * 
- * @publishedAll
- * @released
  */
 typedef  TBuf8<KSHA1HashLengthBytes> TSHA1Hash;
 
@@ -211,8 +200,6 @@ typedef  TBuf8<KSHA1HashLengthBytes> TSHA1Hash;
 /**
  * A SHA-1 hash is also used as a key identifier.
  * 
- * @publishedAll
- * @released
  */
 typedef TSHA1Hash TKeyIdentifier;
 
@@ -221,8 +208,6 @@ typedef TSHA1Hash TKeyIdentifier;
  * 
  * Except EValidatedOK, all these are fatal errors unless specified.
  *
- * @publishedAll
- * @released
  */
 enum TValidationError
 	{
@@ -307,139 +292,6 @@ enum TValidationError
 	 */
 	ECriticalCapabilities
 	};
-
-// Certificate Applicability UIDs
-
-/**
- * This UID is associated with certificates which are trusted for 
- * software installation of native applications. 
- *
- * @see MCertStore::Applications
- * @see MCTWritableCertStore::SetApplicability
- *
- * @publishedPartner
- * @released
- */
-const TUid KSwiApplicabilityUid = {0x100042AB};
-
-/**
- * This UID is associated with certificates which are trusted for 
- * OCSP checks.
- *
- * @see MCertStore::Applications
- * @see MCTWritableCertStore::SetApplicability
- *
- * @publishedPartner
- * @released
- */
-const TUid KSwiOcspApplicabilityUid = {0x1000A8B6};
-
-/**
- * This UID is associated with certificates which are trusted for 
- * Java midlet installation.
- *
- * @see MCertStore::Applications
- * @see MCTWritableCertStore::SetApplicability
- *
- * @publishedPartner
- * @released
- */
-const TUid KMidletInstallApplicabilityUid = {0x101F9B28};
-
-/**
- * This UID is associated with certificates which are trusted for 
- * SSL/TLS connectivity.
- *
- * @see MCertStore::Applications
- * @see MCTWritableCertStore::SetApplicability
- *
- * @publishedPartner
- * @released
- */
-const TUid KTlsApplicabilityUid = {0x1000183D};
-
-/**
- * This OID is associated with X.509 certificates
- * trusted for TLS WWW server authentication.
- *
- * @publishedPartner
- * @released
- */
-_LIT(KServerAuthOID,"1.3.6.1.5.5.7.3.1");
-
-/**
- * This OID is associated with X.509 certificates
- * trusted for TLS WWW client authentication.
- *
- * @publishedPartner
- * @released
- */
- // SSL Client
- _LIT(KClientAuthOID,"1.3.6.1.5.5.7.3.2");
-
-/**
- * This OID is associated with X.509 certificates
- * trusted for signing of downloadable executable code.
- *
- * @publishedPartner
- * @released
- */
-_LIT(KCodeSigningOID,"1.3.6.1.5.5.7.3.3");
-
-/**
- * This OID is associated with X.509 certificates
- * trusted for email protection .
- *
- * @publishedPartner
- * @released
- */
-_LIT(KEmailProtectionOID,"1.3.6.1.5.5.7.3.4");
-
-/**
- * This OID is associated with X.509 certificates
- * trusted for Ipsec end system.
- *
- * @publishedPartner
- * @released
- */
-_LIT(KIpsecEndSystemOID,"1.3.6.1.5.5.7.3.5");
-
-/**
- * This OID is associated with X.509 certificates
- * trusted for Ipsec tunnel.
- *
- * @publishedPartner
- * @released
- */
-_LIT(KIpsecTunnelOID,"1.3.6.1.5.5.7.3.6");
-
-/**
- * This OID is associated with X.509 certificates
- * trusted for Ipsec user.
- *
- * @publishedPartner
- * @released
- */
-_LIT(KIpsecUserOID, "1.3.6.1.5.5.7.3.7");
-
-/**
- * This OID is associated with X.509 certificates
- * trusted for binding the hash of an object to a time.
- *
- * @publishedPartner
- * @released
- */
-_LIT(KTimeStampingOID,"1.3.6.1.5.5.7.3.8");
-
-/**
- * This OID is associated with X.509 certificates
- * trusted for signing OCSP responses.
- *
- * @publishedPartner
- * @released
- */
-_LIT(KOCSPSigningOID,"1.3.6.1.5.5.7.3.9");
-
 
 
 #include "securitydefs.inl"

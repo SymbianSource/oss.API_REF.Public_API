@@ -2,9 +2,9 @@
 * Copyright (c) 2006 Nokia Corporation and/or its subsidiary(-ies).
 * All rights reserved.
 * This component and the accompanying materials are made available
-* under the terms of the License "Symbian Foundation License v1.0" to Symbian Foundation members and "Symbian Foundation End User License Agreement v1.0" to non-members
+* under the terms of "Eclipse Public License v1.0"
 * which accompanies this distribution, and is available
-* at the URL "http://www.symbianfoundation.org/legal/licencesv10.html".
+* at the URL "http://www.eclipse.org/legal/epl-v10.html".
 *
 * Initial Contributors:
 * Nokia Corporation - initial contribution.
@@ -15,6 +15,7 @@
 *
 */
 
+
 #ifndef __PUBLICRUNTIMEIDS_HRH
 #define __PUBLICRUNTIMEIDS_HRH
 
@@ -22,7 +23,11 @@
 
 #define KFeatureIdFf3gCellbroadcast                         175
 
+#define KFeatureIdFfAbcAgressiveUi                          252
+
 #define KFeatureIdFfAdaptiveWlanScanningSupport             140
+
+#define KFeatureIdFfAdditionalFonts                         241
 
 #define KFeatureIdFfAiWlansnifferWidget                     172
 
@@ -36,23 +41,55 @@
 
 #define KFeatureIdFfBirthdayImprovement                     189
 
+#define KFeatureIdFfBluetoothDataProfilesDisabled           271
+
+#define KFeatureIdFfBluetoothDisabled                       270
+
 #define KFeatureIdBrowserProgressiveDownload                1724
+
+#define KFeatureIdFfCalMeetingRequestUi                     296
 
 #define KFeatureIdFfCapacitiveDisplay                       183
 
 #define KFeatureIdChineseFontsHires                         138
 
+#define KFeatureIdFfChineseSelectionKey                     233
+
 #define KFeatureIdFfClockMultiprocolSupport                 190
+
+#define KFeatureIdFfCmailIntegration                        247
 
 #define KFeatureIdCommsDatCreationFromXml                   67
 
 #define KFeatureIdFfConnectionOverride                      179
 
+#define KFeatureIdFfContactsCompanyNames                    236
+
+#define KFeatureIdFfContactsMerge                           268
+
+#define KFeatureIdffContactsMycard                          267
+
 #define KFeatureIdFfContactsNickname                        182
+
+#define KFeatureIdFfContactsPredictiveSearch                235
+
+#define KFeatureIdFfContactsRemoteLookup                    234
+
+#define KFeatureIdFfContactsSocial                          273
+
+#define KFeatureIdFfContextProfiles                         254
+
+#define KFeatureIdFfDeviceEncryptionFeature                 250
+
+#define KFeatureIdFfDisableOmaSuplV2                        308
+
+#define KFeatureIdFfDmConnmoAdapter                         277
 
 #define KFeatureIdDmInstallSecurity                         5065
 
 #define KFeatureIdFfDualLanguageSupport                     194
+
+#define KFeatureIdDualModem                                 230
 
 #define KFeatureIdFfEmailFramework                          135
 
@@ -64,11 +101,19 @@
 
 #define KFeatureIdFfEmailUi                                 136
 
+#define KFeatureIdCertificationTesting                      309
+
+#define KFeatureIdFfEnhancedCalendarEventUi                 295
+
 #define KFeatureIdFfFarsiCalendar                           213
 
 #define KFeatureIdFmtx                                      1705
 
+#define KFeatureIdFfFmtxRdsText                             220
+
 #define KFeatureIdFullscrHwrInput                           66
+
+#define KFeatureIdFfGenericAccessNetwork                    257
 
 #define KFeatureIdFfGenericFontsAssets                      188
 
@@ -90,15 +135,31 @@
 
 #define KFeatureIdFfIntelligentTextInput                    216
 
+#define KFeatureIdFfItiVirtualTouchFirstGenerationSupport   218
+
 #define KFeatureIdFfJavaGlobalIndicatorsApi                 134
+
+#define KFeatureIdFfKeypadNoSendKey                         278
 
 #define KFeatureIdKorean                                    180
 
+#define KFeatureIdFfLayout480640Vga3                        240
+
+#define KFeatureIdFfLayout640480Vga3                        239
+
+#define KFeatureIdFfLimitedMessageAndAlarmToneSize          300
+
 #define KFeatureIdFfLinkedFontsChinese                      159
+
+#define KFeatureIdFfLocationMwApeCentricArchSupport         258
+
+#define KFeatureIdFfMecoXmpp                                232
 
 #define KFeatureIdFfMeetingRequestUi                        174
 
 #define KFeatureIdFfMenuTexturePreloading                   118
+
+#define KFeatureIdS60MtpController                          272
 
 #define KFeatureIdFfNcdEngine                               61
 
@@ -130,6 +191,8 @@
 
 #define KFeatureIdProvAuthtypePlugin                        100
 
+#define KFeatureIdFfQt                                      238
+
 #define KFeatureIdQwertyFnKey                               1714
 
 #define KFeatureIdRockerKey                                 120
@@ -138,7 +201,17 @@
 
 #define KFeatureIdSelectableEmail                           125
 
+#define KFeatureIdFfSipCustomPdpHandling                    269
+
+#define KFeatureIdFfSmallScreenTouch                        279
+
 #define KFeatureStartupOmaDmSupport                         40
+
+#define KFeatureIdFfStrokeInputmodeInTaiwan                 280
+
+#define KFeatureIdFfSuplImsiGeneratedServerPriorityDefault  301
+
+#define KFeatureIdFfSyncmlStatusExtendedErrorCodes          299
 
 #define KFeatureIdFfTacticons                               184
 
@@ -146,9 +219,13 @@
 
 #define KFeatureIdFfTarmCapabilityBasedAccess               214
 
+#define KFeatureIdFfTarmCapabilityChecking                  237
+
 #define KFeatureIdTcpMyfavesFeature                         1722
 
 #define KFeatureIdFfTcpMyprofile                            186
+
+#define KFeatureIdFfTdScdma                                 274
 
 #define KFeatureIdTouchscreencalibInStartup                 69
 
@@ -160,7 +237,13 @@
 
 #define KFeatureIdUsbHost                                   1704
 
+#define KFeatureIdUsbModem                                  265
+
 #define KFeatureIdUseEGprsIcon                              121
+
+#define KFeatureIdFfUseNavikeyForVolume                     248
+
+#define KFeatureIdFfVideoAudioBranding                      266
 
 #define KFeatureIdVirtualFullscrQwertyInput                 64
 
@@ -174,11 +257,15 @@
 
 #define KFeatureIdWebvideoPh2                               39
 
-#define KFeatureIdFfWlansnifferVoipEnhancements             156
-
 #define KFeatureIdFfWlanExtensions                          177
 
 #define KFeatureIdFfWlanWapi                                129
+
+#define KFeatureIdSymbianIncludeLocationNpeDsm              261
+
+#define KFeatureIdSymbianIncludeLocationSuplPosInit         263
+
+#define KFeatureIdSymbianIncludeLocationSuplProxy           262
 
 #define KFeatureId3DMenu                                    1511
 
@@ -507,5 +594,39 @@
 #define KFeatureIdXdmLocalStorage                           1525
 
 #define KFeatureIdXdmXcap                                   1524
+
+/** Features added from customswruntimeids.hrh (removed from customswruntimeids.hrh)  */
+
+#define KFeatureIdFfMtpAlbumArt                             5229
+
+#define KFeatureIdFfMusicPathPlugin                         5232
+
+#define KFeatureIdFfPowerKeyAsKeyguard                      5243
+
+#define KFeatureIdFfDisplayNetworkNameAfterCsRegistration   5217
+
+#define KFeatureIdFfManualSelectionPopulatedPlmnList        5184
+
+#define KFeatureIdFfMobilityManagementErrors                5228
+
+#define KFeatureIdFfServiceCallWhilePhoneLocked             5198
+
+#define KFeatureIdFfLocationsysuiHidePositioningMenu        5224
+
+#define KFeatureIdFfMasterResetAndClearSubmenu              5195
+
+#define KFeatureIdFfSimlockUi                               5197
+
+#define KFeatureIdFfEntryPointForVideoShare                 5225
+
+#define KFeatureIdFfImsDeregistrationInOffline              5230
+
+#define KFeatureIdFfImsDeregistrationInRfs                  5231
+
+#define KFeatureIdFfImsDeregistrationInVpn                  5209
+
+#define KFeatureIdFfIntranetBrowsing                        5109
+
+#define KFeatureIdProductIncludesHomeScreenEasyDialing      5085
 
 #endif // __PUBLICRUNTIMEIDS_HRH

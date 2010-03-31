@@ -1,9 +1,9 @@
 // Copyright (c) 2004-2009 Nokia Corporation and/or its subsidiary(-ies).
 // All rights reserved.
 // This component and the accompanying materials are made available
-// under the terms of the License "Symbian Foundation License v1.0" to Symbian Foundation members and "Symbian Foundation End User License Agreement v1.0" to non-members
+// under the terms of "Eclipse Public License v1.0"
 // which accompanies this distribution, and is available
-// at the URL "http://www.symbianfoundation.org/legal/licencesv10.html".
+// at the URL "http://www.eclipse.org/legal/epl-v10.html".
 //
 // Initial Contributors:
 // Nokia Corporation - initial contribution.
@@ -42,11 +42,11 @@
 * @publishedAll
 * @released
 */
-///@{
-const TUint8 KInet4IP_DF = 0x40;	///< Don't Fragment flag
-const TUint8 KInet4IP_MF = 0x20;	///< More Fragments flag
-const TInt KInetMinMtu = 68;		///< Minimum MTU as defined in RFC-791 
-///@}
+//@{
+const TUint8 KInet4IP_DF = 0x40;	//< Don't Fragment flag
+const TUint8 KInet4IP_MF = 0x20;	//< More Fragments flag
+const TInt KInetMinMtu = 68;		//< Minimum MTU as defined in RFC-791 
+//@}
 
 class TInet6HeaderIP4
 /**
@@ -534,8 +534,8 @@ public:
 private:
 	union
 		{
-		TUint8 i[4*15];	///< This allocates maximum length (60 bytes)
-		TUint32 iAlign;	///< A dummy member to force the 4 byte alignment
+		TUint8 i[4*15];	//< This allocates maximum length (60 bytes)
+		TUint32 iAlign;	//< A dummy member to force the 4 byte alignment
 		};
 	};
 
@@ -545,12 +545,12 @@ private:
 * @publishedAll
 * @released
 */
-///@{
+//@{
 const TUint8 KInet4Option_End			= 0x00;
 const TUint8 KInet4Option_Nop			= 0x01;
 
 const TUint8 KInet4OptionFlag_Copy		= 0x80;
-///@}
+//@}
 
 //
 //	ICMP v4 constants
@@ -562,7 +562,7 @@ const TUint8 KInet4OptionFlag_Copy		= 0x80;
 * @publishedAll
 * @released
 */
-///@{
+//@{
 /** Echo Reply. See TInet6HeaderICMP_Echo (IPv4 and IPv6 use the same format). */
 const TUint8 KInet4ICMP_EchoReply		=  0;
 const TUint8 KInet4ICMP_Unreachable		=  3;
@@ -574,7 +574,7 @@ const TUint8 KInet4ICMP_TimeExceeded	= 11;
 const TUint8 KInet4ICMP_ParameterProblem = 12;
 const TUint8 KInet4ICMP_TimeStamp		= 13;
 const TUint8 KInet4ICMP_TimeStampReply	= 14;
-///@}
+//@}
 
-///@}
+//@}
 #endif

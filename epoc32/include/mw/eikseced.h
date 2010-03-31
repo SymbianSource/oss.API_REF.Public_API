@@ -2,9 +2,9 @@
 * Copyright (c) 1997-1999 Nokia Corporation and/or its subsidiary(-ies).
 * All rights reserved.
 * This component and the accompanying materials are made available
-* under the terms of the License "Symbian Foundation License v1.0" to Symbian Foundation members and "Symbian Foundation End User License Agreement v1.0" to non-members
+* under the terms of "Eclipse Public License v1.0"
 * which accompanies this distribution, and is available
-* at the URL "http://www.symbianfoundation.org/legal/licencesv10.html".
+* at the URL "http://www.eclipse.org/legal/epl-v10.html".
 *
 * Initial Contributors:
 * Nokia Corporation - initial contribution.
@@ -74,7 +74,11 @@ public:
         /** Disables VKB. Non-zero (or ETrue) parameter disables VKB, 
             0 (or EFalse) enables VKB. When disabled, 
             editor doesn't request PenInputServer to start VKB */ 
-        EDisablePenInput
+        EDisablePenInput,
+        
+        ELaunchPenInputAutomatic,
+        
+        EPartialScreenInput
         };    
         
         
@@ -303,7 +307,7 @@ public:    // specific
     
     // for cursor support
     TPoint CursorPos();
-    void EnableCursor( TBool aEnable );    
+    IMPORT_C void EnableCursor( TBool aEnable );    
 
 protected:    // inherited
     // methods to enable CAknNumericSecretEditor to inherit from CEikSecretEditor

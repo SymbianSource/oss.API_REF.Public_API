@@ -1,26 +1,33 @@
-// Copyright (c) 1997-2009 Nokia Corporation and/or its subsidiary(-ies).
-// All rights reserved.
-// This component and the accompanying materials are made available
-// under the terms of the License "Symbian Foundation License v1.0" to Symbian Foundation members and "Symbian Foundation End User License Agreement v1.0" to non-members
-// which accompanies this distribution, and is available
-// at the URL "http://www.symbianfoundation.org/legal/licencesv10.html".
-//
-// Initial Contributors:
-// Nokia Corporation - initial contribution.
-//
-// Contributors:
-//
-// Description:
-//
+/*
+* Copyright (c) 1997-2009 Nokia Corporation and/or its subsidiary(-ies).
+* All rights reserved.
+* This component and the accompanying materials are made available
+* under the terms of "Eclipse Public License v1.0"
+* which accompanies this distribution, and is available
+* at the URL "http://www.eclipse.org/legal/epl-v10.html".
+*
+* Initial Contributors:
+* Nokia Corporation - initial contribution.
+*
+* Contributors:
+*
+* Description: 
+*
+*/
+
 
 #ifndef __TXTETEXT_H__
 #define __TXTETEXT_H__
 
 #include <e32std.h>
 #include <e32base.h>
-#include <fldset.h>
 #include <s32std.h>
 
+#ifndef SYMBIAN_ENABLE_SPLIT_HEADERS
+#include <fldset.h>
+#include <txtetext_internal.h>
+#include <txtclipboard.h>
+#endif
 
 // Forward references
 class CParaFormatLayer;
@@ -35,21 +42,6 @@ class TCharFormat;
 class CEditableTextOptionalData;
 class RFs;
 
-
-/**
-UIDs
-@internalComponent
-*/
-const TUid KPlainTextFieldDataUid = {268435555};
-const TUid KEditableTextUid = {268450334};
-const TUid KPlainTextCharacterDataUid = {268450341};
-const TUid KClipboardUidTypePlainText = {268450333};
-const TUid KUidRichText = {271013233};
-
-/**
-@internalComponent
-*/
-const TInt KMaxFieldBufferSize=0x14;
 
 /** 
 An abstract base class which defines the behaviour common to all editable 
@@ -619,7 +611,7 @@ public:
 	//
 	// Field functions
 	IMPORT_C void SetFieldFactory(MTextFieldFactory* aFactory);
-	inline const MTextFieldFactory* FieldFactory() const;
+	IMPORT_C const MTextFieldFactory* FieldFactory() const;
 	IMPORT_C CTextField* NewTextFieldL(TUid aFieldType) const;
 	IMPORT_C void InsertFieldL(TInt aPos,CTextField* aField,TUid aFieldType); 
 	IMPORT_C virtual void UpdateFieldL(TInt aPos); 

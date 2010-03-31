@@ -2,9 +2,9 @@
 // Copyright (c) 2002-2009 Nokia Corporation and/or its subsidiary(-ies).
 // All rights reserved.
 // This component and the accompanying materials are made available
-// under the terms of the License "Symbian Foundation License v1.0" to Symbian Foundation members and "Symbian Foundation End User License Agreement v1.0" to non-members
+// under the terms of "Eclipse Public License v1.0"
 // which accompanies this distribution, and is available
-// at the URL "http://www.symbianfoundation.org/legal/licencesv10.html".
+// at the URL "http://www.eclipse.org/legal/epl-v10.html".
 //
 // Initial Contributors:
 // Nokia Corporation - initial contribution.
@@ -149,23 +149,28 @@ public:
 	        A callback to notify the client when the input stream has been initialised and is ready for 
 	        use. The caller must create a callback class which implements this interface.
 	@param  aPriority
-	        This client's relative priority. This is a value between EMdaPriorityMin and EMdaPriorityMax and 
-	        represents a relative priority. A higher value indicates a more important request.
-	@param  aPref
-	        The required behaviour if a higher priority client takes over the sound output device.
+	        The Priority Value - this client's relative priority. This is a value between EMdaPriorityMin and 
+	        EMdaPriorityMax and represents a relative priority. A higher value indicates a more important request.
+    @param  aPref
+            The Priority Preference - an additional audio policy parameter. The suggested default is 
+            EMdaPriorityPreferenceNone. Further values are given by TMdaPriorityPreference, and additional 
+            values may be supported by given phones and/or platforms, but should not be depended upon by 
+            portable code.
 
 	@return A pointer to the audio input stream object.
 
-	@capability MultimediaDD
-	            A process requesting or using this method that has MultimediaDD capability will
-				always have precedence over a process that does not have MultimediaDD.
-	            
 	@capability	UserEnvironment
 			For recording - the requesting client process must have a 
 			UserEnvironment capability.
+			
+	Note: The Priority Value and Priority Preference are used primarily when deciding what to do when
+	several audio clients attempt to play or record simultaneously. In addition to the Priority Value and Preference, 
+	the adaptation may consider other parameters such as the SecureId and Capabilities of the client process. 
+	Whatever, the decision 	as to what to do in such situations is up to the audio adaptation, and may
+	vary between different phones. Portable applications are advised not to assume any specific behaviour. 
 	*/
 	IMPORT_C static CMdaAudioInputStream* NewL(MMdaAudioInputStreamCallback& aCallBack,
-		TInt aPriority,	TMdaPriorityPreference aPref);
+		TInt aPriority,	TInt aPref);
 
 	/**
     Destructor.
@@ -244,19 +249,14 @@ public:
 	This function cannot be used while the stream object is open. It is intended for use before an Open()
 	is issued, or between a previous Stop() and a new Open().
 
-	@param  aPriority
-	        The priority level to apply, EMdaPriorityMin means the client can be interrupted by any other client, EMdaPriorityNormal
-	        means the client is only interrupted by clients with a higher priority and EMdaPriorityMax means the client cannot be interrupted by
-	        other clients.
-	@param  aPref
-	        A set of priority values that define the behaviour to be adopted by a client using a sound device if a higher priority
-	        client takes over that device.
+    @param  aPriority
+            The Priority Value.
+    @param  aPref
+            The Priority Preference.
 
-	@capability MultimediaDD
-	            A process requesting or using this method that has MultimediaDD capability will
-				always have precedence over a process that does not have MultimediaDD.
+    @see CMdaAudioInputStream::NewL()
 	*/
-	IMPORT_C void SetPriority(TInt aPriority, TMdaPriorityPreference aPref);
+	IMPORT_C void SetPriority(TInt aPriority, TInt aPref);
 
 	/**
 	Records streaming raw audio data.

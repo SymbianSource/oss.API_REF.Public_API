@@ -1,5 +1,3 @@
-// © Portions copyright (c) 2006 Nokia Corporation.  All rights reserved.
-// © Portions copyright (c) 2007 Symbian Software Ltd. All rights reserved.
 
 /*-
  * Copyright (c) 1982, 1986, 1990, 1993, 1994
@@ -28,7 +26,7 @@
  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY
  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
- *
+ *   Portions Copyright (c) 2006-2007  Nokia Corporation and/or its subsidiary(-ies).  All rights reserved.
  *	@(#)sockio.h	8.1 (Berkeley) 3/28/94
  * $FreeBSD: src/sys/sys/sockio.h,v 1.28 2005/06/05 03:13:13 thompsa Exp $
  */
@@ -46,6 +44,7 @@
 #define	SIOCGIFACTIVECONF	_IOWR('s', 4, struct ifconf)	/* get active ifnet list */
 #define	SIOCSIFNAME			_IOW('s', 5, struct ifreq)	/* set IF name */
 #define	SIOCGIFINDEX		_IOWR('s', 6, struct ifreq)	/* get IF name */
+#define SIOCGIFACTIVEIAP    _IOWR('s',12,struct ifreq) /* gets current active IAP/SNAP*/
 #define	SIOCIFSTART			_IOR('s', 7, NULL)	/* start the IF */
 #define	SIOCIFACTIVESTART	_IOR('s', 8, NULL)	/* start the sub IF */
 #define	SIOCIFSTOP			_IOR('s', 9, NULL)	/* stop the IF */

@@ -1,6 +1,6 @@
 
-#ifndef BOOST_MPL_VECTOR_AUX_ITEM_HPP_INCLUDED
-#define BOOST_MPL_VECTOR_AUX_ITEM_HPP_INCLUDED
+#ifndef BOOST_MPL_LIST_AUX_NODE_HPP_INCLUDED
+#define BOOST_MPL_LIST_AUX_NODE_HPP_INCLUDED
 
 // Copyright Aleksey Gurtovoy 2000-2004
 //
@@ -10,94 +10,46 @@
 //
 // See http://www.boost.org/libs/mpl for documentation.
 
-// $Source: /cvsroot/boost/boost/boost/mpl/vector/aux_/item.hpp,v $
-// $Date: 2005/05/15 00:39:04 $
-// $Revision: 1.8 $
+// $Source: /cvsroot/boost/boost/boost/mpl/list/aux_/item.hpp,v $
+// $Date: 2004/09/02 15:40:58 $
+// $Revision: 1.2 $
 
 #include <boost/mpl/long.hpp>
-#include <boost/mpl/void.hpp>
-#include <boost/mpl/next_prior.hpp>
-#include <boost/mpl/aux_/type_wrapper.hpp>
-#include <boost/mpl/aux_/config/typeof.hpp>
-#include <boost/mpl/aux_/config/ctps.hpp>
+#include <boost/mpl/list/aux_/tag.hpp>
+#include <boost/mpl/aux_/config/msvc.hpp>
+#include <boost/mpl/aux_/config/workaround.hpp>
 
 namespace boost { namespace mpl {
 
-#if defined(BOOST_MPL_CFG_TYPEOF_BASED_SEQUENCES)
-
-template< 
-      typename T
-    , typename Base
-    , int at_front = 0
-    >
-struct v_item
-    : Base
-{
-    typedef typename Base::upper_bound_ index_;
-    typedef typename next<index_>::type upper_bound_;
-    typedef typename next<typename Base::size>::type size;
-    typedef Base base;
-    typedef v_item type;
-
-    // agurt 10/sep/04: MWCW <= 9.3 workaround here and below; the compiler
-    // breaks if using declaration comes _before_ the new overload
-    static aux::type_wrapper<T> item_(index_);
-    using Base::item_;
-};
-
 template<
-      typename T
-    , typename Base
+      typename Size
+    , typename T
+    , typename Next
     >
-struct v_item<T,Base,1>
-    : Base
+struct l_item
 {
-    typedef typename prior<typename Base::lower_bound_>::type index_;
-    typedef index_ lower_bound_;
-    typedef typename next<typename Base::size>::type size;
-    typedef Base base;
-    typedef v_item type;
+// agurt, 17/jul/03: to facilitate the deficient 'is_sequence' implementation 
+#if BOOST_WORKAROUND(BOOST_MSVC, <= 1300)
+    typedef int begin;
+#endif
+    typedef aux::list_tag tag;
+    typedef l_item type;
 
-    static aux::type_wrapper<T> item_(index_);
-    using Base::item_;
+    typedef Size size;
+    typedef T item;
+    typedef Next next;
 };
 
-// "erasure" item
-template< 
-      typename Base
-    , int at_front
-    >
-struct v_mask
-    : Base
+struct l_end
 {
-    typedef typename prior<typename Base::upper_bound_>::type index_;
-    typedef index_ upper_bound_;
-    typedef typename prior<typename Base::size>::type size;
-    typedef Base base;
-    typedef v_mask type;
-
-    static aux::type_wrapper<void_> item_(index_);
-    using Base::item_;
+#if BOOST_WORKAROUND(BOOST_MSVC, <= 1300)
+    typedef int begin;
+#endif
+    typedef aux::list_tag tag;
+    typedef l_end type;
+    typedef long_<0> size;
 };
-
-template< 
-      typename Base
-    >
-struct v_mask<Base,1>
-    : Base
-{
-    typedef typename Base::lower_bound_ index_;
-    typedef typename next<index_>::type lower_bound_;
-    typedef typename prior<typename Base::size>::type size;
-    typedef Base base;
-    typedef v_mask type;
-
-    static aux::type_wrapper<void_> item_(index_);
-    using Base::item_;
-};
-
-#endif // BOOST_MPL_CFG_TYPEOF_BASED_SEQUENCES
 
 }}
 
-#endif // BOOST_MPL_VECTOR_AUX_ITEM_HPP_INCLUDED
+#endif // BOOST_MPL_LIST_AUX_NODE_HPP_INCLUDED

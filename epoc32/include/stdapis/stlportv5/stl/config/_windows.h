@@ -25,6 +25,20 @@
 #  define _STLP_PLATFORM "Windows"
 #endif
 
+/* _STLP_WIN32_VERSION is used to detect targetted Windows platforms as
+ * old ones are not supporting some Win32 functions that STLport use.
+ * Limited OSs are going up to and including Windows 98 so they can be
+ * detected using WINVER or _WIN32_WINDOWS macros, we do not have to use
+ * _WINNT_WINDOWS macro for the moment.
+ */
+#if !defined (_STLP_WIN32_VERSION)
+#  if defined (WINVER)
+#    define _STLP_WIN32_VERSION WINVER
+#  elif defined (_WIN32_WINDOWS)
+#    define _STLP_WIN32_VERSION _WIN32_WINDOWS
+#  endif
+#endif
+
 #if !defined (_STLP_BIG_ENDIAN) && !defined (_STLP_LITTLE_ENDIAN)
 #  if defined (_MIPSEB)
 #    define _STLP_BIG_ENDIAN 1
@@ -145,6 +159,8 @@ _STLP_WCE_WINBASEAPI void WINAPI Sleep(DWORD);
 
 /* end of eMbedded Visual C++ specific section */
 
+#    elif defined (__SYMBIAN32__) && defined(__GCCXML__)
+/* Nothing to do here */
 #    else
 /* boris : for the latest SDK, you may actually need the other version of the declaration (above)
  * even for earlier VC++ versions. There is no way to tell SDK versions apart, sorry ...
@@ -158,7 +174,7 @@ _STLP_IMPORT_DECLSPEC long _STLP_STDCALL InterlockedExchange(long*, long);
 /* This API function do not exist in the old platform SDK and is equivalent to
  * InterlockedExchange on 32 bits platform:
  */
-#      if defined (__cplusplus)
+#      if defined (__cplusplus) && !( defined(__SYMBIAN32__) && (__GCCXML__))
 /* We do not define this function if we are not in a C++ translation unit just
  * because of the inline portability issue it would introduce. We will have to
  * fix it the day we need this function for a C translation unit.
@@ -187,7 +203,7 @@ void* _STLP_CALL STLPInterlockedExchangePointer(void* volatile* __a, void* __b) 
 #      endif
 #    endif
 
-#    if !defined (_STLP_WCE)
+#    if !defined (_STLP_WCE) && !( defined(__SYMBIAN32__) && (__GCCXML__))
 _STLP_IMPORT_DECLSPEC void _STLP_STDCALL Sleep(unsigned long);
 _STLP_IMPORT_DECLSPEC void _STLP_STDCALL OutputDebugStringA(const char* lpOutputString);
 #    endif

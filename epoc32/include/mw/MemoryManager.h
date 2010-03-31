@@ -297,6 +297,47 @@ class MemoryManager
         * @return
         */
         IMPORT_C static void CloseFastAllocator(RAllocator* aDefaultAllocator);
+
+        /**
+        * Create fast allocator and switch as default heap. Special case if fast allocator
+        * has to be created from SetupThreadHeap().
+        * 
+        * @since 9.2
+        * @param
+        * @return
+        */        
+        IMPORT_C static void MemoryManager::CreateFastAllocator();
+
+        /**
+        * Initialize MemoryManager library. Special case if CreateFastAllocator is
+        * called from SetupThreadHeap().
+        * 
+        * @since 9.2
+        * @param
+        * @return
+        */
+        IMPORT_C static void MemoryManager::InitFastAllocator();
+
+        /**
+        * initialize the OOM handler in the memorypool
+        * @since 9.2
+        * @param
+        * @param
+        * @return
+        */
+        IMPORT_C static void InitOOMDialog();
+
+        /**
+        * Reset the OOM dialog display flag in the memorypool; we want to pop the OOM dialog once per page,
+        * so we need to clear this when we are either done with the page (it unloads) or when we load a new one,
+        * so that it will display again when we run out of memory
+        * @since 9.2
+        * @param
+        * @param
+        * @return
+        */
+        IMPORT_C static void ResetOOMDialogDisplayed();
+        
     };
 
 #endif// !_MEMORYMANAGER_H_

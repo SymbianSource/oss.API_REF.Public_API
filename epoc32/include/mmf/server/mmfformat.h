@@ -1,9 +1,9 @@
 // Copyright (c) 2001-2009 Nokia Corporation and/or its subsidiary(-ies).
 // All rights reserved.
 // This component and the accompanying materials are made available
-// under the terms of the License "Symbian Foundation License v1.0" to Symbian Foundation members and "Symbian Foundation End User License Agreement v1.0" to non-members
+// under the terms of "Eclipse Public License v1.0"
 // which accompanies this distribution, and is available
-// at the URL "http://www.symbianfoundation.org/legal/licencesv10.html".
+// at the URL "http://www.eclipse.org/legal/epl-v10.html".
 //
 // Initial Contributors:
 // Nokia Corporation - initial contribution.
@@ -19,7 +19,7 @@
 #include <mmf/server/mmfdatasink.h>
 #include <mmf/server/mmfdatasource.h>
 #include <ecom/ecom.h>
-#include <mmfplugininterfaceuids.hrh>
+#include <mmf/plugin/mmfplugininterfaceuids.hrh>
 
 const TUint KMMFFormatDefaultFrameSize = 0x1000;  //4K
 
@@ -530,8 +530,8 @@ private:
 /**
 Extension class to allow derived classes to support custom interfaces
 
-@publishedPartner
-@prototype
+@publishedAll
+@released
 */
 
 class CMMFFormatDecode2 : public CMMFFormatDecode
@@ -1037,6 +1037,8 @@ public:
 	static CMMFFormatDecode* SelectFormatDecodePluginL(const CMMFFormatPluginSelectionParameters& aSelectParams, MDataSource* aSource, TBool& aSupportsCustomInterfaces);
 	};
 
-#include "mmfformat.inl"
+#include <mmf/server/mmfformat.inl>
+
 
 #endif
+

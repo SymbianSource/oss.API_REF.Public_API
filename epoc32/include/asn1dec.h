@@ -17,8 +17,6 @@
 */
 
 
-
-
 /**
  @file 
  @publishedAll
@@ -35,10 +33,6 @@
 class RInteger;
 
 
-/**
- * @publishedAll
- * @released
- */
 class TASN1DecGeneric
 	{
 public:
@@ -59,10 +53,6 @@ private:
 	TASN1Class iClass;
 	};
 
-/**
- * @publishedAll
- * @released
- */
 class TASN1DecString
 	{
 public:
@@ -71,10 +61,6 @@ protected:
 	virtual TInt CheckValid(const TDesC8& aSource)=0;
 	};
 
-/**
- * @publishedAll
- * @released
- */
 class TASN1DecBoolean
 	{
 public:
@@ -84,10 +70,6 @@ public:
 private:
 	};
 
-/**
- * @publishedAll
- * @released
- */
 class TASN1DecNull
 	{
 public:
@@ -96,20 +78,12 @@ public:
 	IMPORT_C void DecodeDERL(const TASN1DecGeneric& aSource);
 	};
 
-/**
- * @publishedAll
- * @released
- */
 class TASN1DecEnumerated
 	{
 public:
 	IMPORT_C TASN1DecEnumerated(void);
 	};
 
-/**
- * @publishedAll
- * @released
- */
 class TASN1DecInteger
 	{
 public:
@@ -122,10 +96,6 @@ public:
 
 const TInt KNumberOfIDs=15;
 
-/**
- * @publishedAll
- * @released
- */
 class TASN1DecObjectIdentifier
 	{
 public:
@@ -136,10 +106,6 @@ private:
 	TInt DecodeContentsL(TFixedArray<TInt, KNumberOfIDs>& aOID, const TDesC8& aSource);
 	};
 
-/**
- * @publishedAll
- * @released
- */
 class TASN1DecSet
 	{
 public:
@@ -156,10 +122,6 @@ protected:
 	static void CleanupSet(TAny* aArray);	
 	};
 
-/**
- * @publishedAll
- * @released
- */
 class TASN1DecGraphicString
 	{
 public:
@@ -171,10 +133,6 @@ private:
 	HBufC* DecodeContentsL(const TDesC8& aSource);
 	};
 
-/**
- * @publishedAll
- * @released
- */
 class TASN1DecVisibleString
 	{
 public:
@@ -186,10 +144,6 @@ private:
 	HBufC* DecodeContentsL(const TDesC8& aSource);
 	};
 
-/**
- * @publishedAll
- * @released
- */
 class TASN1DecGeneralizedTime
 	{
 public:
@@ -200,10 +154,6 @@ private:
 	TTime GetTimeL(const TDesC8& aSource);
 	};
 
-/**
- * @publishedAll
- * @released
- */
 class TASN1DecUTCTime
 	{
 public:
@@ -214,10 +164,6 @@ private:
 	TTime GetTimeL(const TDesC8& aSource);
 	};
 
-/**
- * @publishedAll
- * @released
- */
 class TASN1DecBitString
 	{
 public:
@@ -230,10 +176,6 @@ public:
 	IMPORT_C HBufC8* ExtractOctetStringL(const TASN1DecGeneric& aSource);
 	};
 
-/**
- * @publishedAll
- * @released
- */
 class TASN1DecIA5String
 	{
 public:
@@ -246,23 +188,7 @@ private:
 	HBufC* DecodeContentsL(const TDesC8& aSource);
 	};
 
-/**
- * @internalComponent
- * @released
- */
-class TASN1DecGenericString
-	{
-public:
-	TASN1DecGenericString();
-	TInt GetContentDER(TDes8& aContent);
-	TInt Length(void);
-private:
-	};
 
-/**
- * @publishedAll
- * @released
- */
 class TASN1DecUTF8String
 	{
 public:
@@ -275,10 +201,6 @@ private:
 	HBufC* DecodeContentsL(const TDesC8& aSource);
 	};
 
-/**
- * @publishedAll
- * @released
- */
 class TASN1DecGeneralString
 	{
 public:
@@ -290,10 +212,6 @@ private:
 	HBufC* DecodeContentsL(const TDesC8& aSource);
 	};
 
-/**
- * @publishedAll
- * @released
- */
 class TASN1DecOctetString
 	{
 public:
@@ -304,10 +222,6 @@ protected:
 	IMPORT_C TInt CheckValid(const TDesC8& aSource);
 	};
 
-/**
- * @publishedAll
- * @released
- */
 class TASN1DecNumericString
 	{
 public:
@@ -320,10 +234,6 @@ private:
 	HBufC* DecodeContentsL(const TDesC8& aSource);
 	};
 
-/**
- * @publishedAll
- * @released
- */
 class TASN1DecVideotexString
 	{
 public:
@@ -335,10 +245,6 @@ private:
 	HBufC* DecodeContentsL(const TDesC8& aSource);
 	};
 
-/**
- * @publishedAll
- * @released
- */
 class TASN1DecPrintableString
 	{
 public:
@@ -360,8 +266,6 @@ private:
  * for cases where the string contains ASCII data.
  * As this is non-destructive, the original data can be retrieved by performing 
  * a Copy to an 8-bit descriptor.
- * @publishedAll
- * @released
  */
 class TASN1DecTeletexString
 	{
@@ -377,8 +281,6 @@ private:
 
 /**
 Class used for decoding ASN.1 BMP strings.
-@publishedAll
-@released
  */
 class TASN1DecBMPString
 	{
@@ -392,10 +294,6 @@ private:
 	HBufC* DecodeContentsL(const TDesC8& aSource);
 	};
 
-/**
- * @publishedAll
- * @released
- */
 class TASN1DecSequence
 	{
 public:

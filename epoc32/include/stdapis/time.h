@@ -32,8 +32,7 @@
  * SUCH DAMAGE.
  *
  *	@(#)time.h	8.3 (Berkeley) 1/21/94
- * © Portions copyright (c) 2005-2006 Nokia Corporation.  All rights reserved.
- * © Portions copyright (c) 2008 Symbian Software Ltd. All rights reserved.
+ * © Portions Copyright (c) 2005-2008 Nokia Corporation and/or its subsidiary(-ies). All rights reserved.
  */
 
 /*
@@ -95,6 +94,16 @@ typedef	__timer_t	timer_t;
 #endif
 
 #include <sys/timespec.h>
+
+/* POSIX.1b structure for timer start values and intervals.  */
+struct itimerspec
+  {
+    struct timespec it_interval;
+    struct timespec it_value;
+  };
+
+/* We can use a simple forward declaration.  */
+struct sigevent; 
 #endif /* __POSIX_VISIBLE >= 199309 */
 
 /* These macros are also in sys/time.h. */
@@ -174,6 +183,32 @@ int clock_settime(clockid_t, const struct timespec *);
 /* XXX missing: clock_nanosleep() */
 IMPORT_C
 int nanosleep(const struct timespec *, struct timespec *);
+
+//////////////////////////LIBRT: START/////////////////////////////////
+
+/* Create new per-process timer using CLOCK_ID.  */
+IMPORT_C int timer_create (clockid_t __clock_id,
+                         struct sigevent *__restrict __evp,
+                         timer_t *__restrict __timerid);
+
+/* Delete timer TIMERID.  */
+IMPORT_C int timer_delete (timer_t __timerid);
+
+/* Set timer TIMERID to VALUE, returning old value in OVLAUE.  */
+IMPORT_C int timer_settime (timer_t __timerid, int __flags,
+                          const struct itimerspec *__restrict __value,
+                          struct itimerspec *__restrict __ovalue);
+
+/* Get current value of timer TIMERID and store it in VLAUE.  */
+IMPORT_C int timer_gettime (timer_t __timerid, struct itimerspec *__value);
+
+/* Get expiration overrun for timer TIMERID.  */
+IMPORT_C int timer_getoverrun (timer_t __timerid);
+
+IMPORT_C int clock_nanosleep(clockid_t clock_id, int flags,
+       const struct timespec *rqtp, struct timespec *rmtp);
+//////////////////////////LIBRT: END/////////////////////////////////
+
 #endif /* __POSIX_VISIBLE >= 199309 */
 
 #ifdef __SYMBIAN32__

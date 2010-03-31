@@ -1,9 +1,9 @@
 // Copyright (c) 1997-2009 Nokia Corporation and/or its subsidiary(-ies).
 // All rights reserved.
 // This component and the accompanying materials are made available
-// under the terms of the License "Symbian Foundation License v1.0" to Symbian Foundation members and "Symbian Foundation End User License Agreement v1.0" to non-members
+// under the terms of "Eclipse Public License v1.0"
 // which accompanies this distribution, and is available
-// at the URL "http://www.symbianfoundation.org/legal/licencesv10.html".
+// at the URL "http://www.eclipse.org/legal/epl-v10.html".
 //
 // Initial Contributors:
 // Nokia Corporation - initial contribution.
@@ -12,77 +12,19 @@
 //
 // Description:
 //
+
 /**
  @file
- @internalTechnology 
+ @publishedAll 
 */
 
 #ifndef ICL_UIDS_HRH
 #define ICL_UIDS_HRH
 
-
-#define KICLCodecDllUidValue	0x101F45AC
-
-#define KDecoderInterfaceUidValue	0x101F45AD
-#define KEncoderInterfaceUidValue	0x101F45B4
-
-#define KBMPCodecDllUidValue		0x101F45AE
-#define KBMPImageDataUidValue		0x101F45BF
-#define KBMPCompressionUidValue		0x101F45E3
-#define KBMPDecoderImplementationUidValue	0x101F45AF
-#define KBMPEncoderImplementationUidValue	0x101F45BE
-
-#define KJPGCodecDllUidValue		0x101F45D6
-#define KJPGImageDataUidValue		0x101F45DA
-#define KJPGQTableUidValue			0x101F45E1
-#define KJPGCommentUidValue			0x101F45E2
-#define KJPGDecoderImplementationUidValue	0x101F45D7
-#define KJPGEncoderImplementationUidValue	0x101F45D9
-
-#define KGIFCodecDllUidValue		0x101F45B1
-#define KGIFBackgroundColorUidValue 0x101F45DE
-#define KGIFImageDescriptorUidValue 0x101F45E4
-#define KGIFLZWInfoUidValue			0x101F45E5
-#define KGIFImageControlUidValue	0x101F45E6
-#define KGIFCommentUidValue			0x101F45E7
-#define KGIFDecoderImplementationUidValue	0x101F45B2
-#define KGIFEncoderImplementationUidValue	0x101F45DD
-
-#define KMBMCodecDllUidValue		0x101F45CA
-#define KMBMDecodeDataUidValue		0x101F45E0
-#define KMBMEncodeDataUidValue		0x101F45E9
-#define KMBMDecoderImplementationUidValue	0x101F45CB
-#define KMBMEncoderImplementationUidValue	0x101F45DF
-
-#define KTIFFCodecDllUidValue		0x101F45C0
-#define KTIFFImageDataUidValue		0x101F45E8
-#define KTIFFDecoderImplementationUidValue	0x101F45C1
-#define KTIFFDecoderLittleEndianImplementationUidValue	0x101F45C2
-#define KTIFFDecoderBigEndianImplementationUidValue	0x101F45C3
-
-#define KWMFCodecDllUidValue		0x101F45B5
-#define KWMFDecoderImplementationUidValue	0x101F45B6
-#define KWMFDecoderStdImplementationUidValue	0x101F45B7
-#define KWMFDecoderApmImplementationUidValue	0x101F45B8
-#define KWMFDecoderClpImplementationUidValue	0x101F45B9
-
-#define KPNGCodecDllUidValue		0x101F45C7
-#define KPNGDecoderImplementationUidValue	0x101F45C8
-#define KPNGEncoderImplementationUidValue	0x101F45FE
-
-#define KWBMPCodecDllUidValue		0x101F45CD
-#define KWBMPDecoderImplementationUidValue	0x101F45CE
-
-#define KOTACodecDllUidValue		0x101F45D0
-#define KOTADecoderImplementationUidValue	0x101F45D1
-
-#define KICOCodecDllUidValue		0x101F45D3
-#define KICODecoderImplementationUidValue	0x101F45D4
-
-#define KMngMimeTypeUidValue 0x101F7C53
-#define KMngImageDisplayPluginUidValue 0x101F7C52
-#define KMngDllUidValue 0x101F7C51
-
+#ifndef SYMBIAN_ENABLE_SPLIT_HEADERS
+#include <icl/icl_uids_const.hrh>
+#include <icl/icl_uids_def.hrh>
+#endif
 /**
 @publishedAll
 @released
@@ -96,8 +38,26 @@ encoder class to be made.
 */
 #define KUidICLJpegEXIFInterface 	0x101F7C4F
 
-#define KUidTransformJpegPluginUidValue		0x101F7C2F
-#define KUidTransformJpegExtension	0x101F7C30
+/**
+@publishedAll
+@released
+Image Transform Plugin Extension UID for Squeeze transformations.
+*/
+#define KUidSqueezeTransformExtension	0x10285BD6
+
+/**
+@publishedAll
+@released
+Image Transform Plugin Extension UID for Orientation transformations.
+*/
+#define KUidOrientationTransformExtension	0x10285C33 
+
+/**
+@publishedAll
+@released
+Image Transform Plugin Extension UID for Overlay transformations.
+*/
+#define KUidOverlayTransformExtension	0x10285C34
 
 /**
 @publishedAll
@@ -111,11 +71,6 @@ encoder class to be made.
 @see CJPEGImageFrameDecoder
 */
 #define KUidICLJpegImageFrameInterface 	0x101F7C60
-
-#define KJPGDecoderImplementation2UidValue	0x101F7C61
-#define KJPGEncoderImplementation2UidValue	0x101F7C62
-
-#define KJPEGImageFramePluginDllUidValue	0x1027376E
 
 /**
 @publishedAll
@@ -140,14 +95,6 @@ Extension interface uid for TImageConvScaler
 Extension interface uid for TImageConvStreamedDecode
 */
 #define KUidImageConvExtStreamedDecodeValue	0x102833E1 	
-
-/**
-@publishedPartner
-@released
-
-Extension interface uid for TImageConvStreamedEncode
-*/
-#define KUidImageConvExtStreamedEncodeValue	0x102833E2 
 
 /**
 @publishedAll

@@ -1,9 +1,9 @@
 // Copyright (c) 1998-2009 Nokia Corporation and/or its subsidiary(-ies).
 // All rights reserved.
 // This component and the accompanying materials are made available
-// under the terms of the License "Symbian Foundation License v1.0" to Symbian Foundation members and "Symbian Foundation End User License Agreement v1.0" to non-members
+// under the terms of "Eclipse Public License v1.0"
 // which accompanies this distribution, and is available
-// at the URL "http://www.symbianfoundation.org/legal/licencesv10.html".
+// at the URL "http://www.eclipse.org/legal/epl-v10.html".
 //
 // Initial Contributors:
 // Nokia Corporation - initial contribution.
@@ -11,8 +11,13 @@
 // Contributors:
 //
 // Description:
+// MTCLBASE.H
 //
-
+/**
+ * @file 
+ * @publishedAll
+ * @released
+ */
 
 #ifndef __MTCLBASE_H__
 #define __MTCLBASE_H__
@@ -25,15 +30,7 @@
 #include <msvstd.hrh>
 #include <cmsvrecipientlist.h>
 
-/**
-UId for 8-bit/16-bit Character set mechanism.
-@internalTechnology
-@prototype
-*/
-const TInt KUIDCharacterSet = 999; 
-
 class CMsvAttachmentWaiter;
-
 
 /** Specifies one or more parts of a message in message-forwarding, message-reply, 
 and message-validation functions.
@@ -48,6 +45,12 @@ typedef TUint TMsvPartList;
 
 class CParaFormatLayer;
 class CCharFormatLayer;
+
+
+//
+// Prototype of expected factory function
+
+typedef CBaseMtm* MtmFactoryFunctionL(CRegisteredMtmDll&, CMsvSession&);
 
 
 /** Specifies function IDs for standard MTM functions.
@@ -65,12 +68,6 @@ enum TMtmStandardAsyncCommands
 	{
 	KMTMStandardFunctionsSendMessage = KMtmFirstFreeStandardMtmFunctionId
 	};
-
-
-////////////////////////////////////////////////////////
-// Prototype of expected factory function
-
-typedef CBaseMtm* MtmFactoryFunctionL(CRegisteredMtmDll&, CMsvSession&);
 
 
 /***********************************************
@@ -476,7 +473,9 @@ public:
  	
  	//For setting the character encoding value, options are 7-bit, 8-bit and 16-bit Unicode.
  	IMPORT_C TInt SetMessageCharacterSet(TUint aCharSet);
-
+	IMPORT_C void SetExtensionData(TAny* aSortData);
+	IMPORT_C TAny* GetExtensionData();
+	
 protected:
 	IMPORT_C CBaseMtm(CRegisteredMtmDll& aRegisteredMtmDll, CMsvSession& aSession);
 	//
@@ -509,11 +508,12 @@ protected:
 	// From CBase
 	IMPORT_C virtual TInt Extension_(TUint aExtensionId, TAny*& a0, TAny* a1);
 
-
 private:
 	void DeleteEntry();
 	
 	void AddFilePathAttachmentL(const TDesC& aFilePath, const TDesC8& aMimeType, TUint aCharset, CMsvAttachment::TMsvAttachmentType aType, TRequestStatus& aStatus);
+	
+
 
 protected:
 	/** The current context. */
@@ -534,6 +534,8 @@ protected:
 	Implementations can modify this if they wish to apply particular formatting 
 	to body text. */
 	CCharFormatLayer* iCharFormatLayer;
+
+
 	
 private:
 	TMsvId	iEntryId;

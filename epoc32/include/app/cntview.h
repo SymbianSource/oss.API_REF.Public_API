@@ -1,9 +1,9 @@
 // Copyright (c) 2001-2009 Nokia Corporation and/or its subsidiary(-ies).
 // All rights reserved.
 // This component and the accompanying materials are made available
-// under the terms of the License "Symbian Foundation License v1.0" to Symbian Foundation members and "Symbian Foundation End User License Agreement v1.0" to non-members
+// under the terms of "Eclipse Public License v1.0"
 // which accompanies this distribution, and is available
-// at the URL "http://www.symbianfoundation.org/legal/licencesv10.html".
+// at the URL "http://www.eclipse.org/legal/epl-v10.html".
 //
 // Initial Contributors:
 // Nokia Corporation - initial contribution.
@@ -22,7 +22,10 @@
 item at the upper or lower limit of the range.
 
 In practice, only the first character in the string is used and this value 
-is ignored. */
+is ignored. 
+@publishedAll
+@released
+*/
 const TInt KMaxBoundaryMatchLength=8;
 
 class CContactGroupView: public CContactViewBase, public MContactViewObserver
@@ -275,7 +278,6 @@ protected:
 	/** The index into the sub view's underlying view of the item at the upper limit 
 	of the range. */
 	TInt iHigh;
-	//ChrisD: contain by value not ptr
 	/** The collation method used to sort the strings.
 	
 	By default, this is the standard collation method for the current locale. */
@@ -326,7 +328,6 @@ private: // From CContactViewRangeBase.
 	void SetL();
 private:
 	CContactViewLowRange(const CContactViewBase& aView,const TDesC& aMatch,TCriteria aCriteria);
-//ChrisD: why private d'tor
 	~CContactViewLowRange();
 private:
 	TBuf<KMaxBoundaryMatchLength> iMatch;
@@ -351,7 +352,6 @@ private: // From CContactViewRangeBase.
 	void SetL();
 private:
 	CContactViewHighRange(const CContactViewBase& aView,const TDesC& aMatch,TCriteria aCriteria);
-//ChrisD: why private d'tor
 	~CContactViewHighRange();
 private:
 	TBuf<KMaxBoundaryMatchLength> iMatch;
@@ -396,7 +396,6 @@ public: // From CContactViewBase.
 private: // From MContactViewObserver.
 	virtual void HandleContactViewEvent(const CContactViewBase& aView,const TContactViewEvent& aEvent);
 private:
-//ChrisD: why private d'tor
 	~CContactSubView();
 	CContactSubView(const CContactDatabase& aDb,CContactViewBase& aView);
 	CContactSubView(const CContactDatabase& aDb,const CContactSubView& aView);

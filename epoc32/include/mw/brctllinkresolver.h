@@ -62,12 +62,12 @@ class MBrCtlLinkContent;
 * Usage:
 *
 * @code
-*  #include <BrCtlLinkResolver.h>
+*  #include <brctllinkresolver.h>
 *
 *  
 * @see S60 Platform: Browser Control API Developer's Guide Version 2.0
 * @lib BrowserEngine.lib
-* @file BrCtlLinkResolver.h
+* @file brctllinkresolver.h
 * @endcode     *
 */
 class MBrCtlLinkResolver
@@ -124,12 +124,12 @@ class MBrCtlLinkResolver
 * Usage:
 *
 * @code
-*  #include <BrCtlLinkResolver.h>
+*  #include <brctllinkresolver.h>
 *
 *  
 * @see S60 Platform: Browser Control API Developer's Guide Version 2.0
 * @lib BrowserEngine.lib
-* @file BrCtlLinkResolver.h
+* @file brctllinkresolver.h
 * @endcode     *
 */
 class MBrCtlLinkContent

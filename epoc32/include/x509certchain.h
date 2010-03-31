@@ -17,8 +17,6 @@
 */
 
 
-
-
 /**
  @file 
  @publishedAll
@@ -39,8 +37,6 @@ class TValidationStatus
 * iCert value is meaningless. The same structure is used for errors and for 
 * warnings. 
 * 
-* @publishedAll
-* @released
 * @since v6.0 */
 	{
 public:
@@ -62,8 +58,6 @@ class CX509CertChain : public CBase
 /** Abstract base class for X.509 certificate chain validation; 
 * derive from this to suit your profile.
 * 
-* @publishedAll
-* @released
 * @since v6.0 */
 	{
 public:
@@ -85,7 +79,7 @@ public:
 	* 
 	* @param aBinaryData	The encoded binary representation.
 	* @return				The certificate objects. */
-	IMPORT_C CArrayPtrFlat<CX509Certificate>* CX509CertChain::DecodeCertsL(const TDesC8& aBinaryData);
+	IMPORT_C CArrayPtrFlat<CX509Certificate>* DecodeCertsL(const TDesC8& aBinaryData);
 	
 	/** Destructor.
 	* 
@@ -109,8 +103,6 @@ class CCertificateValidationWarnings : public CBase
 	/** Encapsulates the critical extensions encountered and any warnings found
 	* for a particular certificate in the chain during the process of validation.
 	* 
-	* @publishedAll
-	* @released
 	* @since v9.5 */
 		{
 	public:
@@ -169,14 +161,12 @@ class CCertificateValidationWarnings : public CBase
 	public:
 		/** Adds a warning.
 		* 
-		* @internalComponent
-		* @released */
+	    */
 		IMPORT_C void AppendWarningL(TValidationStatus aWarning);
 		
 		/** Adds a critical extension OID warning.
 		* 
-		* @internalComponent
-		* @released */
+		*/
 		IMPORT_C void AppendCriticalExtensionWarningL(TDesC& aCriticalExt);
 		
 	private:
@@ -189,3 +179,5 @@ class CCertificateValidationWarnings : public CBase
 		};
 
 #endif
+
+

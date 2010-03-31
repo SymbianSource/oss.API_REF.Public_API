@@ -1,9 +1,9 @@
 // Copyright (c) 1997-2009 Nokia Corporation and/or its subsidiary(-ies).
 // All rights reserved.
 // This component and the accompanying materials are made available
-// under the terms of the License "Symbian Foundation License v1.0" to Symbian Foundation members and "Symbian Foundation End User License Agreement v1.0" to non-members
+// under the terms of "Eclipse Public License v1.0"
 // which accompanies this distribution, and is available
-// at the URL "http://www.symbianfoundation.org/legal/licencesv10.html".
+// at the URL "http://www.eclipse.org/legal/epl-v10.html".
 //
 // Initial Contributors:
 // Nokia Corporation - initial contribution.
@@ -22,7 +22,12 @@
 
 #include <vobserv.h>
 
+
+/** This constant is for internal use only.
+@internalTechnology
+*/
 _LIT(KVersitTokenVCardVersionNo, "2.1");
+
 
 class CVCard3ParserPlugIn;
 
@@ -54,6 +59,7 @@ See CVersitTlsData for more information.
 	{
 public:
 	IMPORT_C static CParserVCard* NewL();
+	static CParserVCard* NewL(TBool aParsingAgent);
 	IMPORT_C CArrayPtr<CParserProperty>* GroupOfPropertiesL(const TDesC8& aName) const;
 public: //from CVersitParser
 	IMPORT_C void InternalizeL(RReadStream& aStream);
@@ -71,11 +77,14 @@ public: //from CVersitParser
 	IMPORT_C void ConvertDateTimesToMachineLocalAndDeleteTZL();
 protected:
 	CParserVCard();
+	CParserVCard(TBool aParsingAgent);
 private: // from CVersitParser
 	IMPORT_C virtual void Reserved1();
 	IMPORT_C virtual void Reserved2();
+	TBool iParsingAgent;
 	};
 
+#ifndef SYMBIAN_ENABLE_SPLIT_HEADERS
 NONSHARABLE_CLASS(CParserVCard3) : public CParserVCard
 /** A vCard 3.0 parser. 
 
@@ -83,7 +92,7 @@ Overrides CParserVCard::InternalizeL(). Internalizing of vCard 3.0
 objects is not supported
 
 @internalTechnology
-@prototype
+@released
 */
 	{
 public:
@@ -101,7 +110,7 @@ private:
 private:
 	CVCard3ParserPlugIn* iPlugInImpl;
 	};
-	
+#endif //SYMBIAN_ENABLE_SPLIT_HEADERS	
 //
 // CParserGroupedProperty
 //
@@ -160,6 +169,8 @@ class CParserPropertyValueAgent : public CParserPropertyValue
 An agent property value contains information about a person who is not the 
 main subject of the vCard. It is implemented as a vCard nested within another 
 vCard. The agent's vCard is held in the property value of the parent vCard.
+
+We do not support nested agents when parsing an agent's vcard.
 
 The UID for an agent property value is KVCardPropertyAgentUid. 
 @publishedAll

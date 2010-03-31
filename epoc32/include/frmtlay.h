@@ -1,17 +1,20 @@
-// Copyright (c) 1997-2009 Nokia Corporation and/or its subsidiary(-ies).
-// All rights reserved.
-// This component and the accompanying materials are made available
-// under the terms of the License "Symbian Foundation License v1.0" to Symbian Foundation members and "Symbian Foundation End User License Agreement v1.0" to non-members
-// which accompanies this distribution, and is available
-// at the URL "http://www.symbianfoundation.org/legal/licencesv10.html".
-//
-// Initial Contributors:
-// Nokia Corporation - initial contribution.
-//
-// Contributors:
-//
-// Description:
-//
+/*
+* Copyright (c) 1997-2009 Nokia Corporation and/or its subsidiary(-ies).
+* All rights reserved.
+* This component and the accompanying materials are made available
+* under the terms of "Eclipse Public License v1.0"
+* which accompanies this distribution, and is available
+* at the URL "http://www.eclipse.org/legal/epl-v10.html".
+*
+* Initial Contributors:
+* Nokia Corporation - initial contribution.
+*
+* Contributors:
+*
+* Description: 
+*
+*/
+
 
 #ifndef __FRMTLAY_H__
 #define __FRMTLAY_H__
@@ -31,6 +34,15 @@ class MLayDoc;
 class TLayDocTextSource;
 class TCursorPosition;
 
+class TLayDocTextSource;
+class CTmTextLayout;
+class TTmHighlightExtensions;
+class MTmSource;
+class TTmFormatParamBase;
+
+#ifndef SYMBIAN_ENABLE_SPLIT_HEADERS
+#include <frmtlay_internal.h>
+#endif
 
 /**
 This interface class defines an interface for clients of Form to provided 
@@ -39,7 +51,7 @@ document as requried by the internals of Form and Tagma. Its use by
 Form clients is optional.
 Derived objects of this interface are registered with the CTextLayout 
 API and are called from the TLayDocTextSource class at present.
-@publishedPartner
+@publishedAll
 @released
 @see MTmInlineTextSource
 */
@@ -313,7 +325,8 @@ class MFormCustomDraw
 								   const TDesC& aText,const TPoint& aTextOrigin,TInt aExtraPixels) const;
 	IMPORT_C virtual TRgb SystemColor(TUint aColorIndex,TRgb aDefaultColor) const;
 
-	IMPORT_C virtual void MFormCustomDraw_Reserved_1();
+	IMPORT_C virtual void DrawText(const TParam& aParam,const TLineInfo& aLineInfo,const TCharFormat& aFormat,
+								   const TDesC& aText,const TInt aStart, const TInt aEnd, const TPoint& aTextOrigin,TInt aExtraPixels) const;
 	IMPORT_C virtual void MFormCustomDraw_Reserved_2();
 	};
 
@@ -383,108 +396,6 @@ public:
 		The replacement character if remapping has taken place, else return original character
 	*/
 	virtual TUint Remap(TUint aChar, const TNonPrintingCharVisibility aNonPrintingCharVisibility, const TLayDocTextSource& aLayDoc) = 0;
-	};
-
-
-/**
-@internalTechnology
-Internal to Symbian
-*/
-NONSHARABLE_CLASS(TLayDocTextSource) : public MTmSource, public MFormLabelApi, public MTmTextDrawExt
-	{
-	public:
-
-	enum
-		{
-		EDefaultFontHeightIncreaseFactor = 7,
-		EDefaultMinimumLineDescent = 3
-		};
-
-	TLayDocTextSource();
-
-	// overrides for MTmSource pure virtual functions
-	MGraphicsDeviceMap& FormatDevice() const;
-	MGraphicsDeviceMap& InterpretDevice() const;
-	TInt DocumentLength() const;
-	void GetText(TInt aPos,TPtrC& aText,TTmCharFormat& aFormat) const;
-	void GetParagraphFormatL(TInt aPos,RTmParFormat& aFormat) const;
-	TInt ParagraphStart(TInt aPos) const;
-
-	// overrides for other MTmSource virtual functions
-	TRgb SystemColor(TUint aColorIndex,TRgb aDefaultColor) const;
-	CPicture* PictureL(TInt aPos) const;
-	TInt GetPictureSizeInTwipsL(TInt aPos,TSize& aSize) const;
-	TBool LabelModeSelect(TLabelType aType, TInt aPos);
-	void LabelModeCancel();
-	void LabelMetrics(TLabelType aType, TSize& aLabelSize, TInt& aMarginSize) const;
-	TUint Map(TUint aChar) const;
-	void SetLineHeight(const TLineHeightParam& aParam,TInt& aAscent,TInt& aDescent) const;
-	TBool PageBreakInRange(TInt aStartPos,TInt aEndPos) const;
-	void DrawBackground(CGraphicsContext& aGc,const TPoint& aTextLayoutTopLeft,const TRect& aRect,
-						const TLogicalRgb& aBackground,TRect& aRectDrawn) const;
-	void DrawLineGraphics(CGraphicsContext& aGc,const TPoint& aTextLayoutTopLeft,const TRect& aRect,
-						  const TTmLineInfo& aLineInfo) const;
-	void DrawText(CGraphicsContext& aGc,const TPoint& aTextLayoutTopLeft,const TRect& aRect,
-				  const TTmLineInfo& aLineInfo,const TTmCharFormat& aFormat,
-				  const TDesC& aText,const TPoint& aTextOrigin,TInt aExtraPixels) const;
-	virtual void DrawPicture(CGraphicsContext& aGc,
-							 const TPoint& aTextLayoutTopLeft, const TRect& aRect,
-							 MGraphicsDeviceMap& aDevice, const CPicture& aPicture) const;
-	
-	// overrides for the MTmSource virtual functions which implements the MFormCustomWrap
-	// if iCustomWrap is set. 
-	TBool LineBreakPossible(TUint aPrevClass,TUint aNextClass,TBool aHaveSpaces) const;
-	TUint LineBreakClass(TUint aCode,TUint& aRangeStart,TUint& aRangeEnd) const;
-	TBool GetLineBreakInContext(const TDesC& aText,TInt aMinBreakPos,TInt aMaxBreakPos,
-												 TBool aForwards,TInt& aBreakPos) const;
-	TBool IsHangingCharacter(TUint aChar) const;
-	
-	// other functions
-	TBool CanMap() const;
-
-	TAny* GetExtendedInterface(const TUid& aInterfaceId);
-
-	//MTmTextDrawExt implementations
-	virtual void DrawLine(CGraphicsContext& aGc, const TPoint& aPt1, const TPoint& aPt2) const;
-	virtual void DrawText(CGraphicsContext& aGc, const TDesC& aText, const TPoint& aPt) const;
-	virtual void DrawRect(CGraphicsContext& aGc, const TRect& aRc) const;
-
-	//Set/reset opaque flag of aGc graphics context
-	void SetOpaque(CGraphicsContext& aGc) const;
-	void ResetOpaque(CGraphicsContext& aGc) const;
-
-	// flags
-	enum
-		{
-		EWrap = 1,
-		ETruncateWithEllipsis = 2,
-		EUseLabelsDevice = 4
-		};
-
-	MLayDoc* iLayDoc;
-	TUint iFlags;								// wrap, truncate, etc.
-	TInt iWidth;								// wrapping width
-	TChar iEllipsis;							// ellipsis character (or none if 0xFFFF) used if truncating
-	TInt iLabelsWidth;
-	TInt iLabelsGutter;
-	CLayoutData::TFormatMode iFormatMode;
-	MGraphicsDeviceMap* iImageDevice;			// device map used for drawing text
-	MGraphicsDeviceMap* iLabelsDevice;			// device map used for labels
-	MGraphicsDeviceMap* iFormatDevice;			// device map used for formatting
-	TInt iFontHeightIncreaseFactor;				// percentage automatically added to font heights
-	TInt iMinimumLineDescent;					// minimum line descent in pixels
-	TNonPrintingCharVisibility iNonPrintingCharVisibility;
-	const MFormParam* iFormParam;				// if non-null, points to the object that supplies system colours
-	const MFormCustomDraw* iCustomDraw;			// if non-null, points to custom drawing routines
-	const MFormCustomWrap* iCustomWrap;			// if non-null, points to custom wrapping routines 
-    /** Optional object able to provide a concrete customisation object for use 
-	    internally by Form. */
-	MFormCustomInterfaceProvider* iInterfaceProvider;
-	TBool iDrawOpaque;						// Opaque drawing active if the flag is ETrue
-	TInt iExcessHeightRequired;				// delta required to position the baseline so there is enough
-											// space for the highset glyph in pixels.  
-	MFormCustomInvisibleCharacterRemapper* iInvisibleCharacterRemapper;	// Used to customize the remapping of 
-																		// invisible characters to visible characters
 	};
 
 /** 
@@ -663,7 +574,9 @@ public:
 
 	To use it, construct a TTagmaForwarder object, then call InitL(), which
 	finishes background formatting, then call the MTmTextLayoutForwarder
-	functions. 
+	functions.
+	
+	The class should only be used internally by FORM component.
 	@internalComponent
 	*/
 		{
@@ -772,6 +685,7 @@ public:
 	IMPORT_C TInt ScrollParagraphsL(TInt& aNumParas,TAllowDisallow aScrollBlankSpace);
 	IMPORT_C TInt ScrollLinesL(TInt& aNumLines,TAllowDisallow aScrollBlankSpace = EFDisallowScrollingBlankSpace);
 	IMPORT_C TInt ChangeBandTopL(TInt& aPixels,TAllowDisallow aScrollBlankSpace = EFDisallowScrollingBlankSpace);
+    IMPORT_C void ChangeBandTopNoLimitBorderL(TInt aPixels);
 	IMPORT_C void PageUpL(TInt& aYCursorPos,TInt& aPixelsScrolled);
 	IMPORT_C void PageDownL(TInt& aYCursorPos,TInt& aPixelsScrolled);
 	IMPORT_C TBool HandleCharEditL(TUint aType,TInt& aCursorPos,TInt& aGood,TInt& aFormattedUpTo,
@@ -798,6 +712,7 @@ public:
 	IMPORT_C const MFormCustomDraw* CustomDraw() const;
 	IMPORT_C void SetCustomWrap(const MFormCustomWrap* aCustomWrap);
 	IMPORT_C const MFormCustomWrap* CustomWrap() const;
+	/* this function should only used by Symbian internally */
 	IMPORT_C void ExtendFormattingToCoverYL(TInt aYPos);
 	IMPORT_C void ExtendFormattingToCoverPosL(TInt aDocPos);
 
@@ -872,7 +787,7 @@ private:
 	IMPORT_C CTextLayout();
  	IMPORT_C void ConstructL(MLayDoc *aDoc,TInt aWrapWidth);
 	void InitFormatParam(TTmFormatParamBase& aParam);
-	TInt ScrollL(TInt aDy,TAllowDisallow aScrollBlankSpace);
+	TInt ScrollL(TInt aDy,TAllowDisallow aScrollBlankSpace,TBool aTopNoLimitBorder=EFalse,TBool aBottomNoLimitBorder=EFalse);
 	void FormatBandL(TInt aStartDocPos,TInt aEndDocPos);
 	void PruneFormatL(TBool aFromStart);
 	TInt VisibleHeightInPixels() const;
@@ -884,7 +799,8 @@ private:
 	static void ResetOpaque(void* aThis);
 
 
-	CTmTextLayout iText;		// the TAGMA object that contains the text layout
+	CTmTextLayout *iText;		// the TAGMA object that contains the text layout
+	TInt iDummyForIText[10];	// It is only here to add padding for maintain compatibility 
 	TInt iExcessHeightRequired; // The delta required to position the baseline so there is enough 
 								// space for the highset glyph in pixels
 	RWindow *iWnd;				// the window to be used to draw
@@ -897,7 +813,7 @@ private:
 										 // has been initiated externally and will be ended externally as well
 	TBool iReadyToRedraw;				// If EFalse, disables CTextLayout::BeginRedraw() and 
 										// CTextLayout::EndRedraw()
-	TInt iDummy[5];		// This dummy variable has been inserted to replace the original size of
+	TInt iDummy[4];		// This dummy variable has been inserted to replace the original size of
 						// a variable that had to be moved to avaid a BC break because it had
 						// increased in size. Feel free to reuse this space - just reduce the size
 						// of this variable by the size of any variable you insert in front of it.
@@ -914,11 +830,13 @@ private:
 	TBool iParInvalid;		// if true and background formatting is happening, the remainder of the paragraph
 							// containing iUnformattedStart is invalid and must be reformatted;
 							// otherwise, formatting stops when line ends match
-	TTmHighlightExtensions iHighlightExtensions;
-	TLayDocTextSource iSource;	// the source of the text
+	TTmHighlightExtensions *iHighlightExtensions;
+	TInt iDmmyForIHighlightExtensions[3];	// It is only here to add padding for maintain compatibility 
+	TLayDocTextSource* iSource;	// the source of the text
 	// before adding any new member variables to the end of this class, please
 	// consider whether you can insert them before the iDummy member variable
 	// further up, which currently represents wasted space.
+	TInt iDmmyForISource[23];	// It is only here to add padding for maintain compatibility 
 	};
 
 /**
@@ -1067,7 +985,7 @@ private:
 // inline functions
 inline const CTmTextLayout& CTextLayout::TagmaTextLayout() const
 	{
-	return iText;
+	return *iText;
 	}
 
 inline void CTextLayout::GetOrigin(TPoint& aPoint) const
@@ -1093,7 +1011,7 @@ inline void CTextLayout::TTagmaForwarder::GetOrigin(TPoint& aPoint) const
 
 inline const TTmHighlightExtensions& CTextLayout::HighlightExtensions() const
 	{
-	return iHighlightExtensions;
+	return *iHighlightExtensions;
 	}
 
 /**

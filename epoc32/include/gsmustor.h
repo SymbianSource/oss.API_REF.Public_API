@@ -1,9 +1,9 @@
 // Copyright (c) 1999-2009 Nokia Corporation and/or its subsidiary(-ies).
 // All rights reserved.
 // This component and the accompanying materials are made available
-// under the terms of the License "Symbian Foundation License v1.0" to Symbian Foundation members and "Symbian Foundation End User License Agreement v1.0" to non-members
+// under the terms of "Eclipse Public License v1.0"
 // which accompanies this distribution, and is available
-// at the URL "http://www.symbianfoundation.org/legal/licencesv10.html".
+// at the URL "http://www.eclipse.org/legal/epl-v10.html".
 //
 // Initial Contributors:
 // Nokia Corporation - initial contribution.
@@ -18,8 +18,6 @@
 // SR  - Status Report
 // 
 //
-
-
 
 /**
  @file
@@ -205,22 +203,22 @@ private:
 private:
 	enum TSAREntryFlags
 		{
-		ESAREntryIsDeleted=0x01, ///< indicates that this entry is deleted
-		ESAREntryIsAdded=0x02    ///< indicated that this entry is added
+		ESAREntryIsDeleted=0x01, //< indicates that this entry is deleted
+		ESAREntryIsAdded=0x02    //< indicated that this entry is added
 		};
 private:
-	TInt iReference; ///< concatenation reference
-	TInt iTotal;     ///< total number of PDUs in this SMS message
-	TInt iCount;     ///< number of PDUs sent/received for this SMS message
+	TInt iReference; //< concatenation reference
+	TInt iTotal;     //< total number of PDUs in this SMS message
+	TInt iCount;     //< number of PDUs sent/received for this SMS message
 protected:
-	TInt iData1;     /// TODO should be TUint32
-	TInt iData2;     ///< Log server ID
+	TInt iData1;     // TODO should be TUint32
+	TInt iData2;     //< Log server ID
 	TInt iData3;
 	TInt iData4;
 private:
-	TBuf<ESmsSAREntryDescriptionLength> iDescription1; ///< first 32 characters from buffer
-	TBuf<ESmsSAREntryDescriptionLength> iDescription2; ///< original address
-	TTime iTime;                                       ///< time when message was sent/received
+	TBuf<ESmsSAREntryDescriptionLength> iDescription1; //< first 32 characters from buffer
+	TBuf<ESmsSAREntryDescriptionLength> iDescription2; //< original address
+	TTime iTime;                                       //< time when message was sent/received
 	TStreamId iDataStreamId;
 	TInt iFlags;  //  Not externalized
 	friend class CSARStore;
@@ -484,16 +482,19 @@ private:
 		};
 
 protected:
-	RFs& iFs;                             ///< File server handle.
+	RFs& iFs;                             //< File server handle.
+	/** Maximum number of SMS messages that can be stored in segmentation store.*/
+	TInt iMaxmumNumberOfMessagesInSegmentationStore;
+	
 private:
 
-	CFileStore* iFileStore;               ///< pointer to the file store
-	CArrayFixFlat<TSAREntry> iEntryArray; ///< array of SAR entries
-	TStreamId iExtraStreamId;             ///< used for any other data that needs persisting
-	TInt iCommitCount;                    ///< counts number of Commit's - used for CompactL
-	TPtrC iFullName;                      ///< holds the name of the File Store
+	CFileStore* iFileStore;               //< pointer to the file store
+	CArrayFixSeg<TSAREntry> iEntryArray; //< array of SAR entries
+	TStreamId iExtraStreamId;             //< used for any other data that needs persisting
+	TInt iCommitCount;                    //< counts number of Commit's - used for CompactL
+	TPtrC iFullName;                      //< holds the name of the File Store
 	TUid iThirdUid;
-	TBool iInTransaction;					///< For debugging purposes to ensure only one transaction at a time
+	TBool iInTransaction;					//< For debugging purposes to ensure only one transaction at a time
 	};
 
 /**

@@ -28,7 +28,8 @@
 @file
 This file contains the definition for class CWTLSName.
 
-@internalAll
+@publishedAll
+@released
 
 enum { null(0), text(1), binary(2), key_hash_sha(254), x509_name(255)}
 	IdentifierType;
@@ -60,8 +61,6 @@ of these.  We just support the text type, with either Latin1 or UTF8 encoding.
  * 
  * Only text strings and X.500 Distinguished Names are currently supported.
  * 
- * @publishedAll
- * @released
  */
 enum 
 	{
@@ -84,16 +83,8 @@ enum
 	EWTLSX500DN =		0xff
 	};
 
-/**
- * @publishedAll
- * @released
- */
 typedef TUint8 TWTLSNameType;
 
-/**
- * @publishedAll
- * @released
- */
 typedef TInt TWTLSCharSet;
 
 // MIBenum constants from the IANA list of character sets.
@@ -109,8 +100,6 @@ class CWTLSName : public CBase
 /**
  * Stores the type of a WTLS name and the underlying encoding of the type.
  *
- * @publishedAll
- * @released
  */
 	{
 public:
@@ -219,10 +208,6 @@ private:
 	HBufC8* iNameData;
 	};
 
-/**
- * @publishedAll
- * @released
- */
 class CWTLSText : public CBase
 	{
 public:
@@ -319,10 +304,6 @@ _LIT(KWTLSServiceName,"OU");
 _LIT(KWTLSTitle,"T");
 _LIT(KWTLSCommonName,"CN");
 
-/**
- * @publishedAll
- * @released
- */
 class TWTLSStructuredTextField 
 	{
 public:
@@ -348,10 +329,6 @@ private:
 	const TPtrC iValue; 
 	};
 
-/**
- * @publishedAll
- * @released
- */
 class CWTLSStructuredText : public CWTLSText
 	{
 public:
@@ -468,3 +445,5 @@ private:
 	};
 
 #endif
+
+

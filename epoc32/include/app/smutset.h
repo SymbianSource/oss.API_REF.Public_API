@@ -1,9 +1,9 @@
 // Copyright (c) 1999-2009 Nokia Corporation and/or its subsidiary(-ies).
 // All rights reserved.
 // This component and the accompanying materials are made available
-// under the terms of the License "Symbian Foundation License v1.0" to Symbian Foundation members and "Symbian Foundation End User License Agreement v1.0" to non-members
+// under the terms of "Eclipse Public License v1.0"
 // which accompanies this distribution, and is available
-// at the URL "http://www.symbianfoundation.org/legal/licencesv10.html".
+// at the URL "http://www.eclipse.org/legal/epl-v10.html".
 //
 // Initial Contributors:
 // Nokia Corporation - initial contribution.
@@ -11,13 +11,15 @@
 // Contributors:
 //
 // Description:
+// SMUTSET.H
 //
-
+/**
+ * @file 
+ * @publishedAll
+ * @released
+ */
 #ifndef __SMUTSET_H__
 #define __SMUTSET_H__
-
- 
-
 
 #include <gsmumsg.h>
 #include <msvrcpt.h>
@@ -176,7 +178,7 @@ Defines the flags and masks for some of the message settings.
 The settings classes CSmsMessageSettings and CSmsSettings use these flags to 
 store the specified information.
 
-@internalComponent
+@publishedAll
 @released
 */
 enum TSmsSettingsFlags
@@ -184,7 +186,7 @@ enum TSmsSettingsFlags
 /**
 Mask that resets the flags.
 */
-	ESmsSettingsNoFlags					=0,
+	ESmsSettingsNoFlags					=0x00000000,
 /**
 Flag that indicates if messages can be concatenated.
 
@@ -231,6 +233,11 @@ Flag that indicates that the service center time stamp should be used for the da
 field in any TMsvEntry that corresponds to a SMS message.
 */
 	ESmsSettingsUseServiceCenterTimeStamp =0x00000080,
+/**
+Flag that indicates if message received from unknown port, 
+discard the message without indicating the user. 
+*/	
+	ESmsSettingsDiscardUnknownPortMsgs =0x00000100,
 /**
 Mask for the set of flags defined.
 */
@@ -430,7 +437,7 @@ SMS-SUBMIT type.
 @publishedAll
 @released
 */
-class CSmsMessageSettings : public CBase
+NONSHARABLE_CLASS(CSmsMessageSettings): public CBase
 	{
 public:
 	IMPORT_C virtual void InternalizeL(RReadStream& aReadStream);
@@ -497,7 +504,7 @@ numbers. The default Service Centre is defined from this set.
 @publishedAll
 @released
 */
-class CSmsSettings : public CSmsMessageSettings
+NONSHARABLE_CLASS(CSmsSettings): public CSmsMessageSettings
 	{
 public:
 
@@ -618,6 +625,8 @@ public:
 	inline void SetDescriptionLength(TInt aLength);
 	inline TInt DescriptionLength() const;
 
+	inline TBool DiscardUnknownPortMessage() const;
+	inline void SetDiscardUnknownPortMessage(TBool aDeleteMessage);
 	TUint32 SettingsFlags() const;
 	void SetSettingsFlags(TUint32 aSetFlags);
 
@@ -652,7 +661,7 @@ A SMS-SUBMIT message may have several recipients
 @publishedAll
 @released
 */
-class CSmsNumber : public CMsvRecipient 
+NONSHARABLE_CLASS(CSmsNumber): public CMsvRecipient
 	{
 public:
 
@@ -723,7 +732,7 @@ Used to store Service Centre numbers and their associated name.
 @publishedAll
 @released
 */
-class CSmsServiceCenter : public CBase
+NONSHARABLE_CLASS (CSmsServiceCenter) : public CBase
 	{
 public:
 	IMPORT_C static CSmsServiceCenter* NewL();

@@ -2,9 +2,9 @@
 * Copyright (c) 1997-2009 Nokia Corporation and/or its subsidiary(-ies).
 * All rights reserved.
 * This component and the accompanying materials are made available
-* under the terms of the License "Symbian Foundation License v1.0" to Symbian Foundation members and "Symbian Foundation End User License Agreement v1.0" to non-members
+* under the terms of "Eclipse Public License v1.0"
 * which accompanies this distribution, and is available
-* at the URL "http://www.symbianfoundation.org/legal/licencesv10.html".
+* at the URL "http://www.eclipse.org/legal/epl-v10.html".
 *
 * Initial Contributors:
 * Nokia Corporation - initial contribution.
@@ -14,9 +14,6 @@
 * Description:
 *
 */
-
-
-
 
 
 
@@ -33,7 +30,7 @@
 EPOC safety net - Check various EPOC defines to ensure that
 we get an appropriate endianness choice
 */
-#if (defined(__WINS__) || defined(__MX86__)) && !defined(__i386__)
+#if (defined(__WINS__) || defined(__MX86__) || defined(__X86GCC__)) && !defined(__i386__)
 #define __i386__
 #elif defined(__MARM__) && !defined(__arm__)
 #define __arm__
@@ -177,3 +174,4 @@ necv70 was __IEEE_LITTLE_ENDIAN.
 
 #endif /* not __IEEE_LITTLE_ENDIAN */
 #endif /* not __IEEE_BIG_ENDIAN */
+

@@ -2,9 +2,9 @@
 * Copyright (c) 2002-2008 Nokia Corporation and/or its subsidiary(-ies).
 * All rights reserved.
 * This component and the accompanying materials are made available
-* under the terms of the License "Symbian Foundation License v1.0" to Symbian Foundation members and "Symbian Foundation End User License Agreement v1.0" to non-members
+* under the terms of "Eclipse Public License v1.0"
 * which accompanies this distribution, and is available
-* at the URL "http://www.symbianfoundation.org/legal/licencesv10.html".
+* at the URL "http://www.eclipse.org/legal/epl-v10.html".
 *
 * Initial Contributors:
 * Nokia Corporation - initial contribution.
@@ -20,21 +20,21 @@
 #define AKNQUERYCONTROL_H
 
 //  INCLUDES
-#include <akncontrol.h>
+#include <AknControl.h>
 #include <gulbordr.h>
 
 #include <eikedwin.h>
 #include <eikseced.h>
 #include <eikmfne.h>
-#include <aknnumseced.h>
-#include <aknnumedwin.h>
+#include <Aknnumseced.h>
+#include <AknNumEdwin.h>
 #include <eikfpne.h>
 
 #include <eikimage.h>   
 #include <eikedwob.h>
 
-#include <aknutils.h>
-#include <aknpanic.h>
+#include <AknUtils.h>
+#include <AknPanic.h>
 
 #include <aknipfed.h>
 #include <lbsposition.h>
@@ -718,8 +718,28 @@ public:
         */
         void LayoutPromptForFullScreen();
 
+        /**
+         * Callback for pin code timeouts for producing a tacticons.
+         *
+         * @param aThis Pointer to this object, which is used to 
+         * play tacticon.
+         */
+        static TInt PinCodeTimeoutCallback( TAny* aThis );
+        
+        /**
+         * Plays a tacticon. Used by the timeout callback.
+         */
+        void PlayPinCodeTacticon();
 
+        /**
+         * Resets the timer for pincode query tacticon playback.
+         */
+        void ResetPinCodeTacticonTimer();
 
+        /**
+         * Stops/removes the timer for pincode query tacticon playback.
+         */
+        void StopPinCodeTacticonTimer();
 
     private:
         /**

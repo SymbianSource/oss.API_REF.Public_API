@@ -22,7 +22,7 @@
 //  INCLUDES
 #include <e32std.h>
 #include <e32base.h>
-#include <BrCtlDefs.h>
+#include <brctldefs.h>
 
 // CONSTANTS
 
@@ -86,12 +86,12 @@ class CBrCtlInterface;
 * Usage:
 *
 * @code
-*  #include <BrCtlDownloadObserver.h>
+*  #include <brctldownloadobserver.h>
 *
 *  
 * @see S60 Platform: Browser Control API Developer's Guide Version 2.0
 * @lib BrowserEngine.lib
-* @file BrCtlDownloadObserver.h
+* @file brctldownloadobserver.h
 * @endcode     *
 */
 class MBrCtlDownloadObserver

@@ -1,9 +1,9 @@
-// Copyright (c) 2007-2009 Nokia Corporation and/or its subsidiary(-ies).
+// Copyright (c) 2008-2009 Nokia Corporation and/or its subsidiary(-ies).
 // All rights reserved.
 // This component and the accompanying materials are made available
-// under the terms of the License "Symbian Foundation License v1.0" to Symbian Foundation members and "Symbian Foundation End User License Agreement v1.0" to non-members
+// under the terms of "Eclipse Public License v1.0"
 // which accompanies this distribution, and is available
-// at the URL "http://www.symbianfoundation.org/legal/licencesv10.html".
+// at the URL "http://www.eclipse.org/legal/epl-v10.html".
 //
 // Initial Contributors:
 // Nokia Corporation - initial contribution.
@@ -13,8 +13,7 @@
 // Description:
 // Place holder for common constants, type definitions and enums.
 //
-
-
+//
 
 /**
  @file
@@ -82,6 +81,20 @@ namespace InetUriList
 		};
 	
 	/**
+	Types of TLD Query type.
+	
+	@publishedAll
+	@released
+	*/
+	enum TTLDQueryType
+		{
+		/** Top Level Domain List type **/
+		EPolicyListType=0x01,
+		/** Top Level Domain Policy data **/
+		EPolicyCharSet=0x02
+		};
+	
+	/**
 	Types of matches.
 	
 	@publishedAll
@@ -141,11 +154,34 @@ namespace InetUriList
 	Invalid stream handle
 	*/
 	static const TInt KErrInvalidStreamHandle 		= KErrorBase - 8;
-	
+	/** 
+	Tld URI is missing.
+	*/
+	static const TInt KErrTldUriNotPresent 			= KErrorBase - 9;
+	/** 
+	Query Type of URI is missing.
+	*/
+	static const TInt KErrTldQueryTypeNotPresent 	= KErrorBase - 10;
+	/** 
+	Policy Data is not present.
+	*/
+	static const TInt KErrPolicyDataNotPresent 		= KErrorBase - 11;	
+	/** 
+	TLD list type is not present.
+	*/
+	static const TInt KErrPolicyListTypeNotPresent	= KErrorBase - 12;	
+	/** 
+	Requested TLD  type is not supported.
+	*/
+	static const TInt KErrInvalidTLD				= KErrorBase - 13;	
 	/** 
 	Panic text if handle is not open.
 	*/
 	_LIT(KInetUriListErrHandleNotOpen,		"Handle not open");
+	/** 
+	Panic text if handle is not open.
+	*/
+	_LIT(KTldInvalidRequest,				"Invalid Request");
 
 	}
 
@@ -157,6 +193,166 @@ ListType, URI in TDesC8 form, and URIMatch.
 @publishedAll
 @released
 */
+#ifdef SYMBIAN_ENABLE_SPLIT_HEADERS
+class TQueryArgs
+	{
+  	public:
+		/**
+		The argument types.	
+		*/
+		enum TArgType
+			{
+			EUri = 1,
+			EServiceType,
+			EListType,
+			EURIMatch
+			};
+		
+		/**
+		Default constructor
+		*/
+		inline TQueryArgs ()
+			:iFlags ( 0 )
+			{}
+
+
+		/**
+		A templated constructor that constructs the query argument.
+		It takes one argument.
+		*/
+		template < class T0 >
+		explicit inline TQueryArgs ( T0 a0 )
+			{
+			Assign ( a0 );
+			iFlags=(Type(a0)<<(( Type(a0))*KBitsPerType));
+			}
+
+		/**
+		A templated constructor that constructs the query argument.
+		It takes two arguments.
+		*/
+		template < class T0, class T1 >
+		inline TQueryArgs ( T0 a0, T1 a1 )
+			{
+			Assign ( a0 );
+			Assign ( a1 );
+			iFlags=(Type(a0)<<(( Type(a0))*KBitsPerType)) |
+					(Type(a1)<<(( Type(a1))*KBitsPerType));
+			}
+
+		/**
+		A templated constructor that constructs the query argument.
+		It takes three arguments.
+		*/
+		template < class T0, class T1, class T2 >
+		inline TQueryArgs ( T0 a0, T1 a1, T2 a2 )
+			{
+			Assign ( a0 );
+			Assign ( a1 );
+			Assign ( a2 );
+			iFlags=(Type(a0)<<(Type(a0)*KBitsPerType)) | 
+					(Type(a1)<<(Type(a1)*KBitsPerType)) |
+					(Type(a2)<<(Type(a2)*KBitsPerType));
+			}
+
+		/**
+		A templated constructor that constructs the query argument.
+		It takes four arguments.
+		*/
+		template < class T0, class T1, class T2, class T3 >
+		inline TQueryArgs ( T0 a0, T1 a1, T2 a2, T3 a3 )
+			{
+			Assign ( a0 );
+			Assign ( a1 );
+			Assign ( a2 );
+			Assign ( a3 );				
+			iFlags=(Type(a0)<<(Type(a0)*KBitsPerType)) | 
+					(Type(a1)<<(Type(a1)*KBitsPerType)) |
+					(Type(a2)<<(Type(a2)*KBitsPerType)) |
+					(Type(a3)<<(Type(a3)*KBitsPerType));
+			}
+		
+		/**
+		Returns the argument if set, otherwise returns KErrNotFound.		
+		*/		
+		TInt Get ( TArgType aType ) const
+			{
+			if ( IsSet ( aType ) )
+				return iArgs[aType - 1];
+			return KErrNotFound;			
+			}
+							
+	private:		
+		/**
+		Bit width of the type.		
+		*/
+		enum 
+			{
+			KBitsPerType = 3			
+			};
+		/**
+		Maximum number of arguments. Currently set as 4.
+		*/
+		enum
+			{
+			KMaxArguments = 4
+			};
+		/**
+		Checks whether the flag is set for the given argument type.
+		*/
+		TBool IsSet ( TArgType aType ) const
+			{
+			TInt val = iFlags & ( aType << ( aType  * KBitsPerType ) );
+			return iFlags & ( aType << ( aType  * KBitsPerType ) );
+			}
+
+		TArgType Type ( const TDesC8* )
+			{
+			return EUri;				
+			}
+			
+		TArgType Type ( InetUriList::TServiceType )
+			{
+			return EServiceType;				
+			}
+
+		TArgType Type ( InetUriList::TListType )
+			{
+			return EListType;				
+			}
+
+		TArgType Type ( InetUriList::TURIMatch )
+			{
+			return EURIMatch;				
+			}
+		
+		void Assign ( const TDesC8* aValue )
+			{
+			iArgs[Type(aValue)-1] = (TInt)aValue;
+			}
+			
+		void Assign ( InetUriList::TServiceType aValue )
+			{
+			iArgs[Type(aValue)-1] = aValue;
+			}
+			
+		void Assign ( InetUriList::TListType aValue )
+			{
+			iArgs[Type(aValue)-1] = aValue;
+			}
+			
+		void Assign ( InetUriList::TURIMatch aValue )
+			{
+			iArgs[Type(aValue)-1] = aValue;
+			}
+			
+	private:	
+		TInt iArgs [KMaxArguments];
+		TInt iFlags;
+	};
+
+#else
+
 class TQueryArgs
 	{
 	public:
@@ -245,8 +441,8 @@ class TQueryArgs
 					(Type(a2)<<(Type(a2)*KBitsPerType)) |
 					(Type(a3)<<(Type(a3)*KBitsPerType));
 			}
-		
 
+			
 		/**
 		Checks whether the flag is set for the given argument type.
 				
@@ -272,7 +468,7 @@ class TQueryArgs
 		
 		/**
 		Maximum number of arguments. Currently set as 4.
-		
+
 		@internalComponent
 		*/
 		enum
@@ -327,7 +523,10 @@ class TQueryArgs
 			
 	private:	
 		TInt iArgs [KMaxArguments];
-		TInt iFlags;			
+		TInt iFlags;
 	};
 
+
+#endif	//SYMBIAN_ENABLE_SPLIT_HEADERS
+	
 #endif // __INETURILISTDEF_H__

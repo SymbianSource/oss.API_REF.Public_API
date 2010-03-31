@@ -1,0 +1,97 @@
+/*
+* Copyright (c) 2005-2007 Nokia Corporation and/or its subsidiary(-ies).
+* All rights reserved.
+* This component and the accompanying materials are made available
+* under the terms of "Eclipse Public License v1.0"
+* which accompanies this distribution, and is available
+* at the URL "http://www.eclipse.org/legal/epl-v10.html".
+*
+* Initial Contributors:
+* Nokia Corporation - initial contribution.
+*
+* Contributors:
+*
+* Description:  Phonebook 2 field property definitions.
+*
+*/
+
+
+#ifndef PBK2FIELDPROPERTY_HRH
+#define PBK2FIELDPROPERTY_HRH
+
+/// Phonebook 2 field property flags
+#define KPbk2FieldFlagNull                  0x01
+#define KPbk2FieldFlagTemplateField         0x02
+#define KPbk2FieldFlagUserCanAddField       0x04
+#define KPbk2FieldFlagDisableEdit           0x08
+#define KPbk2FieldFlagCanNotBeRemoved       0x10
+#define KPbk2FieldFlagHideFromDetailsView   0x20
+
+/// Phonebook 2 field multiplicities
+enum TPbk2FieldMultiplicity
+    {
+    EPbk2FieldMultiplicityOne  = 1,
+    EPbk2FieldMultiplicityMany = 2
+    };
+
+/// Phonebook 2 field editing modes
+enum TPbk2FieldEditMode
+    {
+    EPbk2FieldEditModeAlpha = 1,
+    EPbk2FieldEditModeNumeric,
+    EPbk2FieldEditModeDate,
+    EPbk2FieldEditModeSelector, // If editing happends with commands
+    EPbk2FieldEditModeTBD, // To Be Defined
+    EPbk2FieldEditModeLatinOnly
+    };
+
+/// Phonebook 2 field default cases
+enum TPbk2FieldDefaultCase
+    {
+    EPbk2FieldDefaultCaseNone = 0,
+    EPbk2FieldDefaultCaseLower,
+    EPbk2FieldDefaultCaseText
+    };
+
+/// Phonebook 2 field editor type
+enum TPbk2FieldCtrlType
+    {
+    EPbk2FieldCtrlTypeNone = 0,
+    EPbk2FieldCtrlTypeTextEditor,
+    EPbk2FieldCtrlTypeDateEditor,
+    EPbk2FieldCtrlTypeNumberEditor,
+    EPbk2FieldCtrlTypePhoneNumberEditor,
+    EPbk2FieldCtrlURLEditor,
+    EPbk2FieldCtrlEmailEditor,
+    EPbk2FieldCtrlPostalCodeEditor,
+    EPbk2FieldCtrlTypeReadingEditor,
+    EPbk2FieldCtrlTypeChoiceItems,
+    EPbk2FieldCtrlTypeDTMFEditor,
+    EPbk2FieldCtrlTypeIMPPEditor,
+    EPbk2FieldCtrlTypeRingtoneEditor,
+    EPbk2FieldCtrlTypeImageEditor,
+    EPbk2FieldCtrlTypeLast
+    };
+
+/// Phonebook 2 field locations
+enum TPbk2FieldLocation
+    {
+    EPbk2FieldLocationNone = 0,
+    EPbk2FieldLocationHome,
+    EPbk2FieldLocationWork
+    };
+
+/// Unique Phonebook 2 field type group ids
+enum TPbk2FieldGroupId
+    {
+    EPbk2FieldGroupIdNone,
+    EPbk2FieldGroupIdPostalAddress,
+    EPbk2FieldGroupIdHomeAddress,
+    EPbk2FieldGroupIdCompanyAddress,
+    EPbk2FieldGroupIdFirstName,
+    EPbk2FieldGroupIdLastName
+    };
+
+#endif // PBK2FIELDPROPERTY_HRH
+
+// End of File

@@ -1,28 +1,29 @@
 /*
-* Copyright (c) 2002-2006 Nokia Corporation and/or its subsidiary(-ies). 
+* Copyright (c) 2006-2009 Nokia Corporation and/or its subsidiary(-ies).
 * All rights reserved.
 * This component and the accompanying materials are made available
-* under the terms of the License "Symbian Foundation License v1.0" to Symbian Foundation members and "Symbian Foundation End User License Agreement v1.0" to non-members
+* under the terms of "Eclipse Public License v1.0"
 * which accompanies this distribution, and is available
-* at the URL "http://www.symbianfoundation.org/legal/licencesv10.html".
+* at the URL "http://www.eclipse.org/legal/epl-v10.html".
 *
 * Initial Contributors:
 * Nokia Corporation - initial contribution.
 *
 * Contributors:
 *
-* Description:  Offers functionality for resolving corresponding error texts
-*                for error codes. 
+* Description:
 *
 */
 
 
 
-#if !defined TEXT_RESOLVER_H
+
+#ifndef TEXT_RESOLVER_H
 #define TEXT_RESOLVER_H
 
 #include <coemain.h>    //  CCoeEnv
-#include <TextResolver.hrh> // Resource flags 
+#include <textresolver.hrh> // Resource flags 
+#include <eikenv.h>    //  CEikonEnv
 
 // DEFINES
 typedef CArrayFixFlat<TInt> CErrorResourceIdArray;
@@ -128,165 +129,71 @@ typedef CArrayFixFlat<TInt> CErrorResourceFlagArray;
 * @lib commonengine.lib
 * @since S60 2.0
 */
-
 class CTextResolver : public CBase
     {
+public:
+    /**
+    * Defines used error contexts. 
+    * Optional error contexes for aiding the mapping of error codes to 
+    * texts in a unique way. If no context is given the assumption is 
+    * that error codes are unique.
+    */
+    enum TErrorContext
+        {
+        /** Context is defined automatically from error code value.
+        * Here it is assumed that each error code is unique and in
+        * own range. This is a default value when resolving errors. */
+        ECtxAutomatic = 0,
+        /** Context text is not added to the beginning of the resolved error text,
+        * just context separator ':' and newline are added. */
+        ECtxNoCtx = 1,
+        /** No context text, context separator ':' or newline added to the 
+        * beginning of the resolved error text. */
+        ECtxNoCtxNoSeparator = 2
+        };
+public:
+    IMPORT_C static CTextResolver* NewL(CCoeEnv& aEnv);
+    IMPORT_C static CTextResolver* NewLC(CCoeEnv& aEnv);
+    IMPORT_C static CTextResolver* NewL();
+	IMPORT_C static CTextResolver* NewLC();
+    IMPORT_C ~CTextResolver();
+	IMPORT_C const TDesC& ResolveErrorString(TInt aError, TInt& aTextId, TUint& aFlags,TErrorContext aContext = ECtxAutomatic);
+    IMPORT_C const TDesC& ResolveErrorString(TInt aError, TErrorContext aContext = ECtxAutomatic);
+private: // Construction
+    virtual TInt ResourceForError(TInt aError);
+    virtual void LoadResourceFilesL() { ASSERT(0); }	// deprecated
+    CTextResolver(CCoeEnv& aEnv);
+    CTextResolver();
+    void ConstructL();
+    
+    // Utility
+    void DoRawReadOfSystemErrorResourcesToArraysL(TInt& aError, TInt& aTextId);
+    void Reset();
+    void ReadLocalizedSeparatorCharacterFromResourceL(CCoeEnv& aCoeEnv);
+    void ReadLocalizedSeparatorCharacterFromResourceAndPrepareResourceReaderLC(TResourceReader& aResReader);
 
-    public:
-
-        /**
-        * Defines used error contexts. 
-        * Optional error contexes for aiding the mapping of error codes to 
-        * texts in a unique way. If no context is given the assumption is 
-        * that error codes are unique.
-        */
-        enum TErrorContext
-            {
-            /** Context is defined automatically from error code value.
-            * Here it is assumed that each error code is unique and in
-            * own range. This is a default value when resolving errors.
-            */
-            ECtxAutomatic = 0,
-            /** Context text is not added to the beginning of the resolved error text,
-            * just context separator ':' and newline are added.
-            */
-            ECtxNoCtx = 1,
-            /** No context text, context separator ':' or newline added to the 
-            * beginning of the resolved error text.
-            */
-            ECtxNoCtxNoSeparator = 2
-            };
-    public:
-        /**
-         * Two-phase constructor method that is used to create a new instance
-         * of the CTextResolver class. The implementation uses the passed 
-         * CCoeEnv instance to access the resource files.
-         *
-         * @param aEnv the CCoeEnv instance to be used to access the resource
-         * files.
-         * @return a pointer to a new instance of the CTextResolver class.
-         */
-        IMPORT_C static CTextResolver* NewL(CCoeEnv& aEnv);
-           
-         /**
-         * Constructor creates a new instance of CTextResolver. The 
-         * implementation uses the passed CCoeEnv instance to access the 
-         * resource files. Leaves the object on the cleanup stack.
-         *
-         * @param aEnv the CCoeEnv instance to be used to access the resource
-         * files.
-         * @return a pointer to a new instance of the CTextResolver class.
-         */
-        IMPORT_C static CTextResolver* NewLC(CCoeEnv& aEnv);
-        
-         /**
-         * Constructor creates a new instance of CTextResolver. Resource files 
-         * are accessed through the RResourceFile API.
-         *
-         * @return a pointer to a new instance of the CTextResolver class.
-         */
-        IMPORT_C static CTextResolver* NewL();
-
-         /**
-         * Constructor creates a new instance of CTextResolver.Resource files 
-         * are accessed through the RResourceFile API. Leaves the object on 
-         * the cleanup stack.
-         *
-         * @return a pointer to a new instance of the CTextResolver class.
-         */
-        IMPORT_C static CTextResolver* NewLC();
-
-        
-        /** 
-        * Destructor 
-        */
-        IMPORT_C ~CTextResolver();
-
-        /**
-        * Resolves the given error code and returns the error text for the
-        * resolved error. Resolved text can be of any length. This version
-        * is for advanced use
-        *
-        * @param aError The error code to be resolved.
-        * @param aTextId ID of the returned text.
-        * @param aFlags The priority of the returned error. The priority is 
-        * defined by the this module! Flags are defined in textresolver.hrh.
-        * @param aContext Optional context for error numbers. If the aContext 
-        * parameter is not passed to the function, it uses the default value
-        * ECtxAutomatic. 
-        * @return the error text for the resolved error. "System error" (in 
-        * English localisation) is returned when error code is not known. For 
-        * unknown errors blank error flag (flags are defined in 
-        * textresolver.hrh) is also set to hide errors without proper 
-        * explanation. There is no limit on how long the resolved string 
-        * can be.
-        */
-		IMPORT_C const TDesC& ResolveErrorString(
-             TInt aError,
-             TInt& aTextId,
-             TUint& aFlags,
-             TErrorContext aContext = ECtxAutomatic);
-
-        /**
-        * Resolves the given error code and returns the error text for the
-        * resolved error. Resolved text can be of any length. This version 
-        * is for "normal" use.
-        *
-        * @param aError The error code to be resolved.
-        * @param aContext Optional context for error numbers. If the aContext 
-        * parameter is not passed to the function, it uses the default value
-        * ECtxAutomatic. 
-        * @return the error text for the resolved error. "System error" (in 
-        * English localisation) is returned when error code is not known. For 
-        * unknown errors blank error flag (flags are defined in 
-        * textresolver.hrh) is also set to hide errors without proper 
-        * explanation. There is no limit on how long the resolved string
-        * can be.
-        */
-	    IMPORT_C const TDesC& ResolveErrorString(
-             TInt aError,
-             TErrorContext aContext = ECtxAutomatic);
-
-	private:
-        
-        virtual TInt ResourceForError(TInt aError);
-        virtual void LoadResourceFilesL();
-
-        // Construction
-        CTextResolver(CCoeEnv& aEnv);
-        CTextResolver();
-        void ConstructL();
-
-        // Utility
-        void FindFullPathOfResourceFile(TFileName& aResFile) const;
-        void ReadResourcesToArraysL(TInt& aError, TInt& aTextId);
-        void Reset();
-        void PrepareReaderLC(TResourceReader& reader);
-
-        // returns NULL if fails
-        HBufC* ReadUnicodeString(const TInt& aTextId);
-
-        // returns false if any memory allocation fails or initial values 
-        // of necessary pointers are NULL, indicating alloc failure earlier.
-        TBool AddContextAndSeparator(TErrorContext aContext);
-
-    private:
-        
-        CCoeEnv*                            iCoe;
-        RResourceFile                       iRFile;
-        TInt                                iRDSupport;
-        TInt                                iBaseResourceFileOffset;
-        CArrayFix<TInt>*                    iStartError;
-        CArrayFix<TInt>*                    iAppTexts;
-        CArrayPtr<CErrorResourceIdArray>*   iErrorTexts;
-        CArrayPtr<CErrorResourceFlagArray>* iFlags;
-        HBufC*                              iTextBuffer;
-        HBufC*                              iAppNameText;
-        HBufC*                              iContextSeparator;
-        RFs                                 iFs;
-        TPtrC                               iTruncatedTextPointer;
-    };
+    // returns NULL if fails
+    static HBufC* AllocReadUnicodeString(RResourceFile& aResFile, TInt aTextId);
+    /** Returns false if any memory allocation fails or initial values 
+	of necessary pointers are NULL, indicating alloc failure earlier.*/
+    TBool AddContextAndSeparator(TErrorContext aContext);
+    void AllocBuffersL();
+    void DoResolveErrorStringL(TInt aError, TInt& aTextId, TUint& aFlags);
+private:
+    CCoeEnv* iCoe;
+    RResourceFile iResFile;
+    TInt iRDSupport;
+    TInt iBaseResourceFileOffset;
+    CArrayFix<TInt>* iStartError;
+    CArrayFix<TInt>* iAppTexts;
+    CArrayPtr<CErrorResourceIdArray>*   iErrorTexts;	// Array of arrays of ints
+    CArrayPtr<CErrorResourceFlagArray>* iFlags;			// Array of arrays of ints
+    HBufC* iTextBuffer;
+    HBufC* iTitleText;
+    HBufC* iContextSeparator;
+    RFs iFs;
+    TPtrC  iTruncatedTextPointer;
+	};
 
 #endif
 
-// End of File

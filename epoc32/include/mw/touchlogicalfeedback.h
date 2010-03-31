@@ -1,10 +1,10 @@
 /*
-* Copyright (c) 2007-2008 Nokia Corporation and/or its subsidiary(-ies).
+* Copyright (c) 2009 Nokia Corporation and/or its subsidiary(-ies).
 * All rights reserved.
 * This component and the accompanying materials are made available
-* under the terms of the License "Symbian Foundation License v1.0" to Symbian Foundation members and "Symbian Foundation End User License Agreement v1.0" to non-members
+* under the terms of "Eclipse Public License v1.0"
 * which accompanies this distribution, and is available
-* at the URL "http://www.symbianfoundation.org/legal/licencesv10.html".
+* at the URL "http://www.eclipse.org/legal/epl-v10.html".
 *
 * Initial Contributors:
 * Nokia Corporation - initial contribution.
@@ -12,30 +12,27 @@
 * Contributors:
 *
 * Description:  Logical feedback type enumeration. 
+* Part of:      Tactile Feedback.
 *
 */
 
 
-#ifndef T_TOUCHLOGICALFEEDBACK_H
-#define T_TOUCHLOGICALFEEDBACK_H
-
-
+#ifndef TOUCHLOGICALFEEDBACK_H
+#define TOUCHLOGICALFEEDBACK_H
 
 #include <e32std.h>
 
-
 /**  
  *  Pointer event types, that can be used when registering
- *  areas to registry. Currently only stylus down event 
- *  is supported (this means that there will be feedback 
- *  whenever stylus down event is received on registered
- *  area, no matter what happens _after_ stylus down event).
+ *  areas to registry. 
  */
 enum TTouchEventType
     {
-    ETouchEventStylusDown
+    ETouchEventStylusDown,
+    ETouchEventStylusUp,
+    ETouchEventStylusPressDown,
+    ETouchEventStylusPressUp
     };
-
     
 /**  
  *  Logical feedback types, that can be used when producing direct
@@ -62,13 +59,58 @@ enum TTouchEventType
  *                            feedback on every new selected character).
  *                            Also used for scrolling and dragging.
  *
+ *  Different UI components have specific feedback types, which should be 
+ *  used to maintain similar feedback behaviour in components of same type.
+ *
  */
 enum TTouchLogicalFeedback
     {
-    ETouchFeedbackNone,
-    ETouchFeedbackBasic,   
-    ETouchFeedbackSensitive
+    ETouchFeedbackNone = 0,
+    ETouchFeedbackBasic,
+    ETouchFeedbackSensitive,
+    // New types for S60 5.2:
+    ETouchFeedbackBasicButton = 0x100,    
+    ETouchFeedbackSensitiveButton,
+    ETouchFeedbackList,
+    ETouchFeedbackSensitiveList,
+    ETouchFeedbackBoundaryList,    
+    ETouchFeedbackSlider,
+    ETouchFeedbackEdit,
+    ETouchFeedbackLineSelection,
+    ETouchFeedbackBlankSelection,
+    ETouchFeedbackTextSelection,
+    ETouchFeedbackEmptyLineSelection,
+    ETouchFeedbackTab,
+    ETouchFeedbackPopUp,
+    ETouchFeedbackIncreasingPopUp,
+    ETouchFeedbackDecreasingPopUp,
+    ETouchFeedbackFlick,
+    ETouchFeedbackCheckbox,
+    ETouchFeedbackSensitiveInput,
+    ETouchFeedbackCharacterInputButton,
+    ETouchFeedbackMultiTouchRecognized
+    };
+    
+/**  
+ *  Logical feedback types for producing continuous feedback.
+ *
+ */
+enum TTouchContinuousFeedback
+    {
+    ETouchContinuousSmooth = 0x300, // For generic continuous feedback for custom controls
+    ETouchContinuousSlider,
+    ETouchContinuousInput,
+    ETouchContinuousFlick
+    };
+    
+/**  
+ *  Physical feedback types as bitmask.
+ *
+ */  
+enum TTouchFeedbackType
+    {
+    ETouchFeedbackAudio = 0x01,
+    ETouchFeedbackVibra = 0x02
     };
 
-
-#endif // T_TOUCHLOGICALFEEDBACK_H
+#endif // TOUCHLOGICALFEEDBACK_H

@@ -1,0 +1,28 @@
+// Copyright (c) 2005-2009 Nokia Corporation and/or its subsidiary(-ies).
+// All rights reserved.
+// This component and the accompanying materials are made available
+// under the terms of "Eclipse Public License v1.0"
+// which accompanies this distribution, and is available
+// at the URL "http://www.eclipse.org/legal/epl-v10.html".
+//
+// Initial Contributors:
+// Nokia Corporation - initial contribution.
+//
+// Contributors:
+//
+// Description:
+//
+
+#ifndef _EXIFIMAGEDISPLAY_HRH
+#define _EXIFIMAGEDISPLAY_HRH
+/** 	@file
+	@internalTechnology */
+
+#include <icl/geniclimagedisplay.hrh>
+
+#define KUidImageDisplayExifPluginDll				KUidGenIclImageDisplayPluginDll
+#define KUidImageDisplayExifPluginImplUid			0x101F7C55
+#define KUidExifImageDisplayExtension				0x1020708E
+
+#endif // ndef _EXIFIMAGEDISPLAY_HRH
+

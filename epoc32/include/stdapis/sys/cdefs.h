@@ -1,5 +1,5 @@
 /*-
- * © Portions copyright (c) 2005 Nokia Corporation.  All rights reserved. 
+ *
  * Copyright (c) 1991, 1993
  *	The Regents of the University of California.  All rights reserved.
  *
@@ -29,7 +29,7 @@
  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY
  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
-* © Portions copyright (c) 2007-2008 Symbian Software Ltd. All rights reserved.
+* © Portions Copyright (c) 2005-2010 Nokia Corporation and/or its subsidiary(-ies). All rights reserved.
  *	@(#)cdefs.h	8.8 (Berkeley) 1/9/95
  * $FreeBSD: src/sys/sys/cdefs.h,v 1.88.2.1 2005/10/09 07:48:48 netchild Exp $
  */
@@ -247,8 +247,10 @@
 #endif
 
 /* XXX: should use `#if __STDC_VERSION__ < 199901'. */
+#if __STDC_VERSION__ < 199901
 #if !__GNUC_PREREQ__(2, 7) && !defined(__INTEL_COMPILER)
-#define	__func__	NULL
+#define	__func__	""
+#endif
 #endif
 
 #if (defined(__INTEL_COMPILER) || (defined(__GNUC__) && __GNUC__ >= 2)) && !defined(__STRICT_ANSI__) || __STDC_VERSION__ >= 199901
@@ -324,15 +326,24 @@
  * We define this here since <stddef.h>, <sys/queue.h>, and <sys/types.h>
  * require it.
  */
-
-#if !defined(__cplusplus) || defined(__SYMBIAN32__)
+#if !defined(__cplusplus)
 #define	__offsetof(type, field)	((size_t)(&((type *)0)->field))
 #else
+#if defined(__GNUC__)
+#if(__GNUC__ > 3)
 #define __offsetof(type, field)					\
-  (__offsetof__ (reinterpret_cast <size_t>			\
-                 (&reinterpret_cast <const volatile char &>	\
-                  (static_cast<type *> (0)->field))))
+       (__builtin_offsetof (type,field))
+#else
+#define __offsetof(type, field)					\
+       (__offsetof__ (type,field))
 #endif
+#else
+#define	__offsetof(type, field)	(reinterpret_cast <size_t>			\
+    (&reinterpret_cast <const volatile char &>	\
+               (static_cast<type *> (0)->field)))
+#endif
+#endif
+
 #define	__rangeof(type, start, end) \
 	(__offsetof(type, end) - __offsetof(type, start))
 

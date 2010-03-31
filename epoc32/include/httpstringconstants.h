@@ -7,7 +7,11 @@
 
 struct TStringTable;
 
-/** A String table */
+/** 
+HTTP String Table
+@publishedAll 
+@released
+*/
 class HTTP 
 	{
 public:
@@ -426,7 +430,15 @@ public:
 		/** _054 */
 		EEnableTranspHndlrPriority,
 		/** _055 */
-		EDisableTranspHndlrPriority
+		EDisableTranspHndlrPriority,
+		/** _056 */
+		EStrictConnectHeaders,
+		/** _057 */
+		EEnableStrictConnectHeaders,
+		/** _061 */
+		EHttpOptimalPipelining,
+		/** _062 */
+		EHttpEnableOptimalPipelining
 		};
 	static const TStringTable Table;	
 	};

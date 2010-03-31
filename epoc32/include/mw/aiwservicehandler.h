@@ -2,9 +2,9 @@
 * Copyright (c) 2003-2005 Nokia Corporation and/or its subsidiary(-ies).
 * All rights reserved.
 * This component and the accompanying materials are made available
-* under the terms of the License "Symbian Foundation License v1.0" to Symbian Foundation members and "Symbian Foundation End User License Agreement v1.0" to non-members
+* under the terms of "Eclipse Public License v1.0"
 * which accompanies this distribution, and is available
-* at the URL "http://www.symbianfoundation.org/legal/licencesv10.html".
+* at the URL "http://www.eclipse.org/legal/epl-v10.html".
 *
 * Initial Contributors:
 * Nokia Corporation - initial contribution.
@@ -25,7 +25,7 @@
 
 // INCLUDES
 #include <barsread.h> 
-#include <aiwcommon.h>
+#include <AiwCommon.h>
 
 // CONSTANTS
 
@@ -211,7 +211,7 @@ NONSHARABLE_CLASS(CAiwServiceHandler) : public CBase
             TInt aMenuResourceId,
             TInt aBaseMenuCmdId,
             const CAiwGenericParamList& aInParamList);
-            
+
         /**
         * Initialises menu pane with service commands from a provider.
         * This method must be called upon DynInitMenuPaneL of consumer
@@ -242,6 +242,38 @@ NONSHARABLE_CLASS(CAiwServiceHandler) : public CBase
             const CAiwGenericParamList& aInParamList,
             TBool aUseSubmenuTextsIfAvailable);            
         
+        /**
+        * Initialises menu pane with service commands from a provider.
+        * This method must be called upon DynInitMenuPaneL of consumer
+        * application in order to let the provider to hook its menu items.
+        * In normal circumstances, the other variant of this method should be used.
+        *
+        * @since S60 3.1
+        * @param aMenuPane Handle of the menu pane to initialise.
+        * @param aMenuResourceId The menu to be attached.
+        * @param aBaseMenuCmdId Base ID for the Service Handler to generate 
+        *                       menu IDs for placeholders.
+        * @param aInParamList Input parameter list for provider's parameters checking.
+        * @param aUseSubmenuTextsIfAvailable If the provider has specified alternative submenu
+        *                       texts for its menu items, those can be taken into use if this 
+        *                       parameter is set to ETrue. This should be used only for manually 
+        *                       created submenus. If using AIW_CASCADE_ID or 
+        *                       AIW_INTELLIGENT_CASCADE_ID, the AIW framework can automatically 
+        *                       decide whether to use the submenu texts or not, and this parameter 
+        *                       has no effect.
+        * @param aSetAsItemSpecific Added commands are marked as item specific.
+        * @leave KErrNotSupported CCoeEnv is not accessible.
+        * @leave KErrOverflow Consumer application has too many AIW placeholders in its menu. 
+        *                     Currently, maximum 16 is supported.
+        */
+        IMPORT_C void InitializeMenuPaneL(
+            CEikMenuPane& aMenuPane,
+            TInt aMenuResourceId,
+            TInt aBaseMenuCmdId,
+            const CAiwGenericParamList& aInParamList,
+            TBool aUseSubmenuTextsIfAvailable,
+            TBool aSetAsItemSpecific);
+
         /**
         * Returns the service command ID associated to the menu command. If found, it means 
         * that there is a provider which can handle the menu command. Thus the command 

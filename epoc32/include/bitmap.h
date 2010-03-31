@@ -1,9 +1,9 @@
 // Copyright (c) 1995-2009 Nokia Corporation and/or its subsidiary(-ies).
 // All rights reserved.
 // This component and the accompanying materials are made available
-// under the terms of the License "Symbian Foundation License v1.0" to Symbian Foundation members and "Symbian Foundation End User License Agreement v1.0" to non-members
+// under the terms of "Eclipse Public License v1.0"
 // which accompanies this distribution, and is available
-// at the URL "http://www.symbianfoundation.org/legal/licencesv10.html".
+// at the URL "http://www.eclipse.org/legal/epl-v10.html".
 //
 // Initial Contributors:
 // Nokia Corporation - initial contribution.
@@ -25,23 +25,18 @@
 #include <gdi.h>
 #endif
 
+#ifndef SYMBIAN_ENABLE_SPLIT_HEADERS
+#include <graphics/bitmapuid.h>
+#endif
+
 #ifdef _DEBUG
 	#define SYMBIAN_DEBUG_FBS_LOCKHEAP
 #endif
 
-/**
-@internalComponent
-*/
-const TUid KCBitwiseBitmapUid={268435520};
-const TUid KCBitwiseBitmapHardwareUid={0x10009a3d};
-const TUid KMultiBitmapFileImageUid={268435522};
-const TInt KCompressionBookMarkThreshold=0x2000;
-const TInt KNumBytesPerBitmapHandle = sizeof(TInt); 						// Bitmap handle is the size of a TInt
-const TInt KMaxBitmapHandleBufferSize = KNumBytesPerBitmapHandle * 2000; 	// Maximum size of buffer to store all bitmap handles. 
-
 //Forward declarations
 class CChunkPile;
 class TCompressionBookMark;
+class CFbsRasterizer;
 
 /** 
 Defines the types of file compression. 
@@ -66,6 +61,8 @@ enum TBitmapfileCompression
 	EThirtyTwoABitRLECompression,
 	/** File is compressed as a palette plus reduced bit-per-pixel.  Only applicable to bitmaps already loaded in RAM. */
 	EGenericPaletteCompression,
+	/** Extended bitmap. Data format is proprietary to licensee. */
+	EProprietaryCompression,
 	//Insert new enum items here!
 	ERLECompressionLast = 255
 	};
@@ -86,25 +83,17 @@ enum TBitmapfileCompressionScheme
 	};
 
 /**
-@internalTechnology
-*/
+WARNING: Typedef for internal use ONLY. Compatibility is not guaranteed in future releases.
+@publishedAll
+@released
+ */
 typedef void (*TAssignFunction)(TUint8*& aDestPtr, TUint32 aColor);
-
 /**
-@internalTechnology
-*/
+WARNING: Typedef for internal use ONLY. Compatibility is not guaranteed in future releases.
+@publishedAll
+@released
+ */
 typedef void (*TDecodeFunction)(TUint8* aDataPtr, TUint32* aPalettePtr, TUint8*& aDestPtr, TAssignFunction aAssignFunction);
-
-class TRgb24bit
-/**
-@internalComponent
-*/
-	{
-public:
-	TUint8 iRed;
-	TUint8 iGreen;
-	TUint8 iBlue;
-	};
 
 /** 
 Contains information about the bitmap when streaming bitmaps to stores. 
@@ -159,23 +148,28 @@ public:
 	TBitmapfileCompression iCompression;
 	};
 
-class TLineScanningPosition
 /**
-@internalTechnology
-*/
+WARNING: Class for internal use ONLY.  Compatibility is not guaranteed in future releases.
+
+@publishedAll
+@released 
+ */
+class TLineScanningPosition
 	{
 public:
-	TLineScanningPosition(TUint32* aSrcDataPtr): iSrcDataPtr((TUint8*)aSrcDataPtr), iCursorPos(0), iScanLineBuffer(NULL) {}
+	inline TLineScanningPosition(TUint32* aSrcDataPtr);
 public:
 	TUint8* iSrcDataPtr;
 	TInt iCursorPos;
 	HBufC8* iScanLineBuffer;
+	CFbsRasterizer* const iRasterizer;
 	};
 
 class CShiftedFileStore;
+
 /**
 BitGdi bitmap class (pseudo-CXxx class).
-@internalComponent
+WARNING: Class for internal use ONLY.  Compatibility is not guaranteed in future releases.
 @released
 */
 class CBitwiseBitmap
@@ -200,13 +194,13 @@ public:
 	IMPORT_C TInt VerticalTwipsToPixels(TInt aTwips) const;
 	IMPORT_C TInt HorizontalPixelsToTwips(TInt aPixels) const;
 	IMPORT_C TInt VerticalPixelsToTwips(TInt aPixels) const;
-	IMPORT_C void GetPixel(TRgb& aColor,const TPoint& aPos,TUint32* aBase) const;
+	IMPORT_C void GetPixel(TRgb& aColor,const TPoint& aPos,TUint32* aBase, CFbsRasterizer* aRasterizer) const;
 	IMPORT_C TInt GetScanLinePtr(TUint32*& aSlptr, TPoint& aPixel,TInt aLength, TUint32* aBase, TLineScanningPosition& aLineScanningPosition) const;
 	IMPORT_C TInt GetScanLinePtr(TUint32*& aSlptr, TInt& aLength, TPoint& aPixel,TUint32* aBase, TLineScanningPosition& aLineScanningPosition) const;
 	IMPORT_C void GetScanLine(TDes8& aBuf,const TPoint& aPixel,TInt aLength,TBool aDither,const TPoint& aDitherOffset,TDisplayMode aDispMode,TUint32* aBase, TLineScanningPosition& aLineScanningPosition) const;
 	IMPORT_C void GetScanLine(TUint32*& aSlptr, TDes8& aBuf,const TPoint& aPixel,TInt aLength,TBool aDither,const TPoint& aDitherOffset,TDisplayMode aDispMode) const;
 	IMPORT_C void GetScanLine(TDes8& aBuf,const TPoint& aPixel,TInt aLength,TBool aDither,const TPoint& aDitherOffset,TDisplayMode aDispMode,TUint32* aBase) const;
-	IMPORT_C void GetVerticalScanLine(TDes8& aBuf,TInt aX,TBool aDither,const TPoint& aDitherOffset,TDisplayMode aDispMode,TUint32* aBase) const;
+	IMPORT_C void GetVerticalScanLine(TDes8& aBuf,TInt aX,TBool aDither,const TPoint& aDitherOffset,TDisplayMode aDispMode,TUint32* aBase, CFbsRasterizer* aRasterizer) const;
 	IMPORT_C void StretchScanLine(TDes8& aBuf,const TPoint& aPixel,TInt aClipStrchX,TInt aClipStrchLen,TInt aStretchLength,TInt aOrgX,TInt aOrgLen,const TPoint& aDitherOffset,TDisplayMode aDispMode,TUint32* aBase) const;
 	IMPORT_C void StretchScanLine(TDes8& aBuf,const TPoint& aPixel,TInt aClipStrchX,TInt aClipStrchLen,TInt aStretchLength,TInt aOrgX,TInt aOrgLen,const TPoint& aDitherOffset,TDisplayMode aDispMode,TUint32* aBase, TLineScanningPosition& aLineScanningPosition) const;
 	IMPORT_C TUint32* ScanLineAddress(TUint32* aBase,TUint aY) const;
@@ -228,6 +222,7 @@ private:
 	IMPORT_C ~CBitwiseBitmap();
 	IMPORT_C void Reset();
 	IMPORT_C TInt Construct(const TSize& aSize,TDisplayMode aDispMode,TUid aCreatorUid);
+	IMPORT_C TInt ConstructExtended(const TSize& aSize, TDisplayMode aDispMode, TUid aType, TInt aDataSize);
 	IMPORT_C void ConstructL(RFs& aFs,const TDesC& aFilename,TInt32 aId,TUint aFileOffset);
 	IMPORT_C void ConstructL(RFile& aFile,TInt32 aId,TUint aFileOffset);
 	IMPORT_C void ConstructL(CShiftedFileStore* aFileStore,TStreamId aStreamId);
@@ -340,6 +335,17 @@ private:
 	static void BitmapFill32(TUint32* aDestPtr32, TInt aCount, TUint32 aValue32);
 	static inline void BitmapFill16(TUint16* aDestPtr16, TInt aCount, TUint16 aValue16);
 private:
+	struct TExtra
+		{
+#ifdef SYMBIAN_DEBUG_FBS_LOCKHEAP
+		TInt iLockCount; // number of calls to CFbsBitmap::LockHeap() not balanced by calls to CFbsBitmap::UnlockHeap()
+		TThreadId iThreadId; // id of thread that called CFbsBitmap::LockHeap() if any
+#endif
+		TInt64 iSerialNumber; // serial number of bitmap which is unique to the whole FBServ
+		TInt iTouchCount; // number of calls to TouchBitmap()i.e. number of times bitmap has been changed
+		};
+	inline TExtra* Extra() const; // only for bitmaps created in RAM
+private:
 	TUid iUid;
 	struct TSettings
 		{
@@ -350,9 +356,12 @@ private:
 		TDisplayMode InitialDisplayMode() const;
 		inline void SetDirtyBitmap();
 		inline TBool IsDirtyBitmap() const;
+		inline void SetVolatileBitmap();
+		inline TBool IsVolatileBitmap() const;
 		enum
 			{
-			EBitmapFlagDirty = 0x10000 // set in the old bitmap when a re-allocating operation has created a new bitmap
+			EBitmapFlagDirty = 0x00010000, // set in the old bitmap when a re-allocating operation has created a new bitmap
+			EBitmapFlagVolatile = 0x00020000, // set when DataAddress() has been called but BeginDataAccess() has not
 			};
 		TUint32 iData;
 		} iSettings;
@@ -360,12 +369,7 @@ private:
 	CChunkPile* iPile;
 	TInt iByteWidth;
 	SEpocBitmapHeader iHeader;
-	struct TExtra // used only in builds with SYMBIAN_DEBUG_FBS_LOCKHEAP defined
-		{
-		TInt iLockCount; // number of calls to CFbsBitmap::LockHeap() not balanced by calls to CFbsBitmap::UnlockHeap()
-		TThreadId iThreadId; // id of thread that called CFbsBitmap::LockHeap() if any
-		}
-		*iExtra; // only for bitmaps created in RAM, set to 0xFFFFFFFF for ROM bitmaps by the tool chain
+	TInt iSpare;
 	TInt iDataOffset; // offset in bytes from "this" or from base of bitmap chunk, or hardware bitmap handle
 	TBool iIsCompressedInRAM; //flag indicating whether CompressData has been called
 	};

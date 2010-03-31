@@ -2,9 +2,9 @@
 * Copyright (c) 2002 - 2005 Nokia Corporation and/or its subsidiary(-ies).
 * All rights reserved.
 * This component and the accompanying materials are made available
-* under the terms of the License "Symbian Foundation License v1.0" to Symbian Foundation members and "Symbian Foundation End User License Agreement v1.0" to non-members
+* under the terms of "Eclipse Public License v1.0"
 * which accompanies this distribution, and is available
-* at the URL "http://www.symbianfoundation.org/legal/licencesv10.html".
+* at the URL "http://www.eclipse.org/legal/epl-v10.html".
 *
 * Initial Contributors:
 * Nokia Corporation - initial contribution.
@@ -348,22 +348,6 @@ class CSpdiaControl    : public CCoeControl,
         TBool CreateDataL(const CAknGrid& aGrid);
 
         /**
-        * Returns the size of grid.
-        */
-//        TSize GridSize() const;  // not referenced...
-
-        /**
-        * Display confirmation dialog from id's
-        *
-        * @param aIndex     a index of array.
-        * @param aId        resource id
-        * @param aPromptId  prompt id
-        */
-        TBool ConfirmationNumberL(TInt aIndex,
-                        TInt aId,
-                        TInt aPromptId);
-
-        /**
         * Thumbnail's shadow is drawn.
         *
         * @param aGc    window gc
@@ -648,20 +632,31 @@ class CSpdiaControl    : public CCoeControl,
 
         CAknsBasicBackgroundControlContext* iBgContext;
 	
-		// Variable used to know if the popup dialog has to be shown
-		// according to the release.
-		TBool iBooleanVarForAddingDialogVariation;
-		//Code added for build ver 2.6.
-		RArray<TAknsItemID>*iDialSkinBmp;
-		RArray<TAknsItemID>*iSkinIcons;
-		TAknLayoutRect icellLayout[KArraySize];
-		TBuf<254> iBmpPath;
-		TBuf<254> iRscPath;
-		TInt iType;
-		TInt iError;
-		TBool iPopupDialog;
-		CAknQueryDialog* iSaveChangesDialog;
-		TBool iSaveDlg;
+        // Variable used to know if the popup dialog has to be shown
+        // according to the release.
+        TBool iBooleanVarForAddingDialogVariation;
+
+        //Code added for build ver 2.6.
+        RArray<TAknsItemID>*iDialSkinBmp;
+        RArray<TAknsItemID>*iSkinIcons;
+        RArray<TInt>*iIcons;
+        RArray<TInt>*iIconsId;
+        RArray<TInt>*iIconsMask;
+        TAknLayoutRect icellLayout[KArraySize];
+        TBuf<254> iBmpPath;
+        TBuf<254> iRscPath;
+        TInt iType;
+        TInt iError;
+        TBool iPopupDialog;
+        CAknQueryDialog* iSaveChangesDialog;
+        TBool iSaveDlg;
+
+        // Record the current index before swtich to Speeddial if needed. 
+        TInt iFocusedGrid;   
+        
+        TInt iIconsCount;
+        TInt iIconsIdCount;
+        TInt iIconsMaskCount;
     };
 
 #endif // SPDIACONTROL_H

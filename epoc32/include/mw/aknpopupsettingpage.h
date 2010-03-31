@@ -2,9 +2,9 @@
 * Copyright (c) 2002 Nokia Corporation and/or its subsidiary(-ies).
 * All rights reserved.
 * This component and the accompanying materials are made available
-* under the terms of the License "Symbian Foundation License v1.0" to Symbian Foundation members and "Symbian Foundation End User License Agreement v1.0" to non-members
+* under the terms of "Eclipse Public License v1.0"
 * which accompanies this distribution, and is available
-* at the URL "http://www.symbianfoundation.org/legal/licencesv10.html".
+* at the URL "http://www.eclipse.org/legal/epl-v10.html".
 *
 * Initial Contributors:
 * Nokia Corporation - initial contribution.
@@ -27,9 +27,9 @@
 #define __AKNPOPUPSETTINGPAGE_H__ 
 
 
-#include <aknqueryvalue.h>
-#include <aknqueryvaluetext.h>
-#include <aknlistboxsettingpage.h>
+#include <AknQueryValue.h>
+#include <AknQueryValueText.h>
+#include <AknListBoxSettingPage.h>
 
 #include <AknDesCArrayDecorator.h>
 #include <AknListBoxLayoutDecorator.h>
@@ -148,6 +148,20 @@ public:
  *
  */
 	IMPORT_C void SetPopupSettingListObserver(MAknPopupSettingListObserver* aObserver);
+
+    /**
+     * Selects current item.
+     * 
+     * @internal
+     */
+    void SelectCurrentItemL();
+    
+    /**
+	 * Returns index of currently selected list item.
+	 *
+	 * @return Currently selected item's index.
+	 */
+    TInt CurrentSelection() const;
 
 public: 
 /** 

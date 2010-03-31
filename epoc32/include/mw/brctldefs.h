@@ -33,12 +33,12 @@
 * Usage:
 *
 * @code
-*  #include <BrCtlDefs.h>
+*  #include <brctldefs.h>
 *
 * @see S60 Platform: Browser Control API Developer's Guide Version 2.0
 * @lib BrowserEngine.lib
 * @since 3.0
-* @file BrCtlDefs.h
+* @file brctldefs.h
 * @endcode     *
 */
 class TBrCtlDefs
@@ -466,6 +466,17 @@ class TBrCtlDefs
             ESettingsZoomLevelMin,          ///< Minimum Zoom level supported
             ESettingsZoomLevelMax,          ///< Maximum Zoom level supported
             ESettingsZoomLevelDefault,      ///< Default Zoom level for new page
+            /*
+            * Browser cursor show mode -- some phone doesn't have cursor inside Browser
+            */
+            ESettingsCursorShowMode,
+            
+            /*
+             * Enter key mode - default behavior is like in desktop browser - submit the form
+             * The alternative is to select the link is one is activated.
+             */
+            ESettingsEnterKeyMode, 
+            
             ESettingsMaxEnum              ///< Must be last one
             };
 
@@ -773,7 +784,8 @@ class TBrCtlDefs
         EWidgetIdentifier = 0,
         EWidgetBundleId,
         EWidgetBasePath,
-        EWidgetPublishState
+        EWidgetPublishState,
+        EWidgetNetworkState
         };
 
     /**
@@ -815,8 +827,18 @@ class TBrCtlDefs
         EFormDataOnly,
         EFormDataPlusPassword
         };
+    enum TCursorSettings
+        {
+        ENoCursor = 0,
+        EDefaultCursor
+        };
+    
+    enum TEnterKeySettings
+        {
+        EEnterKeyDefault = 0,
+        EEnterKeyCanActivateLink
+        };
     };
-
 #endif      // BRCTLDEFS_H
 
 // End of File

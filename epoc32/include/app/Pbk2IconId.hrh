@@ -1,0 +1,75 @@
+/*
+* Copyright (c) 2005-2007 Nokia Corporation and/or its subsidiary(-ies).
+* All rights reserved.
+* This component and the accompanying materials are made available
+* under the terms of "Eclipse Public License v1.0"
+* which accompanies this distribution, and is available
+* at the URL "http://www.eclipse.org/legal/epl-v10.html".
+*
+* Initial Contributors:
+* Nokia Corporation - initial contribution.
+*
+* Contributors:
+*
+* Description:  Phonebook 2 icon names.
+*
+*/
+
+
+#ifndef PBK2ICONID_HRH
+#define PBK2ICONID_HRH
+
+// CONSTANTS
+
+#define KPbk2NullIconIdOwnerUid     0
+
+/**
+ * The core Phonebook 2 icon ids.
+ */
+enum TPbk2CoreIconId
+    {
+    EPbk2NullIconId                             = -1,
+    EPbk2qgn_indi_marked_add                    =  1,
+    EPbk2qgn_prop_checkbox_off,
+    EPbk2qgn_prop_checkbox_on,
+    EPbk2qgn_prop_nrtyp_phone,
+    EPbk2qgn_prop_nrtyp_home,
+    EPbk2qgn_prop_nrtyp_work,
+    EPbk2qgn_prop_nrtyp_mobile,
+    EPbk2qgn_prop_nrtyp_fax,
+    EPbk2qgn_prop_nrtyp_pager,
+    EPbk2qgn_prop_nrtyp_email,
+    EPbk2qgn_prop_nrtyp_address,
+    EPbk2qgn_prop_nrtyp_url,
+    EPbk2qgn_prop_nrtyp_date,
+    EPbk2qgn_prop_nrtyp_note,
+    EPbk2qgn_prop_nrtyp_tone,
+    EPbk2qgn_prop_group_open_tab1,
+    EPbk2qgn_prop_group_small,
+    EPbk2qgn_graf_pb_status_backg,
+    EPbk2qgn_prop_nrtyp_empty,
+    EPbk2qgn_indi_voice_add,
+    EPbk2qgn_indi_qdial_add,
+    EPbk2qgn_prop_nrtyp_video,
+    EPbk2qgn_prop_nrtyp_voip,
+    EPbk2qgn_prop_nrtyp_poc,
+    EPbk2qgn_prop_nrtyp_swis,
+    EPbk2qgn_prop_nrtyp_sip,
+    EPbk2qgn_menu_empty_cxt,
+    EPbk2qgn_graf_phob_thumbnail_backg,
+    EPbk2qgn_prop_nrtyp_assistant,
+    EPbk2qgn_prop_nrtyp_car,
+    EPbk2qgn_indi_tb_call,
+    EPbk2qgn_indi_tb_mce,
+    EPbk2qgn_indi_tb_avail_contacts,
+    EPbk2qgn_prop_pb_topc,
+    EPbk2qgn_prop_locev_map,
+    EPbk2qgn_prop_pb_no_valid_lm,
+    EPbk2qgn_prop_blid_waypoint,
+    EPbk2qgn_prop_radiobutt_off,
+    EPbk2qgn_prop_radiobutt_on
+    };
+
+#endif // PBK2ICONID_HRH
+
+// End of File

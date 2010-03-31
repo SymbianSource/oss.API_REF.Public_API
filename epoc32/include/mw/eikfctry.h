@@ -1,9 +1,9 @@
 // Copyright (c) 1997-2009 Nokia Corporation and/or its subsidiary(-ies).
 // All rights reserved.
 // This component and the accompanying materials are made available
-// under the terms of the License "Symbian Foundation License v1.0" to Symbian Foundation members and "Symbian Foundation End User License Agreement v1.0" to non-members
+// under the terms of "Eclipse Public License v1.0"
 // which accompanies this distribution, and is available
-// at the URL "http://www.symbianfoundation.org/legal/licencesv10.html".
+// at the URL "http://www.eclipse.org/legal/epl-v10.html".
 //
 // Initial Contributors:
 // Nokia Corporation - initial contribution.
@@ -18,26 +18,11 @@
 
 #include <e32def.h>
 
+#ifndef SYMBIAN_ENABLE_SPLIT_HEADERS
+#include <uikon/eikctrlstatus.h>
+#endif
+
 class CCoeControl;
-
-/** Flags to determine the control status.
-
-@publishedPartner
-@released
-*/
-enum
-	{
-	/** Flag to determine whether a control has ears. Ears are triangular buttons
-	for moving forwards or backwards through the list. */
-	EEikControlHasEars=0x01,
-	/** Flag to determine whether the control is unable to receive keyboard focus. */
-	EEikControlIsNonFocusing=0x02,
-	/** Flag to determine whether the control is higher than a normal control. */
-	EEikControlHasExtraAscent=0x04,
-	/** Flag to determine if a control should be placed directly
-	 in the view/dialog or if it should be placed in a pop-out control. */
-	EEikControlIsNonEditInPlace=0x08
-	};
 
 /** Structure to hold the control specific information. It is used by 
 EikControlFactory.
@@ -66,5 +51,12 @@ class EikControlFactory
 public:
     IMPORT_C static SEikControlInfo CreateByTypeL(TInt aControlType);
 	};
+
+/**
+WARNING: typedef for internal use ONLY.  Compatibility is not guaranteed in future releases.
+@publishedPartner
+@released
+*/
+typedef SEikControlInfo (*TCreateByTypeFunction)(TInt);
 
 #endif	// __EIKFCTRY_H__

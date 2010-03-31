@@ -1,9 +1,9 @@
 // Copyright (c) 2005-2009 Nokia Corporation and/or its subsidiary(-ies).
 // All rights reserved.
 // This component and the accompanying materials are made available
-// under the terms of the License "Symbian Foundation License v1.0" to Symbian Foundation members and "Symbian Foundation End User License Agreement v1.0" to non-members
+// under the terms of "Eclipse Public License v1.0"
 // which accompanies this distribution, and is available
-// at the URL "http://www.symbianfoundation.org/legal/licencesv10.html".
+// at the URL "http://www.eclipse.org/legal/epl-v10.html".
 //
 // Initial Contributors:
 // Nokia Corporation - initial contribution.
@@ -14,24 +14,50 @@
 // Symbian_OS.hrh
 // Configuration options for Symbian OS
 // This file is managed by the Master Codeline Forum
+
+/** This include is for PREQ2621 */
+#include "platform_paths.hrh"
+
 // SYMBIAN_JAVA_NOT_INCLUDED
-// For TB9.1 and later versions, J2ME will no longer be included in the 
+// For Sphinx and later versions, J2ME will no longer be included in the 
 // build.  
-// This #define supports PREQ2545
+// This #define supports PREQ1791
 // 
 //
 
-#include "platform_paths.hrh"
-#define SMPSAFE   /* SMPSAFE keyword removed */
-
-
 /**
  @publishedPartner
+ @released
 */
 #define SYMBIAN_JAVA_NOT_INCLUDED
    
 /**
+@publishedPartner
+@released
+
+SYMBIAN_HCI_API_V2
+                    
+If SYMBIAN_HCI_API_V2 is defined then the HCI APIs provided in PREQ750 
+(Bluetooth HCI improvements) will be required for use by a version 2 
+Bluetooth Stack and a version 2 HCI. These APIs are neither binary nor 
+source compatible with the previous version 1 HCI APIs. Both the original 
+version 1  Bluetooth stack and HCI, and the new version 2 Bluetooth stack 
+and HCI will be built, but both rombuild and the emulator will be 
+configured to use the version 2 binaries. The version 2 HCI will support 
+all commands and events listed in Bluetooth v2.0 specification.
+
+If SYMBIAN_HCI_API_V2 is not defined then only the version 1 Bluetooth 
+stack and HCI will be built and used by rombuild and the emulator.
+The version 1 HCI supports most but NOT all commands and events listed 
+in Bluetooth v2.0 specification.
+
+See BR1613 for more information.
+*/
+#define SYMBIAN_HCI_API_V2
+
+/**
 @publishedAll
+@released
 
 __WATCHER_API_V2__
 
@@ -42,6 +68,7 @@ watcher framework supports ECOM watcher plugins.
 
 /**
 @publishedAll
+@released
 
 __HIDE_WATCHER_API_V1__
 
@@ -58,6 +85,7 @@ Assumes that __WATCHER_API_V2__ has been defined.
 SYMBIAN_TIMEZONE_SUPPORT_V1
 
 @publishedAll
+@released
 
 When SYMBIAN_TIMEZONE_SUPPORT_V1 is defined the App-services TzClient.dll 
 module (and accompanying import library) is made available for client 
@@ -69,6 +97,7 @@ This #define supports PREQ663
 
 /** 
 @publishedAll
+@released
 
 SYMBIAN_ENABLE_MMF_MULTISCREEN_SUPPORT
 
@@ -83,6 +112,7 @@ number in the cone environment.
 
 /**
 @publishedAll
+@released
 
 SYMBIAN_EXTENDED_COMPOSITE_FILESYSTEM
 
@@ -96,6 +126,7 @@ This #define supports PREQ1085
 
 /**
 @publishedPartner
+@released
 
 __SECURE_BIN__
 
@@ -111,6 +142,7 @@ This #define supports PREQ537 "Platform security - file system layout".
 
 /**
 @publishedAll
+@released
 
 SYMBIAN_COREAPPS_API_V2
 
@@ -122,6 +154,7 @@ support a platform secured OS.
 
 /**
 @publishedPartner
+@released
 
 SYMBIAN_APPARC_APPINFO_CACHE
 
@@ -133,6 +166,7 @@ used during subsequent boots for application information.
 
 /**
 @publishedPartner
+@released
 
 SYMBIAN_NETWORKING_IPSEC_IKE_V2
 
@@ -150,6 +184,7 @@ This #define supports PREQ1223.
 
 /**
 @publishedPartner
+@released
 
 SYMBIAN_UIKON_UNIFICATION
 
@@ -163,6 +198,7 @@ This #define supports PREQ819 and PREQ826
 
 /**
 @publishedAll
+@released
 
 __SECURITY_PLATSEC_ARCH__
 
@@ -201,6 +237,7 @@ This #define supports PREQ799.
 
 /**
 @publishedAll
+@released
 
 SYMBIAN_SECURE_ECOM
 
@@ -217,6 +254,7 @@ is fully enforced, only this new style of discovery will work.
 
 /**
 @publishedAll
+@released
 
 SYMBIAN_INETPROTUTILS_RFC3986
 
@@ -233,6 +271,7 @@ This #define implements BR2009.
 
 /**
 @publishedPartner
+@released
 
 SYMBIAN_FONT_METRICS_V2 
 
@@ -252,6 +291,7 @@ If this macro is not defined then these member variables do not exist.
 
 /**
 @publishedAll
+@released
 
 __OBEX_USER_DEFINED_HEADERS__
 
@@ -267,6 +307,7 @@ For more information on see documents shown below.
 
 /**
 @publishedPartner
+@released
 
 SYMBIAN_CENTREP_NOC
 
@@ -281,6 +322,7 @@ This #define supports PREQ1228.
 
 /**
 @publishedPartner
+@released
 @since 8.1
 
 SYMBIAN_BLUETOOTH_REQUIRES_HCI_FLUSH_COMPLETE_EVENT 
@@ -297,6 +339,7 @@ If this macro is not defined, Flush Complete events will be discarded.
 
 /**
 @publishedAll
+@released
 
 SYMBIAN_MULTIMEDIA_CODEC_API
 
@@ -305,9 +348,27 @@ available for PREQ1024 delivered Processing Unit or
 OpenMAX based codecs and Multimedia hardware devices.
 */
 #define SYMBIAN_MULTIMEDIA_CODEC_API
+/** 
+@publishedAll
+@released
+
+
+SYMBIAN_MULTIMEDIA_SUBTITLE_SUPPORT 
+
+Provides support control the presentation of subtitle and closed captioning text
+from video playback controllers in the Multimedia Framework as part of @see CVideoPlayerUtility2.
+Note that this support is dependent on the following being present in ROM: 
+- GCE version of Graphics (migration component)
+- GCE version of Videorender (optional component).
+- The Subtitle plugin (optional component). 
+
+This #define supports PREQ1939 
+*/ 
+#define SYMBIAN_MULTIMEDIA_SUBTITLE_SUPPORT
 
 /**
 @publishedAll
+@released
 
 __MESSAGING_API_V2__
 
@@ -321,6 +382,7 @@ platform secured OS, e.g. the Attachment API.
 
 /**
 @publishedPartner
+@released
 
 SYMBIAN_BOOKMARK_DATABASE
 
@@ -333,6 +395,7 @@ API is present in the platform.
 
 /**
 @publishedPartner
+@released
 
 SYMBIAN_NETWORKING_UMTSR5
 
@@ -349,6 +412,7 @@ This #define supports PREQ192 and PREQ635.
 
 /**
 @publishedPartner
+@released
 
 SYMBIAN_NETWORKING_3GPPDEFAULTQOS
 
@@ -365,6 +429,7 @@ This #define supports PREQ870.
 SYMBIAN_STAGED_SYSTEM_STARTUP
 
 @publishedPartner
+@released
 
 When SYMBIAN_STAGED_SYSTEM_STARTUP is defined, the staged 
 start-up architecture has been introduced into the OS and 
@@ -377,6 +442,7 @@ This #define supports PREQ 810.
 
 /**
 @publishedAll
+@released
 
 __HIDE_IPC_V1__
 
@@ -394,6 +460,7 @@ For more information see the document listed below.
 
 /**
 @publishedPartner
+@released
 
 SYMBIAN_NETWORKING_DHCPSERVER
 
@@ -406,6 +473,7 @@ This #define provides functionality to support PREQ749.
 
 /**  
 @publishedAll 
+@released
 
 SYMBIAN_REMOVE_TRIVIAL_ENCRYPTION
 
@@ -432,6 +500,7 @@ This #define supports PREQ1505
 
 /**
 @publishedPartner
+@released
 
 SYMBIAN_FLEXIBLE_ALARM
 
@@ -450,6 +519,7 @@ This #define supports PREQ1118
 
 /**
 @publishedPartner
+@released
 
 SYMBIAN_PKCS12
 
@@ -462,6 +532,7 @@ This #define supports PREQ1054.
 
 /**
 @publishedAll
+@released
 
 SYMBIAN_MMF_AUTOPAUSE_RESUME
 
@@ -472,6 +543,7 @@ and resume of audio streams.
 
 /**
 @publishedAll
+@released
 
 __SECURE_BACKUP__
 
@@ -488,6 +560,7 @@ restore for licensee PC Connectivity software
 
 /** 
 @publishedAll
+@released
 
 SYMBIAN_NETWORKING_REMOVE_RGENERIC
 
@@ -515,6 +588,7 @@ This #define supports PREQ 26.
 
 /**
 @publishedAll
+@released
 
 SYMBIAN_HIDE_COREAPPS_API_V1
 
@@ -530,6 +604,7 @@ causing a binary compatibility break to match the source compatibility break.
 
 /**
 @publishedAll
+@released
 
 __UI_FRAMEWORKS_V2__
 
@@ -562,7 +637,8 @@ robustness patterns to support future binary compatibility".
 
 /** 
 @publishedPartner 
-  
+@released
+
 SYMBIAN_TELEPHONY_USAT5 
 
 If SYMBIAN_TELEPHONY_USAT5 is defined then support for 3GPP 
@@ -578,6 +654,7 @@ This #define supports PREQ1234.
 SYMBIAN_GENERIC_SYSTEM_STARTUP
 
 @publishedPartner
+@released
 
 This #define enables the generic start-up architecture in
 which the System Starter process is responsible for the
@@ -589,6 +666,7 @@ The #define supports PREQ808 and PREQ809.
 
 /**
 @publishedAll
+@released
 
 SYMBIAN_SECURE_PUBLISH_AND_SUBSCRIBE
 
@@ -602,6 +680,7 @@ can also use this macro.
 
 /**
 @publishedAll
+@released
 
 SYMBIAN_SECURITY_CAF_RFILE_HANDLE
 
@@ -615,6 +694,7 @@ read by CAF.
 
 /**
 @publishedAll
+@released
 
 __JAVACUSTOMINSTALL__
 
@@ -631,6 +711,7 @@ For more information on see documents shown below.
 
 /**  
 @publishedAll 
+@released
 
 SYMBIAN_MDF_API_V2 
 
@@ -645,6 +726,7 @@ streaming and demux.
 
 /**
 @publishedPartner
+@released
 
 SYMBIAN_SMS_REL6_SUPPORT
 
@@ -657,6 +739,7 @@ shall support Release 6 functionality.
 
 /**
 @publishedPartner
+@released
 
 SYMBIAN_SWI_POST_INSTALL_REVOCATION
 
@@ -669,6 +752,7 @@ This #define supports PREQ919
 
 /**
 @publishedPartner
+@released
 
 SYMBIAN_TELEPHONY_IMS
 
@@ -681,6 +765,7 @@ This #define supports PREQ61.
 
 /**
 @publishedPartner
+@released
 
 SYMBIAN_IGNORE_BIN_TARGETPATH
 
@@ -692,6 +777,7 @@ e.g. \epoc32\release\winscw\udeb
 
 /**
 @publishedAll 
+@released
 
 SYMBIAN_COMMS_REPOSITORY
 
@@ -706,6 +792,7 @@ Commdb is deprecated and should not be used, though it remains as a temporary BC
 
 /**
 @publishedAll
+@released
 
 SYMBIAN_VARIABLE_BITRATE_CODEC
 
@@ -719,6 +806,7 @@ Multimedia Framework (MMF) can support variable bitrate codecs.
 
 /**
 @publishedAll
+@released
 
 __SECURE_TELEPHONY__
 
@@ -731,6 +819,7 @@ within the Telephony subsystem is enabled.
 
 /**
 @publishedPartner
+@released
 
 SYMBIAN_CAF_V2
 
@@ -747,7 +836,8 @@ This #define supports PREQ780.
 SYMBIAN_ROM_STATIC_PLUGIN_INFORMATION
 
 @publishedPartner
- 
+@released
+
 This macro enables a consolidation phase in the ROM building 
 process to generate additional metadata for each ROM drive.  
 The metadata describes the content and structure of the ROM 
@@ -762,6 +852,7 @@ eliminate run-time scanning of ROM content.
 
 /**
 @publishedPartner
+@released
 
 SYMBIAN_BLUETOOTH_ESCO_ENABLED
 
@@ -773,6 +864,7 @@ the Synchronous connection commands added in Bluetooth 1.2.
 
 /**
 @publishedPartner
+@released
 
 SYMBIAN_SECURE_MIDLET_INSTALL
 
@@ -787,6 +879,7 @@ installation is achieved through the security\appinst interfaces.
 
 /**
 @publishedAll
+@released
 
 SYMBIAN_UI_FRAMEWORKS_CONTROL_API_V2
 
@@ -804,6 +897,7 @@ the following additional features will be available in CONE.
 
 /**
 @publishedAll
+@released
 
 SYMBIAN_CNTMODEL_V2
 
@@ -817,6 +911,7 @@ This #define supports PREQ811
 
 /**
 @publishedAll
+@released
 
 SYMBIAN_COREAPPS_PLUGIN_API_V2
 
@@ -846,6 +941,7 @@ This macro will be deprecated when a suitable alternative is provided.
 
 /** 
 @publishedPartner
+@released
 
 SYMBIAN_C32ROOT_API_V2
 
@@ -858,6 +954,7 @@ This #define supports PREQ318.
 
 /**
 @publishedAll
+@released
 
 __SECURE_API__
 
@@ -875,6 +972,7 @@ e.g.
 
 /**
 @publishedAll
+@released
 
 __CNF_FORMAT_V2__
 
@@ -889,6 +987,7 @@ version 1 of this file format can be read by Conarc.
 
 /** 
 @publishedPartner 
+@released
 
 SYMBIAN_SUPPORT_LINKED_FONTS 
 
@@ -905,6 +1004,7 @@ This #define supports PREQ1431.
 
 /**
 @publishedPartner
+@released
 
 SYMBIAN_SECURE_DBMS
 
@@ -917,6 +1017,7 @@ take the form of dummy implementations which return KErrNone.
 
 /**
 @publishedAll
+@released
 
 SYMBIAN_ASSUME_SECURE_DATA
 
@@ -941,6 +1042,7 @@ __KEYSTORE_API_V2__
 
 /**
 @publishedAll
+@released
 
 __SECURE_DATA__
 
@@ -955,6 +1057,7 @@ This #define supports PREQ537 "Platform security - file system layout".
 
 /**
 @publishedAll
+@released
 
 SYMBIAN_NETWORKING_PLATSEC
 
@@ -966,6 +1069,7 @@ subsystems (e.g. API policing).
 
 /**
 @publishedAll
+@released
 
 __CONDITIONS_SCHEDULES_VALID__
 
@@ -1000,6 +1104,7 @@ This macro supports PREQ519 "Implement User::Leave() in terms of throw()".
 
 /**
 @publishedAll
+@released
 
 __BLUETOOTH_API_V2__
 
@@ -1022,6 +1127,7 @@ will be built.
 
 /**
 @publishedAll
+@released
 
 __BLUETOOTH_HCI_ALLOWS_AFH__
 
@@ -1037,6 +1143,7 @@ The APIs provided by the HCI DLL were classified as published-partner.
 
 /**
 @publishedAll
+@released
 
 EKA2
 
@@ -1052,6 +1159,7 @@ Kernel Architecture 1 is a defining property of the Beech platform.
 
 /**
 @publishedPartner
+@released
 
 SYMBIAN_GRAPHICS_ALPHA_SUPPORT_V1
 
@@ -1066,6 +1174,7 @@ This #define supports PREQ915.
 
 /**
 @publishedPartner
+@released
 
 __SECURE_SOFTWARE_INSTALL__
 
@@ -1079,6 +1188,7 @@ This #define supports PREQ56 "Software install enhancements"
 
 /**
 @publishedPartner
+@released
 
 SYMBIAN_ESOCK_V3
 
@@ -1093,6 +1203,7 @@ This #define supports PREQ318.
 
 /**
 @publishedAll
+@released
 
 SYMBIAN_CURB_SYSTEMSERVER_PRIORITIES
 
@@ -1121,36 +1232,38 @@ SYMBIAN_CRYPTO
 */
 #define SYMBIAN_CRYPTO
 
+/**
+@internalAll
+SYMBIAN_J2ME_USE_CALENDAR
+                
+Internal macro - do not use outside Symbian code.
+*/
+#define SYMBIAN_J2ME_USE_CALENDAR
+
 
 /**
 @publishedPartner
+@released
 
-SYMBIAN_GRAPHICS_BUILD_WSERV2
+SYMBIAN_CENREPNOTIFIERHANDLER
 
-If SYMBIAN_GRAPHICS_BUILD_WSERV2 is defined WServ2 binaries are built and can be used instead of WSERV1 versions
+If SYMBIAN_CENREPNOTIFIERHANDLER is defined, the Central 
+Repository notifier handler is present.
+
+@see CCenRepNotifyHandler
+@see MCenRepNotifyHandlerCallback
+
+This #define supports PREQ1802. 
 */
-#define SYMBIAN_GRAPHICS_BUILD_WSERV2
+#define SYMBIAN_CENREPNOTIFIERHANDLER
 
-/**
-@publishedPartner
-
-SYMBIAN_HCI_API_V2
-
-If SYMBIAN_HCI_API_V2 is defined then the HCI APIs provided in PREQ750 (Bluetooth HCI improvements) will be required for use by a version 2 Bluetooth Stack and a version 2 HCI. These APIs are neither binary nor source compatible with the previous version 1 HCI APIs. Both the original version 1  Bluetooth stack and HCI, and the new version 2 Bluetooth stack and HCI will be built, but both rombuild and the emulator will be configured to use the version 2 binaries. The version 2 HCI will support all commands and events listed in Bluetooth v2.0 specification.
-
-If SYMBIAN_HCI_API_V2 is not defined then only the version 1 Bluetooth stack and HCI will be built and used by rombuild and the emulator.
-The version 1 HCI supports most but NOT all commands and events listed in Bluetooth v2.0 specification.
-
-See BR1613 for more information.
-*/
-#define SYMBIAN_HCI_API_V2
 
 /**
 @publishedAll
 @released
 
 SYMBIAN_BAFL_SYSUTIL
-
+ 
 If SYMBIAN_BAFL_SYSUTIL is defined, the bafl sysutil.dll is present, 
 providing APIs for obtaining system version information and 
 APIs for monitoring free disk space.
@@ -1160,7 +1273,8 @@ APIs for monitoring free disk space.
 
 This #define supports PREQ1802.
 */
-#define SYMBIAN_BAFL_SYSUTIL 
+#define SYMBIAN_BAFL_SYSUTIL
+
 
 /**
 @publishedPartner
@@ -1176,24 +1290,49 @@ start and/or end of a period of user inactivity.
 
 This #define supports PREQ1802.
 */
-#define SYMBIAN_BAFL_ACTIVITYMGR 
+#define SYMBIAN_BAFL_ACTIVITYMGR
+
 
 /**
 @publishedPartner
+@released
 
-SYMBIAN_CENREPNOTIFIERHANDLER
+SYMBIAN_CLIENTPROV_V2
 
-If SYMBIAN_CENREPNOTIFIERHANDLER is defined, the Central 
-Repository notifier handler is present.
+If SYMBIAN_CLIENTPROV_V2 is defined then the client provisioning
+documents will be pushed to Inbox by default, and a new API is
+added to submit the documents from Inbox back to CPAgent.
 
-@see CCenRepNotifyHandler
-@see MCenRepNotifyHandlerCallback
+@see RCpMsvDocInputSession
 
-This #define supports PREQ1802. 
+This is a source and binary compatibility break: see BR2092.
+
+This #define supports PREQ1664
 */
-#define SYMBIAN_CENREPNOTIFIERHANDLER
+#define SYMBIAN_CLIENTPROV_V2
+
+
+ /**
+@publishedPartner
+@released
+
+SYMBIAN_CRYPTOSPI
+
+The SYMBIAN_CRYPTOSPI flag indicates that the Crypto SPI is present.
+Crypto SPI (Service Provider Interface) supports licensee-pluggable 
+cryptographic algorithms (e.g. for enabling hardware acceleration), 
+and also allows for future extensibility of the cryptography 
+interfaces (e.g. for supporting future hashes and ciphers and 
+to support non-extractable private keys). 
+
+This #define supports PREQ57.
+*/
+#define SYMBIAN_CRYPTOSPI
+
+
 /**
 @publishedPartner 
+@released
 
 SYMBIAN_C32_SERCOMMS_V2
 
@@ -1207,17 +1346,109 @@ This #define supports PREQ890
 */
 #define SYMBIAN_C32_SERCOMMS_V2
 
+
 /**
-@internalAll
+@publishedPartner
+@released
 
-SYMBIAN_J2ME_USE_CALENDAR
+SYMBIAN_DEVMAN_BEARER_CONFIGURABLE
 
-Internal macro - do not use outside Symbian code.
+If SYMBIAN_DEVMAN_BEARER_CONFIGURABLE is defined then the 
+device management support for network bearers can configured 
+using the resource file 'dmnapddf.rss'
+
+This #define supports CR1011
 */
-#define SYMBIAN_J2ME_USE_CALENDAR
+#define SYMBIAN_DEVMAN_BEARER_CONFIGURABLE
+
+
+/**
+@publishedPartner
+@released
+
+SYMBIAN_NETWORKING_DHCP_MSG_HEADERS
+
+If SYMBIAN_NETWORKING_DHCP_MSG_HEADERS is defined, the 
+Symbian OS DHCPv4 daemon supports retrieval of 
+DHCP message header fields and also 'Parameter Request List' 
+in the DHCP request message to the remote DHCP server is 
+configurable.
+
+This #define supports PREQ1647 and PREQ1648
+*/
+#define SYMBIAN_NETWORKING_DHCP_MSG_HEADERS
+
+
+
+/** 
+@publishedAll
+@released
+
+SYMBIAN_DRM_3RD_PARTY_PLAYBACK
+
+If SYMBIAN_DRM_3RD_PARTY_PLAYBACK is defined, the Multimedia Framework
+supports the playback of DRM-protected content by processes which do not 
+have the DRM capability.
+
+@see RMMFController
+
+This #define supports CR1058.
+*/
+#define SYMBIAN_DRM_3RD_PARTY_PLAYBACK
+
+
+/**
+@publishedAll
+@released
+
+SYMBIAN_USE_MMF_RUF_RECOGNIZER
+
+If SYMBIAN_USE_MMF_RUF_RECOGNIZER is defined, the MMF recognizer is able to 
+recognize formats such as MPEG4, MPEG2, AAC and Divx.
+*/
+#define SYMBIAN_USE_MMF_RUF_RECOGNIZER
+
 
 /** 
 @publishedPartner 
+@released
+
+SYMBIAN_ENABLE_1630_JPEG_EXTENSIONS 
+
+If SYMBIAN_ENABLE_1630_JPEG_EXTENSIONS is defined, the Symbian JPEG 
+codec implements the PREQ1630 ICL API extensions. 
+
+@see CImageDecoder::SetClippingRectL
+@see CImageDecoder::GetDestinationSize
+@see CImageDecoder::PrepareL
+@see CImageDecoder::OperationL
+@see CImageDecoder::ScalerL
+@see CImageDecoder::BlockStreamerL
+@see CImageEncoder::PrepareL
+@see CImageEncoder::OperationL
+@see CImageEncoder::BlockStreamerL
+
+This #define supports PREQ1630. 
+*/
+#define SYMBIAN_ENABLE_1630_JPEG_EXTENSIONS
+
+/**
+@publishedPartner
+@released
+
+SYMBIAN_LFFS_SIBLEY_NORFLASH
+
+If SYMBIAN_LFFS_SIBLEY_NORFLASH is defined support for LFFS on 
+Intel Sibley NOR flash is enabled.
+
+This #define supports PREQ912 and involves a BC break in the 
+parameter list for DMediaDriverFlash::Caps() - see BR1680 for details.
+*/
+#define SYMBIAN_LFFS_SIBLEY_NORFLASH
+
+ /** 
+@publishedPartner 
+@released
 
 SYMBIAN_LOCATION_PRIVACY_V2 
 
@@ -1229,11 +1460,13 @@ This #define supports PREQ1660.
 */
 #define SYMBIAN_LOCATION_PRIVACY_V2
 
+
 /** 
 @publishedPartner 
+@released
 
 SYMBIAN_MDF_SHAREDCHUNK_SOUNDDRIVER
-
+	
 If SYMBIAN_MDF_SHAREDCHUNK_SOUNDDRIVER is defined, the Media Device
 Framework (MDF) will use the RSoundSc sound driver interface.
 If this macro is not defined, MDF will use the older RMdaDevSound interface.
@@ -1247,8 +1480,234 @@ of RMdaDevSound.
 */
 #define SYMBIAN_MDF_SHAREDCHUNK_SOUNDDRIVER
 
+
+/**
+@publishedPartner
+@released
+
+SYMBIAN_MESSAGESTORE_USING_SQLDB
+
+If SYMBIAN_MESSAGESTORE_USING_SQLDB is defined then messaging server
+uses the SQLite database to store message index data.
+*/
+#define SYMBIAN_MESSAGESTORE_USING_SQLDB
+
+
+/**
+@publishedAll
+@released
+
+SYMBIAN_WSERV_AND_CONE_MULTIPLE_SCREENS 
+
+If SYMBIAN_WSERV_AND_CONE_MULTIPLE_SCREENS is defined, new
+APIs are provided in cone.lib and ws32.lib which allow 
+applications to draw to multiple displays simultaneously and 
+react to a change of the active display.
+
+This #define supports PREQ1227
+
+@see CCoeEnv::ScreenDevice
+@see CScreenItem
+*/
+#define SYMBIAN_WSERV_AND_CONE_MULTIPLE_SCREENS
+
+
 /** 
-@publishedPartnerProto 
+@publishedPartner 
+@released
+
+SYMBIAN_POWER_RESOURCE_MANAGER_API 
+
+If SYMBIAN_POWER_RESOURCE_MANAGER_API is defined, the Power Resource 
+Manager is available. 
+
+@see PowerResourceManager 
+@see DPowerResourceController 
+
+This #define supports PREQ1398. 
+*/
+#define SYMBIAN_POWER_RESOURCE_MANAGER_API
+
+
+/**
+@publishedAll
+@released
+
+SYMBIAN_PROCESS_MONITORING_AND_STARTUP
+
+If defined, the System Startup architecture supports dynamic startup
+for after market applications, and provides the SysMon process to
+monitor critical system processes.
+
+@see DscStore::Connect
+@see ERestartOS
+
+This define supports PREQ871 and PREQ1089.
+*/
+#define SYMBIAN_PROCESS_MONITORING_AND_STARTUP
+
+
+/** 
+@publishedAll 
+@released
+
+SYMBIAN_TUNER_RDS_ANNOUNCEMENT 
+
+If SYMBIAN_TUNER_RDS_ANNOUNCEMENT is defined, the RDS Tuner API 
+is provided, allowing applications to be notified if the radio
+is retuned to another station in order to listen to an announcement.  
+
+@see MMMRdsTunerUtilityImpl 
+@see MMMRdsAnnouncementObserver2 
+@see CMMRdsTunerUtility 
+
+This #define supports CR1097. 
+*/
+#define SYMBIAN_TUNER_RDS_ANNOUNCEMENT
+
+
+/** 
+@publishedAll
+@released
+
+SYMBIAN_USER_PROMPT_SERVICE
+
+If SYMBIAN_USER_PROMPT_SERVICE is defined, the User Prompt 
+Service is available, allowing system servers to prompt the 
+user to make a security decision about a request from a client 
+application, e.g. "Allow application X to send an SMS message?" 
+
+@see RupSubsession::Authorise 
+
+This #define is associated with PREQ1262.
+*/ 
+#define SYMBIAN_USER_PROMPT_SERVICE
+
+
+
+/** 
+@publishedPartner 
+@released
+
+SYMBIAN_MULTIMEDIA_MUF 
+
+If SYMBIAN_MULTIMEDIA_MUF is defined, then the PREQ1823 Multimedia 
+Metadata Utility Framework is delivered in to the OS.
+
+@see CMetaDataClientUtility
+@see CMUFParserType
+@see MMUFObserver
+@see CMetaDataFieldsArray
+@see CMetaDataFieldItem
+@see CMetaDataParser
+
+This #define supports PREQ1823. 
+*/
+#define SYMBIAN_MULTIMEDIA_MUF
+
+
+/**
+@publishedAll
+@released
+
+SYMBIAN_MBUFMANAGER_V2
+
+
+SYMBIAN_MBUFMANAGER_V2 make several changes in 
+the CMBufManager including multiple sized RMBuf's.
+This #define supports REQ7857, REQ7860, REQ7864, REQ8585, REQ8586
+developed as part of PREQ1248.
+These changes introduces a BR-2242.
+*/
+#define	SYMBIAN_MBUFMANAGER_V2
+
+
+/**
+@publishedPartner
+@released
+
+SYMBIAN_FEATURE_MANAGER
+
+If SYMBIAN_FEATURE_MANAGER is defined then the Feature Registry 
+functionality is implemented via the Feature Manager, with
+corresponding changes in the ROM building tools.
+
+This #define supports PREQ1645
+*/
+#define SYMBIAN_FEATURE_MANAGER
+
+
+/**
+@publishedAll
+@released
+
+SYMBIAN_BUILD_GCE
+
+If SYMBIAN_BUILD_GCE is defined, the Surface Manager and Graphics 
+Composition Engine APIs are available at build time.
+
+@see RWindowBase::SetBackgroundSurface
+@see RSurfaceManager
+@see RSurfaceUpdateSession
+
+Note that the Surface Manager and GCE executables are optional, 
+and will not be present in the ROM or the emulator unless 
+appropriately configured.
+
+This #define supports PREQ1007 and PREQ1019
+*/
+#define SYMBIAN_BUILD_GCE
+
+
+/** 
+@publishedAll 
+@released
+
+SYMBIAN_NON_SEAMLESS_NETWORK_BEARER_MOBILITY 
+
+If SYMBIAN_NON_SEAMLESS_NETWORK_BEARER_MOBILITY is defined 
+then the comms-infras framework supports the management plane 
+with the RCommsManager API providing support for connection 
+selection, bearer mobility and other functionality.
+
+This #define supports PREQ 1060 and PREQ 399. 
+*/
+#define SYMBIAN_NON_SEAMLESS_NETWORK_BEARER_MOBILITY
+
+/**
+@publishedPartner
+@released
+
+SYMBIAN_CAF_STREAMING
+
+If SYMBIAN_CAF_STREAMING is defined then CAF provides support for 
+streamed broadcast protection standards, such as DVB-H or OMA DRM BCAST.
+
+This #define supports PREQ782
+*/
+#define SYMBIAN_CAF_STREAMING
+
+
+/** 
+@publishedPartner
+@released
+
+SYMBIAN_ENABLE_USB_OTG_HOST
+
+If SYMBIAN_ENABLE_USB_OTG_HOST is defined, executables related 
+to USB Host and USB OTG will be built in addition to the 
+existing support for USB Client.
+
+These additional components are necessary to enable building a 
+ROM incorporating USB Client, Host and OTG functionality.
+
+This #define supports PREQ1782
+*/			
+#define SYMBIAN_ENABLE_USB_OTG_HOST
+
+/** 
+@publishedPartner
+@released
 
 SYMBIAN_MULTIMEDIA_A3FDEVSOUND 
 
@@ -1257,4 +1716,364 @@ present in the Advanced Audio Adaptation Framework
 
 This #define supports PREQ1540. 
 */
-#define SYMBIAN_MULTIMEDIA_A3FDEVSOUND
+#define SYMBIAN_MULTIMEDIA_A3FDEVSOUND 
+
+/**
+@publishedAll
+@released
+
+SYMBIAN_OS_EXCLUDE_DMCPDS
+
+When this macro is enabled, OMA dataSync, Device Management and Client Provisioning protocol 
+implementations will be excluded.
+
+This #define supports PREQ2474.
+*/	
+#define SYMBIAN_OS_EXCLUDE_DMCPDS
+
+/**
+@publishedPartner
+@released
+
+SYMBIAN_USB_RNDIS
+		
+If SYMBIAN_USB_RNDIS is defined, SYMBIAN OS will provide USB Remote NDIS class (this affects Bluetooth PAN as well).
+
+This #define supports PREQ1872.
+*/
+#define SYMBIAN_USB_RNDIS
+
+/**
+@internalAll
+@released
+
+SYMBIAN_ALARM_REPEAT_EXTENSIONS
+If SYMBIAN_ALARM_REPEAT_EXTENSIONS is defined then the client APIs delivered by PREQ2069 will be avilable.
+These APIs introduce an additional alarm repeat definition and a new alarm expiry behaviour. 
+
+#define supports PREQ2069.
+*/
+#define SYMBIAN_ALARM_REPEAT_EXTENSIONS
+
+/** 
+@publishedPartner 
+
+SYMBIAN_BAFL_MULTIPARTPARSER 
+
+If SYMBIAN_BAFL_MULTIPARTPARSER is defined then the BAFL 
+component provides the MultipartParser.dll functionality. 
+
+This #define supports PREQ2051. 
+*/
+#define SYMBIAN_BAFL_MULTIPARTPARSER
+
+/**
+@internalAll
+@released
+
+SYMBIAN_CENTREP_SUPPORT_MULTIROFS
+
+If SYMBIAN_CENTREP_SUPPORT_MULTIROFS is defined, centralrepository client
+will be able to define keyspaces that are composed of multiple files in different ROFS layers.
+
+This #define supports PREQ2112
+*/
+#define SYMBIAN_CENTREP_SUPPORT_MULTIROFS
+
+/**
+@publishedPartner
+@released
+
+SYMBIAN_DNS_PROXY
+
+If SYMBIAN_DNS_PROXY is defined, SYMBIAN OS will provide DNS Proxy Service.
+
+This define supports PREQ1684.
+*/
+#define SYMBIAN_DNS_PROXY
+
+/**
+@publishedPartner
+@released
+
+SYMBIAN_DNS_PUNYCODE
+
+If SYMBIAN_DNS_PUNYCODE is defined, this will enable punycode conversion 
+functionality in the system. If SYMBIAN_DNS_PUNYCODE is enabled, then the DND 
+can resolve the International Domain Names also. As per the requirement, application 
+can use this punycode conversion.
+
+This define supports PREQ2296.
+*/
+#define SYMBIAN_DNS_PUNYCODE
+
+/**
+@publishedAll
+
+SYMBIAN_ENABLE_64_BIT_FILE_SERVER_API
+
+Enables the File Server Client side API for large file access (file size greater than 2GB - 1).
+Enables the configurable part of File Server side to support large files.
+
+This #define supports PREQ1725
+*/
+#define SYMBIAN_ENABLE_64_BIT_FILE_SERVER_API
+
+/**
+@publishedPartner
+@released
+
+SYMBIAN_ENABLE_FAT_DIRECTORY_OPT
+
+If SYMBIAN_ENABLE_FAT_DIRECTORY_OPT is defined, a size-configurable
+Leaf Directory Name Caching and optimisations to file creation operations
+is enabled to improve performance of locating leaf directories and
+file creation on FAT volumes.
+
+This #define supports PREQ1885.
+*/
+#define SYMBIAN_ENABLE_FAT_DIRECTORY_OPT
+
+/** 
+@publishedAll
+@released
+
+SYMBIAN_EUSERHL
+
+EUserHl generic usability library
+
+This #define supports PREQ2177
+*/
+#define SYMBIAN_EUSERHL
+
+/**
+@publishedPartner
+SYMBIAN_LOCATION_BTGPSCONFIG
+
+Allows applications that use the LBS subsystem to automatically utilize the best Bluetooth GPS positioning source
+available (rather than be manually configured to a particular Bluetooth GPS device)
+
+*/
+#define SYMBIAN_LOCATION_BTGPSCONFIG
+
+/**
+@publishedAll
+@released
+
+SYMBIAN_MESSAGESTORE_ENHANCED_SEARCH
+
+If SYMBIAN_MESSAGESTORE_ENHANCED_SEARCH is defined then the client 
+side of  messaging server provides enhanced search capabilities.
+*/
+#define SYMBIAN_MESSAGESTORE_ENHANCED_SEARCH
+
+/** 
+@publishedPartner 
+@released 
+
+SYMBIAN_NETWORKING_ADDRESS_PROVISION 
+
+If SYMBIAN_NETWORKING_ADDRESS_PROVISION is defined, this will enable 
+the DHCP server to provide IP address to the client based on its 
+hardware address, this hardware address is provisioned by the 
+application which is loading the DHCP server. Also NAPT will 
+forward any packets to the uplink only if the source address is 
+provisioned. 
+
+This define supports PREQ1872. 
+*/
+#define SYMBIAN_NETWORKING_ADDRESS_PROVISION
+
+/**
+
+@internalComponent
+
+SYMBIAN_OE_LIBRT
+
+If SYMBIAN_OE_LIBRT is defined, the open environment component will be extended to include the 
+Symbian OS port of the latest version of librt ("realtime") open source library. 
+
+This #define supports PREQ1974
+
+*/
+#define SYMBIAN_OE_LIBRT
+
+/**
+
+@internalComponent
+
+SYMBIAN_OE_POSIX_SIGNALS
+
+If SYMBIAN_OE_POSIX_SIGNALS is enabled, the libc component will use POSIX signals emulation.
+
+This #define supports PREQ1579
+
+*/
+#define SYMBIAN_OE_POSIX_SIGNALS
+
+/**
+@publishedPartner
+
+SYMBIAN_SDP_IPSEC_VOIP_SUPPORT
+
+If SYMBIAN_SDP_IPSEC_VOIP_SUPPORT is defined, then PREQ1853 APIs enable use of the cipher based MAC evaluation 
+and psuedo random generation algorithms (AES-XCBC-MAC-96 and AES-XCBC-PRF-128 respectively) through a new MAC
+interface introduced in the CryptoSpi framework.
+
+Tbis #define supports PREQ1853
+*/
+#define SYMBIAN_SDP_IPSEC_VOIP_SUPPORT
+
+/**
+@internalAll
+@released
+
+SYMBIAN_SKIPPED_CALENDAR_ALARMS
+
+If SYMBIAN_SKIPPED_CALENDAR_ALARMS is present then the alarm server shall
+persist details of missed calendar alarms and clients shall be able to 
+retrieve the list of missed calendar alarms from the Alarm server client API.
+
+This supports PREQ2088.
+*/
+#define SYMBIAN_SKIPPED_CALENDAR_ALARMS
+
+/** 
+@internalTechnology
+
+SYMBIAN_SSM_FLEXIBLE_MERGE 
+
+When SYMBIAN_SSM_FLEXIBLE_MERGE is enabled then flexible merging 
+of startup command lists based on priority is supported.
+
+This define supports PREQ1871.
+*/
+#define SYMBIAN_SSM_FLEXIBLE_MERGE
+
+/** 
+@internalAll 
+
+SYMBIAN_SSM_GRACEFUL_SHUTDOWN 
+
+If SYMBIAN_SSM_GRACEFUL_SHUTDOWN is defined, this will enable
+Staged Shutdown of the device,	which allows definition of
+a policy to specify the order for notifying registered
+components of shutdown, allowing them to perform any necessary
+tasks before the device completes its shutdown.
+
+This define supports PREQ2326.
+*/
+#define SYMBIAN_SSM_GRACEFUL_SHUTDOWN
+
+/**
+@publishedPartner
+@released
+
+SYMBIAN_STRICT_EXPLICIT_SOCKET_BINDING
+
+If SYMBIAN_STRICT_EXPLICIT_SOCKET_BINDING is defined then
+the TCP/IP stack shall support explictly bound sockets.
+If a socket is explicitly bound and a packet arrives on an interface
+that the socket isn't bound to, then the packet should be dropped.
+
+This define supports PREQ2279.
+*/
+#define SYMBIAN_STRICT_EXPLICIT_SOCKET_BINDING
+
+/**
+@publishedAll
+
+SYMBIAN_SWI_RUN_ON_INSTALL_COMPLETE
+
+This new Macro will enable the support for new run option for SIS files . When executables/files inside 
+SIS file marked with this new run option, they will be executed at the end of the successful installation.
+
+This #define supports PREQ2264, CR1544
+*/
+#define SYMBIAN_SWI_RUN_ON_INSTALL_COMPLETE
+
+/** 
+@publishedPartner
+@released
+
+SYMBIAN_SYSTEM_STATE_MANAGEMENT 
+
+If SYMBIAN_SYSTEM_STATE_MANAGEMENT is defined, this will enable 
+the System State Management Architecture, which supports the 
+concept of system states (including startup, normal operation, 
+shutdown, and failure) and associated behaviour, and facilitates 
+the transitioning between them according to licensee-defined 
+policies and procedures.
+
+This define supports PREQ1871.
+*/
+#define SYMBIAN_SYSTEM_STATE_MANAGEMENT
+
+/**
+@internalAll
+
+SYMBIAN_WRITABLE_DATA_PAGING
+
+This System Wide Define will be used to issue a warning when a rom is built that enables data paging on a 
+version of the OS for which data paging is not warranted.
+
+This #define supports PREQ1954
+*/
+#define SYMBIAN_WRITABLE_DATA_PAGING
+
+/**
+@publishedPartner
+@released
+
+SYMBIAN_ZERO_COPY_NETWORKING
+
+If SYMBIAN_ZERO_COPY_NETWORKING is defined the Comms Stack switches from using single memory pool overseen
+by MBufManager to multiple, HW specific pools. With SYMBIAN_ZERO_COPY_NETWORKING defined link-level flows
+can avoid copying data when communicating with the respective HW drivers.
+
+This #define supports PREQ2106.
+*/
+#define SYMBIAN_ZERO_COPY_NETWORKING
+
+/** 
+@publishedPartner 
+@released
+
+SYMBIAN_ENABLE_SPLIT_HEADERS
+
+When this is not defined, header files, that have been split, #include the extra header files to disable the source break. When this is defined, the headers have been fully split and the source break is enabled.
+
+This #define supports PREQ2740 and other splitting "mixed" header file PREQs. 
+*/
+
+#define SYMBIAN_ENABLE_SPLIT_HEADERS
+
+/**
+@publishedAll
+@released
+
+SYMBIAN_OE_LIBSTDCPP
+
+If SYMBIAN_OE_LIBSTDCPP is defined, the open environment component will be extended to include the standard new and delete operators, and STDxxx targets will be linked against stdnew.lib for ARM builds, while other targets will be linked against scppnwdl.lib for Emulator builds.
+
+This #define supports PREQ1184
+*/
+#define SYMBIAN_OE_LIBSTDCPP
+
+/**
+@publishedPartner
+@released
+
+SYMBIAN_E32_ATOMIC_API
+
+If SYMBIAN_E32_ATOMIC_API is defined the header file e32atomics.h is available
+and should be used in preference to hand-coding ARM atomic instructions.
+*/
+#define SYMBIAN_E32_ATOMIC_API
+
+/**
+SYMBIAN_GRAPHICS_BUILD_OPENWF_WSERV
+
+If SYMBIAN_GRAPHICS_BUILD_OPENWF_WSERV, the windowserver component is built to use the OpenWF version of NGA.
+*/
+#define SYMBIAN_GRAPHICS_BUILD_OPENWF_WSERV

@@ -16,11 +16,9 @@
 */
 
 
-
-
 /**
  @file
- @publishedPartner
+ @publishedAll
  @released
 */
 
@@ -48,8 +46,6 @@ namespace ContentAccess
 	it removes the risk of losing information during the unicode to 8 bit 
 	conversion.
 
-	@publishedPartner
-	@released
 	*/
 	class CMetaDataArray : public CBase
 		{

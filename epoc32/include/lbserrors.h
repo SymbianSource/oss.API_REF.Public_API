@@ -1,9 +1,9 @@
 // Copyright (c) 2003-2009 Nokia Corporation and/or its subsidiary(-ies).
 // All rights reserved.
 // This component and the accompanying materials are made available
-// under the terms of the License "Symbian Foundation License v1.0" to Symbian Foundation members and "Symbian Foundation End User License Agreement v1.0" to non-members
+// under the terms of "Eclipse Public License v1.0"
 // which accompanies this distribution, and is available
-// at the URL "http://www.symbianfoundation.org/legal/licencesv10.html".
+// at the URL "http://www.eclipse.org/legal/epl-v10.html".
 //
 // Initial Contributors:
 // Nokia Corporation - initial contribution.
@@ -17,7 +17,7 @@
 #define __LBSERRORS_H__
 
 #include <e32def.h>
-#include <lbs/lbsvariant.h>
+#include <lbsvariant.h>
 
 /**
 LBS Panic string
@@ -120,8 +120,8 @@ const TInt KPositionCalculationFutile = 4;
 Code indicating that the assistance data response asks for a reset of the assistance data, as 
 shown by the data mask.
 
-@publishedPartner
-@prototype
+@publishedAll
+@released
  */
 const TInt KPositionAssistanceDataReset = 5;
 
@@ -229,7 +229,7 @@ const TInt KErrPositionHighPriorityReceive		= KPositionNetworkErrorBase - 7; //-
 Indicates an error due to no network coverage.
 
 @publishedAll
-@prototype
+@released
  */
 const TInt KErrPositionNetworkUnavailable					= KPositionNetworkErrorBase - 8; //-18309
 

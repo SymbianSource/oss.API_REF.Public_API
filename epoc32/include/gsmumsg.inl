@@ -1,9 +1,9 @@
 // Copyright (c) 1999-2009 Nokia Corporation and/or its subsidiary(-ies).
 // All rights reserved.
 // This component and the accompanying materials are made available
-// under the terms of the License "Symbian Foundation License v1.0" to Symbian Foundation members and "Symbian Foundation End User License Agreement v1.0" to non-members
+// under the terms of "Eclipse Public License v1.0"
 // which accompanies this distribution, and is available
-// at the URL "http://www.symbianfoundation.org/legal/licencesv10.html".
+// at the URL "http://www.eclipse.org/legal/epl-v10.html".
 //
 // Initial Contributors:
 // Nokia Corporation - initial contribution.
@@ -12,9 +12,6 @@
 //
 // Description:
 //
-
-
-
 
 /**
  @file
@@ -26,7 +23,7 @@
 */
 inline CSmsPDU::TSmsPDUType CSmsMessage::Type() const
 	{
-	return iSmsPDU->Type();
+	return SmsPDU().Type();
 	}
 
 
@@ -169,7 +166,7 @@ inline const CSmsPDU& CSmsMessage::SmsPDU() const
  */
 inline TPtrC CSmsMessage::ServiceCenterAddress() const
 	{
-	return iSmsPDU->ServiceCenterAddress();
+	return SmsPDU().ServiceCenterAddress();
 	}
 
 
@@ -180,7 +177,7 @@ inline TPtrC CSmsMessage::ServiceCenterAddress() const
  */
 inline void CSmsMessage::SetServiceCenterAddressL(const TDesC& aAddress)
 	{
-	iSmsPDU->SetServiceCenterAddressL(aAddress);
+	SmsPDU().SetServiceCenterAddressL(aAddress);
 	}
 
 
@@ -191,7 +188,7 @@ inline void CSmsMessage::SetServiceCenterAddressL(const TDesC& aAddress)
  */
 inline void CSmsMessage::ParsedServiceCenterAddress(TGsmSmsTelNumber& aParsedAddress) const
 	{
-	iSmsPDU->ParsedServiceCenterAddress(aParsedAddress);
+	SmsPDU().ParsedServiceCenterAddress(aParsedAddress);
 	}
 
 
@@ -202,7 +199,7 @@ inline void CSmsMessage::ParsedServiceCenterAddress(TGsmSmsTelNumber& aParsedAdd
  */
 inline void CSmsMessage::SetParsedServiceCenterAddressL(const TGsmSmsTelNumber& aParsedAddress)
 	{
-	iSmsPDU->SetParsedServiceCenterAddressL(aParsedAddress);
+	SmsPDU().SetParsedServiceCenterAddressL(aParsedAddress);
 	}
 
 
@@ -213,7 +210,7 @@ inline void CSmsMessage::SetParsedServiceCenterAddressL(const TGsmSmsTelNumber& 
  */
 inline TPtrC CSmsMessage::ToFromAddress() const
 	{
-	return iSmsPDU->ToFromAddress();
+	return SmsPDU().ToFromAddress();
 	}
 
 
@@ -224,7 +221,7 @@ inline TPtrC CSmsMessage::ToFromAddress() const
  */
 inline void CSmsMessage::SetToFromAddressL(const TDesC& aAddress)
 	{
-	iSmsPDU->SetToFromAddressL(aAddress);
+	SmsPDU().SetToFromAddressL(aAddress);
 	}
 
 
@@ -235,7 +232,7 @@ inline void CSmsMessage::SetToFromAddressL(const TDesC& aAddress)
  */
 inline void CSmsMessage::ParsedToFromAddress(TGsmSmsTelNumber& aParsedAddress) const
 	{
-	iSmsPDU->ParsedToFromAddress(aParsedAddress);
+	SmsPDU().ParsedToFromAddress(aParsedAddress);
 	}
 
 
@@ -246,7 +243,7 @@ inline void CSmsMessage::ParsedToFromAddress(TGsmSmsTelNumber& aParsedAddress) c
  */
 inline void CSmsMessage::SetParsedToFromAddressL(const TGsmSmsTelNumber& aParsedAddress)
 	{
-	iSmsPDU->SetParsedToFromAddressL(aParsedAddress);
+	SmsPDU().SetParsedToFromAddressL(aParsedAddress);
 	}
 
 
@@ -293,7 +290,7 @@ inline void CSmsMessage::SetIsDecoded(TBool aIsDecoded)
  */
 inline TBool CSmsMessage::BinaryData() const
 	{
-	return iSmsPDU->UserData().IsBinaryData();
+	return SmsPDU().UserData().IsBinaryData();
 	}
 
 

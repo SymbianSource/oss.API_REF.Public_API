@@ -16,11 +16,10 @@
 */
 
 
-
-
 /**
  @file 
- @internalAll 
+ @publishedAll
+ @released
 */
  
 #ifndef __WTLSCERTCHAIN_H__
@@ -37,8 +36,7 @@ class TWTLSValidationStatus
 * Some errors cannot be blamed on any single certificate, in which case the 
 * iCert value is meaningless. The same structure is used for errors and for warnings. 
 *
-* @publishedAll
-* @released */
+*/
 	{
 public:
 	/** Creates a validation status object.
@@ -59,8 +57,7 @@ class CWTLSValidationResult : public CBase
 * 
 * It is returned to client code, which can examine it. Client code takes ownership of it. 
 *
-* @publishedAll
-* @released */
+*/
 	{
 public:
 	/** Creates a new CWTLSValidationResult object and puts a pointer to it on the 
@@ -127,8 +124,7 @@ class CWTLSCertChainAO;
 class CWTLSCertChain : public CBase
 /** Implements a WTLS certificate chain. 
 *
-* @publishedAll
-* @released */
+*/
 	{
 	friend class CWTLSCertChainAO;
 
@@ -256,3 +252,4 @@ private:
 	};
 
 #endif
+

@@ -2,9 +2,9 @@
 * Copyright (c) 2002 Nokia Corporation and/or its subsidiary(-ies). 
 * All rights reserved.
 * This component and the accompanying materials are made available
-* under the terms of the License "Symbian Foundation License v1.0" to Symbian Foundation members and "Symbian Foundation End User License Agreement v1.0" to non-members
+* under the terms of "Eclipse Public License v1.0"
 * which accompanies this distribution, and is available
-* at the URL "http://www.symbianfoundation.org/legal/licencesv10.html".
+* at the URL "http://www.eclipse.org/legal/epl-v10.html".
 *
 * Initial Contributors:
 * Nokia Corporation - initial contribution.
@@ -533,17 +533,6 @@ protected:      // Constructors
 
 
         /**
-        * Reads the CDMA data from the database.
-        * In case of error, leaves with CommDb error codes.
-        * @param aIspId The UID of the record in the CDMA table to
-        * read the data from.
-        * @param aApItem A reference to a CApAccessPointItem to hold the data
-        * @return No return value.
-        */
-        void ReadCdmaDataL( TUint32 aIspId, CApAccessPointItem& aApItem );
-
-
-        /**
         * Reads the LAN data from the database.
         * In case of error, leaves with CommDb error codes.
         * @param aIspId The UID of the record in the LAN table to
@@ -642,20 +631,6 @@ protected:      // Constructors
         */
         void WriteIspDataL( TBool aIsNew, TUint32 aIspId,
                             CApAccessPointItem& aApItem );
-
-
-        /**
-        * Writes the Cdma data to the database.
-        * In case of error, leaves with CommDb error codes.
-        * @param aIsNew A Boolean indicating whether it is a new record or it
-        * is an update operation.
-        * @param aApItem Reference to a CApAccessPointItem which holds the data
-        * @return No return value.
-        */
-        void WriteCdmaDataL( TBool aIsNew,
-                            CApAccessPointItem& aApItem );
-
-
 
         /**
         * Writes the Gprs data to the database.
@@ -758,18 +733,6 @@ protected:      // Constructors
         * @return No return value.
         */
         void RemoveGprsL( TUint32 aUid, TBool aOut );
-
-
-        /**
-        * Removes the CDMA part of the access point from the database.
-        * Expects that CApDataHandler has been created and the database had
-        * been opened.
-        * In case of error, access point will not be removed.
-        * @param aUid The UID of the CDMA part of the access point to remove.
-        * @return No return value.
-        */
-        void RemoveCdmaL( TUint32 aUid );
-
 
 
         /**

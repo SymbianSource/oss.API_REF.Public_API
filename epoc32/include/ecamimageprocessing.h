@@ -1,9 +1,9 @@
 // Copyright (c) 2005-2009 Nokia Corporation and/or its subsidiary(-ies).
 // All rights reserved.
 // This component and the accompanying materials are made available
-// under the terms of the License "Symbian Foundation License v1.0" to Symbian Foundation members and "Symbian Foundation End User License Agreement v1.0" to non-members
+// under the terms of "Eclipse Public License v1.0"
 // which accompanies this distribution, and is available
-// at the URL "http://www.symbianfoundation.org/legal/licencesv10.html".
+// at the URL "http://www.eclipse.org/legal/epl-v10.html".
 //
 // Initial Contributors:
 // Nokia Corporation - initial contribution.
@@ -12,8 +12,6 @@
 //
 // Description:
 //
-
-
 
 /**
  @file	
@@ -28,6 +26,12 @@
 #include <ecam.h>
 #include <ecamadvsettingsuids.hrh>
 #include <ecam/ecamconstants.h>
+
+#ifndef SYMBIAN_ENABLE_SPLIT_HEADERS
+#include <ecamimageprocessingconst.h>
+#include <ecamimageprocessingdef.h>
+#endif
+
 
 class MCameraImageProcessing;
 class MCameraImageProcessing2;
@@ -79,32 +83,6 @@ static const TUid  KUidECamEventImageProcessingAdjustSaturation 	= {KUidECamEven
 /** Hue adjustment  - recognized range [-100:100] */
 static const TUid  KUidECamEventtImageProcessingAdjustHue 			= {KUidECamEventtImageProcessingAdjustHueUidValue};
 static const TUid  KUidECamEventImageProcessingAdjustHue 			= {KUidECamEventtImageProcessingAdjustHueUidValue};
-/** Contrast Enhancement
-
-This uid value is available from the 'supported' or 'getter' methods only to the API clients using CCamera::New2L() or 
-CCamera::NewDuplicate2L().
-
-@internalTechnology
-*/
-static const TUid  KUidECamEventCIPAdjustContrastEnhancement 		= {KUidECamEventCIPAdjustContrastEnhancementUidValue};
-/** Software based Red Eye Reduction
-
-This uid value is available from the 'supported' or 'getter' methods only to the API clients using CCamera::New2L() or 
-CCamera::NewDuplicate2L()
-
-@internalTechnology
-*/
-static const TUid  KUidECamEventCIPAdjustRedEyeReduction 		    = {KUidECamEventCIPAdjustRedEyeReductionUidValue};
-
-/**
-Image distortion correction.
-
-This uid value is available from the 'supported' or 'getter' methods only to the API clients using CCamera::New2L() or 
-CCamera::NewDuplicate2L()
-
-@internalTechnology
-*/
-static const TUid KUidECamEventCIPImageDistortionCorrection         = {KUidECamEventCIPImageDistortionCorrectionUidValue};
 
 
 /** Effect value */
@@ -125,15 +103,6 @@ static const TUid  KUidECamEventImageProcessingSourceRect 			= {KUidECamEventIma
 static const TUid  KUidECamEventImageProcessingNoiseReduction		= {KUidECamEventImageProcessingNoiseReductionUidValue};
 /** Glare removal */
 static const TUid  KUidECamEventImageProcessingGlareRemoval			= {KUidECamEventImageProcessingGlareRemovalUidValue};
-/** Relative Orientation 
-
-This uid value is available from the 'supported' or 'getter' methods only to the API clients using CCamera::New2L() or 
-CCamera::NewDuplicate2L().
-
-@publishedPartner
-@prototype
-*/
-static const TUid  KUidECamEventImageProcessingTransformRelativeOrientation = {KUidECamEventImageProcessingTransformRelativeOrientationUidValue};
 
 /** Default value for image processing */
 static const TInt  KECamImageProcessingDefaultValue  = 0;
@@ -150,16 +119,6 @@ Uid used to indicate completion of StartColorAccent
 */
 static const TUid  KUidECamEventCIPStartColorAccent					= {KUidECamEventCIPStartColorAccentUidValue};
 
-/**
-Uid used to notify that the current picture orientation is unachievable after setting the relative custom orientation.
-
-@see CCamera::CCameraImageProcessing::SetRelativeCustomOrientationL(TOrientationReference aOrientationReference, 
-												TRelativeCustomOrientation aRelativeCustomOrientation);
-
-@publishedPartner
-@prototype
-*/
-static const TUid  KUidECamEventPictureOrientationUnachievable		= {KUidECamEventPictureOrientationUnachievableUidValue};
 
 /** 
 This class is used to perform image processing operations on the camera.
@@ -729,3 +688,6 @@ private:
 	MCameraImageProcessing3* iImpl3;   //not owned
 	};
 #endif//ECAMIMAGEPROCESSING_H
+
+
+

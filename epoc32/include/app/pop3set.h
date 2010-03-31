@@ -1,9 +1,9 @@
 // Copyright (c) 1998-2009 Nokia Corporation and/or its subsidiary(-ies).
 // All rights reserved.
 // This component and the accompanying materials are made available
-// under the terms of the License "Symbian Foundation License v1.0" to Symbian Foundation members and "Symbian Foundation End User License Agreement v1.0" to non-members
+// under the terms of "Eclipse Public License v1.0"
 // which accompanies this distribution, and is available
-// at the URL "http://www.symbianfoundation.org/legal/licencesv10.html".
+// at the URL "http://www.eclipse.org/legal/epl-v10.html".
 //
 // Initial Contributors:
 // Nokia Corporation - initial contribution.
@@ -242,6 +242,12 @@ public:
 	IMPORT_C void SetPopulationLimitL(const TInt32 aPopulationLimit);
 	IMPORT_C void SetTlsSslDomainL(const TDesC8& aDomainName);
 	IMPORT_C TPtrC8 TlsSslDomain() const;
+#if (defined SYMBIAN_EMAIL_CAPABILITY_SUPPORT)
+	IMPORT_C void SetPOP3Auth(TBool aFlag);
+	IMPORT_C TBool POP3Auth() const;
+	IMPORT_C void SetFallBack(TBool aFlag);
+	IMPORT_C TBool FallBack() const;
+#endif
 
 private:
 	class TImPop3SettingsExtension
@@ -266,7 +272,13 @@ private:
 		KPop3DisconnectedModeFlag				= KPop3AutoSendFlag << 1,						//0x00000010
 		KPop3DeleteEmailsWhenDisconnectingFlag	= KPop3DisconnectedModeFlag << 1,				//0x00000020
 		KPop3AcknowledgeReceipts				= KPop3DeleteEmailsWhenDisconnectingFlag << 1,	//0x00000040
+#if (defined SYMBIAN_EMAIL_CAPABILITY_SUPPORT)		
+		KPop3AuthFlag							= KPop3AcknowledgeReceipts << 1,				//0x00000080
+		KPop3FallbackFlag						= KPop3AuthFlag << 1,							//0x00000100
+		KPop3EmailSettingsLastUsedFlag			= KPop3FallbackFlag								//0x00000100
+#else		
 		KPop3EmailSettingsLastUsedFlag			= KPop3AcknowledgeReceipts						//0x00000040
+#endif		
 		};
 
 	TImPop3SettingsExtension*	iExtension; // renamed iReceiptAddress

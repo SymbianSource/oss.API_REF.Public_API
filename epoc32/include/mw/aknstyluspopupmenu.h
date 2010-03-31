@@ -2,9 +2,9 @@
 * Copyright (c) 2005-2009 Nokia Corporation and/or its subsidiary(-ies).
 * All rights reserved.
 * This component and the accompanying materials are made available
-* under the terms of the License "Symbian Foundation License v1.0" to Symbian Foundation members and "Symbian Foundation End User License Agreement v1.0" to non-members
+* under the terms of "Eclipse Public License v1.0"
 * which accompanies this distribution, and is available
-* at the URL "http://www.symbianfoundation.org/legal/licencesv10.html".
+* at the URL "http://www.eclipse.org/legal/epl-v10.html".
 *
 * Initial Contributors:
 * Nokia Corporation - initial contribution.
@@ -22,6 +22,7 @@
 
 #include <e32base.h>
 #include <coecobs.h> // MCoeControlObserver
+#include <babitflags.h>
 
 class CAknPreviewPopUpController;
 class CAknStylusPopUpMenuContent;
@@ -141,12 +142,21 @@ public:
      * @param aPosType  Position type e.g. left-top corner or right-top corner  
      */
     IMPORT_C void SetPosition( const TPoint& aPoint, TPositionType aPosType );    
-    
+
     /**
      * Tells the popup menu to recalculate its position. This can be used e.g.
      * after layout transition.
      */
     void UpdatePosition();
+
+    /**
+     * Removes all menu items.
+     * 
+     * @internal
+     * @since s60 v5.2
+     */
+    void Clear();
+
 // from base class CCoeControl
 
     /**
@@ -167,12 +177,6 @@ public:
     IMPORT_C void HandleControlEventL( CCoeControl* aControl,
                                        TCoeEvent aEventType );
 
-public:
-
-    /**
-     * Resets timer that hides popup.
-     */
-    void ResetTimer(); 
 
 private:
 
@@ -193,6 +197,21 @@ private:
      */
     void ConstructL();
 
+    /**
+     * Starts the CIdle
+     */
+    void StartControllerIdleL();
+    
+    /**
+     * CIdle callback function 
+     */
+    static TInt ControllerCallBack( TAny* aThis );
+    
+    /**
+     * Removes the controller
+     */
+    void RemoveController();
+    
 private: // data
 
     /**
@@ -227,6 +246,26 @@ private: // data
      */
     CAknPreviewPopUpController* iPreviewPopup;
     
+    /**
+     * An idle time active object 
+     * Own
+     */
+    CIdle* iControllerIdle;
+    
+    /**
+     * Position type
+     */
+    TInt iPositionType;
+
+    /**
+     * Internal flags.
+     */
+    TBitFlags iFlags;
+    
+    /**
+     * Used to track if object has been deleted while calling client callback.
+     */
+    TBool* iIsDeleted;
     };
 
 

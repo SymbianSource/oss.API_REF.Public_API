@@ -2,9 +2,9 @@
 * Copyright (c) 2005-2009 Nokia Corporation and/or its subsidiary(-ies).
 * All rights reserved.
 * This component and the accompanying materials are made available
-* under the terms of the License "Symbian Foundation License v1.0" to Symbian Foundation members and "Symbian Foundation End User License Agreement v1.0" to non-members
+* under the terms of "Eclipse Public License v1.0"
 * which accompanies this distribution, and is available
-* at the URL "http://www.symbianfoundation.org/legal/licencesv10.html".
+* at the URL "http://www.eclipse.org/legal/epl-v10.html".
 *
 * Initial Contributors:
 * Nokia Corporation - initial contribution.
@@ -27,7 +27,6 @@
 // INCLUDES
 #include <e32base.h>
 #include <in_sock.h>
-#include "_sipcodecdefs.h"
 
 // FORWARD DECLARATIONS
 class CSIP;
@@ -297,14 +296,22 @@ class CSIPConnection : public CBase
         */ 	                         
 	    IMPORT_C void GetLocalAddrL(TInetAddr& aAddr) const;
 	    
-	/**
-	* Refreshes the connection.
-	* This will retrieve the Bearer Monitor Instance if any, is available for this  CSIPConnection and issue a Connection Refresh Request to it.
-	* The state of the Connection can be retrieved from State() to check if there is any change after Refreshing the connection.
-	* @capability NetworkServices.
-	*/
+	    /**
+	    * Refreshes the connection.
+	    * This will retrieve the Bearer Monitor Instance if any, is available for this  CSIPConnection and issue a Connection Refresh Request to it.
+	    * The state of the Connection can be retrieved from State() to check if there is any change after Refreshing the connection.
+	    * @capability NetworkServices.
+	    */
 	    
-	  IMPORT_C void RefreshConnection() const;
+	    IMPORT_C void RefreshConnection() const;
+	  
+	    /**
+	    * Gets the connection error code
+	    * @param aError will be filled with the error code
+	    * @leave a system-wide error code
+	    * @capability NetworkServices. 
+	    */
+	    IMPORT_C void GetConnectionErrorL(TInt &aError) const;
 
 	public: // New functions, for internal use
 	
@@ -328,17 +335,18 @@ class CSIPConnection : public CBase
 		CSIPConnectionImplementation* iImplementation;
 		        
 	private: // For testing purposes
-	
-	    UNIT_TEST(CSIP_Test)
-        UNIT_TEST(CSIPConnection_Test)
-        UNIT_TEST(CSIPSubscribeDialogAssoc_Test)
-        UNIT_TEST(CSIPInviteDialogAssoc_Test)
-        UNIT_TEST(CSIPReferDialogAssoc_Test)
-        UNIT_TEST(CSIPNotifyDialogAssoc_Test)
-        UNIT_TEST(CSIPDialogTrying_Test)
-        UNIT_TEST(CSIPRegistrationBinding_Test)
-        
-        __DECLARE_TEST;
+#ifdef CPPUNIT_TEST	
+	    friend class CSIP_Test;
+        friend class CSIPConnection_Test;
+        friend class CSIPSubscribeDialogAssoc_Test;
+        friend class CSIPInviteDialogAssoc_Test;
+        friend class CSIPReferDialogAssoc_Test;
+        friend class CSIPNotifyDialogAssoc_Test;
+        friend class CSIPDialogTrying_Test;
+        friend class CSIPRegistrationBinding_Test;
+#endif
+		void __DbgTestInvariant() const;
+
 	};
 
 #endif

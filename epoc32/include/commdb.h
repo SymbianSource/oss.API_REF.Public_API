@@ -1,9 +1,9 @@
 // Copyright (c) 2006-2009 Nokia Corporation and/or its subsidiary(-ies).
 // All rights reserved.
 // This component and the accompanying materials are made available
-// under the terms of the License "Symbian Foundation License v1.0" to Symbian Foundation members and "Symbian Foundation End User License Agreement v1.0" to non-members
+// under the terms of "Eclipse Public License v1.0"
 // which accompanies this distribution, and is available
-// at the URL "http://www.symbianfoundation.org/legal/licencesv10.html".
+// at the URL "http://www.eclipse.org/legal/epl-v10.html".
 //
 // Initial Contributors:
 // Nokia Corporation - initial contribution.
@@ -14,8 +14,6 @@
 // Comms Database public interface
 // 
 //
-
-
 
 /**
  @file
@@ -250,7 +248,7 @@ public:
 	//DEPRECATED : Agent table has been removed. These functions have been
 	//				stubbed to return KErrNotSupported or leave with the same error.
 	// Access agent settings. `aService` is one of: (`DIAL_OUT_ISP`,
-	//	`DIAL_IN_ISP`, `OUTGOING_WCDMA` or `CDMA2000_PACKET_SERVICE_TABLE`). */
+	//	`DIAL_IN_ISP`, `OUTGOING_WCDMA'). */
 	IMPORT_C void SetAgentL(const TDesC& aService, const TDesC& aAgent);
 
 	IMPORT_C void SetAgentExtL(const TDesC& aService, const TDesC& aAgentExt);
@@ -455,12 +453,10 @@ protected:
 
 
 
-#ifdef SYMBIAN_NON_SEAMLESS_NETWORK_BEARER_MOBILITY
 /**
 Convert a legacy field name to a CommsDat element Id
 
 @internalTechnology
-@prototype
 @param aFieldName A legacy commdb field name in the format "tableName\fieldName"
 @return A Commsdat element Id
 */
@@ -470,7 +466,6 @@ public:
 	IMPORT_C static TMDBElementId GetElementIdFromFieldNameL(const TDesC& aFieldName);
 	};
 
-#endif
 // SYMBIAN_NON_SEAMLESS_NETWORK_BEARER_MOBILITY
 
 

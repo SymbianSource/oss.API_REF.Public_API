@@ -23,10 +23,10 @@
 
 #include <e32base.h>
 #include <d32dbms.h>
-#include <FavouritesItem.h>
-#include <FavouritesLimits.h>
-#include <FavouritesSession.h>
-#include <FavouritesHandle.h>
+#include <favouritesitem.h>
+#include <favouriteslimits.h>
+#include <favouritessession.h>
+#include <favouriteshandle.h>
 
 // FORWARD DECLARATIONS
 

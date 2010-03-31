@@ -1,547 +1,1651 @@
+#ifndef BOOST_BIND_HPP_INCLUDED
+#define BOOST_BIND_HPP_INCLUDED
 
-#if !defined(BOOST_PP_IS_ITERATING)
+// MS compatible compilers support #pragma once
 
-///// header body
+#if defined(_MSC_VER) && (_MSC_VER >= 1020)
+# pragma once
+#endif
 
-#ifndef BOOST_MPL_BIND_HPP_INCLUDED
-#define BOOST_MPL_BIND_HPP_INCLUDED
-
-// Copyright Peter Dimov 2001
-// Copyright Aleksey Gurtovoy 2001-2004
 //
-// Distributed under the Boost Software License, Version 1.0. 
-// (See accompanying file LICENSE_1_0.txt or copy at 
+//  bind.hpp - binds function objects to arguments
+//
+//  Copyright (c) 2001-2004 Peter Dimov and Multi Media Ltd.
+//  Copyright (c) 2001 David Abrahams
+//  Copyright (c) 2005 Peter Dimov
+//
+// Distributed under the Boost Software License, Version 1.0. (See
+// accompanying file LICENSE_1_0.txt or copy at
 // http://www.boost.org/LICENSE_1_0.txt)
 //
-// See http://www.boost.org/libs/mpl for documentation.
+//  See http://www.boost.org/libs/bind/bind.html for documentation.
+//
 
-// $Source: /cvsroot/boost/boost/boost/mpl/bind.hpp,v $
-// $Date: 2004/10/26 14:51:04 $
-// $Revision: 1.13 $
+#include <boost/config.hpp>
+#include <boost/ref.hpp>
+#include <boost/mem_fn.hpp>
+#include <boost/type.hpp>
+#include <boost/bind/arg.hpp>
+#include <boost/detail/workaround.hpp>
+#include <boost/visit_each.hpp>
 
-#if !defined(BOOST_MPL_PREPROCESSING_MODE)
-#   include <boost/mpl/bind_fwd.hpp>
-#   include <boost/mpl/placeholders.hpp>
-#   include <boost/mpl/next.hpp>
-#   include <boost/mpl/protect.hpp>
-#   include <boost/mpl/apply_wrap.hpp>
-#   include <boost/mpl/limits/arity.hpp>
-#   include <boost/mpl/aux_/na.hpp>
-#   include <boost/mpl/aux_/arity_spec.hpp>
-#   include <boost/mpl/aux_/type_wrapper.hpp>
-#   include <boost/mpl/aux_/yes_no.hpp>
-#   if defined(BOOST_NO_TEMPLATE_PARTIAL_SPECIALIZATION)
-#       include <boost/type_traits/is_reference.hpp>
-#   endif 
-#endif
+// Borland-specific bug, visit_each() silently fails to produce code
 
-#include <boost/mpl/aux_/config/bind.hpp>
-#include <boost/mpl/aux_/config/static_constant.hpp>
-#include <boost/mpl/aux_/config/use_preprocessed.hpp>
-
-#if !defined(BOOST_MPL_CFG_NO_PREPROCESSED_HEADERS) \
-    && !defined(BOOST_MPL_PREPROCESSING_MODE)
-
-#   if defined(BOOST_MPL_CFG_NO_UNNAMED_PLACEHOLDER_SUPPORT)
-#       define BOOST_MPL_PREPROCESSED_HEADER basic_bind.hpp
-#   else
-#       define BOOST_MPL_PREPROCESSED_HEADER bind.hpp
-#   endif
-#   include <boost/mpl/aux_/include_preprocessed.hpp>
-
+#if defined(__BORLANDC__)
+#  define BOOST_BIND_VISIT_EACH boost::visit_each
 #else
-
-#   include <boost/mpl/aux_/preprocessor/params.hpp>
-#   include <boost/mpl/aux_/preprocessor/default_params.hpp>
-#   include <boost/mpl/aux_/preprocessor/def_params_tail.hpp>
-#   include <boost/mpl/aux_/preprocessor/partial_spec_params.hpp>
-#   include <boost/mpl/aux_/preprocessor/ext_params.hpp>
-#   include <boost/mpl/aux_/preprocessor/repeat.hpp>
-#   include <boost/mpl/aux_/preprocessor/enum.hpp>
-#   include <boost/mpl/aux_/preprocessor/add.hpp>
-#   include <boost/mpl/aux_/config/dmc_ambiguous_ctps.hpp>
-#   include <boost/mpl/aux_/config/ctps.hpp>
-#   include <boost/mpl/aux_/config/ttp.hpp>
-#   include <boost/mpl/aux_/config/dtp.hpp>
-#   include <boost/mpl/aux_/nttp_decl.hpp>
-
-#   include <boost/preprocessor/iterate.hpp>
-#   include <boost/preprocessor/comma_if.hpp>
-#   include <boost/preprocessor/cat.hpp>
-#   include <boost/preprocessor/inc.hpp>
-
-namespace boost { namespace mpl {
-
-// local macros, #undef-ined at the end of the header
-#   define AUX778076_APPLY \
-    BOOST_PP_CAT(apply_wrap,BOOST_MPL_LIMIT_METAFUNCTION_ARITY) \
-    /**/
-
-#   if defined(BOOST_MPL_CFG_DMC_AMBIGUOUS_CTPS)
-#       define AUX778076_DMC_PARAM() , int dummy_
-#   else
-#       define AUX778076_DMC_PARAM()
-#   endif
-
-#   define AUX778076_BIND_PARAMS(param) \
-    BOOST_MPL_PP_PARAMS( \
-          BOOST_MPL_LIMIT_METAFUNCTION_ARITY \
-        , param \
-        ) \
-    /**/
-
-#   define AUX778076_BIND_DEFAULT_PARAMS(param, value) \
-    BOOST_MPL_PP_DEFAULT_PARAMS( \
-          BOOST_MPL_LIMIT_METAFUNCTION_ARITY \
-        , param \
-        , value \
-        ) \
-    /**/
-
-#   define AUX778076_BIND_N_PARAMS(n, param) \
-    BOOST_PP_COMMA_IF(n) BOOST_MPL_PP_PARAMS(n, param) \
-    /**/
-
-#   define AUX778076_BIND_N_SPEC_PARAMS(n, param, def) \
-    BOOST_PP_COMMA_IF(n) \
-    BOOST_MPL_PP_PARTIAL_SPEC_PARAMS(n, param, def) \
-    /**/
-
-#if !defined(BOOST_MPL_CFG_NO_DEFAULT_PARAMETERS_IN_NESTED_TEMPLATES)
-#   define AUX778076_BIND_NESTED_DEFAULT_PARAMS(param, value) \
-    AUX778076_BIND_DEFAULT_PARAMS(param, value) \
-    /**/
-#else
-#   define AUX778076_BIND_NESTED_DEFAULT_PARAMS(param, value) \
-    AUX778076_BIND_PARAMS(param) \
-    /**/
+#  define BOOST_BIND_VISIT_EACH visit_each
 #endif
 
-namespace aux {
+#include <boost/bind/storage.hpp>
 
-#if !defined(BOOST_NO_TEMPLATE_PARTIAL_SPECIALIZATION)
-
-template<
-      typename T, AUX778076_BIND_PARAMS(typename U)
-    >
-struct resolve_bind_arg
-{
-    typedef T type;
-};
-
-#   if !defined(BOOST_MPL_CFG_NO_UNNAMED_PLACEHOLDER_SUPPORT)
-
-template<
-      typename T
-    , typename Arg
-    >
-struct replace_unnamed_arg
-{
-    typedef Arg next;
-    typedef T type;
-};
-
-template<
-      typename Arg
-    >
-struct replace_unnamed_arg< arg<-1>,Arg >
-{
-    typedef typename Arg::next next;
-    typedef Arg type;
-};
-
-#   endif // BOOST_MPL_CFG_NO_UNNAMED_PLACEHOLDER_SUPPORT
-
-template<
-      BOOST_MPL_AUX_NTTP_DECL(int, N), AUX778076_BIND_PARAMS(typename U)
-    >
-struct resolve_bind_arg< arg<N>,AUX778076_BIND_PARAMS(U) >
-{
-    typedef typename AUX778076_APPLY<mpl::arg<N>, AUX778076_BIND_PARAMS(U)>::type type;
-};
-
-#if !defined(BOOST_MPL_CFG_NO_BIND_TEMPLATE)
-template<
-      typename F, AUX778076_BIND_PARAMS(typename T), AUX778076_BIND_PARAMS(typename U)
-    >
-struct resolve_bind_arg< bind<F,AUX778076_BIND_PARAMS(T)>,AUX778076_BIND_PARAMS(U) >
-{
-    typedef bind<F,AUX778076_BIND_PARAMS(T)> f_;
-    typedef typename AUX778076_APPLY<f_, AUX778076_BIND_PARAMS(U)>::type type;
-};
+#ifdef BOOST_MSVC
+# pragma warning(push)
+# pragma warning(disable: 4512) // assignment operator could not be generated
 #endif
 
-#else // BOOST_NO_TEMPLATE_PARTIAL_SPECIALIZATION
-
-// agurt, 15/jan/02: it's not a intended to be used as a function class, and 
-// MSVC6.5 has problems with 'apply' name here (the code compiles, but doesn't
-// work), so I went with the 'result_' here, and in all other similar cases
-template< bool >
-struct resolve_arg_impl
+namespace boost
 {
-    template< typename T, AUX778076_BIND_PARAMS(typename U) > struct result_
-    {
-        typedef T type;
-    };
+
+namespace _bi // implementation details
+{
+
+// result_traits
+
+template<class R, class F> struct result_traits
+{
+    typedef R type;
 };
 
-template<> 
-struct resolve_arg_impl<true>
+#if !defined(BOOST_NO_TEMPLATE_PARTIAL_SPECIALIZATION) && !defined(BOOST_NO_FUNCTION_TEMPLATE_ORDERING)
+
+struct unspecified {};
+
+template<class F> struct result_traits<unspecified, F>
 {
-    template< typename T, AUX778076_BIND_PARAMS(typename U) > struct result_
-    {
-        typedef typename AUX778076_APPLY<
-              T
-            , AUX778076_BIND_PARAMS(U)
-            >::type type;
-    };
+    typedef typename F::result_type type;
 };
 
-// for 'resolve_bind_arg'
-template< typename T > struct is_bind_template;
-
-template< 
-      typename T, AUX778076_BIND_PARAMS(typename U)
-    >
-struct resolve_bind_arg
-    : resolve_arg_impl< is_bind_template<T>::value >
-            ::template result_< T,AUX778076_BIND_PARAMS(U) >
+template<class F> struct result_traits< unspecified, reference_wrapper<F> >
 {
+    typedef typename F::result_type type;
 };
 
-#   if !defined(BOOST_MPL_CFG_NO_UNNAMED_PLACEHOLDER_SUPPORT)
-
-template< typename T > 
-struct replace_unnamed_arg_impl
-{
-    template< typename Arg > struct result_
-    {
-        typedef Arg next;
-        typedef T type;
-    };
-};
-
-template<> 
-struct replace_unnamed_arg_impl< arg<-1> >
-{
-    template< typename Arg > struct result_
-    {
-        typedef typename next<Arg>::type next;
-        typedef Arg type;
-    };
-};
-
-template< typename T, typename Arg > 
-struct replace_unnamed_arg
-    : replace_unnamed_arg_impl<T>::template result_<Arg>
-{
-};
-
-#   endif // BOOST_MPL_CFG_NO_UNNAMED_PLACEHOLDER_SUPPORT
-
-// agurt, 10/mar/02: the forward declaration has to appear before any of
-// 'is_bind_helper' overloads, otherwise MSVC6.5 issues an ICE on it
-template< BOOST_MPL_AUX_NTTP_DECL(int, arity_) > struct bind_chooser;
-
-aux::no_tag is_bind_helper(...);
-template< typename T > aux::no_tag is_bind_helper(protect<T>*);
-
-// overload for "main" form
-// agurt, 15/mar/02: MSVC 6.5 fails to properly resolve the overload 
-// in case if we use 'aux::type_wrapper< bind<...> >' here, and all 
-// 'bind' instantiations form a complete type anyway
-#if !defined(BOOST_MPL_CFG_NO_BIND_TEMPLATE)
-template<
-      typename F, AUX778076_BIND_PARAMS(typename T)
-    >
-aux::yes_tag is_bind_helper(bind<F,AUX778076_BIND_PARAMS(T)>*);
 #endif
 
-template< BOOST_MPL_AUX_NTTP_DECL(int, N) >
-aux::yes_tag is_bind_helper(arg<N>*);
+// ref_compare
 
-template< bool is_ref_ = true >
-struct is_bind_template_impl
+template<class T> bool ref_compare( T const & a, T const & b, long )
 {
-    template< typename T > struct result_
-    {
-        BOOST_STATIC_CONSTANT(bool, value = false);
-    };
-};
-
-template<>
-struct is_bind_template_impl<false>
-{
-    template< typename T > struct result_
-    {
-        BOOST_STATIC_CONSTANT(bool, value = 
-              sizeof(aux::is_bind_helper(static_cast<T*>(0))) 
-                == sizeof(aux::yes_tag)
-            );
-    };
-};
-
-template< typename T > struct is_bind_template
-    : is_bind_template_impl< ::boost::detail::is_reference_impl<T>::value >
-        ::template result_<T>
-{
-};
-
-#endif // BOOST_NO_TEMPLATE_PARTIAL_SPECIALIZATION
-
-} // namespace aux
-
-
-#define BOOST_PP_ITERATION_PARAMS_1 \
-    (3,(0, BOOST_MPL_LIMIT_METAFUNCTION_ARITY, <boost/mpl/bind.hpp>))
-#include BOOST_PP_ITERATE()
-
-#if !defined(BOOST_NO_TEMPLATE_PARTIAL_SPECIALIZATION) \
-    && !defined(BOOST_MPL_CFG_NO_TEMPLATE_TEMPLATE_PARAMETERS)
-/// if_/eval_if specializations
-#   define AUX778076_SPEC_NAME if_
-#   define BOOST_PP_ITERATION_PARAMS_1 (3,(3, 3, <boost/mpl/bind.hpp>))
-#   include BOOST_PP_ITERATE()
-
-#if !defined(BOOST_MPL_CFG_DMC_AMBIGUOUS_CTPS)
-#   define AUX778076_SPEC_NAME eval_if
-#   define BOOST_PP_ITERATION_PARAMS_1 (3,(3, 3, <boost/mpl/bind.hpp>))
-#   include BOOST_PP_ITERATE()
-#endif
-#endif
-
-// real C++ version is already taken care of
-#if defined(BOOST_NO_TEMPLATE_PARTIAL_SPECIALIZATION) \
-    && !defined(BOOST_MPL_CFG_NO_BIND_TEMPLATE)
-
-namespace aux {
-// apply_count_args
-#define AUX778076_COUNT_ARGS_PREFIX bind
-#define AUX778076_COUNT_ARGS_DEFAULT na
-#define AUX778076_COUNT_ARGS_ARITY BOOST_MPL_LIMIT_METAFUNCTION_ARITY
-#include <boost/mpl/aux_/count_args.hpp>
+    return a == b;
 }
 
-// bind
-template<
-      typename F, AUX778076_BIND_PARAMS(typename T) AUX778076_DMC_PARAM()
-    >
-struct bind
-    : aux::bind_chooser<
-          aux::bind_count_args<AUX778076_BIND_PARAMS(T)>::value
-        >::template result_< F,AUX778076_BIND_PARAMS(T) >::type
+template<int I> bool ref_compare( arg<I> const &, arg<I> const &, int )
 {
-};
+    return true;
+}
 
-BOOST_MPL_AUX_ARITY_SPEC(
-      BOOST_PP_INC(BOOST_MPL_LIMIT_METAFUNCTION_ARITY)
-    , bind
-    )
-
-BOOST_MPL_AUX_TEMPLATE_ARITY_SPEC(
-      BOOST_PP_INC(BOOST_MPL_LIMIT_METAFUNCTION_ARITY)
-    , bind
-    )
-
-
-#endif // BOOST_NO_TEMPLATE_PARTIAL_SPECIALIZATION
-
-#   undef AUX778076_BIND_NESTED_DEFAULT_PARAMS
-#   undef AUX778076_BIND_N_SPEC_PARAMS
-#   undef AUX778076_BIND_N_PARAMS
-#   undef AUX778076_BIND_DEFAULT_PARAMS
-#   undef AUX778076_BIND_PARAMS
-#   undef AUX778076_DMC_PARAM
-#   undef AUX778076_APPLY
-
-}}
-
-#endif // BOOST_MPL_CFG_NO_PREPROCESSED_HEADERS
-#endif // BOOST_MPL_BIND_HPP_INCLUDED
-
-///// iteration, depth == 1
-
-#elif BOOST_PP_ITERATION_DEPTH() == 1
-
-#   define i_ BOOST_PP_FRAME_ITERATION(1)
-
-#if defined(AUX778076_SPEC_NAME)
-
-// lazy metafunction specialization
-template< template< BOOST_MPL_PP_PARAMS(i_, typename T) > class F, typename Tag >
-struct BOOST_PP_CAT(quote,i_);
-
-template< BOOST_MPL_PP_PARAMS(i_, typename T) > struct AUX778076_SPEC_NAME;
-
-template<
-      typename Tag AUX778076_BIND_N_PARAMS(i_, typename T)
-    >
-struct BOOST_PP_CAT(bind,i_)< 
-      BOOST_PP_CAT(quote,i_)<AUX778076_SPEC_NAME,Tag>
-    AUX778076_BIND_N_PARAMS(i_,T)
-    >
+template<int I> bool ref_compare( arg<I> (*) (), arg<I> (*) (), int )
 {
-    template<
-          AUX778076_BIND_NESTED_DEFAULT_PARAMS(typename U, na)
-        >
-    struct apply
+    return true;
+}
+
+template<class T> bool ref_compare( reference_wrapper<T> const & a, reference_wrapper<T> const & b, int )
+{
+    return a.get_pointer() == b.get_pointer();
+}
+
+// bind_t forward declaration for listN
+
+template<class R, class F, class L> class bind_t;
+
+// value
+
+template<class T> class value
+{
+public:
+
+    value(T const & t): t_(t) {}
+
+    T & get() { return t_; }
+    T const & get() const { return t_; }
+
+    bool operator==(value const & rhs) const
     {
-     private:
-        typedef mpl::arg<1> n1;
-#       define BOOST_PP_ITERATION_PARAMS_2 (3,(1, i_, <boost/mpl/bind.hpp>))
-#       include BOOST_PP_ITERATE()
+        return t_ == rhs.t_;
+    }
 
-        typedef typename AUX778076_SPEC_NAME<
-              typename t1::type
-            , BOOST_MPL_PP_EXT_PARAMS(2, BOOST_PP_INC(i_), t)
-            >::type f_;
+private:
 
-     public:
-        typedef typename f_::type type;
-    };
+    T t_;
 };
 
-#undef AUX778076_SPEC_NAME
+// type
 
-#else // AUX778076_SPEC_NAME
+template<class T> class type {};
 
-template<
-      typename F AUX778076_BIND_N_PARAMS(i_, typename T) AUX778076_DMC_PARAM()
-    >
-struct BOOST_PP_CAT(bind,i_)
+// unwrap
+
+template<class F> struct unwrapper
 {
-    template<
-          AUX778076_BIND_NESTED_DEFAULT_PARAMS(typename U, na)
-        >
-    struct apply
+    static inline F & unwrap( F & f, long )
     {
-     private:
-#   if !defined(BOOST_MPL_CFG_NO_UNNAMED_PLACEHOLDER_SUPPORT)
+        return f;
+    }
 
-        typedef aux::replace_unnamed_arg< F,mpl::arg<1> > r0;
-        typedef typename r0::type a0;
-        typedef typename r0::next n1;
-        typedef typename aux::resolve_bind_arg<a0,AUX778076_BIND_PARAMS(U)>::type f_;
-        ///
-#   else
-        typedef typename aux::resolve_bind_arg<F,AUX778076_BIND_PARAMS(U)>::type f_;
+    template<class F2> static inline F2 & unwrap( reference_wrapper<F2> rf, int )
+    {
+        return rf.get();
+    }
 
-#   endif // BOOST_MPL_CFG_NO_UNNAMED_PLACEHOLDER_SUPPORT
-
-#   if i_ > 0
-#       define BOOST_PP_ITERATION_PARAMS_2 (3,(1, i_, <boost/mpl/bind.hpp>))
-#       include BOOST_PP_ITERATE()
-#   endif
-
-     public:
-
-#   define AUX778076_ARG(unused, i_, t) \
-    BOOST_PP_COMMA_IF(i_) \
-    typename BOOST_PP_CAT(t,BOOST_PP_INC(i_))::type \
-/**/
-
-        typedef typename BOOST_PP_CAT(apply_wrap,i_)<
-              f_ 
-            BOOST_PP_COMMA_IF(i_) BOOST_MPL_PP_REPEAT(i_, AUX778076_ARG, t)
-            >::type type;
-
-#   undef AUX778076_ARG
-    };
+    template<class R, class T> static inline _mfi::dm<R, T> unwrap( R T::* pm, int )
+    {
+        return _mfi::dm<R, T>( pm );
+    }
 };
 
-namespace aux {
+// listN
 
-#if !defined(BOOST_NO_TEMPLATE_PARTIAL_SPECIALIZATION)
-
-template<
-      typename F AUX778076_BIND_N_PARAMS(i_, typename T), AUX778076_BIND_PARAMS(typename U)
-    >
-struct resolve_bind_arg<
-      BOOST_PP_CAT(bind,i_)<F AUX778076_BIND_N_PARAMS(i_,T)>,AUX778076_BIND_PARAMS(U)
-    >
+class list0
 {
-    typedef BOOST_PP_CAT(bind,i_)<F AUX778076_BIND_N_PARAMS(i_,T)> f_;
-    typedef typename AUX778076_APPLY<f_, AUX778076_BIND_PARAMS(U)>::type type;
+public:
+
+    list0() {}
+
+    template<class T> T & operator[] (_bi::value<T> & v) const { return v.get(); }
+
+    template<class T> T const & operator[] (_bi::value<T> const & v) const { return v.get(); }
+
+    template<class T> T & operator[] (reference_wrapper<T> const & v) const { return v.get(); }
+
+    template<class R, class F, class L> typename result_traits<R, F>::type operator[] (bind_t<R, F, L> & b) const { return b.eval(*this); }
+
+    template<class R, class F, class L> typename result_traits<R, F>::type operator[] (bind_t<R, F, L> const & b) const { return b.eval(*this); }
+
+    template<class R, class F, class A> R operator()(type<R>, F & f, A &, long)
+    {
+        return unwrapper<F>::unwrap(f, 0)();
+    }
+
+    template<class R, class F, class A> R operator()(type<R>, F const & f, A &, long) const
+    {
+        return unwrapper<F const>::unwrap(f, 0)();
+    }
+
+    template<class F, class A> void operator()(type<void>, F & f, A &, int)
+    {
+        unwrapper<F>::unwrap(f, 0)();
+    }
+
+    template<class F, class A> void operator()(type<void>, F const & f, A &, int) const
+    {
+        unwrapper<F const>::unwrap(f, 0)();
+    }
+
+    template<class V> void accept(V &) const
+    {
+    }
+
+    bool operator==(list0 const &) const
+    {
+        return true;
+    }
+};
+
+template< class A1 > class list1: private storage1< A1 >
+{
+private:
+
+    typedef storage1< A1 > base_type;
+
+public:
+
+    explicit list1( A1 a1 ): base_type( a1 ) {}
+
+    A1 operator[] (boost::arg<1>) const { return base_type::a1_; }
+
+    A1 operator[] (boost::arg<1> (*) ()) const { return base_type::a1_; }
+
+    template<class T> T & operator[] ( _bi::value<T> & v ) const { return v.get(); }
+
+    template<class T> T const & operator[] ( _bi::value<T> const & v ) const { return v.get(); }
+
+    template<class T> T & operator[] (reference_wrapper<T> const & v) const { return v.get(); }
+
+    template<class R, class F, class L> typename result_traits<R, F>::type operator[] (bind_t<R, F, L> & b) const { return b.eval(*this); }
+
+    template<class R, class F, class L> typename result_traits<R, F>::type operator[] (bind_t<R, F, L> const & b) const { return b.eval(*this); }
+
+    template<class R, class F, class A> R operator()(type<R>, F & f, A & a, long)
+    {
+        return unwrapper<F>::unwrap(f, 0)(a[base_type::a1_]);
+    }
+
+    template<class R, class F, class A> R operator()(type<R>, F const & f, A & a, long) const
+    {
+        return unwrapper<F const>::unwrap(f, 0)(a[base_type::a1_]);
+    }
+
+    template<class F, class A> void operator()(type<void>, F & f, A & a, int)
+    {
+        unwrapper<F>::unwrap(f, 0)(a[base_type::a1_]);
+    }
+
+    template<class F, class A> void operator()(type<void>, F const & f, A & a, int) const
+    {
+        unwrapper<F const>::unwrap(f, 0)(a[base_type::a1_]);
+    }
+
+    template<class V> void accept(V & v) const
+    {
+        base_type::accept(v);
+    }
+
+    bool operator==(list1 const & rhs) const
+    {
+        return ref_compare(base_type::a1_, rhs.a1_, 0);
+    }
+};
+
+template< class A1, class A2 > class list2: private storage2< A1, A2 >
+{
+private:
+
+    typedef storage2< A1, A2 > base_type;
+
+public:
+
+    list2( A1 a1, A2 a2 ): base_type( a1, a2 ) {}
+
+    A1 operator[] (boost::arg<1>) const { return base_type::a1_; }
+    A2 operator[] (boost::arg<2>) const { return base_type::a2_; }
+
+    A1 operator[] (boost::arg<1> (*) ()) const { return base_type::a1_; }
+    A2 operator[] (boost::arg<2> (*) ()) const { return base_type::a2_; }
+
+    template<class T> T & operator[] (_bi::value<T> & v) const { return v.get(); }
+
+    template<class T> T const & operator[] (_bi::value<T> const & v) const { return v.get(); }
+
+    template<class T> T & operator[] (reference_wrapper<T> const & v) const { return v.get(); }
+
+    template<class R, class F, class L> typename result_traits<R, F>::type operator[] (bind_t<R, F, L> & b) const { return b.eval(*this); }
+
+    template<class R, class F, class L> typename result_traits<R, F>::type operator[] (bind_t<R, F, L> const & b) const { return b.eval(*this); }
+
+    template<class R, class F, class A> R operator()(type<R>, F & f, A & a, long)
+    {
+        return unwrapper<F>::unwrap(f, 0)(a[base_type::a1_], a[base_type::a2_]);
+    }
+
+    template<class R, class F, class A> R operator()(type<R>, F const & f, A & a, long) const
+    {
+        return unwrapper<F const>::unwrap(f, 0)(a[base_type::a1_], a[base_type::a2_]);
+    }
+
+    template<class F, class A> void operator()(type<void>, F & f, A & a, int)
+    {
+        unwrapper<F>::unwrap(f, 0)(a[base_type::a1_], a[base_type::a2_]);
+    }
+
+    template<class F, class A> void operator()(type<void>, F const & f, A & a, int) const
+    {
+        unwrapper<F const>::unwrap(f, 0)(a[base_type::a1_], a[base_type::a2_]);
+    }
+
+    template<class V> void accept(V & v) const
+    {
+        base_type::accept(v);
+    }
+
+    bool operator==(list2 const & rhs) const
+    {
+        return ref_compare(base_type::a1_, rhs.a1_, 0) && ref_compare(base_type::a2_, rhs.a2_, 0);
+    }
+};
+
+template< class A1, class A2, class A3 > class list3: private storage3< A1, A2, A3 >
+{
+private:
+
+    typedef storage3< A1, A2, A3 > base_type;
+
+public:
+
+    list3( A1 a1, A2 a2, A3 a3 ): base_type( a1, a2, a3 ) {}
+
+    A1 operator[] (boost::arg<1>) const { return base_type::a1_; }
+    A2 operator[] (boost::arg<2>) const { return base_type::a2_; }
+    A3 operator[] (boost::arg<3>) const { return base_type::a3_; }
+
+    A1 operator[] (boost::arg<1> (*) ()) const { return base_type::a1_; }
+    A2 operator[] (boost::arg<2> (*) ()) const { return base_type::a2_; }
+    A3 operator[] (boost::arg<3> (*) ()) const { return base_type::a3_; }
+
+    template<class T> T & operator[] (_bi::value<T> & v) const { return v.get(); }
+
+    template<class T> T const & operator[] (_bi::value<T> const & v) const { return v.get(); }
+
+    template<class T> T & operator[] (reference_wrapper<T> const & v) const { return v.get(); }
+
+    template<class R, class F, class L> typename result_traits<R, F>::type operator[] (bind_t<R, F, L> & b) const { return b.eval(*this); }
+
+    template<class R, class F, class L> typename result_traits<R, F>::type operator[] (bind_t<R, F, L> const & b) const { return b.eval(*this); }
+
+    template<class R, class F, class A> R operator()(type<R>, F & f, A & a, long)
+    {
+        return unwrapper<F>::unwrap(f, 0)(a[base_type::a1_], a[base_type::a2_], a[base_type::a3_]);
+    }
+
+    template<class R, class F, class A> R operator()(type<R>, F const & f, A & a, long) const
+    {
+        return unwrapper<F const>::unwrap(f, 0)(a[base_type::a1_], a[base_type::a2_], a[base_type::a3_]);
+    }
+
+    template<class F, class A> void operator()(type<void>, F & f, A & a, int)
+    {
+        unwrapper<F>::unwrap(f, 0)(a[base_type::a1_], a[base_type::a2_], a[base_type::a3_]);
+    }
+
+    template<class F, class A> void operator()(type<void>, F const & f, A & a, int) const
+    {
+        unwrapper<F const>::unwrap(f, 0)(a[base_type::a1_], a[base_type::a2_], a[base_type::a3_]);
+    }
+
+    template<class V> void accept(V & v) const
+    {
+        base_type::accept(v);
+    }
+
+    bool operator==(list3 const & rhs) const
+    {
+        return
+            
+            ref_compare( base_type::a1_, rhs.a1_, 0 ) &&
+            ref_compare( base_type::a2_, rhs.a2_, 0 ) &&
+            ref_compare( base_type::a3_, rhs.a3_, 0 );
+    }
+};
+
+template< class A1, class A2, class A3, class A4 > class list4: private storage4< A1, A2, A3, A4 >
+{
+private:
+
+    typedef storage4< A1, A2, A3, A4 > base_type;
+
+public:
+
+    list4( A1 a1, A2 a2, A3 a3, A4 a4 ): base_type( a1, a2, a3, a4 ) {}
+
+    A1 operator[] (boost::arg<1>) const { return base_type::a1_; }
+    A2 operator[] (boost::arg<2>) const { return base_type::a2_; }
+    A3 operator[] (boost::arg<3>) const { return base_type::a3_; }
+    A4 operator[] (boost::arg<4>) const { return base_type::a4_; }
+
+    A1 operator[] (boost::arg<1> (*) ()) const { return base_type::a1_; }
+    A2 operator[] (boost::arg<2> (*) ()) const { return base_type::a2_; }
+    A3 operator[] (boost::arg<3> (*) ()) const { return base_type::a3_; }
+    A4 operator[] (boost::arg<4> (*) ()) const { return base_type::a4_; }
+
+    template<class T> T & operator[] (_bi::value<T> & v) const { return v.get(); }
+
+    template<class T> T const & operator[] (_bi::value<T> const & v) const { return v.get(); }
+
+    template<class T> T & operator[] (reference_wrapper<T> const & v) const { return v.get(); }
+
+    template<class R, class F, class L> typename result_traits<R, F>::type operator[] (bind_t<R, F, L> & b) const { return b.eval(*this); }
+
+    template<class R, class F, class L> typename result_traits<R, F>::type operator[] (bind_t<R, F, L> const & b) const { return b.eval(*this); }
+
+    template<class R, class F, class A> R operator()(type<R>, F & f, A & a, long)
+    {
+        return unwrapper<F>::unwrap(f, 0)(a[base_type::a1_], a[base_type::a2_], a[base_type::a3_], a[base_type::a4_]);
+    }
+
+    template<class R, class F, class A> R operator()(type<R>, F const & f, A & a, long) const
+    {
+        return unwrapper<F const>::unwrap(f, 0)(a[base_type::a1_], a[base_type::a2_], a[base_type::a3_], a[base_type::a4_]);
+    }
+
+    template<class F, class A> void operator()(type<void>, F & f, A & a, int)
+    {
+        unwrapper<F>::unwrap(f, 0)(a[base_type::a1_], a[base_type::a2_], a[base_type::a3_], a[base_type::a4_]);
+    }
+
+    template<class F, class A> void operator()(type<void>, F const & f, A & a, int) const
+    {
+        unwrapper<F const>::unwrap(f, 0)(a[base_type::a1_], a[base_type::a2_], a[base_type::a3_], a[base_type::a4_]);
+    }
+
+    template<class V> void accept(V & v) const
+    {
+        base_type::accept(v);
+    }
+
+    bool operator==(list4 const & rhs) const
+    {
+        return
+
+            ref_compare( base_type::a1_, rhs.a1_, 0 ) &&
+            ref_compare( base_type::a2_, rhs.a2_, 0 ) &&
+            ref_compare( base_type::a3_, rhs.a3_, 0 ) &&
+            ref_compare( base_type::a4_, rhs.a4_, 0 );
+    }
+};
+
+template< class A1, class A2, class A3, class A4, class A5 > class list5: private storage5< A1, A2, A3, A4, A5 >
+{
+private:
+
+    typedef storage5< A1, A2, A3, A4, A5 > base_type;
+
+public:
+
+    list5( A1 a1, A2 a2, A3 a3, A4 a4, A5 a5 ): base_type( a1, a2, a3, a4, a5 ) {}
+
+    A1 operator[] (boost::arg<1>) const { return base_type::a1_; }
+    A2 operator[] (boost::arg<2>) const { return base_type::a2_; }
+    A3 operator[] (boost::arg<3>) const { return base_type::a3_; }
+    A4 operator[] (boost::arg<4>) const { return base_type::a4_; }
+    A5 operator[] (boost::arg<5>) const { return base_type::a5_; }
+
+    A1 operator[] (boost::arg<1> (*) ()) const { return base_type::a1_; }
+    A2 operator[] (boost::arg<2> (*) ()) const { return base_type::a2_; }
+    A3 operator[] (boost::arg<3> (*) ()) const { return base_type::a3_; }
+    A4 operator[] (boost::arg<4> (*) ()) const { return base_type::a4_; }
+    A5 operator[] (boost::arg<5> (*) ()) const { return base_type::a5_; }
+
+    template<class T> T & operator[] (_bi::value<T> & v) const { return v.get(); }
+
+    template<class T> T const & operator[] (_bi::value<T> const & v) const { return v.get(); }
+
+    template<class T> T & operator[] (reference_wrapper<T> const & v) const { return v.get(); }
+
+    template<class R, class F, class L> typename result_traits<R, F>::type operator[] (bind_t<R, F, L> & b) const { return b.eval(*this); }
+
+    template<class R, class F, class L> typename result_traits<R, F>::type operator[] (bind_t<R, F, L> const & b) const { return b.eval(*this); }
+
+    template<class R, class F, class A> R operator()(type<R>, F & f, A & a, long)
+    {
+        return unwrapper<F>::unwrap(f, 0)(a[base_type::a1_], a[base_type::a2_], a[base_type::a3_], a[base_type::a4_], a[base_type::a5_]);
+    }
+
+    template<class R, class F, class A> R operator()(type<R>, F const & f, A & a, long) const
+    {
+        return unwrapper<F const>::unwrap(f, 0)(a[base_type::a1_], a[base_type::a2_], a[base_type::a3_], a[base_type::a4_], a[base_type::a5_]);
+    }
+
+    template<class F, class A> void operator()(type<void>, F & f, A & a, int)
+    {
+        unwrapper<F>::unwrap(f, 0)(a[base_type::a1_], a[base_type::a2_], a[base_type::a3_], a[base_type::a4_], a[base_type::a5_]);
+    }
+
+    template<class F, class A> void operator()(type<void>, F const & f, A & a, int) const
+    {
+        unwrapper<F const>::unwrap(f, 0)(a[base_type::a1_], a[base_type::a2_], a[base_type::a3_], a[base_type::a4_], a[base_type::a5_]);
+    }
+
+    template<class V> void accept(V & v) const
+    {
+        base_type::accept(v);
+    }
+
+    bool operator==(list5 const & rhs) const
+    {
+        return
+
+            ref_compare( base_type::a1_, rhs.a1_, 0 ) &&
+            ref_compare( base_type::a2_, rhs.a2_, 0 ) &&
+            ref_compare( base_type::a3_, rhs.a3_, 0 ) &&
+            ref_compare( base_type::a4_, rhs.a4_, 0 ) &&
+            ref_compare( base_type::a5_, rhs.a5_, 0 );
+    }
+};
+
+template<class A1, class A2, class A3, class A4, class A5, class A6> class list6: private storage6< A1, A2, A3, A4, A5, A6 >
+{
+private:
+
+    typedef storage6< A1, A2, A3, A4, A5, A6 > base_type;
+
+public:
+
+    list6( A1 a1, A2 a2, A3 a3, A4 a4, A5 a5, A6 a6 ): base_type( a1, a2, a3, a4, a5, a6 ) {}
+
+    A1 operator[] (boost::arg<1>) const { return base_type::a1_; }
+    A2 operator[] (boost::arg<2>) const { return base_type::a2_; }
+    A3 operator[] (boost::arg<3>) const { return base_type::a3_; }
+    A4 operator[] (boost::arg<4>) const { return base_type::a4_; }
+    A5 operator[] (boost::arg<5>) const { return base_type::a5_; }
+    A6 operator[] (boost::arg<6>) const { return base_type::a6_; }
+
+    A1 operator[] (boost::arg<1> (*) ()) const { return base_type::a1_; }
+    A2 operator[] (boost::arg<2> (*) ()) const { return base_type::a2_; }
+    A3 operator[] (boost::arg<3> (*) ()) const { return base_type::a3_; }
+    A4 operator[] (boost::arg<4> (*) ()) const { return base_type::a4_; }
+    A5 operator[] (boost::arg<5> (*) ()) const { return base_type::a5_; }
+    A6 operator[] (boost::arg<6> (*) ()) const { return base_type::a6_; }
+
+    template<class T> T & operator[] (_bi::value<T> & v) const { return v.get(); }
+
+    template<class T> T const & operator[] (_bi::value<T> const & v) const { return v.get(); }
+
+    template<class T> T & operator[] (reference_wrapper<T> const & v) const { return v.get(); }
+
+    template<class R, class F, class L> typename result_traits<R, F>::type operator[] (bind_t<R, F, L> & b) const { return b.eval(*this); }
+
+    template<class R, class F, class L> typename result_traits<R, F>::type operator[] (bind_t<R, F, L> const & b) const { return b.eval(*this); }
+
+    template<class R, class F, class A> R operator()(type<R>, F & f, A & a, long)
+    {
+        return unwrapper<F>::unwrap(f, 0)(a[base_type::a1_], a[base_type::a2_], a[base_type::a3_], a[base_type::a4_], a[base_type::a5_], a[base_type::a6_]);
+    }
+
+    template<class R, class F, class A> R operator()(type<R>, F const & f, A & a, long) const
+    {
+        return unwrapper<F const>::unwrap(f, 0)(a[base_type::a1_], a[base_type::a2_], a[base_type::a3_], a[base_type::a4_], a[base_type::a5_], a[base_type::a6_]);
+    }
+
+    template<class F, class A> void operator()(type<void>, F & f, A & a, int)
+    {
+        unwrapper<F>::unwrap(f, 0)(a[base_type::a1_], a[base_type::a2_], a[base_type::a3_], a[base_type::a4_], a[base_type::a5_], a[base_type::a6_]);
+    }
+
+    template<class F, class A> void operator()(type<void>, F const & f, A & a, int) const
+    {
+        unwrapper<F const>::unwrap(f, 0)(a[base_type::a1_], a[base_type::a2_], a[base_type::a3_], a[base_type::a4_], a[base_type::a5_], a[base_type::a6_]);
+    }
+
+    template<class V> void accept(V & v) const
+    {
+        base_type::accept(v);
+    }
+
+    bool operator==(list6 const & rhs) const
+    {
+        return
+
+            ref_compare( base_type::a1_, rhs.a1_, 0 ) &&
+            ref_compare( base_type::a2_, rhs.a2_, 0 ) &&
+            ref_compare( base_type::a3_, rhs.a3_, 0 ) &&
+            ref_compare( base_type::a4_, rhs.a4_, 0 ) &&
+            ref_compare( base_type::a5_, rhs.a5_, 0 ) &&
+            ref_compare( base_type::a6_, rhs.a6_, 0 );
+    }
+};
+
+template<class A1, class A2, class A3, class A4, class A5, class A6, class A7> class list7: private storage7< A1, A2, A3, A4, A5, A6, A7 >
+{
+private:
+
+    typedef storage7< A1, A2, A3, A4, A5, A6, A7 > base_type;
+
+public:
+
+    list7( A1 a1, A2 a2, A3 a3, A4 a4, A5 a5, A6 a6, A7 a7 ): base_type( a1, a2, a3, a4, a5, a6, a7 ) {}
+
+    A1 operator[] (boost::arg<1>) const { return base_type::a1_; }
+    A2 operator[] (boost::arg<2>) const { return base_type::a2_; }
+    A3 operator[] (boost::arg<3>) const { return base_type::a3_; }
+    A4 operator[] (boost::arg<4>) const { return base_type::a4_; }
+    A5 operator[] (boost::arg<5>) const { return base_type::a5_; }
+    A6 operator[] (boost::arg<6>) const { return base_type::a6_; }
+    A7 operator[] (boost::arg<7>) const { return base_type::a7_; }
+
+    A1 operator[] (boost::arg<1> (*) ()) const { return base_type::a1_; }
+    A2 operator[] (boost::arg<2> (*) ()) const { return base_type::a2_; }
+    A3 operator[] (boost::arg<3> (*) ()) const { return base_type::a3_; }
+    A4 operator[] (boost::arg<4> (*) ()) const { return base_type::a4_; }
+    A5 operator[] (boost::arg<5> (*) ()) const { return base_type::a5_; }
+    A6 operator[] (boost::arg<6> (*) ()) const { return base_type::a6_; }
+    A7 operator[] (boost::arg<7> (*) ()) const { return base_type::a7_; }
+
+    template<class T> T & operator[] (_bi::value<T> & v) const { return v.get(); }
+
+    template<class T> T const & operator[] (_bi::value<T> const & v) const { return v.get(); }
+
+    template<class T> T & operator[] (reference_wrapper<T> const & v) const { return v.get(); }
+
+    template<class R, class F, class L> typename result_traits<R, F>::type operator[] (bind_t<R, F, L> & b) const { return b.eval(*this); }
+
+    template<class R, class F, class L> typename result_traits<R, F>::type operator[] (bind_t<R, F, L> const & b) const { return b.eval(*this); }
+
+    template<class R, class F, class A> R operator()(type<R>, F & f, A & a, long)
+    {
+        return unwrapper<F>::unwrap(f, 0)(a[base_type::a1_], a[base_type::a2_], a[base_type::a3_], a[base_type::a4_], a[base_type::a5_], a[base_type::a6_], a[base_type::a7_]);
+    }
+
+    template<class R, class F, class A> R operator()(type<R>, F const & f, A & a, long) const
+    {
+        return unwrapper<F const>::unwrap(f, 0)(a[base_type::a1_], a[base_type::a2_], a[base_type::a3_], a[base_type::a4_], a[base_type::a5_], a[base_type::a6_], a[base_type::a7_]);
+    }
+
+    template<class F, class A> void operator()(type<void>, F & f, A & a, int)
+    {
+        unwrapper<F>::unwrap(f, 0)(a[base_type::a1_], a[base_type::a2_], a[base_type::a3_], a[base_type::a4_], a[base_type::a5_], a[base_type::a6_], a[base_type::a7_]);
+    }
+
+    template<class F, class A> void operator()(type<void>, F const & f, A & a, int) const
+    {
+        unwrapper<F const>::unwrap(f, 0)(a[base_type::a1_], a[base_type::a2_], a[base_type::a3_], a[base_type::a4_], a[base_type::a5_], a[base_type::a6_], a[base_type::a7_]);
+    }
+
+    template<class V> void accept(V & v) const
+    {
+        base_type::accept(v);
+    }
+
+    bool operator==(list7 const & rhs) const
+    {
+        return
+
+            ref_compare( base_type::a1_, rhs.a1_, 0 ) &&
+            ref_compare( base_type::a2_, rhs.a2_, 0 ) &&
+            ref_compare( base_type::a3_, rhs.a3_, 0 ) &&
+            ref_compare( base_type::a4_, rhs.a4_, 0 ) &&
+            ref_compare( base_type::a5_, rhs.a5_, 0 ) &&
+            ref_compare( base_type::a6_, rhs.a6_, 0 ) &&
+            ref_compare( base_type::a7_, rhs.a7_, 0 );
+    }
+};
+
+template< class A1, class A2, class A3, class A4, class A5, class A6, class A7, class A8 > class list8: private storage8< A1, A2, A3, A4, A5, A6, A7, A8 >
+{
+private:
+
+    typedef storage8< A1, A2, A3, A4, A5, A6, A7, A8 > base_type;
+
+public:
+
+    list8( A1 a1, A2 a2, A3 a3, A4 a4, A5 a5, A6 a6, A7 a7, A8 a8 ): base_type( a1, a2, a3, a4, a5, a6, a7, a8 ) {}
+
+    A1 operator[] (boost::arg<1>) const { return base_type::a1_; }
+    A2 operator[] (boost::arg<2>) const { return base_type::a2_; }
+    A3 operator[] (boost::arg<3>) const { return base_type::a3_; }
+    A4 operator[] (boost::arg<4>) const { return base_type::a4_; }
+    A5 operator[] (boost::arg<5>) const { return base_type::a5_; }
+    A6 operator[] (boost::arg<6>) const { return base_type::a6_; }
+    A7 operator[] (boost::arg<7>) const { return base_type::a7_; }
+    A8 operator[] (boost::arg<8>) const { return base_type::a8_; }
+
+    A1 operator[] (boost::arg<1> (*) ()) const { return base_type::a1_; }
+    A2 operator[] (boost::arg<2> (*) ()) const { return base_type::a2_; }
+    A3 operator[] (boost::arg<3> (*) ()) const { return base_type::a3_; }
+    A4 operator[] (boost::arg<4> (*) ()) const { return base_type::a4_; }
+    A5 operator[] (boost::arg<5> (*) ()) const { return base_type::a5_; }
+    A6 operator[] (boost::arg<6> (*) ()) const { return base_type::a6_; }
+    A7 operator[] (boost::arg<7> (*) ()) const { return base_type::a7_; }
+    A8 operator[] (boost::arg<8> (*) ()) const { return base_type::a8_; }
+
+    template<class T> T & operator[] (_bi::value<T> & v) const { return v.get(); }
+
+    template<class T> T const & operator[] (_bi::value<T> const & v) const { return v.get(); }
+
+    template<class T> T & operator[] (reference_wrapper<T> const & v) const { return v.get(); }
+
+    template<class R, class F, class L> typename result_traits<R, F>::type operator[] (bind_t<R, F, L> & b) const { return b.eval(*this); }
+
+    template<class R, class F, class L> typename result_traits<R, F>::type operator[] (bind_t<R, F, L> const & b) const { return b.eval(*this); }
+
+    template<class R, class F, class A> R operator()(type<R>, F & f, A & a, long)
+    {
+        return unwrapper<F>::unwrap(f, 0)(a[base_type::a1_], a[base_type::a2_], a[base_type::a3_], a[base_type::a4_], a[base_type::a5_], a[base_type::a6_], a[base_type::a7_], a[base_type::a8_]);
+    }
+
+    template<class R, class F, class A> R operator()(type<R>, F const & f, A & a, long) const
+    {
+        return unwrapper<F const>::unwrap(f, 0)(a[base_type::a1_], a[base_type::a2_], a[base_type::a3_], a[base_type::a4_], a[base_type::a5_], a[base_type::a6_], a[base_type::a7_], a[base_type::a8_]);
+    }
+
+    template<class F, class A> void operator()(type<void>, F & f, A & a, int)
+    {
+        unwrapper<F>::unwrap(f, 0)(a[base_type::a1_], a[base_type::a2_], a[base_type::a3_], a[base_type::a4_], a[base_type::a5_], a[base_type::a6_], a[base_type::a7_], a[base_type::a8_]);
+    }
+
+    template<class F, class A> void operator()(type<void>, F const & f, A & a, int) const
+    {
+        unwrapper<F const>::unwrap(f, 0)(a[base_type::a1_], a[base_type::a2_], a[base_type::a3_], a[base_type::a4_], a[base_type::a5_], a[base_type::a6_], a[base_type::a7_], a[base_type::a8_]);
+    }
+
+    template<class V> void accept(V & v) const
+    {
+        base_type::accept(v);
+    }
+
+    bool operator==(list8 const & rhs) const
+    {
+        return
+            
+            ref_compare( base_type::a1_, rhs.a1_, 0 ) &&
+            ref_compare( base_type::a2_, rhs.a2_, 0 ) &&
+            ref_compare( base_type::a3_, rhs.a3_, 0 ) &&
+            ref_compare( base_type::a4_, rhs.a4_, 0 ) &&
+            ref_compare( base_type::a5_, rhs.a5_, 0 ) &&
+            ref_compare( base_type::a6_, rhs.a6_, 0 ) &&
+            ref_compare( base_type::a7_, rhs.a7_, 0 ) &&
+            ref_compare( base_type::a8_, rhs.a8_, 0 );
+    }
+};
+
+template<class A1, class A2, class A3, class A4, class A5, class A6, class A7, class A8, class A9> class list9: private storage9< A1, A2, A3, A4, A5, A6, A7, A8, A9 >
+{
+private:
+
+    typedef storage9< A1, A2, A3, A4, A5, A6, A7, A8, A9 > base_type;
+
+public:
+
+    list9( A1 a1, A2 a2, A3 a3, A4 a4, A5 a5, A6 a6, A7 a7, A8 a8, A9 a9 ): base_type( a1, a2, a3, a4, a5, a6, a7, a8, a9 ) {}
+
+    A1 operator[] (boost::arg<1>) const { return base_type::a1_; }
+    A2 operator[] (boost::arg<2>) const { return base_type::a2_; }
+    A3 operator[] (boost::arg<3>) const { return base_type::a3_; }
+    A4 operator[] (boost::arg<4>) const { return base_type::a4_; }
+    A5 operator[] (boost::arg<5>) const { return base_type::a5_; }
+    A6 operator[] (boost::arg<6>) const { return base_type::a6_; }
+    A7 operator[] (boost::arg<7>) const { return base_type::a7_; }
+    A8 operator[] (boost::arg<8>) const { return base_type::a8_; }
+    A9 operator[] (boost::arg<9>) const { return base_type::a9_; }
+
+    A1 operator[] (boost::arg<1> (*) ()) const { return base_type::a1_; }
+    A2 operator[] (boost::arg<2> (*) ()) const { return base_type::a2_; }
+    A3 operator[] (boost::arg<3> (*) ()) const { return base_type::a3_; }
+    A4 operator[] (boost::arg<4> (*) ()) const { return base_type::a4_; }
+    A5 operator[] (boost::arg<5> (*) ()) const { return base_type::a5_; }
+    A6 operator[] (boost::arg<6> (*) ()) const { return base_type::a6_; }
+    A7 operator[] (boost::arg<7> (*) ()) const { return base_type::a7_; }
+    A8 operator[] (boost::arg<8> (*) ()) const { return base_type::a8_; }
+    A9 operator[] (boost::arg<9> (*) ()) const { return base_type::a9_; }
+
+    template<class T> T & operator[] (_bi::value<T> & v) const { return v.get(); }
+
+    template<class T> T const & operator[] (_bi::value<T> const & v) const { return v.get(); }
+
+    template<class T> T & operator[] (reference_wrapper<T> const & v) const { return v.get(); }
+
+    template<class R, class F, class L> typename result_traits<R, F>::type operator[] (bind_t<R, F, L> & b) const { return b.eval(*this); }
+
+    template<class R, class F, class L> typename result_traits<R, F>::type operator[] (bind_t<R, F, L> const & b) const { return b.eval(*this); }
+
+    template<class R, class F, class A> R operator()(type<R>, F & f, A & a, long)
+    {
+        return unwrapper<F>::unwrap(f, 0)(a[base_type::a1_], a[base_type::a2_], a[base_type::a3_], a[base_type::a4_], a[base_type::a5_], a[base_type::a6_], a[base_type::a7_], a[base_type::a8_], a[base_type::a9_]);
+    }
+
+    template<class R, class F, class A> R operator()(type<R>, F const & f, A & a, long) const
+    {
+        return unwrapper<F const>::unwrap(f, 0)(a[base_type::a1_], a[base_type::a2_], a[base_type::a3_], a[base_type::a4_], a[base_type::a5_], a[base_type::a6_], a[base_type::a7_], a[base_type::a8_], a[base_type::a9_]);
+    }
+
+    template<class F, class A> void operator()(type<void>, F & f, A & a, int)
+    {
+        unwrapper<F>::unwrap(f, 0)(a[base_type::a1_], a[base_type::a2_], a[base_type::a3_], a[base_type::a4_], a[base_type::a5_], a[base_type::a6_], a[base_type::a7_], a[base_type::a8_], a[base_type::a9_]);
+    }
+
+    template<class F, class A> void operator()(type<void>, F const & f, A & a, int) const
+    {
+        unwrapper<F const>::unwrap(f, 0)(a[base_type::a1_], a[base_type::a2_], a[base_type::a3_], a[base_type::a4_], a[base_type::a5_], a[base_type::a6_], a[base_type::a7_], a[base_type::a8_], a[base_type::a9_]);
+    }
+
+    template<class V> void accept(V & v) const
+    {
+        base_type::accept(v);
+    }
+
+    bool operator==(list9 const & rhs) const
+    {
+        return
+
+            ref_compare( base_type::a1_, rhs.a1_, 0 ) &&
+            ref_compare( base_type::a2_, rhs.a2_, 0 ) &&
+            ref_compare( base_type::a3_, rhs.a3_, 0 ) &&
+            ref_compare( base_type::a4_, rhs.a4_, 0 ) &&
+            ref_compare( base_type::a5_, rhs.a5_, 0 ) &&
+            ref_compare( base_type::a6_, rhs.a6_, 0 ) &&
+            ref_compare( base_type::a7_, rhs.a7_, 0 ) &&
+            ref_compare( base_type::a8_, rhs.a8_, 0 ) &&
+            ref_compare( base_type::a9_, rhs.a9_, 0 );
+    }
+};
+
+// bind_t
+
+#ifndef BOOST_NO_VOID_RETURNS
+
+template<class R, class F, class L> class bind_t
+{
+public:
+
+    typedef bind_t this_type;
+
+    bind_t(F f, L const & l): f_(f), l_(l) {}
+
+#define BOOST_BIND_RETURN return
+#include <boost/bind/bind_template.hpp>
+#undef BOOST_BIND_RETURN
+
 };
 
 #else
 
-template<
-      typename F AUX778076_BIND_N_PARAMS(i_, typename T)
-    >
-aux::yes_tag
-is_bind_helper(BOOST_PP_CAT(bind,i_)<F AUX778076_BIND_N_PARAMS(i_,T)>*);
-
-#endif // BOOST_NO_TEMPLATE_PARTIAL_SPECIALIZATION
-
-} // namespace aux
-
-BOOST_MPL_AUX_ARITY_SPEC(BOOST_PP_INC(i_), BOOST_PP_CAT(bind,i_))
-BOOST_MPL_AUX_TEMPLATE_ARITY_SPEC(BOOST_PP_INC(i_), BOOST_PP_CAT(bind,i_))
-
-#   if !defined(BOOST_MPL_CFG_NO_BIND_TEMPLATE)
-#   if !defined(BOOST_NO_TEMPLATE_PARTIAL_SPECIALIZATION)
-    
-#if i_ == BOOST_MPL_LIMIT_METAFUNCTION_ARITY
-/// primary template (not a specialization!)
-template<
-      typename F AUX778076_BIND_N_PARAMS(i_, typename T) AUX778076_DMC_PARAM()
-    >
-struct bind
-    : BOOST_PP_CAT(bind,i_)<F AUX778076_BIND_N_PARAMS(i_,T) >
+template<class R> struct bind_t_generator
 {
-};
-#else
-template<
-      typename F AUX778076_BIND_N_PARAMS(i_, typename T) AUX778076_DMC_PARAM()
-    >
-struct bind< F AUX778076_BIND_N_SPEC_PARAMS(i_, T, na) >
-    : BOOST_PP_CAT(bind,i_)<F AUX778076_BIND_N_PARAMS(i_,T) >
+
+template<class F, class L> class implementation
 {
+public:
+
+    typedef implementation this_type;
+
+    implementation(F f, L const & l): f_(f), l_(l) {}
+
+#define BOOST_BIND_RETURN return
+#include <boost/bind/bind_template.hpp>
+#undef BOOST_BIND_RETURN
+
 };
+
+};
+
+template<> struct bind_t_generator<void>
+{
+
+template<class F, class L> class implementation
+{
+private:
+
+    typedef void R;
+
+public:
+
+    typedef implementation this_type;
+
+    implementation(F f, L const & l): f_(f), l_(l) {}
+
+#define BOOST_BIND_RETURN
+#include <boost/bind/bind_template.hpp>
+#undef BOOST_BIND_RETURN
+
+};
+
+};
+
+template<class R2, class F, class L> class bind_t: public bind_t_generator<R2>::BOOST_NESTED_TEMPLATE implementation<F, L>
+{
+public:
+
+    bind_t(F f, L const & l): bind_t_generator<R2>::BOOST_NESTED_TEMPLATE implementation<F, L>(f, l) {}
+
+};
+
 #endif
 
-#   else // BOOST_NO_TEMPLATE_PARTIAL_SPECIALIZATION
+// function_equal
 
-namespace aux {
+#ifndef BOOST_NO_ARGUMENT_DEPENDENT_LOOKUP
 
-template<>
-struct bind_chooser<i_>
+// put overloads in _bi, rely on ADL
+
+# ifndef BOOST_NO_FUNCTION_TEMPLATE_ORDERING
+
+template<class R, class F, class L> bool function_equal( bind_t<R, F, L> const & a, bind_t<R, F, L> const & b )
 {
-    template<
-          typename F, AUX778076_BIND_PARAMS(typename T)
-        >
-    struct result_
+    return a.compare(b);
+}
+
+# else
+
+template<class R, class F, class L> bool function_equal_impl( bind_t<R, F, L> const & a, bind_t<R, F, L> const & b, int )
+{
+    return a.compare(b);
+}
+
+# endif // #ifndef BOOST_NO_FUNCTION_TEMPLATE_ORDERING
+
+#else // BOOST_NO_ARGUMENT_DEPENDENT_LOOKUP
+
+// put overloads in boost
+
+} // namespace _bi
+
+# ifndef BOOST_NO_FUNCTION_TEMPLATE_ORDERING
+
+template<class R, class F, class L> bool function_equal( _bi::bind_t<R, F, L> const & a, _bi::bind_t<R, F, L> const & b )
+{
+    return a.compare(b);
+}
+
+# else
+
+template<class R, class F, class L> bool function_equal_impl( _bi::bind_t<R, F, L> const & a, _bi::bind_t<R, F, L> const & b, int )
+{
+    return a.compare(b);
+}
+
+# endif // #ifndef BOOST_NO_FUNCTION_TEMPLATE_ORDERING
+
+namespace _bi
+{
+
+#endif // BOOST_NO_ARGUMENT_DEPENDENT_LOOKUP
+
+// add_value
+
+#if !defined(BOOST_NO_TEMPLATE_PARTIAL_SPECIALIZATION) || (__SUNPRO_CC >= 0x530)
+
+template<class T> struct add_value
+{
+    typedef _bi::value<T> type;
+};
+
+template<class T> struct add_value< value<T> >
+{
+    typedef _bi::value<T> type;
+};
+
+template<class T> struct add_value< reference_wrapper<T> >
+{
+    typedef reference_wrapper<T> type;
+};
+
+template<int I> struct add_value< arg<I> >
+{
+    typedef boost::arg<I> type;
+};
+
+template<int I> struct add_value< arg<I> (*) () >
+{
+    typedef boost::arg<I> (*type) ();
+};
+
+template<class R, class F, class L> struct add_value< bind_t<R, F, L> >
+{
+    typedef bind_t<R, F, L> type;
+};
+
+#else
+
+template<int I> struct _avt_0;
+
+template<> struct _avt_0<1>
+{
+    template<class T> struct inner
     {
-        typedef BOOST_PP_CAT(bind,i_)< F AUX778076_BIND_N_PARAMS(i_,T) > type;
+        typedef T type;
     };
 };
 
-} // namespace aux
+template<> struct _avt_0<2>
+{
+    template<class T> struct inner
+    {
+        typedef value<T> type;
+    };
+};
 
-#   endif // BOOST_NO_TEMPLATE_PARTIAL_SPECIALIZATION
-#   endif // BOOST_MPL_CFG_NO_BIND_TEMPLATE
+typedef char (&_avt_r1) [1];
+typedef char (&_avt_r2) [2];
 
-#endif // AUX778076_SPEC_NAME
+template<class T> _avt_r1 _avt_f(value<T>);
+template<class T> _avt_r1 _avt_f(reference_wrapper<T>);
+template<int I> _avt_r1 _avt_f(arg<I>);
+template<int I> _avt_r1 _avt_f(arg<I> (*) ());
+template<class R, class F, class L> _avt_r1 _avt_f(bind_t<R, F, L>);
 
-#   undef i_
+_avt_r2 _avt_f(...);
 
-///// iteration, depth == 2
+template<class T> struct add_value
+{
+    static T t();
+    typedef typename _avt_0<sizeof(_avt_f(t()))>::template inner<T>::type type;
+};
 
-#elif BOOST_PP_ITERATION_DEPTH() == 2
+#endif
 
-#   define j_ BOOST_PP_FRAME_ITERATION(2)
-#   if !defined(BOOST_MPL_CFG_NO_UNNAMED_PLACEHOLDER_SUPPORT)
+// list_av_N
 
-        typedef aux::replace_unnamed_arg< BOOST_PP_CAT(T,j_),BOOST_PP_CAT(n,j_) > BOOST_PP_CAT(r,j_);
-        typedef typename BOOST_PP_CAT(r,j_)::type BOOST_PP_CAT(a,j_);
-        typedef typename BOOST_PP_CAT(r,j_)::next BOOST_PP_CAT(n,BOOST_PP_INC(j_));
-        typedef aux::resolve_bind_arg<BOOST_PP_CAT(a,j_), AUX778076_BIND_PARAMS(U)> BOOST_PP_CAT(t,j_);
-        ///
-#   else
-        typedef aux::resolve_bind_arg< BOOST_PP_CAT(T,j_),AUX778076_BIND_PARAMS(U)> BOOST_PP_CAT(t,j_);
+template<class A1> struct list_av_1
+{
+    typedef typename add_value<A1>::type B1;
+    typedef list1<B1> type;
+};
 
-#   endif
-#   undef j_
+template<class A1, class A2> struct list_av_2
+{
+    typedef typename add_value<A1>::type B1;
+    typedef typename add_value<A2>::type B2;
+    typedef list2<B1, B2> type;
+};
 
-#endif // BOOST_PP_IS_ITERATING
+template<class A1, class A2, class A3> struct list_av_3
+{
+    typedef typename add_value<A1>::type B1;
+    typedef typename add_value<A2>::type B2;
+    typedef typename add_value<A3>::type B3;
+    typedef list3<B1, B2, B3> type;
+};
+
+template<class A1, class A2, class A3, class A4> struct list_av_4
+{
+    typedef typename add_value<A1>::type B1;
+    typedef typename add_value<A2>::type B2;
+    typedef typename add_value<A3>::type B3;
+    typedef typename add_value<A4>::type B4;
+    typedef list4<B1, B2, B3, B4> type;
+};
+
+template<class A1, class A2, class A3, class A4, class A5> struct list_av_5
+{
+    typedef typename add_value<A1>::type B1;
+    typedef typename add_value<A2>::type B2;
+    typedef typename add_value<A3>::type B3;
+    typedef typename add_value<A4>::type B4;
+    typedef typename add_value<A5>::type B5;
+    typedef list5<B1, B2, B3, B4, B5> type;
+};
+
+template<class A1, class A2, class A3, class A4, class A5, class A6> struct list_av_6
+{
+    typedef typename add_value<A1>::type B1;
+    typedef typename add_value<A2>::type B2;
+    typedef typename add_value<A3>::type B3;
+    typedef typename add_value<A4>::type B4;
+    typedef typename add_value<A5>::type B5;
+    typedef typename add_value<A6>::type B6;
+    typedef list6<B1, B2, B3, B4, B5, B6> type;
+};
+
+template<class A1, class A2, class A3, class A4, class A5, class A6, class A7> struct list_av_7
+{
+    typedef typename add_value<A1>::type B1;
+    typedef typename add_value<A2>::type B2;
+    typedef typename add_value<A3>::type B3;
+    typedef typename add_value<A4>::type B4;
+    typedef typename add_value<A5>::type B5;
+    typedef typename add_value<A6>::type B6;
+    typedef typename add_value<A7>::type B7;
+    typedef list7<B1, B2, B3, B4, B5, B6, B7> type;
+};
+
+template<class A1, class A2, class A3, class A4, class A5, class A6, class A7, class A8> struct list_av_8
+{
+    typedef typename add_value<A1>::type B1;
+    typedef typename add_value<A2>::type B2;
+    typedef typename add_value<A3>::type B3;
+    typedef typename add_value<A4>::type B4;
+    typedef typename add_value<A5>::type B5;
+    typedef typename add_value<A6>::type B6;
+    typedef typename add_value<A7>::type B7;
+    typedef typename add_value<A8>::type B8;
+    typedef list8<B1, B2, B3, B4, B5, B6, B7, B8> type;
+};
+
+template<class A1, class A2, class A3, class A4, class A5, class A6, class A7, class A8, class A9> struct list_av_9
+{
+    typedef typename add_value<A1>::type B1;
+    typedef typename add_value<A2>::type B2;
+    typedef typename add_value<A3>::type B3;
+    typedef typename add_value<A4>::type B4;
+    typedef typename add_value<A5>::type B5;
+    typedef typename add_value<A6>::type B6;
+    typedef typename add_value<A7>::type B7;
+    typedef typename add_value<A8>::type B8;
+    typedef typename add_value<A9>::type B9;
+    typedef list9<B1, B2, B3, B4, B5, B6, B7, B8, B9> type;
+};
+
+// operator!
+
+struct logical_not
+{
+    template<class V> bool operator()(V const & v) const { return !v; }
+};
+
+template<class R, class F, class L>
+    bind_t< bool, logical_not, list1< bind_t<R, F, L> > >
+    operator! (bind_t<R, F, L> const & f)
+{
+    typedef list1< bind_t<R, F, L> > list_type;
+    return bind_t<bool, logical_not, list_type> ( logical_not(), list_type(f) );
+}
+
+// relational operators
+
+#define BOOST_BIND_OPERATOR( op, name ) \
+\
+struct name \
+{ \
+    template<class V, class W> bool operator()(V const & v, W const & w) const { return v op w; } \
+}; \
+ \
+template<class R, class F, class L, class A2> \
+    bind_t< bool, name, list2< bind_t<R, F, L>, typename add_value<A2>::type > > \
+    operator op (bind_t<R, F, L> const & f, A2 a2) \
+{ \
+    typedef typename add_value<A2>::type B2; \
+    typedef list2< bind_t<R, F, L>, B2> list_type; \
+    return bind_t<bool, name, list_type> ( name(), list_type(f, a2) ); \
+}
+
+BOOST_BIND_OPERATOR( ==, equal )
+BOOST_BIND_OPERATOR( !=, not_equal )
+
+BOOST_BIND_OPERATOR( <, less )
+BOOST_BIND_OPERATOR( <=, less_equal )
+
+BOOST_BIND_OPERATOR( >, greater )
+BOOST_BIND_OPERATOR( >=, greater_equal )
+
+#undef BOOST_BIND_OPERATOR
+
+#if defined(__GNUC__) && BOOST_WORKAROUND(__GNUC__, < 3)
+
+// resolve ambiguity with rel_ops
+
+#define BOOST_BIND_OPERATOR( op, name ) \
+\
+template<class R, class F, class L> \
+    bind_t< bool, name, list2< bind_t<R, F, L>, bind_t<R, F, L> > > \
+    operator op (bind_t<R, F, L> const & f, bind_t<R, F, L> const & g) \
+{ \
+    typedef list2< bind_t<R, F, L>, bind_t<R, F, L> > list_type; \
+    return bind_t<bool, name, list_type> ( name(), list_type(f, g) ); \
+}
+
+BOOST_BIND_OPERATOR( !=, not_equal )
+BOOST_BIND_OPERATOR( <=, less_equal )
+BOOST_BIND_OPERATOR( >, greater )
+BOOST_BIND_OPERATOR( >=, greater_equal )
+
+#endif
+
+// visit_each, ADL
+
+#if !defined( BOOST_NO_ARGUMENT_DEPENDENT_LOOKUP ) && !defined( __BORLANDC__ ) \
+   && !(defined(__GNUC__) && __GNUC__ == 3 && __GNUC_MINOR__ <= 3)
+
+template<class V, class T> void visit_each( V & v, value<T> const & t, int )
+{
+    using boost::visit_each;
+    BOOST_BIND_VISIT_EACH( v, t.get(), 0 );
+}
+
+template<class V, class R, class F, class L> void visit_each( V & v, bind_t<R, F, L> const & t, int )
+{
+    t.accept( v );
+}
+
+#endif
+
+} // namespace _bi
+
+// visit_each, no ADL
+
+#if defined( BOOST_NO_ARGUMENT_DEPENDENT_LOOKUP ) || defined( __BORLANDC__ ) \
+  || (defined(__GNUC__) && __GNUC__ == 3 && __GNUC_MINOR__ <= 3)
+
+template<class V, class T> void visit_each( V & v, _bi::value<T> const & t, int )
+{
+    BOOST_BIND_VISIT_EACH( v, t.get(), 0 );
+}
+
+template<class V, class R, class F, class L> void visit_each( V & v, _bi::bind_t<R, F, L> const & t, int )
+{
+    t.accept( v );
+}
+
+#endif
+
+// bind
+
+#ifndef BOOST_BIND
+#define BOOST_BIND bind
+#endif
+
+// generic function objects
+
+template<class R, class F>
+    _bi::bind_t<R, F, _bi::list0>
+    BOOST_BIND(F f)
+{
+    typedef _bi::list0 list_type;
+    return _bi::bind_t<R, F, list_type> (f, list_type());
+}
+
+template<class R, class F, class A1>
+    _bi::bind_t<R, F, typename _bi::list_av_1<A1>::type>
+    BOOST_BIND(F f, A1 a1)
+{
+    typedef typename _bi::list_av_1<A1>::type list_type;
+    return _bi::bind_t<R, F, list_type> (f, list_type(a1));
+}
+
+template<class R, class F, class A1, class A2>
+    _bi::bind_t<R, F, typename _bi::list_av_2<A1, A2>::type>
+    BOOST_BIND(F f, A1 a1, A2 a2)
+{
+    typedef typename _bi::list_av_2<A1, A2>::type list_type;
+    return _bi::bind_t<R, F, list_type> (f, list_type(a1, a2));
+}
+
+template<class R, class F, class A1, class A2, class A3>
+    _bi::bind_t<R, F, typename _bi::list_av_3<A1, A2, A3>::type>
+    BOOST_BIND(F f, A1 a1, A2 a2, A3 a3)
+{
+    typedef typename _bi::list_av_3<A1, A2, A3>::type list_type;
+    return _bi::bind_t<R, F, list_type>(f, list_type(a1, a2, a3));
+}
+
+template<class R, class F, class A1, class A2, class A3, class A4>
+    _bi::bind_t<R, F, typename _bi::list_av_4<A1, A2, A3, A4>::type>
+    BOOST_BIND(F f, A1 a1, A2 a2, A3 a3, A4 a4)
+{
+    typedef typename _bi::list_av_4<A1, A2, A3, A4>::type list_type;
+    return _bi::bind_t<R, F, list_type>(f, list_type(a1, a2, a3, a4));
+}
+
+template<class R, class F, class A1, class A2, class A3, class A4, class A5>
+    _bi::bind_t<R, F, typename _bi::list_av_5<A1, A2, A3, A4, A5>::type>
+    BOOST_BIND(F f, A1 a1, A2 a2, A3 a3, A4 a4, A5 a5)
+{
+    typedef typename _bi::list_av_5<A1, A2, A3, A4, A5>::type list_type;
+    return _bi::bind_t<R, F, list_type>(f, list_type(a1, a2, a3, a4, a5));
+}
+
+template<class R, class F, class A1, class A2, class A3, class A4, class A5, class A6>
+    _bi::bind_t<R, F, typename _bi::list_av_6<A1, A2, A3, A4, A5, A6>::type>
+    BOOST_BIND(F f, A1 a1, A2 a2, A3 a3, A4 a4, A5 a5, A6 a6)
+{
+    typedef typename _bi::list_av_6<A1, A2, A3, A4, A5, A6>::type list_type;
+    return _bi::bind_t<R, F, list_type>(f, list_type(a1, a2, a3, a4, a5, a6));
+}
+
+template<class R, class F, class A1, class A2, class A3, class A4, class A5, class A6, class A7>
+    _bi::bind_t<R, F, typename _bi::list_av_7<A1, A2, A3, A4, A5, A6, A7>::type>
+    BOOST_BIND(F f, A1 a1, A2 a2, A3 a3, A4 a4, A5 a5, A6 a6, A7 a7)
+{
+    typedef typename _bi::list_av_7<A1, A2, A3, A4, A5, A6, A7>::type list_type;
+    return _bi::bind_t<R, F, list_type>(f, list_type(a1, a2, a3, a4, a5, a6, a7));
+}
+
+template<class R, class F, class A1, class A2, class A3, class A4, class A5, class A6, class A7, class A8>
+    _bi::bind_t<R, F, typename _bi::list_av_8<A1, A2, A3, A4, A5, A6, A7, A8>::type>
+    BOOST_BIND(F f, A1 a1, A2 a2, A3 a3, A4 a4, A5 a5, A6 a6, A7 a7, A8 a8)
+{
+    typedef typename _bi::list_av_8<A1, A2, A3, A4, A5, A6, A7, A8>::type list_type;
+    return _bi::bind_t<R, F, list_type>(f, list_type(a1, a2, a3, a4, a5, a6, a7, a8));
+}
+
+template<class R, class F, class A1, class A2, class A3, class A4, class A5, class A6, class A7, class A8, class A9>
+    _bi::bind_t<R, F, typename _bi::list_av_9<A1, A2, A3, A4, A5, A6, A7, A8, A9>::type>
+    BOOST_BIND(F f, A1 a1, A2 a2, A3 a3, A4 a4, A5 a5, A6 a6, A7 a7, A8 a8, A9 a9)
+{
+    typedef typename _bi::list_av_9<A1, A2, A3, A4, A5, A6, A7, A8, A9>::type list_type;
+    return _bi::bind_t<R, F, list_type>(f, list_type(a1, a2, a3, a4, a5, a6, a7, a8, a9));
+}
+
+// generic function objects, alternative syntax
+
+template<class R, class F>
+    _bi::bind_t<R, F, _bi::list0>
+    BOOST_BIND(boost::type<R>, F f)
+{
+    typedef _bi::list0 list_type;
+    return _bi::bind_t<R, F, list_type> (f, list_type());
+}
+
+template<class R, class F, class A1>
+    _bi::bind_t<R, F, typename _bi::list_av_1<A1>::type>
+    BOOST_BIND(boost::type<R>, F f, A1 a1)
+{
+    typedef typename _bi::list_av_1<A1>::type list_type;
+    return _bi::bind_t<R, F, list_type> (f, list_type(a1));
+}
+
+template<class R, class F, class A1, class A2>
+    _bi::bind_t<R, F, typename _bi::list_av_2<A1, A2>::type>
+    BOOST_BIND(boost::type<R>, F f, A1 a1, A2 a2)
+{
+    typedef typename _bi::list_av_2<A1, A2>::type list_type;
+    return _bi::bind_t<R, F, list_type> (f, list_type(a1, a2));
+}
+
+template<class R, class F, class A1, class A2, class A3>
+    _bi::bind_t<R, F, typename _bi::list_av_3<A1, A2, A3>::type>
+    BOOST_BIND(boost::type<R>, F f, A1 a1, A2 a2, A3 a3)
+{
+    typedef typename _bi::list_av_3<A1, A2, A3>::type list_type;
+    return _bi::bind_t<R, F, list_type>(f, list_type(a1, a2, a3));
+}
+
+template<class R, class F, class A1, class A2, class A3, class A4>
+    _bi::bind_t<R, F, typename _bi::list_av_4<A1, A2, A3, A4>::type>
+    BOOST_BIND(boost::type<R>, F f, A1 a1, A2 a2, A3 a3, A4 a4)
+{
+    typedef typename _bi::list_av_4<A1, A2, A3, A4>::type list_type;
+    return _bi::bind_t<R, F, list_type>(f, list_type(a1, a2, a3, a4));
+}
+
+template<class R, class F, class A1, class A2, class A3, class A4, class A5>
+    _bi::bind_t<R, F, typename _bi::list_av_5<A1, A2, A3, A4, A5>::type>
+    BOOST_BIND(boost::type<R>, F f, A1 a1, A2 a2, A3 a3, A4 a4, A5 a5)
+{
+    typedef typename _bi::list_av_5<A1, A2, A3, A4, A5>::type list_type;
+    return _bi::bind_t<R, F, list_type>(f, list_type(a1, a2, a3, a4, a5));
+}
+
+template<class R, class F, class A1, class A2, class A3, class A4, class A5, class A6>
+    _bi::bind_t<R, F, typename _bi::list_av_6<A1, A2, A3, A4, A5, A6>::type>
+    BOOST_BIND(boost::type<R>, F f, A1 a1, A2 a2, A3 a3, A4 a4, A5 a5, A6 a6)
+{
+    typedef typename _bi::list_av_6<A1, A2, A3, A4, A5, A6>::type list_type;
+    return _bi::bind_t<R, F, list_type>(f, list_type(a1, a2, a3, a4, a5, a6));
+}
+
+template<class R, class F, class A1, class A2, class A3, class A4, class A5, class A6, class A7>
+    _bi::bind_t<R, F, typename _bi::list_av_7<A1, A2, A3, A4, A5, A6, A7>::type>
+    BOOST_BIND(boost::type<R>, F f, A1 a1, A2 a2, A3 a3, A4 a4, A5 a5, A6 a6, A7 a7)
+{
+    typedef typename _bi::list_av_7<A1, A2, A3, A4, A5, A6, A7>::type list_type;
+    return _bi::bind_t<R, F, list_type>(f, list_type(a1, a2, a3, a4, a5, a6, a7));
+}
+
+template<class R, class F, class A1, class A2, class A3, class A4, class A5, class A6, class A7, class A8>
+    _bi::bind_t<R, F, typename _bi::list_av_8<A1, A2, A3, A4, A5, A6, A7, A8>::type>
+    BOOST_BIND(boost::type<R>, F f, A1 a1, A2 a2, A3 a3, A4 a4, A5 a5, A6 a6, A7 a7, A8 a8)
+{
+    typedef typename _bi::list_av_8<A1, A2, A3, A4, A5, A6, A7, A8>::type list_type;
+    return _bi::bind_t<R, F, list_type>(f, list_type(a1, a2, a3, a4, a5, a6, a7, a8));
+}
+
+template<class R, class F, class A1, class A2, class A3, class A4, class A5, class A6, class A7, class A8, class A9>
+    _bi::bind_t<R, F, typename _bi::list_av_9<A1, A2, A3, A4, A5, A6, A7, A8, A9>::type>
+    BOOST_BIND(boost::type<R>, F f, A1 a1, A2 a2, A3 a3, A4 a4, A5 a5, A6 a6, A7 a7, A8 a8, A9 a9)
+{
+    typedef typename _bi::list_av_9<A1, A2, A3, A4, A5, A6, A7, A8, A9>::type list_type;
+    return _bi::bind_t<R, F, list_type>(f, list_type(a1, a2, a3, a4, a5, a6, a7, a8, a9));
+}
+
+#if !defined(BOOST_NO_TEMPLATE_PARTIAL_SPECIALIZATION) && !defined(BOOST_NO_FUNCTION_TEMPLATE_ORDERING)
+
+// adaptable function objects
+
+template<class F>
+    _bi::bind_t<_bi::unspecified, F, _bi::list0>
+    BOOST_BIND(F f)
+{
+    typedef _bi::list0 list_type;
+    return _bi::bind_t<_bi::unspecified, F, list_type> (f, list_type());
+}
+
+template<class F, class A1>
+    _bi::bind_t<_bi::unspecified, F, typename _bi::list_av_1<A1>::type>
+    BOOST_BIND(F f, A1 a1)
+{
+    typedef typename _bi::list_av_1<A1>::type list_type;
+    return _bi::bind_t<_bi::unspecified, F, list_type> (f, list_type(a1));
+}
+
+template<class F, class A1, class A2>
+    _bi::bind_t<_bi::unspecified, F, typename _bi::list_av_2<A1, A2>::type>
+    BOOST_BIND(F f, A1 a1, A2 a2)
+{
+    typedef typename _bi::list_av_2<A1, A2>::type list_type;
+    return _bi::bind_t<_bi::unspecified, F, list_type> (f, list_type(a1, a2));
+}
+
+template<class F, class A1, class A2, class A3>
+    _bi::bind_t<_bi::unspecified, F, typename _bi::list_av_3<A1, A2, A3>::type>
+    BOOST_BIND(F f, A1 a1, A2 a2, A3 a3)
+{
+    typedef typename _bi::list_av_3<A1, A2, A3>::type list_type;
+    return _bi::bind_t<_bi::unspecified, F, list_type>(f, list_type(a1, a2, a3));
+}
+
+template<class F, class A1, class A2, class A3, class A4>
+    _bi::bind_t<_bi::unspecified, F, typename _bi::list_av_4<A1, A2, A3, A4>::type>
+    BOOST_BIND(F f, A1 a1, A2 a2, A3 a3, A4 a4)
+{
+    typedef typename _bi::list_av_4<A1, A2, A3, A4>::type list_type;
+    return _bi::bind_t<_bi::unspecified, F, list_type>(f, list_type(a1, a2, a3, a4));
+}
+
+template<class F, class A1, class A2, class A3, class A4, class A5>
+    _bi::bind_t<_bi::unspecified, F, typename _bi::list_av_5<A1, A2, A3, A4, A5>::type>
+    BOOST_BIND(F f, A1 a1, A2 a2, A3 a3, A4 a4, A5 a5)
+{
+    typedef typename _bi::list_av_5<A1, A2, A3, A4, A5>::type list_type;
+    return _bi::bind_t<_bi::unspecified, F, list_type>(f, list_type(a1, a2, a3, a4, a5));
+}
+
+template<class F, class A1, class A2, class A3, class A4, class A5, class A6>
+    _bi::bind_t<_bi::unspecified, F, typename _bi::list_av_6<A1, A2, A3, A4, A5, A6>::type>
+    BOOST_BIND(F f, A1 a1, A2 a2, A3 a3, A4 a4, A5 a5, A6 a6)
+{
+    typedef typename _bi::list_av_6<A1, A2, A3, A4, A5, A6>::type list_type;
+    return _bi::bind_t<_bi::unspecified, F, list_type>(f, list_type(a1, a2, a3, a4, a5, a6));
+}
+
+template<class F, class A1, class A2, class A3, class A4, class A5, class A6, class A7>
+    _bi::bind_t<_bi::unspecified, F, typename _bi::list_av_7<A1, A2, A3, A4, A5, A6, A7>::type>
+    BOOST_BIND(F f, A1 a1, A2 a2, A3 a3, A4 a4, A5 a5, A6 a6, A7 a7)
+{
+    typedef typename _bi::list_av_7<A1, A2, A3, A4, A5, A6, A7>::type list_type;
+    return _bi::bind_t<_bi::unspecified, F, list_type>(f, list_type(a1, a2, a3, a4, a5, a6, a7));
+}
+
+template<class F, class A1, class A2, class A3, class A4, class A5, class A6, class A7, class A8>
+    _bi::bind_t<_bi::unspecified, F, typename _bi::list_av_8<A1, A2, A3, A4, A5, A6, A7, A8>::type>
+    BOOST_BIND(F f, A1 a1, A2 a2, A3 a3, A4 a4, A5 a5, A6 a6, A7 a7, A8 a8)
+{
+    typedef typename _bi::list_av_8<A1, A2, A3, A4, A5, A6, A7, A8>::type list_type;
+    return _bi::bind_t<_bi::unspecified, F, list_type>(f, list_type(a1, a2, a3, a4, a5, a6, a7, a8));
+}
+
+template<class F, class A1, class A2, class A3, class A4, class A5, class A6, class A7, class A8, class A9>
+    _bi::bind_t<_bi::unspecified, F, typename _bi::list_av_9<A1, A2, A3, A4, A5, A6, A7, A8, A9>::type>
+    BOOST_BIND(F f, A1 a1, A2 a2, A3 a3, A4 a4, A5 a5, A6 a6, A7 a7, A8 a8, A9 a9)
+{
+    typedef typename _bi::list_av_9<A1, A2, A3, A4, A5, A6, A7, A8, A9>::type list_type;
+    return _bi::bind_t<_bi::unspecified, F, list_type>(f, list_type(a1, a2, a3, a4, a5, a6, a7, a8, a9));
+}
+
+#endif // !defined(BOOST_NO_TEMPLATE_PARTIAL_SPECIALIZATION) && !defined(BOOST_NO_FUNCTION_TEMPLATE_ORDERING)
+
+// function pointers
+
+#define BOOST_BIND_CC
+#define BOOST_BIND_ST
+
+#include <boost/bind/bind_cc.hpp>
+
+#undef BOOST_BIND_CC
+#undef BOOST_BIND_ST
+
+#ifdef BOOST_BIND_ENABLE_STDCALL
+
+#define BOOST_BIND_CC __stdcall
+#define BOOST_BIND_ST
+
+#include <boost/bind/bind_cc.hpp>
+
+#undef BOOST_BIND_CC
+#undef BOOST_BIND_ST
+
+#endif
+
+#ifdef BOOST_BIND_ENABLE_FASTCALL
+
+#define BOOST_BIND_CC __fastcall
+#define BOOST_BIND_ST
+
+#include <boost/bind/bind_cc.hpp>
+
+#undef BOOST_BIND_CC
+#undef BOOST_BIND_ST
+
+#endif
+
+#ifdef BOOST_BIND_ENABLE_PASCAL
+
+#define BOOST_BIND_ST pascal
+#define BOOST_BIND_CC
+
+#include <boost/bind/bind_cc.hpp>
+
+#undef BOOST_BIND_ST
+#undef BOOST_BIND_CC
+
+#endif
+
+// member function pointers
+
+#define BOOST_BIND_MF_NAME(X) X
+#define BOOST_BIND_MF_CC
+
+#include <boost/bind/bind_mf_cc.hpp>
+
+#undef BOOST_BIND_MF_NAME
+#undef BOOST_BIND_MF_CC
+
+#ifdef BOOST_MEM_FN_ENABLE_CDECL
+
+#define BOOST_BIND_MF_NAME(X) X##_cdecl
+#define BOOST_BIND_MF_CC __cdecl
+
+#include <boost/bind/bind_mf_cc.hpp>
+
+#undef BOOST_BIND_MF_NAME
+#undef BOOST_BIND_MF_CC
+
+#endif
+
+#ifdef BOOST_MEM_FN_ENABLE_STDCALL
+
+#define BOOST_BIND_MF_NAME(X) X##_stdcall
+#define BOOST_BIND_MF_CC __stdcall
+
+#include <boost/bind/bind_mf_cc.hpp>
+
+#undef BOOST_BIND_MF_NAME
+#undef BOOST_BIND_MF_CC
+
+#endif
+
+#ifdef BOOST_MEM_FN_ENABLE_FASTCALL
+
+#define BOOST_BIND_MF_NAME(X) X##_fastcall
+#define BOOST_BIND_MF_CC __fastcall
+
+#include <boost/bind/bind_mf_cc.hpp>
+
+#undef BOOST_BIND_MF_NAME
+#undef BOOST_BIND_MF_CC
+
+#endif
+
+// data member pointers
+
+#if defined(BOOST_NO_TEMPLATE_PARTIAL_SPECIALIZATION) || defined(BOOST_NO_FUNCTION_TEMPLATE_ORDERING) \
+    || ( defined(__BORLANDC__) && BOOST_WORKAROUND( __BORLANDC__, < 0x600 ) )
+
+template<class R, class T, class A1>
+_bi::bind_t< R, _mfi::dm<R, T>, typename _bi::list_av_1<A1>::type >
+    BOOST_BIND(R T::*f, A1 a1)
+{
+    typedef _mfi::dm<R, T> F;
+    typedef typename _bi::list_av_1<A1>::type list_type;
+    return _bi::bind_t<R, F, list_type>( F(f), list_type(a1) );
+}
+
+#else
+
+namespace _bi
+{
+
+template< class Pm, int I > struct add_cref;
+
+template< class M, class T > struct add_cref< M T::*, 0 >
+{
+    typedef M type;
+};
+
+template< class M, class T > struct add_cref< M T::*, 1 >
+{
+    typedef M const & type;
+};
+
+template< class R, class T > struct add_cref< R (T::*) (), 1 >
+{
+    typedef void type;
+};
+
+#if !( defined(__IBMCPP__) && BOOST_WORKAROUND( __IBMCPP__, BOOST_TESTED_AT(600) ) )
+
+template< class R, class T > struct add_cref< R (T::*) () const, 1 >
+{
+    typedef void type;
+};
+
+#endif // __IBMCPP__
+
+template<class R> struct isref
+{
+    enum value_type { value = 0 };
+};
+
+template<class R> struct isref< R& >
+{
+    enum value_type { value = 1 };
+};
+
+template<class R> struct isref< R* >
+{
+    enum value_type { value = 1 };
+};
+
+template<class Pm, class A1> struct dm_result
+{
+    typedef typename add_cref< Pm, 1 >::type type;
+};
+
+template<class Pm, class R, class F, class L> struct dm_result< Pm, bind_t<R, F, L> >
+{
+    typedef typename bind_t<R, F, L>::result_type result_type;
+    typedef typename add_cref< Pm, isref< result_type >::value >::type type;
+};
+
+} // namespace _bi
+
+template< class A1, class M, class T >
+
+_bi::bind_t<
+    typename _bi::dm_result< M T::*, A1 >::type,
+    _mfi::dm<M, T>,
+    typename _bi::list_av_1<A1>::type
+>
+
+BOOST_BIND( M T::*f, A1 a1 )
+{
+    typedef typename _bi::dm_result< M T::*, A1 >::type result_type;
+    typedef _mfi::dm<M, T> F;
+    typedef typename _bi::list_av_1<A1>::type list_type;
+    return _bi::bind_t< result_type, F, list_type >( F( f ), list_type( a1 ) );
+}
+
+#endif
+
+} // namespace boost
+
+#ifndef BOOST_BIND_NO_PLACEHOLDERS
+
+# include <boost/bind/placeholders.hpp>
+
+#endif
+
+#ifdef BOOST_MSVC
+# pragma warning(default: 4512) // assignment operator could not be generated
+# pragma warning(pop)
+#endif
+
+#endif // #ifndef BOOST_BIND_HPP_INCLUDED

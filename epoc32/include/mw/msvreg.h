@@ -1,9 +1,9 @@
 // Copyright (c) 1998-2009 Nokia Corporation and/or its subsidiary(-ies).
 // All rights reserved.
 // This component and the accompanying materials are made available
-// under the terms of the License "Symbian Foundation License v1.0" to Symbian Foundation members and "Symbian Foundation End User License Agreement v1.0" to non-members
+// under the terms of "Eclipse Public License v1.0"
 // which accompanies this distribution, and is available
-// at the URL "http://www.symbianfoundation.org/legal/licencesv10.html".
+// at the URL "http://www.eclipse.org/legal/epl-v10.html".
 //
 // Initial Contributors:
 // Nokia Corporation - initial contribution.
@@ -11,7 +11,13 @@
 // Contributors:
 //
 // Description:
+// MSVREG.H
 //
+/**
+ * @file 
+ * @publishedAll
+ * @released
+ */
 
 #if !defined(__MSVREG_H__)
 #define __MSVREG_H__
@@ -21,20 +27,6 @@
 #if !defined(__F32FILE_H__)
 #include <f32file.h>
 #endif
-
-
-
-/**
-@internalComponent
-@released
-*/
-enum TMtsrDllIndex    //  Used in CMtmGroupData
-	{
-	EMtsrServerComponentIndex,
-	EMtsrClientComponentIndex,
-	EMtsrUiComponentIndex,
-	EMtsrUiDataComponentIndex
-	};
 
 const TInt KHumanReadableNameLength=50;
 typedef TBuf<KHumanReadableNameLength> THumanReadableName;   //  could be used client side
@@ -160,7 +152,7 @@ private:
 
 class MRegisteredMtmDllObserver
 /** 
-@internalComponent
+@publishedAll
 @released
 */
 	{
@@ -213,7 +205,7 @@ private:
 
 class CRegisteredMtmDllArray : public CArrayPtrFlat<CRegisteredMtmDll>
 /**
-@internalComponent
+@publishedAll
 @released
 */
 	{
@@ -234,7 +226,7 @@ provides functions to discover the MTMs registered in such a registry. The
 registered MTMs can be regarded as existing in a list: you can use NumRegisteredMtmDlls() 
 to get the number in the list, and MtmTypeUid() to index into it.
  
-@internalComponent
+@publishedAll
 @released
 */
 	{

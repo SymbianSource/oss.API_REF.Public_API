@@ -1,9 +1,9 @@
 // Copyright (c) 2004-2009 Nokia Corporation and/or its subsidiary(-ies).
 // All rights reserved.
 // This component and the accompanying materials are made available
-// under the terms of the License "Symbian Foundation License v1.0" to Symbian Foundation members and "Symbian Foundation End User License Agreement v1.0" to non-members
+// under the terms of "Eclipse Public License v1.0"
 // which accompanies this distribution, and is available
-// at the URL "http://www.symbianfoundation.org/legal/licencesv10.html".
+// at the URL "http://www.eclipse.org/legal/epl-v10.html".
 //
 // Initial Contributors:
 // Nokia Corporation - initial contribution.
@@ -25,9 +25,9 @@
 */
 #define KMaxFileNameLength 256
 
-//////////////////////////////////////////////////////////////////
+//
 // DEFINITIONS FOR THE NON-LOCALISABLE REGISTRATION RESOURCE FILE
-//////////////////////////////////////////////////////////////////
+//
 
 /**
 @publishedAll
@@ -130,13 +130,39 @@ STRUCT APP_REGISTRATION_INFO
 @publishedAll
 @released
 */
+
+/* This enum is used to specify the priority at which an application can handle a particular MIME type.
+   The application with the highest priority will be considered as the default application 
+   for that particular MIME type.
+   Default association of MIME types with applications can be overridden by user settings,
+   except for applications handling data types with EDataTypePrioritySystem.
+*/
 enum
 	{
-	EDataTypePrioritySystem = 0xFFF9,
-	EDataTypePriorityHigh = 10000,
-	EDataTypePriorityNormal = 0,
-	EDataTypePriorityLow = -10000,
-	EDataTypePriorityLastResort = -20000
+	
+	EDataTypePrioritySystem = 0xFFF9, 		// This is a special priority that overrides any user settings. 
+						    		// Applications must have EWriteDeviceData capability to use this priority. 
+						 		// If not they will be downgraded to EDataTypePriorityNormal
+	
+
+	EDataTypePriorityTrustedHigh = 0xC000, 	// Trusted applications may use this priority value to ensure that their MIME type
+								// associations cannot be overridden by self signed (untrusted) applications 
+
+
+	EDataTypePriorityHigh = 10000,		// An application at EDataTypePriorityHigh will be given higher preference for a  
+								// particular data type, than applications with EDataTypePriorityNormal
+
+
+	EDataTypePriorityNormal = 0,			// An application at EDataTypePriorityNormal will be given higher preference for a  
+								// particular data type, than applications with EDataTypePriorityLow.
+	
+	
+	EDataTypePriorityLow = -10000,		// This priority means that the data type is a secondary type for that application. 
+								// For example, "text/plain" files for a web browser	
+
+
+	EDataTypePriorityLastResort = -20000	// This priority means that the data type is a last resort for that application
+								 
 	};
 
 /**
@@ -170,9 +196,9 @@ STRUCT SERVICE_INFO
 	}
 
 
-/////////////////////////////////////////////////
+//
 // DEFINITIONS FOR THE LOCALISABLE RESOURCE FILE
-/////////////////////////////////////////////////
+//
 
 /**
 @publishedAll
@@ -229,3 +255,4 @@ STRUCT VIEW_DATA
 	}
 
 #endif
+

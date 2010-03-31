@@ -1,9 +1,9 @@
 // Copyright (c) 2007-2009 Nokia Corporation and/or its subsidiary(-ies).
 // All rights reserved.
 // This component and the accompanying materials are made available
-// under the terms of the License "Symbian Foundation License v1.0" to Symbian Foundation members and "Symbian Foundation End User License Agreement v1.0" to non-members
+// under the terms of "Eclipse Public License v1.0"
 // which accompanies this distribution, and is available
-// at the URL "http://www.symbianfoundation.org/legal/licencesv10.html".
+// at the URL "http://www.eclipse.org/legal/epl-v10.html".
 //
 // Initial Contributors:
 // Nokia Corporation - initial contribution.
@@ -12,8 +12,6 @@
 //
 // Description:
 //
-
-
 
 /**
  @file
@@ -35,6 +33,7 @@
 
 class CRemConInterfaceSelector;
 class CPlayerApplicationSettings;
+class TEventsMask;
 
 // This is the maximum length of the player application setting attribute and value strings
 const TInt KMaxPlayerApplicationSettingsValue = 255 ;
@@ -116,6 +115,7 @@ private:
 	void ProcessGetStatusAndBeginObserving(TUint aOperationId, TRegisterNotificationEvent aEventId, const TDesC8& aData);
 	void ProcessGetStatus(TUint aOperationId, TRegisterNotificationEvent aEventId);
 	void SendNotificationResponse(TRegisterNotificationEvent aEventId, TRemConMessageSubType aMsgSubType);
+	void ProcessGetPlayStatusUpdate(const TDesC8& aData);
 	
 	// Capabilities API implementation from MPlayerCapabilitiesObserver
 	void DoClearEvents();
@@ -135,7 +135,8 @@ private:
 	void SendError(TInt, TInt);
 	void SendError(TInt, TInt, TRemConMessageSubType aSubType);
 	CPlayerApplicationSettings* GetSetting(TUint anAttribute);
-	
+	MPlayerEventsObserver::TTargetBatteryStatus DetectBatteryStatus();
+
 private: // owned
 	RBuf8								iOutBuf;
 
@@ -149,18 +150,21 @@ private: // owned
 	
 	// The time interval (received as part if the RegisterNotification) 
 	// in which the change in playback position will be notified
-	TUint32								iPlayBackIntervalInMilliseconds;
+	TUint32   							iPlayBackIntervalInMilliseconds;
 
 	TTargetBatteryStatus				iBatteryStatus;
 	TUint32 							iPlaybackPositionInMilliseconds;
 	TUint32								iLastNotifiedPlaybackPositionInMilliseconds;
 	
 	// data for MPlayerCapabilitiesObserver
-	RArray<TRegisterNotificationEvent> 			iSupportedNotificationEventList;
+	TEventsMask*						iSupportedNotificationEventList;
 	RArray<TInt> 						iCompanyIdList;
 
 	// list of events for which notifications have been request 
 	RArray<TRegisterNotificationEvent> 			iPendingNotificationEventList;
+	
+	// Whether we've been asked for an update when the play status changes
+	TBool								iPlaybackStatusUpdatePending;
 
 	// Attribute (settings) data MPlayerApplicationSettingsObserver
 	RHashMap<TInt, CPlayerApplicationSettings*>		iPlayerApplicationSettings;

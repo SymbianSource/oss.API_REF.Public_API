@@ -1,9 +1,9 @@
 // Copyright (c) 1997-2009 Nokia Corporation and/or its subsidiary(-ies).
 // All rights reserved.
 // This component and the accompanying materials are made available
-// under the terms of the License "Symbian Foundation License v1.0" to Symbian Foundation members and "Symbian Foundation End User License Agreement v1.0" to non-members
+// under the terms of "Eclipse Public License v1.0"
 // which accompanies this distribution, and is available
-// at the URL "http://www.symbianfoundation.org/legal/licencesv10.html".
+// at the URL "http://www.eclipse.org/legal/epl-v10.html".
 //
 // Initial Contributors:
 // Nokia Corporation - initial contribution.
@@ -250,9 +250,9 @@ _LIT8(KEntityShy,"&shy;");
 const TUint16 KWbxmlSkipLiteralEndTagMagicToken = 0xac1d;
 
 
-///////////////////////////////////////////////////////////////////
+//
 // CWbxmlConverter
-///////////////////////////////////////////////////////////////////
+//
 class RFileReadStream;
 //##ModelId=3B6678E20007
 class CWbxmlConverter : public CBase
@@ -267,11 +267,11 @@ public:	// Methods
 
 	// NOTE: input data really is 8bit bytecode
 	//##ModelId=3B6678E300F9
-	IMPORT_C static CWbxmlConverter* CWbxmlConverter::NewL(RFs& aFs, MWbxmlConverterObserver* aObserver);
+	IMPORT_C static CWbxmlConverter* NewL(RFs& aFs, MWbxmlConverterObserver* aObserver);
 	//##ModelId=3B6678E300BD
-	IMPORT_C static CWbxmlConverter* CWbxmlConverter::NewLC(RFs& aFs, MWbxmlConverterObserver* aObserver);
+	IMPORT_C static CWbxmlConverter* NewLC(RFs& aFs, MWbxmlConverterObserver* aObserver);
 	//##ModelId=3B6678E30135
-	IMPORT_C static CWbxmlConverter* CWbxmlConverter::NewL(RFs& aFs, MWbxmlConverterObserver* aObserver, const TDesC* aCharacterEncoding);
+	IMPORT_C static CWbxmlConverter* NewL(RFs& aFs, MWbxmlConverterObserver* aObserver, const TDesC* aCharacterEncoding);
 	//##ModelId=3B6678E3009F
 	IMPORT_C void ProcessDataL(HBufC8& aBuffer);
 	//##ModelId=3B6678E3009E
@@ -466,6 +466,6 @@ private:	// Attributes
 
 #endif // __WBCONVERTER_H
 
-///////////////////////////////////////////////////////////////////
+//
 // End of file
-///////////////////////////////////////////////////////////////////
+//

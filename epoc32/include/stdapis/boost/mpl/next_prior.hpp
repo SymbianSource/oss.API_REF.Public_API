@@ -1,51 +1,49 @@
-//  Boost next_prior.hpp header file  ---------------------------------------//
 
-//  (C) Copyright Dave Abrahams and Daniel Walker 1999-2003. Distributed under the Boost
-//  Software License, Version 1.0. (See accompanying file
-//  LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
+#ifndef BOOST_MPL_NEXT_PRIOR_HPP_INCLUDED
+#define BOOST_MPL_NEXT_PRIOR_HPP_INCLUDED
 
-//  See http://www.boost.org/libs/utility for documentation.
-
-//  Revision History
-//  13 Dec 2003  Added next(x, n) and prior(x, n) (Daniel Walker)
-
-#ifndef BOOST_NEXT_PRIOR_HPP_INCLUDED
-#define BOOST_NEXT_PRIOR_HPP_INCLUDED
-
-#include <iterator>
-
-namespace boost {
-
-//  Helper functions for classes like bidirectional iterators not supporting
-//  operator+ and operator-
+// Copyright Aleksey Gurtovoy 2000-2004
 //
-//  Usage:
-//    const std::list<T>::iterator p = get_some_iterator();
-//    const std::list<T>::iterator prev = boost::prior(p);
-//    const std::list<T>::iterator next = boost::next(prev, 2);
+// Distributed under the Boost Software License, Version 1.0. 
+// (See accompanying file LICENSE_1_0.txt or copy at 
+// http://www.boost.org/LICENSE_1_0.txt)
+//
+// See http://www.boost.org/libs/mpl for documentation.
 
-//  Contributed by Dave Abrahams
+// $Source: /cvsroot/boost/boost/boost/mpl/next_prior.hpp,v $
+// $Date: 2004/09/17 06:09:38 $
+// $Revision: 1.3 $
 
-template <class T>
-inline T next(T x) { return ++x; }
+#include <boost/mpl/aux_/common_name_wknd.hpp>
+#include <boost/mpl/aux_/na_spec.hpp>
+#include <boost/mpl/aux_/lambda_support.hpp>
 
-template <class T, class Distance>
-inline T next(T x, Distance n)
+namespace boost { namespace mpl {
+
+BOOST_MPL_AUX_COMMON_NAME_WKND(next)
+BOOST_MPL_AUX_COMMON_NAME_WKND(prior)
+
+template<
+      typename BOOST_MPL_AUX_NA_PARAM(T)
+    >
+struct next
 {
-    std::advance(x, n);
-    return x;
-}
+    typedef typename T::next type;
+    BOOST_MPL_AUX_LAMBDA_SUPPORT(1,next,(T))
+};
 
-template <class T>
-inline T prior(T x) { return --x; }
-
-template <class T, class Distance>
-inline T prior(T x, Distance n)
+template<
+      typename BOOST_MPL_AUX_NA_PARAM(T)
+    >
+struct prior
 {
-    std::advance(x, -n);
-    return x;
-}
+    typedef typename T::prior type;
+    BOOST_MPL_AUX_LAMBDA_SUPPORT(1,prior,(T))
+};
 
-} // namespace boost
+BOOST_MPL_AUX_NA_SPEC(1, next)
+BOOST_MPL_AUX_NA_SPEC(1, prior)
 
-#endif  // BOOST_NEXT_PRIOR_HPP_INCLUDED
+}}
+
+#endif // BOOST_MPL_NEXT_PRIOR_HPP_INCLUDED

@@ -1,42 +1,23 @@
-/* Copyright 2003-2005 Joaquín M López Muñoz.
- * Distributed under the Boost Software License, Version 1.0.
- * (See accompanying file LICENSE_1_0.txt or copy at
- * http://www.boost.org/LICENSE_1_0.txt)
- *
- * See http://www.boost.org/libs/multi_index for library home page.
- */
 
-#ifndef BOOST_MULTI_INDEX_DETAIL_HAS_TAG_HPP
-#define BOOST_MULTI_INDEX_DETAIL_HAS_TAG_HPP
+#ifndef BOOST_MPL_AUX_HAS_TAG_HPP_INCLUDED
+#define BOOST_MPL_AUX_HAS_TAG_HPP_INCLUDED
 
-#if defined(_MSC_VER)&&(_MSC_VER>=1200)
-#pragma once
-#endif
+// Copyright Aleksey Gurtovoy 2002-2004
+//
+// Distributed under the Boost Software License, Version 1.0. 
+// (See accompanying file LICENSE_1_0.txt or copy at 
+// http://www.boost.org/LICENSE_1_0.txt)
+//
+// See http://www.boost.org/libs/mpl for documentation.
 
-#include <boost/config.hpp> /* keep it first to prevent nasty warns in MSVC */
-#include <boost/mpl/contains.hpp>
+// $Source: /cvsroot/boost/boost/boost/mpl/aux_/has_tag.hpp,v $
+// $Date: 2004/09/02 15:40:43 $
+// $Revision: 1.3 $
 
-namespace boost{
+#include <boost/mpl/has_xxx.hpp>
 
-namespace multi_index{
+namespace boost { namespace mpl { namespace aux {
+BOOST_MPL_HAS_XXX_TRAIT_NAMED_DEF(has_tag, tag, false)
+}}}
 
-namespace detail{
-
-/* determines whether an index type has a given tag in its tag list */
-
-template<typename Tag>
-struct has_tag
-{
-  template<typename Index>
-  struct apply:mpl::contains<BOOST_DEDUCED_TYPENAME Index::tag_list,Tag>
-  {
-  }; 
-};
-
-} /* namespace multi_index::detail */
-
-} /* namespace multi_index */
-
-} /* namespace boost */
-
-#endif
+#endif // BOOST_MPL_AUX_HAS_TAG_HPP_INCLUDED

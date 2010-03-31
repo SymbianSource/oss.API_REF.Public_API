@@ -1,9 +1,9 @@
 // Copyright (c) 2002-2009 Nokia Corporation and/or its subsidiary(-ies).
 // All rights reserved.
 // This component and the accompanying materials are made available
-// under the terms of the License "Symbian Foundation License v1.0" to Symbian Foundation members and "Symbian Foundation End User License Agreement v1.0" to non-members
+// under the terms of "Eclipse Public License v1.0"
 // which accompanies this distribution, and is available
-// at the URL "http://www.symbianfoundation.org/legal/licencesv10.html".
+// at the URL "http://www.eclipse.org/legal/epl-v10.html".
 //
 // Initial Contributors:
 // Nokia Corporation - initial contribution.
@@ -139,21 +139,26 @@ public:
 	        A callback to notify the client when the sound device is open and ready to receive data, when each
 	        descriptor has been copied and when the stream is closed. The caller must create a callback class
 	        which implements this interface.
-	@param  aPriority
-	        This client's relative priority. This is a value between EMdaPriorityMin and EMdaPriorityMax and represents
-	        a relative priority. A higher value indicates a more important request.
-	@param  aPref
-	        The required behaviour if a higher priority client takes over the sound output device.
+    @param  aPriority
+            The Priority Value - this client's relative priority. This is a value between EMdaPriorityMin and 
+            EMdaPriorityMax and represents a relative priority. A higher value indicates a more important request.
+    @param  aPref
+            The Priority Preference - an additional audio policy parameter. The suggested default is 
+            EMdaPriorityPreferenceNone. Further values are given by TMdaPriorityPreference, and additional 
+            values may be supported by given phones and/or platforms, but should not be depended upon by 
+            portable code.
 
 	@return A pointer to CMdaAudioOutputStream.
 
-	@capability MultimediaDD
-	            A process requesting or using this method that has MultimediaDD capability will
-				always have precedence over a process that does not have MultimediaDD.
+    Note: The Priority Value and Priority Preference are used primarily when deciding what to do when
+    several audio clients attempt to play or record simultaneously. In addition to the Priority Value and Preference, 
+    the adaptation may consider other parameters such as the SecureId and Capabilities of the client process. 
+    Whatever, the decision  as to what to do in such situations is up to the audio adaptation, and may
+    vary between different phones. Portable applications are advised not to assume any specific behaviour. 
 	*/
 	IMPORT_C static CMdaAudioOutputStream* NewL(MMdaAudioOutputStreamCallback& aCallBack,
 												TInt aPriority,
-												TMdaPriorityPreference aPref = EMdaPriorityPreferenceTimeAndQuality);
+												TInt aPref = EMdaPriorityPreferenceTimeAndQuality);
 
 
 	/**
@@ -220,19 +225,13 @@ public:
 	is issued, or between a previous Stop() and a new Open().
 
 	@param  aPriority
-	        The priority level to apply, EMdaPriorityMin allows the client can be interrupted by any other client,
-	        EMdaPriorityNormal allows the client is only interrupted by clients with a higher priority or
-			EMdaPriorityMax allows the client cannot be interrupted by other clients.
+	        The Priority Value.
 	@param  aPref
-	        A set of priority values that define the behaviour to be adopted by a client using a sound device if a 
-	        higher priority client takes over that device.
+	        The Priority Preference.
 
-
-	@capability MultimediaDD
-	            A process requesting or using this method that has MultimediaDD capability will
-				always have precedence over a process that does not have MultimediaDD.
+    @see CMdaAudioOutputStream::NewL()
 	*/
-	virtual void SetPriority(TInt aPriority, TMdaPriorityPreference aPref);
+	virtual void SetPriority(TInt aPriority, TInt aPref);
 	
 	/**
 	Writes (plays) streaming raw audio data.

@@ -1,9 +1,9 @@
 // Copyright (c) 2003-2009 Nokia Corporation and/or its subsidiary(-ies).
 // All rights reserved.
 // This component and the accompanying materials are made available
-// under the terms of the License "Symbian Foundation License v1.0" to Symbian Foundation members and "Symbian Foundation End User License Agreement v1.0" to non-members
+// under the terms of "Eclipse Public License v1.0"
 // which accompanies this distribution, and is available
-// at the URL "http://www.symbianfoundation.org/legal/licencesv10.html".
+// at the URL "http://www.eclipse.org/legal/epl-v10.html".
 //
 // Initial Contributors:
 // Nokia Corporation - initial contribution.
@@ -12,8 +12,6 @@
 //
 // Description:
 //
-
-
 
 /**
  @file
@@ -24,6 +22,10 @@
 #if !defined(__LOGWRAP_HRH__)
 #define __LOGWRAP_HRH__
 
+#ifndef SYMBIAN_ENABLE_SPLIT_HEADERS 
+	#include <logfilterandeventconstants.hrh>
+#endif
+
 // Event Uid's
 #define KLogCallEventType 0x1000550D
 #define KLogDataEventType 0x10005566
@@ -32,85 +34,144 @@
 #define KLogMailEventType 0x10005569
 #define KLogTaskSchedulerEventType  0x1000585E
 
-/**
-@internalComponent
-*/
-#define KLogPacketDataEventType  0x10008F8E
-
-/**
-Location Requested by On Board Application Event Uid
-@publishedPartner
-@released
-*/
-#define KLogLbsSelfLocateEventType 0x102822B2
-/**
-Location Requested by Remote Party Event Uid
-@publishedPartner
-@released
-*/
-#define KLogLbsExternalLocateEventType 0x102822B3
-/**
-Location Sent to Remote Party Event Uid
-@publishedPartner
-@released
-*/
-#define KLogLbsTransmitLocationEventType 0x102822B4
-/**
-Location Determined by Network Event Uid
-@publishedPartner
-@released
-*/
-#define KLogLbsNetworkLocateEventType 0x102822B5
-/**
-Location Data Obtained from Network Event Uid
-@publishedPartner
-@released
-*/
-#define KLogLbsAssistanceDataEventType 0x102822B6
-
-// Recent lists (Make consecutive)
-/**
-Log Recent Incoming Calls List
-@publishedPartner
-@released
-*/
-#define KLogRecentIncomingCalls 1
-/**
-Log Recent Outgoing Calls List
-@publishedPartner
-@released
-*/
-#define KLogRecentOutgoingCalls 2
-/**
-Log Recent Missed Calls List
-@publishedPartner
-@released
-*/
-#define KLogRecentMissedCalls 3
-
 // Filter fields
-/**
-@internalComponent
-*/
-#define ELogFirstFilterField 0x1
 
+/**
+"Contact" filter field bit mask which can be used for specifying filter's null fields.
+@see CLogFilter::NullFields() 
+@see CLogFilter::SetNullFields() 
+@publishedAll
+@released 
+*/
 #define ELogContactField 0x1
-#define ELogDirectionField 0x2
-#define ELogDurationTypeField 0x4
-#define ELogEventTypeField 0x8
-#define ELogNumberField 0x10
-#define ELogRemotePartyField 0x20
-#define ELogStatusField 0x40
-#define ELogStartTimeField 0x80
-#define ELogEndTimeField 0x100
-#define ELogFlagsField 0x200
-#define ELogSubjectField 0x400
-#define ELogLinkField 0x800
-#define ELogDataField 0x1000
 
 /**
-@internalComponent
+"Direction" filter field bit mask which can be used for specifying filter's null fields.
+@see CLogFilter::NullFields() 
+@see CLogFilter::SetNullFields() 
+@publishedAll
+@released 
 */
-#define ELogLastFilterField 0x200
+#define ELogDirectionField 0x2
+
+/**
+"Duration type" filter field bit mask which can be used for specifying filter's null fields.
+@see CLogFilter::NullFields() 
+@see CLogFilter::SetNullFields() 
+@publishedAll
+@released 
+*/
+#define ELogDurationTypeField 0x4
+
+/**
+"Event type" filter field bit mask which can be used for specifying filter's null fields.
+@see CLogFilter::NullFields() 
+@see CLogFilter::SetNullFields() 
+@publishedAll
+@released 
+*/
+#define ELogEventTypeField 0x8
+
+/**
+"Number" filter field bit mask which can be used for specifying filter's null fields.
+@see CLogFilter::NullFields() 
+@see CLogFilter::SetNullFields() 
+@publishedAll
+@released 
+*/
+#define ELogNumberField 0x10
+
+/**
+"Remote party" filter field bit mask which can be used for specifying filter's null fields.
+@see CLogFilter::NullFields() 
+@see CLogFilter::SetNullFields() 
+@publishedAll
+@released 
+*/
+#define ELogRemotePartyField 0x20
+
+/**
+"Status" filter field bit mask which can be used for specifying filter's null fields.
+@see CLogFilter::NullFields() 
+@see CLogFilter::SetNullFields() 
+@publishedAll
+@released 
+*/
+#define ELogStatusField 0x40
+
+/**
+"Start time" filter field bit mask which can be used for specifying filter's null fields.
+@see CLogFilter::NullFields() 
+@see CLogFilter::SetNullFields() 
+@publishedAll
+@released 
+*/
+#define ELogStartTimeField 0x80
+
+/**
+"End time" filter field bit mask which can be used for specifying filter's null fields.
+@see CLogFilter::NullFields() 
+@see CLogFilter::SetNullFields() 
+@publishedAll
+@released 
+*/
+#define ELogEndTimeField 0x100
+
+/**
+"Flags" filter field bit mask which can be used for specifying filter's null fields.
+@see CLogFilter::NullFields() 
+@see CLogFilter::SetNullFields() 
+@publishedAll
+@released 
+*/
+#define ELogFlagsField 0x200
+
+/**
+"Subject" filter field bit mask which can be used for specifying filter's null fields.
+@see CLogFilter::NullFields() 
+@see CLogFilter::SetNullFields() 
+@publishedAll
+@released 
+*/
+#define ELogSubjectField 0x400
+
+/**
+"Link" filter field bit mask which can be used for specifying filter's null fields.
+@see CLogFilter::NullFields() 
+@see CLogFilter::SetNullFields() 
+@publishedAll
+@released 
+*/
+#define ELogLinkField 0x800
+
+/**
+"Data" filter field bit mask which can be used for specifying filter's null fields.
+@see CLogFilter::NullFields() 
+@see CLogFilter::SetNullFields() 
+@publishedAll
+@released 
+*/
+
+#ifdef SYMBIAN_ENABLE_EVENTLOGGER_DUALSIM	
+
+/**
+"SIM short Id" filter field bit mask which can be used for specifying filter's null fields.
+@see CLogFilter::NullFields() 
+@see CLogFilter::SetNullFields() 
+@publishedAll
+@released 
+*/
+#define ELogSimIdField 0x2000
 
 #endif
+
+//Note that the max filter field bit mask must fit in a 16-bit unsigned integer.
+//Server resource file related. See the ConstructL() methods of CLogServRecentCondition and CLogServRecentList.
+
+/**
+Not used anymore.
+*/
+#define ELogDataField 0x1000
+
+#endif
+

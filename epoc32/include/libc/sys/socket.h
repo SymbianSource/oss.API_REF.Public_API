@@ -1,9 +1,9 @@
 // Copyright (c) 1997-2009 Nokia Corporation and/or its subsidiary(-ies).
 // All rights reserved.
 // This component and the accompanying materials are made available
-// under the terms of the License "Symbian Foundation License v1.0" to Symbian Foundation members and "Symbian Foundation End User License Agreement v1.0" to non-members
+// under the terms of "Eclipse Public License v1.0"
 // which accompanies this distribution, and is available
-// at the URL "http://www.symbianfoundation.org/legal/licencesv10.html".
+// at the URL "http://www.eclipse.org/legal/epl-v10.html".
 //
 // Initial Contributors:
 // Nokia Corporation - initial contribution.
@@ -12,8 +12,6 @@
 //
 // Description:
 //
-
-
 
 /**
  @file
@@ -29,39 +27,39 @@
 #ifdef	__cplusplus
 extern "C" {
 #endif
-
+#include <sys/types.h>
 /*
 Types - may be extended by individual protocols
 */
-#define	SOCK_STREAM	1		///< stream socket
-#define	SOCK_DGRAM	2		///< datagram socket
-#define	SOCK_SEQPACKET	3	///< sequenced packet stream
-#define	SOCK_RAW	4		///< raw-protocol interface
+#define	SOCK_STREAM	1		//< stream socket
+#define	SOCK_DGRAM	2		//< datagram socket
+#define	SOCK_SEQPACKET	3	//< sequenced packet stream
+#define	SOCK_RAW	4		//< raw-protocol interface
 
 /*
 Options for use with [gs]etsockopt at the socket level.
 Note: Symbian OS setsockopt() ignores the options with values <= 0.
 */
-#define	SOL_SOCKET	1		///< options for socket level
+#define	SOL_SOCKET	1		//< options for socket level
 
-#define	SO_DEBUG	1		///< turn on debugging info recording
-#define	SO_RCVBUF	2		///< receive buffer size
-#define	SO_SNDBUF	3		///< send buffer size
-#define	SO_ERROR	9		///< get error status and clear
-#define	SO_REUSEADDR	0x406		///< reuse local addresses
-#define	SO_BROADCAST	-1	///< permit sending of broadcast msgs, not supported in Symbian OS
-#define	SO_USELOOPBACK	-2	///< bypass hardware when possible, not supported in Symbian OS
-#define	SO_LINGER	    -3  ///< linger on close if data present, not supported in Symbian OS
-#define	SO_OOBINLINE	-4	///< leave received OOB data in line, not supported in Symbian OS
+#define	SO_DEBUG	1		//< turn on debugging info recording
+#define	SO_RCVBUF	2		//< receive buffer size
+#define	SO_SNDBUF	3		//< send buffer size
+#define	SO_ERROR	9		//< get error status and clear
+#define	SO_REUSEADDR	0x406		//< reuse local addresses
+#define	SO_BROADCAST	-1	//< permit sending of broadcast msgs, not supported in Symbian OS
+#define	SO_USELOOPBACK	-2	//< bypass hardware when possible, not supported in Symbian OS
+#define	SO_LINGER	    -3  //< linger on close if data present, not supported in Symbian OS
+#define	SO_OOBINLINE	-4	//< leave received OOB data in line, not supported in Symbian OS
 
 /*
 Address families - for EPOC32 these are based on the protocol IDs.
 */
-#define	AF_UNSPEC	0		///< unspecified
-#define	AF_LOCAL	0x666	///< local to host (pipes)
-#define	AF_INET		0x0800	///< internetwork: UDP, TCP, etc.
-#define	AF_IRDA		0x0100	///< IrDA
-#define AF_PLP		273		///< Symbian link protocol
+#define	AF_UNSPEC	0		//< unspecified
+#define	AF_LOCAL	0x666	//< local to host (pipes)
+#define	AF_INET		0x0800	//< internetwork: UDP, TCP, etc.
+#define	AF_IRDA		0x0100	//< IrDA
+#define AF_PLP		273		//< Symbian link protocol
 
 /*
 Protocol families, same as address families
@@ -83,10 +81,10 @@ struct sockaddr {
 	char	sa_data[24];		/* up to 24 bytes of direct address */
 };
 
-#define	SOMAXCONN	5 ///< Maximum queue length specifiable by listen
+#define	SOMAXCONN	5 //< Maximum queue length specifiable by listen
 
-#define	MSG_PEEK	1 ///< peek at incoming message
-#define	MSG_OOB		1 ///< write out-of-band data
+#define	MSG_PEEK	1 //< peek at incoming message
+#define	MSG_OOB		1 //< write out-of-band data
 
 IMPORT_C int accept(int, struct sockaddr *, size_t *);
 IMPORT_C int bind(int, struct sockaddr *, size_t);

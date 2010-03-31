@@ -16,8 +16,6 @@
 */
 
 
-
-
 /**
  @file 
  @publishedAll
@@ -31,10 +29,6 @@
 #include <e32std.h>
 #include <asymmetric.h>
 
-/**
- * @publishedAll
- * @released
- */
 class CWTLSRSAPublicKey : public CRSAPublicKey
 	{
 public:

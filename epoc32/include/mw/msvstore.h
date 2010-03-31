@@ -1,9 +1,9 @@
 // Copyright (c) 1998-2009 Nokia Corporation and/or its subsidiary(-ies).
 // All rights reserved.
 // This component and the accompanying materials are made available
-// under the terms of the License "Symbian Foundation License v1.0" to Symbian Foundation members and "Symbian Foundation End User License Agreement v1.0" to non-members
+// under the terms of "Eclipse Public License v1.0"
 // which accompanies this distribution, and is available
-// at the URL "http://www.symbianfoundation.org/legal/licencesv10.html".
+// at the URL "http://www.eclipse.org/legal/epl-v10.html".
 //
 // Initial Contributors:
 // Nokia Corporation - initial contribution.
@@ -11,8 +11,13 @@
 // Contributors:
 //
 // Description:
+// MSVSTORE.H
 //
-
+/**
+ * @file 
+ * @publishedAll
+ * @released
+ */
 #if !defined(__MSVSTORE_H__)
 #define __MSVSTORE_H__
 
@@ -71,31 +76,18 @@ public:
 
 /*
 Uid which are not needed to be known outside CMsvStore
-@internalComponent
-@deprecated
+@publishedAll
+@released
 */
 const TUid KMsvEntryRichTextBody={0x10000F70};
-
-
-/**
-UId for the 16-bit chunk storage mechanism.
-@internalTechnology
-@prototype
-*/
-const TUid KMsvPlainBodyText16={0x10000F90};
-
-/**
-UId for the 8-bit chunk storage mechanism.
-@internalTechnology
-@prototype
-*/
-const TUid KMsvPlainBodyText8={0x10000F80};
 
 class MMsvAttachmentManager;
 class MMsvAttachmentManagerSync;
 class CMsvAttachmentManager;
 class MMsvStoreManager;
 class CMsvPlainBodyText;
+
+
 class CMsvStore : public CBase
 /** Provides an interface over the message store that is associated with a message 
 entry. It is similar to the dictionary store in supporting the concept of 
@@ -140,7 +132,12 @@ public:
 	IMPORT_C void RevertL();
 	IMPORT_C TInt Commit(); 
 	IMPORT_C void CommitL();
-	
+
+#if (defined SYMBIAN_MESSAGESTORE_HEADER_BODY_USING_SQLDB)
+	IMPORT_C TBool IsDbStore();
+	void CommitHeaderL();
+#endif
+
 	// Attachment Management
 	IMPORT_C MMsvAttachmentManager& AttachmentManagerL();
 	IMPORT_C MMsvAttachmentManagerSync& AttachmentManagerExtensionsL();
@@ -149,24 +146,26 @@ public:
 	IMPORT_C CMsvPlainBodyText* InitialisePlainBodyTextForWriteL(TBool aIs8Bit, TUint aCharsetId, TUint aDefaultCharsetId);
 	IMPORT_C CMsvPlainBodyText* InitialisePlainBodyTextForReadL(TInt aChunkLength);
 
-	/**
-	@internalTechnology
-	@released
-	*/
 	IMPORT_C void CreateShareProtectedAttachmentL(const TDesC& aFileName, RFile& aAttachmentFile, CMsvAttachment* aAttachmentInfo);
 	void Restore8BitBodyTextL(RFileReadStream& aInputStream);
-	
 protected:
-
+#if (defined SYMBIAN_MESSAGESTORE_HEADER_BODY_USING_SQLDB)
+	IMPORT_C static CMsvStore* OpenForReadL(MMsvStoreObserver& aObserver, RFs& aFs, MMsvStoreManager& aStoreManager, TMsvId aId, TUid aMtmId);
+	IMPORT_C static CMsvStore* OpenForWriteL(MMsvStoreObserver& aObserver, RFs& aFs, MMsvStoreManager& aStoreManager, TMsvId aId, TUid aMtmId);
+#endif
 	IMPORT_C CMsvStore(MMsvStoreObserver& aObserver, RFs& aFs, TMsvId aId, MMsvStoreManager& aStoreManager);
 	IMPORT_C static CMsvStore* OpenForReadL(MMsvStoreObserver& aObserver, RFs& aFs, MMsvStoreManager& aStoreManager, TMsvId aId);
 	IMPORT_C static CMsvStore* OpenForWriteL(MMsvStoreObserver& aObserver, RFs& aFs, MMsvStoreManager& aStoreManager, TMsvId aId);
-
+	
 private:
 	
-	
 	void ConstructL(TBool aReadOnly);
-	
+#if (defined SYMBIAN_MESSAGESTORE_HEADER_BODY_USING_SQLDB)
+	void ConstructDbL(TUid aMtmId,TBool aReadOnly);
+	void RestoreL();
+	void LoadHeaderEntryL(const TUid aMtmId, TBool aUid);
+#endif
+
 	//Methods to handle plain bodytext.
 	void RestorePlainBodyTextL(CRichText& aRichText, TUint aCharsetOverride);
 	void GetRichTextFrom8BitL(RFile& aBodyTextFile, CRichText& aRichText, TUint aCharSet, TUint aDefaultCharSet);
@@ -195,6 +194,10 @@ friend class CMsvEntry;
 friend class CMsvServerEntry;
 friend class RMsvReadStream;
 friend class RMsvWriteStream;
+#if (defined SYMBIAN_MESSAGESTORE_HEADER_BODY_USING_SQLDB)
+friend class TMsvWriteStore;
+friend class TMsvReadStore;
+#endif
 	};
 
 
@@ -242,5 +245,54 @@ public:
 	};
 
 
+
+#if (defined SYMBIAN_MESSAGESTORE_HEADER_BODY_USING_SQLDB)
+
+/** Accesses the message store with write access, or creates new header entry. 
+Before it is used, a CMsvStore must have been opened on the message store 
+with write access.
+
+This class is intended for use by MTM implementations to store MTM-specific 
+information. Message client applications access the store through the higher-level 
+functions provided by Client-side and User Interface MTMs.
+
+@publishedAll
+@released
+*/
+class TMsvWriteStore
+	{
+public:	
+	IMPORT_C TMsvWriteStore(CMsvStore& aMsvStore);
+	IMPORT_C void AssignL(CHeaderFields* aHeaderFields);
+	IMPORT_C void CommitL();	
+public:
+	CMsvStore& iMsvStore;
+	};
+	
+/** Accesses the a message store with read access. 
+
+Before it is used, 
+a CMsvStore must have been opened on the message store with read or read/write 
+access.
+
+This class is intended for use by MTM implementations to store MTM-specific 
+information. Message client applications access the store through the higher-level 
+functions provided by Client-side and User Interface MTMs.
+
+@publishedAll
+@released
+*/
+	
+class TMsvReadStore
+	{
+public:	
+	IMPORT_C TMsvReadStore(CMsvStore& aMsvStore, TUid aUid);
+	IMPORT_C void LoadL(CHeaderFields*& aHeaderFields);
+	IMPORT_C void ReadL(CHeaderFields*& aHeaderFields);
+public:
+	CMsvStore& iMsvStore;
+	TUid iUid;
+	};
+#endif
 
 #endif

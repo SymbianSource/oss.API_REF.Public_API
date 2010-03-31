@@ -1,9 +1,9 @@
 // Copyright (c) 2003-2009 Nokia Corporation and/or its subsidiary(-ies).
 // All rights reserved.
 // This component and the accompanying materials are made available
-// under the terms of the License "Symbian Foundation License v1.0" to Symbian Foundation members and "Symbian Foundation End User License Agreement v1.0" to non-members
+// under the terms of "Eclipse Public License v1.0"
 // which accompanies this distribution, and is available
-// at the URL "http://www.symbianfoundation.org/legal/licencesv10.html".
+// at the URL "http://www.eclipse.org/legal/epl-v10.html".
 //
 // Initial Contributors:
 // Nokia Corporation - initial contribution.
@@ -12,8 +12,6 @@
 //
 // Description:
 //
-
-
 
 /**
  @file
@@ -25,7 +23,6 @@
 #define __OBEXSERVER_H
 
 #include <obextypes.h>
-#include <obex/internal/obextransportconstants.h>
 #include <obexbase.h>
 
 class TObexTransportInfo;
@@ -86,7 +83,7 @@ public:
 	IMPORT_C static CObexServer* NewL(TObexProtocolInfo& aObexProtocolInfoPtr);
 	IMPORT_C static CObexServer* NewL(TObexProtocolInfo& aObexProtocolInfoPtr, TObexProtocolPolicy& aObexProtocolPolicy);
 	IMPORT_C static CObexServer* NewL(TObexTransportInfo& aObexTransportInfo);
-	IMPORT_C ~CObexServer();
+	~CObexServer();
 	IMPORT_C TInt Start(MObexServerNotify* aOwner);
 	IMPORT_C TInt Start(MObexServerNotifyAsync* aOwner);
 	IMPORT_C void Stop();
@@ -103,17 +100,17 @@ public:
     IMPORT_C TInt RequestIndicationCallbackWithError(TInt aErrorCode);
     IMPORT_C TInt RequestCompleteIndicationCallback(TObexResponse aResponseCode);
     IMPORT_C TInt RequestCompleteIndicationCallback(TInt aErrorCode);
-    // @publishedPartner
+
 	IMPORT_C TInt PacketHeaders(CObexHeaderSet*& aHeaderSet);
 	IMPORT_C TInt PacketHeaders(CObexHeaderSet*& aHeaderSet, MObexHeaderCheck& aHeaderCheck);
 	IMPORT_C void SetReadActivityObserver(MObexReadActivityObserver* aObserver);
-	// @internalTechnology
+
 	IMPORT_C TAny* ExtensionInterfaceL(TUid aUid);
 	IMPORT_C const TObexTransportInfo* TransportInfo() const;
 
 public:
 	// Called from CObexNotifyExtendServer
-	void SignalPacketProcessEvent(TObexPacketProcessEvent aEvent);
+	void SignalPacketProcessEvent(TInt aEvent);
 	
 	// Unexported functions used by the Server state machine
 	TBool CheckObjectForConnectionId(CObexBaseObject& aObject);
@@ -691,3 +688,5 @@ public:
 
 
 #endif	// __OBEXSERVER_H
+
+

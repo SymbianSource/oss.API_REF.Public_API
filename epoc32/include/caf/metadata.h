@@ -16,11 +16,9 @@
 */
 
 
-
-
 /**
  @file
- @publishedPartner
+ @publishedAll
  @released
 */
 
@@ -56,8 +54,6 @@ namespace ContentAccess
 	Applications should use the unicode functions whenever possible because it 
 	removes the risk of losing information during the unicode to 8 bit conversion.
 
-	@publishedPartner
-	@released
 	*/
 	class CMetaData : public CBase
 		{
@@ -68,8 +64,6 @@ namespace ContentAccess
 		@param aField The name of the field
 		@param aData The data associated with the field
 		@return A CMetaData object populated with the given field and data		
-		@internalComponent
-		@released
 		*/
 		static CMetaData* NewL(const TDesC8& aField, const TDesC8& aData);
 		/** Construct a new CMetaData with unicode data 
@@ -78,8 +72,6 @@ namespace ContentAccess
 		@param aData The data associated with the field
 		@return A CMetaData object populated with the given field and data		
 
-		@internalComponent
-		@released
 		*/
 		static CMetaData* NewL(const TDesC16& aField, const TDesC16& aData);
 
@@ -88,8 +80,6 @@ namespace ContentAccess
 		@param aStream The stream to read the CMetaData object from
 		@return A CMetaData object read from the stream
 		
-		@internalComponent
-		@released
 		*/
 		static CMetaData* NewL(RReadStream& aStream);
 
@@ -120,8 +110,6 @@ namespace ContentAccess
 		/** Write the CMetaData to a data stream
 		
 		@param aStream The stream to write the CMetaData object to
-		@internalComponent
-		@released
 		*/
 		void ExternalizeL(RWriteStream& aStream) const;
 

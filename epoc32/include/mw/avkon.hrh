@@ -1,10 +1,10 @@
 /*
-* Copyright (c) 2002-2008 Nokia Corporation and/or its subsidiary(-ies).
+* Copyright (c) 2002-2010 Nokia Corporation and/or its subsidiary(-ies).
 * All rights reserved.
 * This component and the accompanying materials are made available
-* under the terms of the License "Symbian Foundation License v1.0" to Symbian Foundation members and "Symbian Foundation End User License Agreement v1.0" to non-members
+* under the terms of "Eclipse Public License v1.0"
 * which accompanies this distribution, and is available
-* at the URL "http://www.symbianfoundation.org/legal/licencesv10.html".
+* at the URL "http://www.eclipse.org/legal/epl-v10.html".
 *
 * Initial Contributors:
 * Nokia Corporation - initial contribution.
@@ -26,8 +26,8 @@
 #include <eikon.hrh>
 #endif
 
-#include <aknfontcategory.hrh>
-#include <aknfontidoffsets.hrh>
+#include <AknFontCategory.hrh>
+#include <AknFontIdOffsets.hrh>
 
 // This file is very important for applications!
 //
@@ -51,6 +51,7 @@
 #define EAknListBoxViewerFlag                0x8000
 #define EAknListBoxPointerMultiselectionList 0x10000
 #define EAknListBoxPointerMarkableList       0x20000
+#define EAknListBoxDisableItemSpecificMenu   0x40000
 
 
 // These are combined to the viewerflag to make it fit to WORD in resources.
@@ -91,7 +92,7 @@
 #define EAknListBoxMarkableGridWithShortcuts  (EAknListBoxMarkableList | EAknListBoxIncrementalMatching)
 
 #define EAknListBoxMenuGrid                   (EAknListBoxMenuList)
-
+#define EAknListBoxItemSpecificMenuDisabled   ( EAknListBoxDisableItemSpecificMenu )
 //
 // Viewers (see Selection service)
 //
@@ -342,6 +343,8 @@ enum
     
     //Command id for launching arabic handwriting recognition dictionary on-off menu
     EPenInputCmdRecognitionWithDictionary,
+    EAknCmdEditModeKorean,
+    EAknCmdEditModeEnglish,
 
 		/**
      * Command ids for UDB Editing with ITI input
@@ -355,7 +358,25 @@ enum
     
     //Command id for launch phrase creation view
     EAknCmdUserDBDlg,
+    
+    /**
+    * open smiley dialog in edit menu
+    */
+    EAknCmdEditInsertSmiley,
 
+    EPenInputCmdVITUT,
+    EPeninputCmdFSQ,
+    
+    /**
+    * Command id for dealing with discreet popup's close
+    */
+    EAknDiscreetPopupCmdClose,
+    // Commands ids for arabic finger hwr option menu
+    EPenInputCmdHwrInputToPortrait,
+    EPenInputCmdHwrInputToLandscape,
+    EPenInputCmdSwitchToVkeyBasedInput,
+    EPenInputCmdWritingSpeed,
+    EPenInputCmdGuidingLine,    
     /**
     * @deprecated
     * Do not use.
@@ -598,6 +619,18 @@ enum
     /** For selection list with adaptive search */
 	/** @since 5.0 */
     EAknCtSelectionListAdaptiveFind,
+
+    /** For Smiley Picker Dialog */
+    /** @since 5.0 */
+    EAknCtSmileyMap,
+
+    /** For slider with feedback style */
+	/** @since 5.1 */
+    EAknSliderWithFeedbackStyle,
+
+    /** For combined sub-pane in status pane */
+    /** @since 5.2 */
+    EAknCtCombinedPane,
 
     // This is the marker for the last AVKON control id: It does not construct a control
     EAknCtLastControlId = KAknCtLastControlId
@@ -909,6 +942,7 @@ enum
 #define EEikStatusPaneUidClock        0x100059C0
 #define EEikStatusPaneUidDigitalClock 0x10275090
 #define EEikStatusPaneUidEmpty        0x102750A3
+#define EEikStatusPaneUidCombined     0x2001E2D9
 
 // POPUP_FIELD flags
 #define EAknPopupFieldFlagAllowsUserDefinedEntry  0x01
@@ -981,6 +1015,12 @@ enum
     EAknSliderValueDecimal
     };
 
+// Slider feedback styles
+enum TAknFeedbackStyle
+    {
+    EAknSliderFbStable,
+    EAknSliderFbDynamic
+    };
 /** Volume layouts */
 enum
     {
@@ -1066,6 +1106,8 @@ enum
     EAknIndicatorUSBMemConnected,
     EAknIndicatorUSBMemActive,
     EAknIndicatorStopWatch,
+    EAknIndicatorMecoServiceTab,
+    EAknIndicatorHDMI,
 
     // Navi pane editor indicators
     EAknNaviPaneEditorIndicatorT9 = 100,
@@ -1170,6 +1212,9 @@ enum
     EAknNaviPaneEditorIndicatorCyrillicUpperCase = 700,
     EAknNaviPaneEditorIndicatorCyrillicLowerCase,
     EAknNaviPaneEditorIndicatorCyrillicTextCase,
+    
+    // Navi pane indicator for hybrid mode in easy dialling
+    EAknNaviPaneEditorIndicatorHybridLatin = 800,
         
     // Reserved for dynamic indicators
     EAknNaviPaneEditorIndicatorDynamicUidRangeFirst = 10000,
@@ -1319,6 +1364,12 @@ enum TSCTQueryCtrlIds
     {
     EAknSCTQueryHeadingId = 1,
     EAknSCTQueryContentId
+    };
+
+enum TSmileyQueryCtrlIds
+    {
+    EAknSmileyQueryHeadingId = 1,
+    EAknSmileyQueryContentId
     };
 
 // Enemerations for Avkon KeySounds
@@ -1648,6 +1699,7 @@ enum TAknNaviPaneBackgroundTypes
 #define MEMORYCARDUI_BITMAP_FILE     "z:\\resource\\apps\\aknmemorycardui.mbm"
 #define AVKON_BITMAP_FILE            "z:\\resource\\apps\\avkon2.mbm"
 #define AVKON_VARIATED_BITMAPS_FILE  "z:\\resource\\apps\\variatedbitmaps.mbm"
+#define SMILEY_ICONS_MIF_FILE        "z:\\resource\\apps\\smiley.mif"
 
 // End key closing event. If this window server event is received,
 // by default application will be closed unless it is system application.
@@ -1688,8 +1740,9 @@ enum TAknFepDualLanguageSettingDualInput
 
 enum TAknSctTableNaviButtons
     {
-    EAknSctTableNaviTableExit = 0,
-    EAknSctTableNaviSpecialCharTable,
+    EAknSctTableNaviExit = 0,
+    EAknSctTableNaviSpecialChar,
+    EAknSctTableNaviEmotion,
     EAknSctTableNaviLastId
     };
 
@@ -1700,4 +1753,23 @@ enum TAknSctPageNaviButtons
     EAknSctPageNaviLastId
     };
 
+//
+// Flags for CAknDiscreetPopup
+//
+// Popup's duration is long (default is short)
+#define KAknDiscreetPopupDurationLong       0x00000001
+// Popup switches the device light on
+#define KAknDiscreetPopupLightsOn           0x00000002
+// Popup plays the confirmation tone
+#define KAknDiscreetPopupConfirmationTone   0x00000004
+// Popup plays the warning tone
+#define KAknDiscreetPopupWarningTone        0x00000008
+// Popup plays the error tone
+#define KAknDiscreetPopupErrorTone          0x00000010
 #endif // __AVKON_HRH__
+
+//
+// Flags for CAknSettingPage (used in extension resource)
+//
+#define KAknSettingPageNoEmbeddedSoftKeys 0x00000001
+

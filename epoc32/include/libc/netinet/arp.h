@@ -34,13 +34,13 @@
 #ifndef	_NETINET_ARP_H
 #define	_NETINET_ARP_H
 
-
-#include <libc\sys\socket.h>
-
 #ifdef	__cplusplus
 extern "C" {
 #endif
 
+#include <sys/socket.h>
+#include <sys/types.h>
+#include <libc/netinet/net_types.h>
 /**
 Address Resolution Protocol.
 
@@ -90,26 +90,6 @@ struct	ether_arp {
 	struct ether_addr arp_tha;	/* target hardware address */
 	u_char	arp_tpa[4];		/* target protocol address */
 };
-/**
-@internalComponent
-*/
-#define	arp_hrd	ea_hdr.ar_hrd
-/**
-@internalComponent
-*/
-#define	arp_pro	ea_hdr.ar_pro
-/**
-@internalComponent
-*/
-#define	arp_hln	ea_hdr.ar_hln
-/**
-@internalComponent
-*/
-#define	arp_pln	ea_hdr.ar_pln
-/**
-@internalComponent
-*/
-#define	arp_op	ea_hdr.ar_op
 
 /**
 ARP ioctl request
@@ -119,27 +99,7 @@ struct arpreq {
 	struct	sockaddr arp_ha;		/* hardware address */
 	int	arp_flags;			/* flags */
 };
-/**
-arp_flags and at_flags field values 
-@internalComponent
-*/
-#define	ATF_INUSE	0x01	/* entry in use */
-/**
-@internalComponent
-*/
-#define	ATF_COM		0x02	/* completed entry (enaddr valid) */
-/**
-@internalComponent
-*/
-#define	ATF_PERM	0x04	/* permanent entry */
-/**
-@internalComponent
-*/
-#define	ATF_PUBL	0x08	/* publish entry (respond for other host) */
-/**
-@internalComponent
-*/
-#define	ATF_USETRAILERS	0x10	/* has requested trailers */
+
 
 #ifdef	__cplusplus
 }

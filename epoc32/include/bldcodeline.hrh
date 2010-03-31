@@ -2,9 +2,9 @@
 * Copyright (c) 2009 Nokia Corporation and/or its subsidiary(-ies).
 * All rights reserved.
 * This component and the accompanying materials are made available
-* under the terms of the License "Symbian Foundation License v1.0" to Symbian Foundation members and "Symbian Foundation End User License Agreement v1.0" to non-members
+* under the terms of "Eclipse Public License v1.0"
 * which accompanies this distribution, and is available
-* at the URL "http://www.symbianfoundation.org/legal/licencesv10.html".
+* at the URL "http://www.eclipse.org/legal/epl-v10.html".
 *
 * Initial Contributors:
 * Nokia Corporation - initial contribution.
@@ -14,6 +14,7 @@
 * Description: 
 *
 */
+
 
 #ifndef __BLDCODELINE_HRH 
 #define __BLDCODELINE_HRH 
@@ -58,6 +59,12 @@ RD flag for development of new AIW Dial Data APIs.
 Flag enables ui accelerator toolkit development. 
 */ 
 #define RD_ALF_IN_PLATFORM                                  
+
+/** #ALF_USE_OPENWF_COMPOSITION
+Bug 1391 - UI Acceleration migration to OpenWF
+*/ 
+#define ALF_USE_OPENWF_COMPOSITION
+
  
 /** #RD_ALR_AND_NLR_ENABLERS  
 Enables Application and Network Level Roaming. 
@@ -585,7 +592,7 @@ Image Handling Library utilized Extended ICL JPEG API
 /** #RD_IMAGEPREVIEW  
 ImageViewer's ImagePreview API and DLL are available in release. 
 */ 
-#define RD_IMAGEPREVIEW                                     
+#undef RD_IMAGEPREVIEW                                     
  
 /** #RD_IMAGINGCONFIGMANAGER  
 Flag to include/exclude Imaging Configuration Manager component. 
@@ -1414,4 +1421,4 @@ RD flag for development of new XML Engine APIs.
 #define RD_XML_ENGINE_API_CHANGE                            
  
 
-#endif // __BLDCODELINE_HRH 
+#endif // __BLDCODELINE_HRH

@@ -1,9 +1,9 @@
 // Copyright (c) 1997-2009 Nokia Corporation and/or its subsidiary(-ies).
 // All rights reserved.
 // This component and the accompanying materials are made available
-// under the terms of the License "Symbian Foundation License v1.0" to Symbian Foundation members and "Symbian Foundation End User License Agreement v1.0" to non-members
+// under the terms of "Eclipse Public License v1.0"
 // which accompanies this distribution, and is available
-// at the URL "http://www.symbianfoundation.org/legal/licencesv10.html".
+// at the URL "http://www.eclipse.org/legal/epl-v10.html".
 //
 // Initial Contributors:
 // Nokia Corporation - initial contribution.
@@ -12,8 +12,6 @@
 //
 // Description:
 //
-
-
 
 /**
  @file
@@ -34,6 +32,11 @@
 #endif
 
 #include <comms-infras/metacontainer.h>
+#include <elements/sd_errors.h>
+#include <comms-infras/es_parameterset.h>
+
+#include <comms-infras/es_event.h>
+
 using Meta::STypeId;
 using Meta::SMetaDataECom;
 using Meta::RMetaDataEComContainer;
@@ -46,12 +49,6 @@ namespace ESock
 }
 
 /**
-Name of ESock server in EKA2
-@internalComponent
-*/
-_LIT(SOCKET_SERVER_NAME, "!SocketServer");
-
-/**
 Canonical names for the core ESOCKSVR modules
 */
 _LIT8(SOCKET_SERVER_MAIN_MODULE_NAME, "ESock_Main");		// Worker 0
@@ -60,11 +57,28 @@ _LIT8(SOCKET_SERVER_BT_MODULE_NAME, "ESock_Bt");			// Worker 2
 _LIT8(SOCKET_SERVER_IR_MODULE_NAME, "ESock_Ir");			// Worker 3
 _LIT8(SOCKET_SERVER_SMSWAP_MODULE_NAME, "ESock_SmsWap");	// Worker 4
 
+
 /**
-Id of the network layer.
-@publishedPartner
+Progress Notification to inform clients Connection is up
+This event has the same numerical values as 
+KLinkLayerOpen which is deprecated
+@publishedAll
+@released
 */
-const TUint KCommsNetworkLayerId = 1;
+
+const TUint KConnectionUp    = 7000;    
+/**
+Progress Notification to inform clients Connection is up
+This event has the same numerical values as 
+KLinkLayerClosed which is deprecated 
+
+@publishedAll
+@released
+*/
+
+const TUint KConnectionDown  = 8000;  
+
+      
 
 /**
 Default number of message slots.
@@ -73,32 +87,12 @@ Default number of message slots.
 */
 const TUint KESockDefaultMessageSlots=8;
 
-/**
-Major Version Number of Connection
-
-@internalComponent
-*/
-const TUint KConnectionMajorVersionNumber=1;
-
-/**
-Minor Version Number of Connection
-
-@internalComponent
-*/
-const TUint KConnectionMinorVersionNumber=0;
-
-/**
-Build Version Number of Connection
-this must not be changed - expected by TCPIP to be >=68
-
-@internalComponent
-*/
-const TUint KConnectionBuildVersionNumber=68;
 
 /**
 Size of Maximum SubConnection event
 
-@internalComponent
+@publishedAll
+@released
 @note If you allocate this on the heap, remember to delete through the pointer to the buffer and not any pointers to the events held inside it
 if you change this value, you will alter the function signature and break the .def file
 */
@@ -106,6 +100,9 @@ const TUint KMaxSubConnectionEventSize = 512;
 
 /**
 SubConnection Unique Id
+
+THIS API IS TO BE DEPRECATED
+
 @publishedPartner
 @released
 */
@@ -113,14 +110,17 @@ typedef TUint TSubConnectionUniqueId;
 
 /**
 Buffer for  notification of any change in the state of  SubConnection.
+
+THIS API IS TO BE DEPRECATED
+
 @publishedPartner
 @released
 */
 typedef TBuf8<KMaxSubConnectionEventSize> TSubConnectionNotificationBuf;
 //
-const TUint KUseEmbeddedUniqueId = 0; ///< Used by RConnection to identify cases where the subconnection id is embedded in the data structure
+const TUint KUseEmbeddedUniqueId = 0; //< Used by RConnection to identify cases where the subconnection id is embedded in the data structure
 
-const TUint KConnProgressDefault = 0; ///< Default Connection Progress
+const TUint KConnProgressDefault = 0; //< Default Connection Progress
 
 class TSessionPref
 /**
@@ -160,6 +160,8 @@ Contains progress information on a dial-up connection
 	{
 public:
 	inline TNifProgress();
+	inline TNifProgress(TInt aStage, TInt aError);
+	inline TBool operator==(const TNifProgress& aRHS) const;
 	TInt iStage;
 	TInt iError;
 	};
@@ -336,7 +338,11 @@ const TUint KSOReadBytesPending=7;
 support urgent data).
 Value is a TInt. */
 const TUint KSOUrgentDataOffset=8;
-/** Getting only: retrieves the last error. Value is a TInt. */
+/** 
+Getting only: retrieves the last error. 
+Errors are normally reported by the called method and behaviour is protocol dependent.
+KSOSelectLastError does not return such errors.
+Value is a TInt. */
 const TUint KSOSelectLastError=9;
 
 
@@ -362,17 +368,8 @@ const TInt  KSocketBufSizeUndefined=0;
 const TInt  KSocketDefaultBufferSize=4096;
 
 //internal
-const TUint KSocketInternalOptionBit=0x80000000;	///< Must not be set for client requests
+const TUint KSocketInternalOptionBit=0x80000000;	//< Must not be set for client requests
 
-/**
-Ioctls
-
-Must not be set for client requests
-
-@internalComponent
-@released
-*/
-const TUint KInternalIoctlBit=0x80000000;
 
 /** The aDesc parameter of RSocket::Ioctl() specifies a TUint containing a bitmask
 of Socket status constants. The completion status will be the subset of those
@@ -443,7 +440,7 @@ enum TByteOrder
 // TServerProtocolDesc and TProtocolDesc
 //
 /** The protocol is connectionless.
-@publishedPartner
+@publishedAll
 @released */
 const TUint KSIConnectionLess=0x00000001;
 /** The protocol is reliable. */
@@ -483,8 +480,11 @@ protocol). */
 const TUint KSIPeekData=0x00010000;
 /** Protocol is to be informed of the identity of the client (i.e. process ID,
 thread ID and UID) of each SAP (i.e. Socket Service Provider) created.
+Note that this value has no meaningful interpretation on the client side.
 @see KSoOwnerInfo and TSoOwnerInfo */
 const TUint KSIRequiresOwnerInfo=0x00020000;	// SetOption(KSoOwnerInfo) invoked on each SAP
+/** @internalTechnology */
+const TUint KSIReserved=0xFFFC0000;
 
 //
 // Naming service constants
@@ -493,13 +493,13 @@ const TUint KSIRequiresOwnerInfo=0x00020000;	// SetOption(KSoOwnerInfo) invoked 
 //
 /** Protocol supports resolving human readable entity names into network addresses
 (like DNS).
-@publishedPartner
+@publishedAll
 @released */
 const TUint KNSNameResolution=0x00000001;
 /** Network naming is hierarchical. */
 const TUint KNSHierarchicalNaming=0x00000002;
 /** @deprecated Use KNSHierarchicalNaming instead. */
-const TUint KNSHeirarchicalNaming=0x00000002;
+const TUint KNSHeirarchicalNaming=KNSHierarchicalNaming;
 /** Addressing is dynamic and should be attempted every time before connecting
 (like IrDA). */
 const TUint KNSRemoteDiscovery=0x00000004;
@@ -516,8 +516,12 @@ const TUint KNSDynamicAddressing=0x00000040;
 /** Protocol has another database which is defined by the protocol. */
 const TUint KNSInfoDatabase=0x00000080;
 /** Protocol may request Socket Server to startup a connection on its behalf (via
-the KErrCompletion error code)*/
+the KErrCompletion error code)
+Note that this value has no meaningful interpretation on the client side.
+*/
 const TUint KNSRequiresConnectionStartup=0x00000100;
+/** @internalTechnology */
+const TUint KNSReserved=0xFFFFFE00;
 
 // Security Schemes
 // The following constants are defined for
@@ -556,6 +560,12 @@ const TUint KUndefinedSockType=0xFFFFFFFF;
 Undefined Protocol
 @released */
 const TUint KUndefinedProtocol=0xFFFFFFFE;
+
+/** Undefined address family
+@publishedPartner
+@released
+ */
+const TUint KUndefinedAddressFamily = 0;
 
 /** Contains the name of a protocol in structure TProtocolDesc.
 @publishedAll
@@ -633,56 +643,45 @@ A gap has been left between the currently existing vals and this one.
 */
 const TInt KErrConnectionTerminated=-17210;
 
-const TInt KErrCannotFindProtocol = -17211;
+const TInt KErrCannotFindProtocol = Den::KErrPlayerNotFound;
+const TInt KErrTierNotFound = -17212;
+const TInt KErrConnectionContention = -17213;
+
+/**
+The protocol requested for the socket was recognised but was not able to be used.
+This can happen with protocols that require specific settings to have been prepared
+prior to the socket being opened.
+
+@publishedAll
+@released
+*/ 
+const TInt KErrProtocolNotReady = -17214;
+
+// -17215 used for non published error. Do not use here.
+
 
 /** Used in RSocket read and write calls to pass the length of data read and written.
 @publishedAll
 @released */
 typedef TPckgBuf<TInt> TSockXfrLength;
 
-class TSockIO
-/**
-IPC Data holder
 
-@internalComponent
-*/
-	{
-public:
-	const TSockXfrLength* iLength;  ///< length of data read and written
-	TUint iFlags;                   ///<  Flag
-	TSockAddr* iAddr;               ///< Socket Address
-	};
 
-class TSockIOBufC : public TPckgC<TSockIO>
-/** @internalComponent */
+namespace ESockDebug
 	{
-public:
-	inline TSockIOBufC();
-	TSockIO iArgs;
-	};
-
-class TSockOpen
-/** @internalComponent */
-	{
-public:
-	TUint iAddrFamily;
-	TUint iSockType;
-	TUint iProtocol;
-	TInt  iHandle;
-	TInt  iReserved;
-	};
-
-class TSockOpenBufC : public TPckgC<TSockOpen>
-/** @internalComponent */
-	{
-public:
-	inline TSockOpenBufC();
-	TSockOpen iArgs;
-	};
+	class TControlMsg;
+	}
 
 class RSocket;
 class RConnection;
-class RSocketServ : public RSessionBase
+
+NONSHARABLE_CLASS(RCommsSession) : public RSessionBase
+	{
+	friend class RCommsApiExtensionBase;
+	friend class CCommsSessionApiExtProvider;
+	};
+
+class RSocketServ : public RCommsSession
 /** Provides the Connect() function to create an IPC communication channel to the
 socket server. To close the channel RHandleBase provides a RHandleBase::Close()
 function.
@@ -729,11 +728,13 @@ public:
 	IMPORT_C TInt __DbgCheckMbuf(TInt asize);
 	IMPORT_C TInt __DbgMbufFreeSpace();
 	IMPORT_C TInt __DbgMbufTotalSpace();
+	IMPORT_C TInt __DbgControl(const ESockDebug::TControlMsg& aRequestMsg);
 	};
 
 NONSHARABLE_CLASS(RCommsSubSession) : public RSubSessionBase
 	{
 	friend class RCommsApiExtensionBase;
+	friend class CCommsSubSessionApiExtProvider;
 	};
 
 class RSubConnection;
@@ -759,7 +760,8 @@ must have been made and the socket must be open.
 	{
 friend class RSocketServ;
 public:
-	/** Used in structure TProtocolDesc to describes the endianness of a protocol. */
+	/** Argument to RSocket::Shutdown() specifying how abruptly the shutdown occurs.
+	*/
 	enum TShutdown
 		{
 		/** Complete when socket output/input stopped. */
@@ -789,6 +791,7 @@ public:
 	IMPORT_C void Recv(TDes8& aDesc,TUint flags,TRequestStatus& aStatus,TSockXfrLength& aLen);
 
 	IMPORT_C void RecvOneOrMore(TDes8& aDesc,TUint flags,TRequestStatus& aStatus,TSockXfrLength& aLen);
+	IMPORT_C void RecvOneOrMore(TDes8& aDesc,TUint flags,TRequestStatus& aStatus);
 	IMPORT_C void CancelRecv();
 
 	IMPORT_C void Read(TDes8& aDesc,TRequestStatus& aStatus);
@@ -839,10 +842,13 @@ class TNameRecord
 	{
 public:
 	inline TNameRecord();
-	/**
-	@internalComponent
-	*/
-	enum {EAlias=0x00000001,};
+
+	enum
+	{
+	EAlias=0x00000001,
+	EPartial=0x00000002, 	/*!< Indicates a partial (truncated) host name. */
+	
+	};
 	/** A host name
 
 	@see THostName */
@@ -908,6 +914,7 @@ public:
     IMPORT_C TInt Query(const TDesC8& aQuery, TDes8& aResult);
     IMPORT_C void QueryGetNext(TDes8& aResult, TRequestStatus& aStatus);
     IMPORT_C TInt QueryGetNext(TDes8& aResult);
+    IMPORT_C TInt SetOpt(TUint anOptionName,TUint anOptionLevel,const TDesC8& anOption=TPtrC8(NULL,0));
 
 private:
 	};
@@ -970,51 +977,6 @@ public:
 private:
 	};
 
-/**
-@publishedPartner
-@released
-*/
-
-const TUint KCOLConnection = 1;						// level for RConnection::Control()
-const TUint KCOLProvider = 2;						// level for RConnection::Control()
-const TUint KConnInternalOptionBit = 0x80000000;	// Must not be set for client requests
-const TUint KConnWriteUserDataBit = 0x40000000;
-const TUint KConnReadUserDataBit = 0x20000000;
-
-/**
-Level for RConnection::Control()
-
-@publishedPartner
-@deprecated in 8.1
-@capability NetworkControl Restrict access to connection clients
-@ref RConnection::Control()
-*/
-const TUint KCoEnumerateConnectionClients  =  1 | (KConnWriteUserDataBit | KConnReadUserDataBit);
-
-/**
-Level for RConnection::Control()
-Information about client
-
-@publishedPartner
-@deprecated in 8.1
-@capability NetworkControl Restrict access to connection client info
-@ref RConnection::Control()
-*/
-const TUint KCoGetConnectionClientInfo     =  2 | (KConnWriteUserDataBit | KConnReadUserDataBit);
-
-/** @internalTechnology */
-const TUint KCoEnumerateConnectionSockets  =  3 | (KConnWriteUserDataBit | KConnReadUserDataBit);
-
-/**
-Level for RConnection::Control()
-Information about connected socket
-
-@publishedPartner
-@deprecated
-@capability NetworkControl Restrict access to socket info on a connection
-@ref RConnection::Control()
-*/
-const TUint KCoGetConnectionSocketInfo     =  4 | (KConnWriteUserDataBit | KConnReadUserDataBit);
 
 /**
 Default connection type
@@ -1023,20 +985,6 @@ Default connection type
 */
 const TUint KConnectionTypeDefault = 0x0800;		// KAfInet is the default connection type
 
-/**
-Setting only: enable processes to "clone" open this RConnection instance via a call to
-RConnection::Open(..., TName&), as long as they conform to the security policy
-passed as argument (specified as a TSecurityPolicyBuf).
-@internalTechnology
-*/
-const TUint KCoEnableCloneOpen				= 5 | (KConnReadUserDataBit);
-
-/**
-Setting only: disable "clone" open of this RConnection instance, which was enabled via
-a previous KCoEnableCloneOpen option.
-@internalTechnology
-*/
-const TUint KCoDisableCloneOpen				= 6 | (KConnReadUserDataBit);
 
 class TConnPref;
 class TSubConnectionInfo;
@@ -1157,17 +1105,35 @@ public:
 	IMPORT_C void ServiceChangeNotification(TUint32& aNewISPId, TDes& aNewServiceType, TRequestStatus& aStatus);
 	IMPORT_C void CancelServiceChangeNotification();
 
+	
+	/**
+	@deprecated Since SymbianOS v9.5
+	*/
 	IMPORT_C TInt GetIntSetting(const TDesC& aSettingName, TUint32& aValue);
+
+	/**
+	@deprecated Since SymbianOS v9.5
+	*/
 	IMPORT_C TInt GetBoolSetting(const TDesC& aSettingName, TBool& aValue);
+
+	/**
+	@deprecated Since SymbianOS v9.5
+	*/
 	IMPORT_C TInt GetDesSetting(const TDesC& aSettingName, TDes8& aValue);
+
+	/**
+	@deprecated Since SymbianOS v9.5
+	*/
 	IMPORT_C TInt GetDesSetting(const TDesC& aSettingName, TDes16& aValue);
+
+	/**
+	@deprecated Since SymbianOS v9.5
+	*/
 	IMPORT_C TInt GetLongDesSetting(const TDesC& aSettingName, TDes& aValue);
 
 
-	/**
-	@prototype SymbianOS v9.4
-	*/
 	IMPORT_C TInt GetParameters(ESock::CCommsDataObjectBase& aDataObject);
+	IMPORT_C TInt SetParameters(ESock::CCommsDataObjectBase& aDataObject);
 
 	IMPORT_C TInt Name(TName& aName);
 
@@ -1215,11 +1181,13 @@ private:
 	TUint32 iReserved[4];
 	};
 
-class CSubConParameterSet : public SMetaDataECom
+class CSubConParameterSet : public XParameterSetBase
 /** Base class for all RSubConnection parameter sets.
 
+THIS API IS DEPRECATED IN FAVOUR OF XParameterSet
+
 @publishedAll
-@released since v9.0 */
+@deprecated since v9.6 */
 	{
 public:
 	IMPORT_C static CSubConParameterSet* NewL(const STypeId& aTypeId);
@@ -1233,8 +1201,10 @@ protected:
 class CSubConGenericParameterSet : public CSubConParameterSet
 /** Base class for generic RSubConnection parameter sets.
 
+THIS API IS DEPRECATED IN FAVOUR OF XParameterSet
+
 @publishedAll
-@released since v9.0 */
+@deprecated since v9.6 */
 	{
 public:
 	IMPORT_C ~CSubConGenericParameterSet();
@@ -1246,8 +1216,10 @@ protected:
 class CSubConExtensionParameterSet : public CSubConParameterSet
 /** Base class for extended RSubConnection parameter sets.
 
+THIS API IS DEPRECATED IN FAVOUR OF XParameterSet
+
 @publishedAll
-@released since v9.0 */
+@deprecated since v9.6 */
 	{
 public:
 	IMPORT_C ~CSubConExtensionParameterSet();
@@ -1265,13 +1237,17 @@ const TInt32 KSubConnEventInterfaceUid = 0x10204305;
 const TInt32 KSubConnGenericParamsImplUid  = 0x10204304;
 const TInt32 KSubConnGenericEventsImplUid  = 0x10204306;
 
-const TUint32 KSubConGlobalFamily = 0;
-const TUint32 KSubConQoSFamily = 1;
-const TUint32 KSubConAuthorisationFamily = 2;
-const TUint32 KSubConnCallDescrParamsFamily = 3;
-#ifdef SYMBIAN_NETWORKING_UMTSR5
-const TUint32 KSubConnContextDescrParamsFamily = 4;
-#endif //SYMBIAN_NETWORKING_UMTSR5
+const TUint32 KSubConGlobalFamily 				= 0;
+const TUint32 KSubConQoSFamily 					= 1;
+const TUint32 KSubConAuthorisationFamily 		= 2;
+const TUint32 KSubConnCallDescrParamsFamily 	= 3;
+const TUint32 KSubConnContextDescrParamsFamily 	= 4;
+
+const TUint32 KSubConIPAddressInfoFamily 		= 5;
+
+const TInt32 KProtocolExtensionFamily 		= 6;
+const TInt32 KFlowParametersFamily 		= 7;
+class RParameterFamily;
 
 class CSubConParameterFamily : public CBase
 /** Container of RSubConnection parameter sets.
@@ -1279,8 +1255,16 @@ class CSubConParameterFamily : public CBase
 For each Parameter Type (Requested, Acceptable and Granted) it
 contains one generic and 0..N extended parameter sets.
 
+Note:
+a CSubConParameterBundle or RSubConParameterBundle object can take ownership of a 
+CSubConParameterFamily object, in this case, when the bundle is destroyed, this 
+family object will also be destroyed  (along with any parameter sets that are owned 
+by the family).
+
+THIS API IS DEPRECATED IN FAVOUR OF RParameterFamily
+
 @publishedAll
-@released since v9.0 */
+@deprecated since v9.6 */
 	{
 public:
 
@@ -1314,59 +1298,47 @@ public:
 	IMPORT_C TInt Store(TDes8& aDes) const;
 	IMPORT_C void ClearAllParameters(TParameterSetType aType);
 
-protected:
-	explicit CSubConParameterFamily(TUint32 aFamilyId);
-	void ConstructL(RSubConParameterBundle& aBundle);
-	void ConstructL(CSubConParameterBundle& aBundle);
+	/**
+	Copy the parameters of this CSubConParameterFamily to a RParameterFamily.
+	@param aDest RParameterFamily object to copy to
+	*/
+	void CopyToFamilyL(RParameterFamily& aDest) const;
 
-	static TInt32 ExtractFamilyAndCreateBufferL(TPtrC8& aBuffer, TPtrC8& aContainerBuffer);
+    /**
+	Copy the parameters of this CSubConParameterFamily from a RParameterFamily.
+	@param aSrc RParameterFamily object to copy from
+	*/
+	void CopyFromFamilyL(RParameterFamily& aSrc);
+protected:
+	IMPORT_C explicit CSubConParameterFamily(TUint32 aFamilyId);
+	IMPORT_C void ConstructL(RSubConParameterBundle& aBundle);
+	IMPORT_C void ConstructL(CSubConParameterBundle& aBundle);
+
+	IMPORT_C static TInt32 ExtractFamilyAndCreateBufferL(TPtrC8& aBuffer, TPtrC8& aContainerBuffer);
 
 private:
-	const TUint32 iFamilyId;
+	const TUint32 iFamilyId;   // This member variable is accessed by an inline function ( Id () ).
 	RMetaDataEComContainer iGenericSets;
-	RMetaDataEComContainer iExtensionSets[ENumValues];
-	};
-
-class CSubConParameterBundle : public CObject
-/** Container for (bundle of) SubConnection parameter families.
-
-May contain and 0..N parameter families.
-
-@publishedPartner
-@released since v9.0 */
-	{
-public:
-	IMPORT_C static CSubConParameterBundle* NewL();
-	IMPORT_C static CSubConParameterBundle* LoadL(TDesC8& aDes);
-
-	IMPORT_C ~CSubConParameterBundle();
-
-	IMPORT_C TUint Length() const;
-	IMPORT_C TInt Load(const TDesC8& aDes);
-	IMPORT_C TInt Store(TDes8& aDes) const;
-	IMPORT_C void AddFamilyL(CSubConParameterFamily* aFamily);
-	IMPORT_C CSubConParameterFamily* FindFamily(TUint32 aFamilyId);
-	IMPORT_C void ClearAllParameters(CSubConParameterFamily::TParameterSetType aType);
-
 protected:
-	CSubConParameterBundle();
+	RMetaDataEComContainer iExtensionSets[ENumValues];
 
-private:
-	CSubConParameterBundle(const CSubConParameterBundle& aBundle);
-	CSubConParameterBundle& operator=(const CSubConParameterBundle& aBundle);
-
-private:
-	RPointerArray<CSubConParameterFamily> iFamilies;
 	};
 
+class RParameterFamilyBundle;
 class RSubConParameterBundle
 /** Container for (bundle of) SubConnection parameter families.
 
 May contain and 0..N SubConnection parameter families.
 
+Note:
+If the RSubConParameterBundle object takes ownership of any CSubConParameterFamily object, 
+then when the bundle object is destroyed, any family owned by this object will also be 
+destroyed.
+
+THIS API IS DEPRECATED IN FAVOUR OF RParameterFamilyBundle
 
 @publishedAll
-@released since v9.0 */
+@deprecated since v9.6 */
 	{
 public:
 	IMPORT_C RSubConParameterBundle();
@@ -1379,6 +1351,18 @@ public:
 	IMPORT_C CSubConParameterFamily* FindFamily(TUint32 aFamilyId);
 	IMPORT_C void ClearAllParameters(CSubConParameterFamily::TParameterSetType aType);
 
+    /**
+    Copy the contents of this parameter bundle to a RParameterFamilyBundle.
+	@param aDest RParameterFamilyBundle to copy parameters to
+	*/
+	void CopyToFamilyBundleL(RParameterFamilyBundle& aDest) const;
+
+	/**
+	Copy the contents of an RParameterFamilyBundle to this RSubConParameterBundle
+	@param aSrc RParameterFamilyBundle to copy contents from
+	*/
+	void CopyFromFamilyBundleL(RParameterFamilyBundle& aSrc);
+
 protected:
 	TInt CheckBundle() const;
 private:
@@ -1388,6 +1372,7 @@ private:
 private:
 	mutable CSubConParameterBundle* iBundle;
 	};
+
 
 const TInt KNotificationEventMaxSize = 2048;
 class TNotificationEventBuf : public TBuf8<KNotificationEventMaxSize>
@@ -1407,7 +1392,11 @@ public:
 	IMPORT_C TUint32 Id() const;
 	};
 
+#ifndef SYMBIAN_ADAPTIVE_TCP_RECEIVE_WINDOW
 class CSubConNotificationEvent : public SMetaDataECom
+#else
+class CSubConNotificationEvent : public ESock::XEventBase
+#endif // SYMBIAN_ADAPTIVE_TCP_RECEIVE_WINDOW
 	{
 public:
 	IMPORT_C static CSubConNotificationEvent* NewL(const STypeId& aTypeId);
@@ -1439,10 +1428,10 @@ public:
 	TInt  iReserved;
 	};
 
-class RSubConnection : public RSubSessionBase
+class RSubConnection : public RCommsSubSession
 /** A Sub-Connection, a channel within a Connection. A representation of a channel between this device and remote devices with which we are communicating. This channel will be used by one or more sockets.
  Depending on the state of the channel, it may not be possible to bind arbitary sockets into it.  Attempts to bind sockets from different protocol families to a single channel is an error, as each channel can only be used by one protocol family.
- @note The sub-connection can represent a end-to-end channel and/or a channel from this device to an intermediate device (e.g an access server such as a GGSN which using UMTS and PDP contexts. Properties can be specified simultaneously on protocol and link level.
+ @note The sub-connection can represent a end-to-end channel and/or a channel from this device to an intermediate device (e.g an access server such as a GGSN which using UMTS and PDP contexts. Properties can be specified simultaneously on protocol and link level.)
 
 Before using any of these services, a connection to a socket server session
 must have been made and the connection must be open.
@@ -1456,7 +1445,8 @@ public:
 	enum TSubConnType
 		{
 		EAttachToDefault,
-		ECreateNew
+		ECreateNew,
+		EWaitIncoming
 		};
 
 	struct TEventFilter
@@ -1473,15 +1463,19 @@ public:
 	IMPORT_C void Close();
 	IMPORT_C void Start(TRequestStatus& aStatus);
 	IMPORT_C TInt Start();
-	IMPORT_C TInt Stop();
+	IMPORT_C TInt Stop();		
 
 	// Socket Management
 	IMPORT_C void Add(RSocket& aSocket, TRequestStatus& aStatus);
 	IMPORT_C void Remove(RSocket& aSocket, TRequestStatus& aStatus);
 
-	// QoS Properties
+	// QoS Properties (legacy bundles - to be deprecated)
 	IMPORT_C TInt SetParameters(const RSubConParameterBundle& aParametersSet);
 	IMPORT_C TInt GetParameters(RSubConParameterBundle& aParametersSet);
+
+	// QoS Properties (new prototype bundles)
+	IMPORT_C TInt SetParameters(const RParameterFamilyBundle& aParametersSet);
+	IMPORT_C TInt GetParameters(RParameterFamilyBundle& aParametersSet);
 
 	// Event Notification
 	IMPORT_C void EventNotification(TNotificationEventBuf& aEventBuffer, TBool aGenericEventsOnly, TRequestStatus& aStatus);
@@ -1490,6 +1484,15 @@ public:
 
 	// Generic Control
 	IMPORT_C TInt Control(TUint aOptionLevel, TUint aOptionName, TDes8& aOption);
+		
+	//
+	// IMPORT_C TInt Stop(TConnStopType aStopType);
+	// IMPORT_C void ProgressNotification(TNifProgressBuf& aProgress, TRequestStatus& aStatus, TUint aSelectedProgress = KConnProgressDefault);
+	// IMPORT_C void CancelProgressNotification();
+	// IMPORT_C TInt Progress(TNifProgress& aProgress);
+	// IMPORT_C void IsSubConnectionActiveRequest(TUint aSecs, TPckg<TBool>& aState, TRequestStatus& aStatus);
+	// IMPORT_C void IsSubConnectionActiveCancel();	
+	//	
 
 	TBool SameSession(TInt aSessionHandle);
 
@@ -1538,7 +1541,9 @@ public:
 
 class TAccessPointInfo
 /** Stores Access Point information.
-@publishedAll */
+@publishedAll
+@released
+*/
 	{
 public:
 	TAccessPointInfo(TUint aApId = 0);
@@ -1551,6 +1556,13 @@ private:
 	TUint iAccessPointId;
 	};
 
+
+#ifndef SYMBIAN_ENABLE_SPLIT_HEADERS
+#include <es_sock_internal.h>
+#include <es_sock_partner.h>
+#endif
+
 #include <es_sock.inl>
 
 #endif	//__ES_SOCK_H__
+

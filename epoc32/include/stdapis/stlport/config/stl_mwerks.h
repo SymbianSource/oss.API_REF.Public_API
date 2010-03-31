@@ -18,11 +18,15 @@
 #  define _STLP_USE_UNIX_EMULATION_IO	1
 #  define _STLP_USE_AUTO_PTR_CONVERSIONS	1
 
+#ifdef __SYMBIAN32__
+#   define _STLP_LITTLE_ENDIAN
+#else
 # ifdef __INTEL__
 #  define _STLP_LITTLE_ENDIAN
 # else
 #  define _STLP_BIG_ENDIAN
-# endif
+# endif//__INTEL__
+#endif//__SYMBIAN32__
 
 #if defined(_MSL_NO_LOCALE)
 #define _STLP_NO_IMPORT_LOCALE

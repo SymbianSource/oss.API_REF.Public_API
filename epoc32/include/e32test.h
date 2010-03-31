@@ -1,9 +1,9 @@
 // Copyright (c) 1994-2009 Nokia Corporation and/or its subsidiary(-ies).
 // All rights reserved.
 // This component and the accompanying materials are made available
-// under the terms of the License "Symbian Foundation License v1.0" to Symbian Foundation members and "Symbian Foundation End User License Agreement v1.0" to non-members
+// under the terms of the License "Eclipse Public License v1.0"
 // which accompanies this distribution, and is available
-// at the URL "http://www.symbianfoundation.org/legal/licencesv10.html".
+// at the URL "http://www.eclipse.org/legal/epl-v10.html".
 //
 // Initial Contributors:
 // Nokia Corporation - initial contribution.
@@ -15,8 +15,6 @@
 // 
 //
 
-
-
 /**
  @file e32test.h
  @publishedAll
@@ -26,11 +24,18 @@
 #ifndef __E32TEST_H__
 #define __E32TEST_H__
 #include <e32std.h>
+#ifndef SYMBIAN_ENABLE_SPLIT_HEADERS
+#include <e32std_private.h>
+#include <e32base_private.h>
+#endif
 #include <e32base.h>
 #include <e32cons.h>
-#include <e32ver.h>
 #include <e32kpan.h>
 #include <e32debug.h>
+#ifndef SYMBIAN_ENABLE_SPLIT_HEADERS
+#include <e32def_private.h>
+#include <e32event_private.h>
+#endif
 
 
 /**
@@ -66,6 +71,7 @@ public:
 	inline void HandleNull(TInt aLine, const TText* aFileName);
 	inline void HandleNotEqual(TInt aExpected, TInt aActual, TInt aLine, const TText* aFileName);
 	inline void HandleFailedCompare(TInt aLeft, const TText* aComp, TInt aRight, TInt aLine, const TText* aFileName);
+	inline void HandleValue(TInt aValue,  TInt aLine, const TText* aFileName);
 
 	IMPORT_C static TInt CloseHandleAndWaitForDestruction(RHandleBase& aH);	/**< @internalTechnology */
 
@@ -203,48 +209,56 @@ inline void RTest::SetLogged(TBool aToLog)
 /**
 @internalComponent
 
-Panics and displays an approprate error message if x is less then zero (Indicating an error code).
+Panics and displays an appropriate error message if x is less then zero (Indicating an error code).
 */
 #define test_NotNegative(x) { TInt _r = (x); if (_r < 0) test.HandleError(_r, __LINE__,__S(__FILE__)); }
 
 /**
 @internalComponent
 
-Panics and displays an approprate error message if x is not equal to KErrNone.
+Panics and displays an appropriate error message if x is not equal to KErrNone.
 */
 #define test_KErrNone(x) { TInt _r = (x); if (_r !=KErrNone) test.HandleError(_r, __LINE__,__S(__FILE__)); }
 
 /**
 @internalComponent
 
-Panics and displays an approprate error message if the trapped statement/block x leaves.
+Panics and displays an appropriate error message if the trapped statement/block x leaves.
 */
-#define test_TRAP(x) { TRAPD(_r, x); if (_r !=KErrNone) test.HandleError(_r, __LINE__,__S(__FILE__)); }
+#define test_TRAP(x) { TRAPD(_r, x); if (_r != KErrNone) test.HandleError(_r, __LINE__,__S(__FILE__)); }
 
 /**
 @internalComponent
 
-Panics and displays an approprate error message if x is not equal to NULL.
+Panics and displays an appropriate error message if x is not equal to NULL.
 */
 #define test_NotNull(x) { TAny* _a = (TAny*)(x); if (_a == NULL) test.HandleNull(__LINE__,__S(__FILE__)); }
 /**
 @internalComponent
 
-Panics and displays an approprate error message if e (expected) is not equal to a (actual).
+Panics and displays an appropriate error message if e (expected) is not equal to a (actual).
 */
 #define test_Equal(e, a) { TInt _e = TInt(e); TInt _a = TInt(a); if (_e != _a) test.HandleNotEqual(_e, _a, __LINE__,__S(__FILE__)); }
 
 /**
 @internalComponent
 
-Panics and displays an approprate error message if the comparison specifed with b, between a and c is EFalse.
+Panics and displays an appropriate error message if the comparison specified with operator b, between a and c, is EFalse.
 */
 #define test_Compare(a,b,c)  {TInt _a = TInt(a); TInt _c = TInt(c); if (!(_a b _c)) test.HandleFailedCompare(_a, __S(#b), _c, __LINE__,__S(__FILE__)); }
-	
+
+
 /**
 @internalComponent
 
-If the expressione e is false, the the statment s is exectude before a Panic is raised.
+Panics and displays an appropriate error message displaying v, if the expression e is false.
+*/
+#define test_Value(v, e) if (!(e)) test.HandleValue(v,  __LINE__,__S(__FILE__));
+
+/**
+@internalComponent
+
+If expression e is false, statement s is executed then a Panic is raised.
 */
 #define test_Assert(e,s) if(!(e)) {s; test.operator()(EFalse, __LINE__,__S(__FILE__)); }
 	
@@ -326,6 +340,22 @@ inline void RTest::HandleFailedCompare(TInt aLeft, const TText* aComp, TInt aRig
 
 
 /**
+Prints a failure message indicating that aValue was not an expected value, at the console and raises a panic.
+
+@param aValue The value that is to be printed as not being an expected value.
+@param aLineNum  A line number that is printed in the failure message.
+@param aFileName A file name that is printed in the failure message.
+                 
+@panic USER 84 Always.
+*/
+inline void RTest::HandleValue(TInt aValue,  TInt aLine, const TText* aFileName)
+	{
+	Printf(_L("RTEST: %d (0x%x) was not an expected value.\n"), aValue, aValue);
+	operator()(EFalse, aLine, aFileName);
+	}
+
+
+/**
 @internalTechnology
 */
 _LIT(KLitCloseAndWait,"Close&Wait");
@@ -335,4 +365,7 @@ _LIT(KLitCloseAndWait,"Close&Wait");
 */
 #define CLOSE_AND_WAIT(h)	((void)(RTest::CloseHandleAndWaitForDestruction(h) && (User::Panic(KLitCloseAndWait,__LINE__),1)))
 
+
+
 #endif
+

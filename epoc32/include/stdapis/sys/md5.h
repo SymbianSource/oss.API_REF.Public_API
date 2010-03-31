@@ -39,7 +39,6 @@ documentation and/or software.
 
 #ifdef __SYMBIAN32__
 #include <sys/types.h>
-typedef __uint32_t u_int32_t;
 #endif
 
 typedef struct MD5Context {

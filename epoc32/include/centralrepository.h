@@ -1,9 +1,9 @@
 // Copyright (c) 2004-2009 Nokia Corporation and/or its subsidiary(-ies).
 // All rights reserved.
 // This component and the accompanying materials are made available
-// under the terms of the License "Symbian Foundation License v1.0" to Symbian Foundation members and "Symbian Foundation End User License Agreement v1.0" to non-members
+// under the terms of "Eclipse Public License v1.0"
 // which accompanies this distribution, and is available
-// at the URL "http://www.symbianfoundation.org/legal/licencesv10.html".
+// at the URL "http://www.eclipse.org/legal/epl-v10.html".
 //
 // Initial Contributors:
 // Nokia Corporation - initial contribution.
@@ -18,6 +18,9 @@
 
 #include <e32base.h>
 
+#ifndef SYMBIAN_ENABLE_SPLIT_HEADERS 
+	#include <centralrepositoryinternal.h>
+#endif
 
 namespace NCentralRepositoryConstants
 /** Namespace encapsulating the CentralRepository constants.
@@ -41,18 +44,10 @@ const TInt KMaxBinaryLength = KMaxUnicodeStringLength*2;
 /** Error key returned by CommitTransaction in case of an error that cannot be
 attributed to any single or partial key. Also notify value for spurious 
 notifications (eg when a notification is cancelled or several values change at once )
-@internalAll
+@publishedAll
 @released
 */
 const TUint32 KUnspecifiedKey = 0xffffffffUL;
-
-/** Initial buffer size for Find~ API. Initial buffer is used to cut on the number
-of IPC calls required for each Find~ API call. If the number of settings found is 
-less than or equal to KCentRepFindBufSize then all the settings can be retrieved with
-a single IPC.
-@internalAll
-*/
-const TInt KCentRepFindBufSize = 16;
 
 /** Use KUnspecifiedKey instead of this value.
 @publishedAll
@@ -65,7 +60,6 @@ Clients should not make use of the reserved bits (unless it is specifically stat
 otherwise in Symbian developer documentation).  Clients should not rely on the value
 of the reserved bits.  Reserved bits are not guaranteed to be 0 or 1 and are not
 guaranteed to stay constant from one GetMeta call to the next.
-@publishedPartner
 @released
 @see CRepository::GetMeta
 @see KMetaUnreserved
@@ -77,7 +71,6 @@ should make use of KMetaUnreserved to mask out the reserved bits following a cal
 to GetMeta.  Clients should not rely on the value of the reserved bits.  Reserved bits
 are not guaranteed to be 0 or 1 and are not guaranteed to stay constant from one
 GetMeta call to the next.
-@publishedPartner
 @released
 @see CRepository::GetMeta
 @see KMetaSymbianReserved 
@@ -99,32 +92,32 @@ class CRepository : public CBase
 public:
 
 	/**	Transaction mode chosen with StartTransaction.
-	@publishedPartner
-	@released */
+	*/
 	enum TTransactionMode
 		{
 		/** Standard optimistic non-serialised transaction. Can be started at any time
 		Commit fails with KErrLocked if another client interrupts it by first committing
-		changes: transaction should be repeated until KErrLocked is not returned. */
+		changes: transaction should be repeated until KErrLocked is not returned.
+		*/
 		EConcurrentReadWriteTransaction = 2,
 		/** Pessimistic locking transaction intended for reading consistent values.
 		Can only be started if EReadWriteTransaction is not in progress.
 		Automatically promoted to EReadWriteTransaction on first write operation
 		if no other read transaction is in progress (or fails if not attainable).
 		Use ONLY if all clients can agree not to use EConcurrentReadWriteTransaction,
-		and only make changes in an EReadWriteTransaction. */
+		and only make changes in an EReadWriteTransaction.
+		*/
 		EReadTransaction = 1,
 		/** Pessimistic locking transaction intended for writing values. Can only be
 		started if no EReadTransaction or EReadWriteTransactions are in progress.
 		Use ONLY if all clients can agree not to use EConcurrentReadWriteTransaction,
-		and only make changes in an EReadWriteTransaction. */
+		and only make changes in an EReadWriteTransaction.
+		*/
 		EReadWriteTransaction = 3
 		};
 
 	/** Buffer type for aKeyInfo parameter to asynchronous CommitTransaction.
 	@see CRepository::CommitTransaction(TDes8& aKeyInfo, TRequestStatus& aStatus)
-	@publishedPartner
-	@released
 	*/
 	typedef TPckgBuf<TUint32> TTransactionKeyInfoBuf;
 
@@ -201,29 +194,20 @@ public:
 	IMPORT_C void CleanupFailTransactionPushL();
 
 	/** Same as CancelTransaction.
-	@publishedPartner
-	@released
-	@see CancelTransaction */
+	@see CancelTransaction
+	*/
 	inline void RollbackTransaction() 
 		{
 		CancelTransaction();
 		}
 
 	/** Same as CleanupCancelTransactionPushL.
-	@publishedPartner
-	@released
-	@see CleanupCancelTransactionPushL */
+	@see CleanupCancelTransactionPushL
+	*/
 	inline void CleanupRollbackTransactionPushL()
 		{
 		CleanupCancelTransactionPushL();
 		}
-
-	IMPORT_C TInt TransactionState();
-
-	/** This API is for internal use only and for testing purposes.
-	@internalAll
-	*/
-	IMPORT_C static TInt SetGetParameters(const TIpcArgs& aArgs);
 	};
 
 #endif // __CENTRALREPOSITORY_H__

@@ -1,9 +1,9 @@
 // Copyright (c) 1999-2009 Nokia Corporation and/or its subsidiary(-ies).
 // All rights reserved.
 // This component and the accompanying materials are made available
-// under the terms of the License "Symbian Foundation License v1.0" to Symbian Foundation members and "Symbian Foundation End User License Agreement v1.0" to non-members
+// under the terms of "Eclipse Public License v1.0"
 // which accompanies this distribution, and is available
-// at the URL "http://www.symbianfoundation.org/legal/licencesv10.html".
+// at the URL "http://www.eclipse.org/legal/epl-v10.html".
 //
 // Initial Contributors:
 // Nokia Corporation - initial contribution.
@@ -18,15 +18,20 @@
 
 #include <e32std.h>
 
+#ifndef SYMBIAN_ENABLE_SPLIT_HEADERS
 /**
 @publishedPartner
+@released
 */
 #define KUidCustomCrossCheckValue 0x80282748
 
 /**
 @publishedPartner
+@released
 */
 const TUid KUidCustomCrossCheck={KUidCustomCrossCheckValue};
+
+#endif //SYMBIAN_ENABLE_SPLIT_HEADERS
 
 class TVwsViewId
 /** Identifies an application view using two unique identifiers (UIDs): a view 
@@ -55,12 +60,20 @@ public:
 	TUid iViewUid;
 	};
 
-/** @internalTechnology */
+#ifndef SYMBIAN_ENABLE_SPLIT_HEADERS
+/**
+@internalTechnology
+@released
+*/
 #define KNullViewId TVwsViewId(KNullUid,KNullUid)
 
-/** @internalTechnology */
+/**
+@internalTechnology
+@released
+*/
 const TInt KErrViewWrongMode=1; // !!! Wrong error code - should be -ve & unique
 
+#endif //SYMBIAN_ENABLE_SPLIT_HEADERS
 
 class TVwsViewIdAndMessage
 /**
@@ -84,7 +97,7 @@ public:
 	};
 
 
-
+#ifndef SYMBIAN_ENABLE_SPLIT_HEADERS
 class TVwsViewEvent
 /**
 The TVwsViewEvent class encapsulates the attributes of a view server event.
@@ -147,16 +160,22 @@ public:
 	TInt iCustomMessageLength;
 	};
 
-
 //
 // Typedefs.
 //
-/** @internalComponent */
+/**
+@internalComponent
+@released
+*/
 typedef TPckgBuf<TVwsViewIdAndMessage> TVwsViewIdAndMessageBuf;
 
-/** @internalComponent */
+/**
+@internalComponent
+@released
+*/
 typedef TPckgBuf<TVwsViewEvent> TVwsViewEventBuf;
 
+#endif //SYMBIAN_ENABLE_SPLIT_HEADERS
 
 //
 // Inlines
@@ -259,6 +278,8 @@ inline TVwsViewIdAndMessage& TVwsViewIdAndMessage::operator=(const TVwsViewIdAnd
 	return(*this);
 	}
 
+#ifndef SYMBIAN_ENABLE_SPLIT_HEADERS
+
 inline TVwsViewEvent::TVwsViewEvent() {}
 
 inline TVwsViewEvent::TVwsViewEvent(TVwsViewEventType aEventType)
@@ -273,5 +294,6 @@ inline TVwsViewEvent::TVwsViewEvent(TVwsViewEventType aEventType,const TVwsViewI
 inline TVwsViewEvent::TVwsViewEvent(TVwsViewEventType aEventType,const TVwsViewId& aViewOneId,const TVwsViewId& aViewTwoId,TUid aCustomMessageId,TInt aCustomMessageLength)
 	: iEventType(aEventType),iViewOneId(aViewOneId),iViewTwoId(aViewTwoId),iCustomMessageId(aCustomMessageId),iCustomMessageLength(aCustomMessageLength) {}
 
+#endif //SYMBIAN_ENABLE_SPLIT_HEADERS
 
 #endif

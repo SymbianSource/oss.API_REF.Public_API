@@ -1,7 +1,5 @@
 // glob.h
-//
-// © Portions copyright (c) 2006 Symbian Software Ltd. All rights reserved.
-//
+
 
 /*
  * Copyright (c) 1989, 1993
@@ -37,6 +35,7 @@
  *	@(#)glob.h	8.1 (Berkeley) 6/2/93
  * $FreeBSD: src/include/glob.h,v 1.7 2002/07/17 04:58:09 mikeh Exp $
  */
+/* Portions Copyright (c) 2007 Nokia Corporation and/or its subsidiary(-ies). All rights reserved. */
 
 #ifndef _GLOB_H_
 #define	_GLOB_H_
@@ -64,6 +63,10 @@ typedef struct {
 	int (*gl_lstat)(const char *, struct stat *);
 	int (*gl_stat)(const char *, struct stat *);
 } glob_t;
+
+#if defined(SYMBIAN_OE_LARGE_FILE_SUPPORT) && !defined(SYMBIAN_OE_NO_LFS)
+#define glob64_t	glob_t
+#endif /* SYMBIAN_OE_LARGE_FILE_SUPPORT && !SYMBIAN_OE_NO_LFS */
 
 #if __POSIX_VISIBLE >= 199209
 /* Believed to have been introduced in 1003.2-1992 */
@@ -100,6 +103,11 @@ __BEGIN_DECLS
 
 IMPORT_C int	glob(const char *, int, int (*)(const char *, int), glob_t *);
 IMPORT_C void	globfree(glob_t *);
+
+#if defined(SYMBIAN_OE_LARGE_FILE_SUPPORT) && !defined(SYMBIAN_OE_NO_LFS)
+#define glob64	glob
+#define globfree64	globfree
+#endif /* SYMBIAN_OE_LARGE_FILE_SUPPORT && !SYMBIAN_OE_NO_LFS */
 
 __END_DECLS
 

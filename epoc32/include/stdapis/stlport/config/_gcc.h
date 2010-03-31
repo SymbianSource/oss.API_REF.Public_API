@@ -24,6 +24,11 @@
 #  define _STLP_NO_VENDOR_STDLIB_L
 #endif
 
+#if defined (__SYMBIAN32__) && !defined (_STLP_NO_VENDOR_STDLIB_L)
+//The following macro is defined so that the vendor's APIs dont get picked. Rather the ones from PIPS are used.
+#  define _STLP_NO_VENDOR_STDLIB_L
+#endif // (__SYMBIAN32__) && !defined (_STLP_NO_VENDOR_STDLIB_L)
+
 /* We guess if we are using the cygwin distrib that has a special include schema.
  * There is no way to distinguish a cygwin distrib used in no-cygwin mode from a
  * mingw install. We are forced to use a configuration option
@@ -58,7 +63,7 @@
 #endif
 
 /* Tru64 Unix, AIX, HP : gcc there by default uses native ld and hence cannot auto-instantiate
-   static template data. If you are using GNU ld, please say so in stl_user_config.h header */
+   static template data. If you are using GNU ld, please say so in user_config.h header */
 #if (__GNUC__ < 3) && !defined(_STLP_GCC_USES_GNU_LD) && \
    ((defined (__osf__) && defined (__alpha__)) || defined (_AIX) || defined (__hpux) || defined(__amigaos__) )
 #  define _STLP_NO_STATIC_TEMPLATE_DATA
@@ -77,8 +82,14 @@
 #  define _STLP_LITTLE_ENDIAN
 #endif
 
-#if defined (__MINGW32__)
+#ifdef __SYMBIAN32__
+#  if !defined(_STLP_LITTLE_ENDIAN)
+#    define _STLP_LITTLE_ENDIAN
+#  endif
+#endif
+#if defined (__MINGW32__) && !defined (__SYMBIAN32__)
 /* Mingw32, egcs compiler using the Microsoft C runtime */
+#  define _STLP_VENDOR_GLOBAL_CSTD
 #  undef  _STLP_NO_DRAND48
 #  define _STLP_NO_DRAND48
 #  define _STLP_CALL
@@ -89,7 +100,7 @@
 #  endif
 #endif /* __MINGW32__ */
 
-#if defined (__CYGWIN__) || defined (__MINGW32__)
+#if defined (__CYGWIN__) || defined (__MINGW32__) && !defined(__SYMBIAN32__)
 #  if !defined (_STLP_USE_STATIC_LIB)
 #    define _STLP_USE_DECLSPEC 1
 #    if !defined (_STLP_USE_DYNAMIC_LIB)
@@ -105,7 +116,7 @@
 #  define _STLP_IMPORT_DECLSPEC __declspec(dllimport)
 #endif
 
-#if defined (__CYGWIN__) || defined (__MINGW32__) || !(defined (_STLP_USE_GLIBC) || defined (__sun) || defined(__APPLE__))
+#if !defined (__SYMBIAN32__) && (defined (__CYGWIN__) || defined (__MINGW32__) || !(defined (_STLP_USE_GLIBC) || defined (__sun) || defined(__APPLE__)))
 #  if !defined (__MINGW32__) && !defined (__CYGWIN__)
 #    define _STLP_NO_NATIVE_MBSTATE_T    1
 #  endif
@@ -232,7 +243,9 @@ typedef unsigned int wint_t;
 
 #if (__GNUC__ < 3)
 #  define _STLP_HAS_NO_NEW_C_HEADERS     1
-#  define _STLP_VENDOR_GLOBAL_CSTD       1
+#  if !defined(_STLP_VENDOR_GLOBAL_CSTD)
+#    define _STLP_VENDOR_GLOBAL_CSTD       1
+#  endif
 #  define _STLP_DONT_USE_PTHREAD_SPINLOCK 1
 #  ifndef __HONOR_STD
 #    define _STLP_VENDOR_GLOBAL_EXCEPT_STD 1
@@ -254,7 +267,7 @@ typedef unsigned int wint_t;
 #  undef _STLP_NO_UNEXPECTED_EXCEPT_SUPPORT
 #endif
 
-#if (__GNUC_MINOR__ < 9)  && (__GNUC__ < 3) /* gcc 2.8 */
+#if (__GNUC_MINOR__ < 9)  && (__GNUC__ < 3) && !(defined (__SYMBIAN32__) && defined (__GCCXML__))/* gcc 2.8 */
 #  define _STLP_NO_TEMPLATE_CONVERSIONS
 #  define _STLP_NO_MEMBER_TEMPLATE_CLASSES 1
 #  define _STLP_NO_FUNCTION_TMPL_PARTIAL_ORDER 1
@@ -270,7 +283,7 @@ typedef unsigned int wint_t;
 #  endif
 #endif
 
-#if __GNUC__ <= 2 && __GNUC_MINOR__ <= 7 && !defined (__CYGWIN32__)
+#if __GNUC__ <= 2 && __GNUC_MINOR__ <= 7 && !defined (__CYGWIN32__) && !(defined (__SYMBIAN32__) && defined (__GCCXML__))
 /* Will it work with 2.6 ? I doubt it. */
 #  if ( __GNUC_MINOR__ < 6 )
 __GIVE_UP_WITH_STL(GCC_272);
@@ -297,7 +310,9 @@ __GIVE_UP_WITH_STL(GCC_272);
 #  endif
 #  define _STLP_NO_PARTIAL_SPECIALIZATION_SYNTAX 1
 #  define _STLP_NO_EXPLICIT_FUNCTION_TMPL_ARGS 1
-#  define _STLP_NO_EXCEPTION_HEADER 1
+#  if !(defined (__SYMBIAN32__) && defined (__GCCXML__))
+#    define _STLP_NO_EXCEPTION_HEADER 1
+#  endif
 #else /* ! <= 2.7.* */
 #endif /* ! <= 2.7.* */
 
@@ -369,7 +384,9 @@ __GIVE_UP_WITH_STL(GCC_272);
 #elif (__GNUC_MINOR__ < 8)
 
 #  if !defined (_STLP_NATIVE_INCLUDE_PATH)
-#    define _STLP_NATIVE_INCLUDE_PATH ../g++-include
+#    if !defined (__SYMBIAN32__)
+#      define _STLP_NATIVE_INCLUDE_PATH ../g++-include
+#    endif
 #  endif
 
 /* tuning of static template data members workaround */
@@ -458,4 +475,5 @@ __GIVE_UP_WITH_STL(GCC_272);
 #else
 #  define _STLP_STATIC_TEMPLATE_DATA 1
 #endif
+
 

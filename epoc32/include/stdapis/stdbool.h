@@ -50,6 +50,8 @@ typedef	int	_Bool;
 #endif 
 #endif//__SYMBIAN32__
 
+#define bool    _Bool
+
 #endif /* !__cplusplus */
 
 #endif /* !_STDBOOL_H_ */

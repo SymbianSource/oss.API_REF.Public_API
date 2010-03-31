@@ -18,11 +18,9 @@
 */
 
 
-
-
 /**
  @file 
- @internalTechnology
+ @publishedAll
  @released
 */
  
@@ -148,8 +146,6 @@ class CX500DistinguishedName;
  * to certificate access are documented here even though the checks are actually
  * made in the individual cert store implementations.
  * 
- * @publishedAll
- * @released
  */
 NONSHARABLE_CLASS(CUnifiedCertStore) : public CActive, public MCertStore
 	{

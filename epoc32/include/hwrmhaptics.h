@@ -2,9 +2,9 @@
 * Copyright (c) 2008 Nokia Corporation and/or its subsidiary(-ies). 
 * All rights reserved.
 * This component and the accompanying materials are made available
-* under the terms of the License "Symbian Foundation License v1.0" to Symbian Foundation members and "Symbian Foundation End User License Agreement v1.0" to non-members
+* under the terms of "Eclipse Public License v1.0"
 * which accompanies this distribution, and is available
-* at the URL "http://www.symbianfoundation.org/legal/licencesv10.html".
+* at the URL "http://www.eclipse.org/legal/epl-v10.html".
 *
 * Initial Contributors:
 * Nokia Corporation - initial contribution.
@@ -95,11 +95,11 @@ const TInt KHWRMHapticsMaxStrength = 10000;
  *
  * if( EHWRMLogicalActuatorDevice & suppAct )
  *     {
- *     haptics->OpenActuatorL( EHWRMLogicalActuatorDevice )
+ *     haptics->OpenActuatorL( EHWRMLogicalActuatorDevice );
  *     }
  * else if ( EHWRMLogicalActuatorAny & suppAct )
  *     {
- *     haptics->OpenActuatorL( EHWRMLogicalActuatorAny )
+ *     haptics->OpenActuatorL( EHWRMLogicalActuatorAny );
  *     }
  *
  *
@@ -113,12 +113,12 @@ const TInt KHWRMHapticsMaxStrength = 10000;
  *
  * // --> now playing effects is possible
  *
- * THWRMHapticsPeriodicEffect periodicEff;
+ * CHWRMHaptics::THWRMHapticsPeriodicEffect periodicEff;
  *
  * periodicEff.iDuration = 5000;
  * periodicEff.iMagnitude = 5000;
  * periodicEff.iPeriod = minPeriod;
- * periodicEff.iStyle = EHWRMHapticsStyleSharp;
+ * periodicEff.iStyle = CHWRMHaptics::EHWRMHapticsStyleSharp;
  * periodicEff.iAttackTime = 250;
  * periodicEff.iAttackLevel = 10000;
  * periodicEff.iFadeTime = 250;
@@ -752,8 +752,8 @@ public:
     * priority client succeeds in playing its effects.
     *
     * Calling this method is equal to call ReserveHapticsL(EFalse),
-    * i.e. CCoeEnv background/foreground status is always used
-    * to control further reservations.
+    * i.e. foreground status is always used to control further reservations.
+    * However, this is a future feature, and not implemented in current version.
     */
     virtual void ReserveHapticsL() = 0;
 
@@ -773,7 +773,10 @@ public:
     * Note also that even if haptics is reserved by some client, a higher 
     * priority client succeeds in playing its effects.
     *
-    * @param aForceNoCCoeEnv If EFalse, then reservation requires that
+    * @param aForceNoCCoeEnv (Note: This is a future feature, and not
+    *                        implemented in current version.  You can think of
+    *                        it ETrue always.)
+    *                        If EFalse, then reservation requires that
     *                        this client has the keyboard focus at the time of
     *                        reservation and haptics is automatically
     *                        released and re-reserved based on the keyboard
@@ -786,7 +789,8 @@ public:
     *                        background status of the client. Only trusted
     *                        clients are allowed to set this flag to ETrue.
     *                        The client application is considered trusted if 
-    *                it has a priority defined in haptics policy file.                              *                The policy files can be modified by S60 licensees.
+    *                        it has a priority defined in haptics policy file. 
+    *                        The policy files can be modified by S60 licensees. 
     *
     * @leave KErrAccessDenied Parameter aForceNoCCoeEnv is ETrue
     *                         and client is not trusted.

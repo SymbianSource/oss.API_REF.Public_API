@@ -1,9 +1,9 @@
 // Copyright (c) 2003-2009 Nokia Corporation and/or its subsidiary(-ies).
 // All rights reserved.
 // This component and the accompanying materials are made available
-// under the terms of the License "Symbian Foundation License v1.0" to Symbian Foundation members and "Symbian Foundation End User License Agreement v1.0" to non-members
+// under the terms of "Eclipse Public License v1.0"
 // which accompanies this distribution, and is available
-// at the URL "http://www.symbianfoundation.org/legal/licencesv10.html".
+// at the URL "http://www.eclipse.org/legal/epl-v10.html".
 //
 // Initial Contributors:
 // Nokia Corporation - initial contribution.
@@ -85,7 +85,6 @@ const TUid KUidDevVideoPreProcessorHwDevice = {KUidDevVideoPreProcessorHwDeviceD
 */
 const TUid KUidDevVideoPlayHwDeviceExtensionScanCopy = {KUidDevVideoPlayHwDeviceExScanCopyDefine};
 
-
 /** 
 Picture frame rate constants
 
@@ -127,7 +126,12 @@ enum TImageDataFormat
 	/** Raw YUV picture data stored in a memory area. The data storage 
 	format depends on the YUV sampling pattern and data layout used.
 	*/
-	EYuvRawData		= 0x04000000
+	EYuvRawData		= 0x04000000,
+	
+	/** Picture stored in a surface buffer.
+	 @See MMmfVideoSurfaceHandleControl::MmvshcSetSurfaceHandle
+	*/
+	ESurfaceBuffer = 0x08000000
 	};
 
 
@@ -673,3 +677,4 @@ enum TFramePortion
 	};
 
 #endif
+

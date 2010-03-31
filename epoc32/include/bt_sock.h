@@ -1,9 +1,9 @@
 // Copyright (c) 1999-2009 Nokia Corporation and/or its subsidiary(-ies).
 // All rights reserved.
 // This component and the accompanying materials are made available
-// under the terms of the License "Symbian Foundation License v1.0" to Symbian Foundation members and "Symbian Foundation End User License Agreement v1.0" to non-members
+// under the terms of "Eclipse Public License v1.0"
 // which accompanies this distribution, and is available
-// at the URL "http://www.symbianfoundation.org/legal/licencesv10.html".
+// at the URL "http://www.eclipse.org/legal/epl-v10.html".
 //
 // Initial Contributors:
 // Nokia Corporation - initial contribution.
@@ -15,8 +15,6 @@
 // 
 //
 
-
-
 /**
  @file
  @publishedAll
@@ -26,12 +24,26 @@
 #ifndef BT_SOCK_H
 #define BT_SOCK_H
 
+#ifndef SYMBIAN_ENABLE_SPLIT_HEADERS
+#include <bthci.h>
+#include <bluetooth/lmoptions.h>
+#endif
+
+#include <bluetooth/btscoparams.h>
+#include <bluetooth/btbaseband.h>
+#include <btsocketoptionlevels.h>
+#include <btdevice.h>
+
 #include <es_sock.h>
 #include <bttypes.h>
 #include <d32comm.h>	// for RS232 signal names for RFCOMM
 #include <bluetooth/hci/hcierrors.h>
-#include <btsecmanclient.h>
+#include <btmanclient.h>
 #include <bt_subscribe.h>
+#include <btsockaddr.h>
+#include <btsecurity.h>
+#include <btbasebandpolicy.h>
+#include <btsyncbandwidth.h>
 
 
 
@@ -56,36 +68,7 @@ const TInt KBTMajor = 0;				/*!< BT version number for major version */
 const TInt KBTMinor = 1;				/*!< BT version number for minor version */
 const TInt KBTBuild = 1;				/*!< BT version number for build version */
 
-// Socket Options
-const TUint	KSolBtBlog  =0x1000;		/*!< Logging socket option */
-const TUint KSolBtHCI   =0x1010;		/*!< HCI socket option */
-const TUint KSolBtLM    =0x1011;		/*!< Link Manager socket option */
-const TUint KSolBtL2CAP =0x1012;		/*!< L2CAP socket option */
-const TUint KSolBtRFCOMM=0x1013;		/*!< RFCOMM socket option */
-const TUint KSolBtAVCTP	=0x1014;		/*!< AVCTP socket option */
-const TUint KSolBtACL	=0x1015;		/*!< ACL socket option */
-/**
-Decimal Value: 4118.
-*/
-const TUint	KSolBtAVDTPSignalling	=0x1016;
-/**
-Decimal Value: 4119.
-*/
-const TUint	KSolBtAVDTPMedia		=0x1017;
-/**
-Decimal Value: 4120.
-*/
-const TUint	KSolBtAVDTPReporting	=0x1018;
-/**
-Decimal Value: 4121.
-*/
-const TUint	KSolBtAVDTPRecovery		=0x1019;
-/**
-Decimal Value: 4128.
-*/
-const TUint KSolBtAVDTPInternal		=0x1020;
-const TUint KSolBtLMProxy = 0x2011;		/*!< Link Manager Proxy socket option */
-const TUint KSolBtSAPBase  = 0x2020;	/*!< CBluetoothSAP handles SetOpt first */
+// The Socket Options are now in btsocketoptionlevels.h
 
 const static TUint8 KSCOListenQueSize = 1; /*!< Length of SCO listening queue */
 
@@ -110,130 +93,6 @@ const static TUint16 KMinUserPSM = 0x1001;
  * @deprecated
  */
 const static TUint16 KMinPSM = 0x1001;
-
-/**
-An enumeration to represent the possible levels of Man-in-the-Middle protection
-that a Bluetooth service may specify.
-*/
-enum TBluetoothMitmProtection
-	{
-	EMitmNotRequired	= 0x0, /*!< No Man-in-the-Middle protection is required. */
-	EMitmDesired		= 0x1, /*!< Man-in-the-Middle protection should be used where possible. */
-	EMitmRequired		= 0x2  /*!< Man-in-the-Middle protection is required. */
-	};
-
-NONSHARABLE_CLASS(TBTAccessRequirements)
-/** The access requirements set up by a bluetooth service.
-
-An incoming connection must satisfy these criteria before the connection may proceed.
-Not spectacularly useful for applications; mainly used by other Bluetooth libraries
-@publishedAll
-@released
-*/
-	{
-public:
-	IMPORT_C TBTAccessRequirements();
-	IMPORT_C void SetAuthentication(TBool aPreference);
-	IMPORT_C void SetAuthorisation(TBool aPreference);
-	IMPORT_C void SetEncryption(TBool aPreference);
-	IMPORT_C void SetDenied(TBool aPreference);
-	IMPORT_C void SetAuthentication(TBluetoothMitmProtection aPreference);
-	IMPORT_C TInt SetPasskeyMinLength(TUint aPasskeyMinLength);	
-	IMPORT_C TBool AuthenticationRequired() const;
-	IMPORT_C TBool AuthorisationRequired() const;
-	IMPORT_C TBool EncryptionRequired() const;
-	IMPORT_C TBool Denied() const;
-	IMPORT_C TUint PasskeyMinLength() const;
-	IMPORT_C TBool operator==(const TBTAccessRequirements& aRequirements) const;
-	IMPORT_C TBluetoothMitmProtection MitmProtection() const;
-	
-private:
-	TUint8 iRequirements;
-	TUint  iPasskeyMinLength;
-	
-private:
-	enum TBTServiceSecuritySettings
-		{
-		EAuthenticate = 0x01,
-		EAuthorise = 0x02,
-		EEncrypt = 0x04,
-		EDenied = 0x08,
-		EMitm = 0x30, // 2 bit field for MITM
-		};
-	
-	enum TBTAccessRequirementsMitmProtection
-		{
-		EAccessRequirementsMitmUndefined = 0x00,
-		EAccessRequirementsMitmNotRequired = 0x10,
-		EAccessRequirementsMitmDesired = 0x20,
-		EAccessRequirementsMitmRequired = 0x30
-		};
-	};
-
-NONSHARABLE_CLASS(TBTServiceSecurity)
-/** The security settings of a bluetooth service.
-
-Contains information regarding the service UID and the access requirements.
-@publishedAll
-@released
-*/
-	{
-public:
-	IMPORT_C TBTServiceSecurity(const TBTServiceSecurity& aService);
-	IMPORT_C TBTServiceSecurity();
-	IMPORT_C void SetUid(TUid aUid);
-	IMPORT_C void SetAuthentication(TBool aPreference);
-	IMPORT_C void SetAuthorisation(TBool aPreference);
-	IMPORT_C void SetEncryption(TBool aPreference);
-	IMPORT_C void SetDenied(TBool aPreference);
-	IMPORT_C void SetAuthentication(TBluetoothMitmProtection aPreference);
-	IMPORT_C TInt SetPasskeyMinLength(TUint aPasskeyMinLength);	
-	IMPORT_C TBool AuthorisationRequired() const;
-	IMPORT_C TBool EncryptionRequired() const;
-	IMPORT_C TBool AuthenticationRequired() const;
-	IMPORT_C TBool Denied() const;
-	IMPORT_C TUint PasskeyMinLength() const;
-	IMPORT_C TUid Uid() const;
-	IMPORT_C TBluetoothMitmProtection MitmProtection() const;
-	
-private:
-	TUid iUid;	///<The UID of the service.  Will be used by the UI to work out the name of the service when prompting the user.
-	TBTAccessRequirements iSecurityRequirements;	///<Whether the service requires authentication, authorisation, encryption or min passkey len.
-	};
-
-typedef TPckgBuf<TBTServiceSecurity> TBTServiceSecurityPckg;	/*!< Package definition for securty settings */
-
-NONSHARABLE_CLASS(TBTSockAddr) : public TSockAddr
-/** Bluetooth socket address
-
-Stores bluetooth device address, and security - these are common to all Bluetooth addresses
-@publishedAll
-@released
-*/
-	{
-struct SBTAddrSecurity
-	{		
-	TBTDevAddr iAddress;
-	TBTServiceSecurity iSecurity;
-	};
-	
-public:
-	IMPORT_C TBTSockAddr();
-	IMPORT_C TBTSockAddr(const TSockAddr& aAddr);
-	IMPORT_C TBTDevAddr BTAddr() const;
-	IMPORT_C void SetBTAddr(const TBTDevAddr& aRemote);
-	IMPORT_C void SetSecurity(const TBTServiceSecurity& aSecurity);
-	IMPORT_C TBTServiceSecurity BTSecurity() const;
-	IMPORT_C static TBTSockAddr& Cast(const TSockAddr& aAddr);
-	
-protected:
-	IMPORT_C TAny* EndBTSockAddrPtr() const;
-	
-private:
-	SBTAddrSecurity& BTAddrSecStruct() const;
-	TPtr8 AddressPtr() const;
-	};
-
 
 const static TInt KErrBtEskError = -6999;	/*!< BT ESK error code */
 
@@ -286,6 +145,18 @@ const static TInt KErrL2CAPConfigPending = KL2CAPErrBase - 18;			/*!< L2CAP conf
 																			 @internalComponent*/
 const static TInt KErrL2CAPConfigAlreadyInProgress = KL2CAPErrBase - 19;/*!< L2CAP attempt to alter config whilst configuration is in progress error code*/
 const static TInt KErrL2CAPNoFreeCID = KL2CAPErrBase - 21;				/*!< L2CAP no more channel IDs available error code*/
+const static TInt KErrL2CAPPeerDoesNotSupportRequestedChannelMode = KL2CAPErrBase - 22; /*!< L2CAP peer doesn't support channel modes satisfying requested channel configuration. */
+const static TInt KErrL2CAPInvalidPacketSequenceNumber = KL2CAPErrBase - 23;	/*!< L2CAP packet with an invalid sequence number was received */
+const static TInt KErrL2CAPInvalidAcknowledgementNumber = KL2CAPErrBase - 24;	/*!< L2CAP invalid acknowledgment number was received */
+const static TInt KErrL2CAPIllegalRemoteBehavior = KL2CAPErrBase - 25;			/*!< L2CAP remote broke the L2CAP specification */
+const static TInt KErrL2CAPNegotiatedDifferentModesForEachDirection = KL2CAPErrBase - 26; /*!< L2CAP different channel modes were negotiated for incoming and outgoing direction */
+const static TInt KErrL2CAPIncomingSduSegmentationError = KL2CAPErrBase - 27;	/*!< L2CAP received I-Frame does not match the sequence of start, continuation, end of SDU */
+const static TInt KErrL2CAPIncomingSduTooBig = KL2CAPErrBase - 28;		/*!< L2CAP received SDU size is larger than the negotiated MTU */
+const static TInt KErrL2CAPIncomingIFrameTooSmall = KL2CAPErrBase - 29;	/*!< L2CAP Incoming I-Frame size is too small */
+const static TInt KErrL2CAPIncomingIFrameTooBig = KL2CAPErrBase - 30;	/*!< L2CAP Incoming I-Frame information payload is larger than the negotiated MPS */
+const static TInt KErrL2CAPInvalidIncomingSFrameSize = KL2CAPErrBase - 31; /*!< L2CAP Incoming S-Frame size is incorrect */
+const static TInt KErrL2CAPAttemptToSetMinMtuGreaterThanMtu = KL2CAPErrBase - 32; /*!< L2CAP An attempt to configure minimal acceptable MTU that's larger than the preferred MTU was made */
+const static TInt KErrL2CAPAttemptToSetMinMruGreaterThanMru = KL2CAPErrBase - 33; /*!< L2CAP An attempt to configure minimal acceptable MRU that's larger than the preferred MRU was made */
 
 // Host Resolver
 const static TInt KErrHostResNoMoreResults = KErrEof;  					/*!< Host resolver has no more results error code */
@@ -296,99 +167,11 @@ const static TUint KHostResCache = 32; 			/*!< A way to get CoD from cache */
 const static TUint KHostResEir = 64; 			/*!< Host resolver Eir option. This is mutually exclusive with KHostResName  */
 
 // L2CAP Ioctls
-const static TInt KL2CAPEchoRequestIoctl	= 0;		/*!< Echo Request Ioctl name */
-const static TInt KL2CAPIncomingMTUIoctl	= 1;		/*!< Change incoming MTU Ioctl name */
-const static TInt KL2CAPOutgoingMTUIoctl    = 2;		/*!< Change outgoing MTU Ioctl name */
-const static TInt KL2CAPUpdateChannelConfigIoctl	= 3;/*!< Change conguration parameters Ioctl name */
-
-
-// Link Manager Ioctls
-
-/** Link manager Ioctl codes.*/
-enum TBTLMIoctls
-	{
-	/** Disconnect ACL Ioctl code
-	@deprecated
-	*/
-	KLMDisconnectACLIoctl,
-	/** Set Packet type Ioctl code
-	@deprecated
-	*/
-	KLMSetPacketTypeIoctl,
-	/** Wait for SCO notification Ioctl code
-	@internalComponent
-	*/
-	KLMWaitForSCONotificationIoctl,
-	/** One-shot baseband notification Ioctl code
-	@internalComponent
-	*/	
-	KLMBasebandEventOneShotNotificationIoctl,
-	/** Baseband event notification Ioctl code
-	@internalComponent
-	*/	
-	KLMBasebandEventNotificationIoctl,
-	/** Read Failed Contact Counter Ioctl
-	@internalComponent
-	*/	
-	KLMReadFailedContactCounterIoctl,
-	/** Read Link Quality Ioctl
-	@internalComponent
-	*/	
-	KLMReadLinkQualityIoctl,
-	/** Read RSSI Ioctl
-	@internalComponent
-	*/	
-	KLMReadRssiIoctl,
-	/** Read Current Transmit Power Level Ioctl
-	@internalComponent
-	*/	
-	KLMReadCurrentTransmitPowerLevelIoctl,
-	};
-
-
-/** Paging policy for baseband.*/
-enum TBasebandPageTimePolicy
-    {
-	EPagingDontCare,	/*!< Don't care setting */
-    EPagingNormal,		/*!< Normal setting */
-    EPagingBestEffort,	/*!< Best effort setting */
-    EPagingQuick,		/*!< Quick paging setting */
-    };
-
-struct TBasebandPolicyParams
-/** Baseband policy parameters.*/
-	{
-	TBasebandPageTimePolicy		iPageTimePolicy;	/*!< Page time policy */
-	};
-
-struct TSetBasebandPolicy
-/** Set baseband policy.
-
-@deprecated
-@see RBTBaseband, TPhysicalLinkQuickConnectionToken
-*/
-	{
-	TBTDevAddr				iDevAddr;	/*!< Device Address */
-	TBasebandPolicyParams	iPolicy;	/*!< Policy parameters */
-	};
-
-/** Package for SetBasebandPolicy structure
-@deprecated
-*/
-typedef TPckgBuf<TSetBasebandPolicy> TSetBasebandPolicyBuf;	
-
-struct TPhysicalLinkQuickConnectionToken
-/** Specifies details for faster connection.*/
-	{
-	TBTNamelessDevice		iDevice;	/*!< Nameless device */
-	TBasebandPolicyParams	iPolicy;	/*!< New policy */
-	};
-	
-typedef TPckgBuf<TPhysicalLinkQuickConnectionToken> TPhysicalLinkQuickConnectionTokenBuf;	/*!< Package for TPhysicalLinkQuickConnectionToken structure */
-
-#define KBasebandSlotTime 0.000625	/*!< Baseband timeslot duration (0.000625 seconds) */
-static const TUint KDefaultBasebandConnectionTimeout = 10;  /*!< Default baseband connection timeout (10 seconds) */
-
+const static TInt KL2CAPEchoRequestIoctl			= 0;	/*!< Echo Request Ioctl name */
+const static TInt KL2CAPIncomingMTUIoctl			= 1;	/*!< Change incoming MTU Ioctl name */
+const static TInt KL2CAPOutgoingMTUIoctl			= 2;	/*!< Change outgoing MTU Ioctl name */
+const static TInt KL2CAPUpdateChannelConfigIoctl	= 3;	/*!< Change configuration parameters Ioctl name */
+const static TInt KL2CAPPretendIncomingSduQFull		= 4;	/*!< Pretend incoming SDU Queue is full - internal testing only @internalComponent */
 
 struct TLMDisconnectACLIoctl
 /**
@@ -408,52 +191,6 @@ typedef TPckgBuf<TLMDisconnectACLIoctl> TLMDisconnectACLBuf;	/*!< Package for TL
 // private tokens for use by RBTBaseband facade and stack
 _LIT8(KDisconnectOnePhysicalLink, "1");		/*!< Specifes one physical link should be disconnected */
 _LIT8(KDisconnectAllPhysicalLinks, "A");	/*!< Specifes all physical links should be disconnected */
-
-
-/** Link manager options.
-@internalComponent
-*/
-enum TBTLMOptions
-	{
-	ELMOutboundACLSize,						/*!< Outbound ACL size option */
-	ELMInboundACLSize,						/*!< Inbound ACL size option */
-	KLMGetACLHandle,						/*!< Get ACL Handle option */
-	KLMGetACLLinkCount,						/*!< Get ACL link count option */
-	KLMGetACLLinkArray,						/*!< Get ACL link array option */
-	KLMSetBasebandConnectionPolicy,			/*!< Set baseband connection policy option */
-	KLMGetBasebandHandle,					/*!< Get baseband handle option */
-	EBBSubscribePhysicalLink,				/*!< Subscribe physical link option */
-	EBBBeginRaw,							/*!< Enable raw broadcast option */
-	EBBRequestRoleMaster,					/*!< Request switch to master option */
-	EBBRequestRoleSlave,					/*!< Request switch to slave option */
-	EBBCancelModeRequest,					/*!< Cancel mode request option */
-	EBBRequestSniff,						/*!< Request sniff mode option */
-	EBBRequestPark,							/*!< Request park mode option */
-	EBBRequestPreventRoleChange,			/*!< Request to prevent a role (master / slave) switch option */
-	EBBRequestAllowRoleChange,				/*!< Request to allow a role (master / slave) switchoption */
-	EBBRequestChangeSupportedPacketTypes,	/*!< Request to cange the current supported packet types option */
-	EBBEnumeratePhysicalLinks,				/*!< Enumerate physical links option */
-	EBBGetPhysicalLinkState,				/*!< Get the physical link state option */
-	EBBGetSniffInterval,					/*!< Get Sniff Interval option */
-	EBBRequestLinkAuthentication,			/*!< Request authentication on the link */
-	EBBRequestExplicitActiveMode,			/*!< Explicitly request the link to go into active mode */
-	
-	//Allow combination of options below...
-	EBBRequestPreventSniff = 0x100,			/*!< Request to prevent entering sniff mode option */
-	EBBRequestPreventHold = 0x200,			/*!< Request to prevent entering hold mode option */
-	EBBRequestPreventPark = 0x400,			/*!< Request to prevent entering park mode option */
-	EBBRequestPreventAllLowPowerModes = 
-		(EBBRequestPreventSniff | 
-		 EBBRequestPreventHold | 
-		 EBBRequestPreventPark),			/*!< Request to prevent entering all modes option */
-	EBBRequestAllowSniff = 0x800,			/*!< Request to allow entering sniff mode option */
-	EBBRequestAllowHold = 0x1000,			/*!< Request to allow entering hold mode option */
-	EBBRequestAllowPark = 0x2000,			/*!< Request to allow entering park mode option */
-	EBBRequestAllowAllLowPowerModes = 
-		(EBBRequestAllowSniff | 
-		 EBBRequestAllowHold | 
-		 EBBRequestAllowPark),				/*!< Request to allow entering-all-modes option. */
-	};
 
 // HCI Ioctls
 /** Add SCO connnection Ioctl
@@ -722,7 +459,7 @@ enum TBTL2CAPOptions
 	KL2CAPNegotiatedOutboundMTU,    
 
 	KL2CAPTestConfigure,	
-	KL2CAPDebugFlush,
+	KL2CAPDebugFlush,				// not implemented anymore, just a placeholder for BC
 	KL2CAPVersion1_2,
 	KL2CAPHeapAlloc,
 	KL2CAPDataPlaneConfig,
@@ -733,6 +470,8 @@ enum TBTL2CAPOptions
 	that still want an optimal MTU but have their own restrictions on packet size.
 	*/
 	KL2CAPOutboundMTUForBestPerformanceWithRestriction,
+	KL2CAPLocalPSM,					/*!< Return local PSM of the socket (only works before the socket is accepted, stack internal use only) @internalTechnology */
+	KL2CAPNegotiatedChannelMode		/*!< Get the negotiated L2CAP channel mode */
 	};
 
 typedef TUint16 TL2CAPPort;			/*!< Definition of a L2CAP port number type */
@@ -859,46 +598,6 @@ private:
 	SInquiryAddr& InquiryAddrStruct() const;
 	TPtr8 AddressPtr() const;
 	};
-
-
-enum TACLPort
-/** ACL port types.
-@internalComponent
-*/
-	{
-	EACLPortRaw		= 0x00,		/*!< Raw port type */
-	EACLPortL2CAP	= 0x01,		/*!< L2CAP port type */
-	EACLPortUnset	= 0xFF,		/*!< Unspecified ACL port type */
-	};
-
-
-// SAP types for baseband
-/** ACL socket type
-@internalTechnology
-*/
-static const TUint KSockBluetoothTypeACL = KMaxTUint;
-/** Raw broadcast socket type
-@internalTechnology
-*/
-static const TUint KSockBluetoothTypeRawBroadcast = KMaxTUint-2;
-
-NONSHARABLE_CLASS(TACLSockAddr) : public TBTSockAddr
-/** ACL Socket Address.
-
-Use this class to specify a local or remote baseband connection end-point,
-This is tied to the flags field in ACL data packets
-@internalComponent
-*/
-	{
-public:
-	IMPORT_C TACLSockAddr();
-	IMPORT_C TACLSockAddr(const TSockAddr& aSockAddr);
-	IMPORT_C static TACLSockAddr& Cast(const TSockAddr& aSockAddr);
-	//
-	IMPORT_C TACLPort Port() const;
-	IMPORT_C void SetPort(TACLPort aPort);
-	};
-
 
 //
 // RFCOMM
@@ -1098,97 +797,7 @@ class CBTBasebandSocketProxy;
 class CBTBasebandPropertySubscriber;
 
 class MBasebandObserver;
-/** Array of device addresses
-@see Enumerate method
-*/
-typedef RArray<TBTDevAddr> RBTDevAddrArray;		
-
-NONSHARABLE_CLASS(RBTBaseband)
-/** API useful for Bluetooth as seen from a single physical link perspective
-@internalTechnology
-@released
-*/
-	{
-public:
-	RBTBaseband();
-	//API useful for Bluetooth as seen from a single physical link perspective
-	TInt Open(RSocketServ& aSocketServ, RSocket& aSocket);
-	TInt Open(RSocketServ& aSocketServ, const TBTDevAddr& aDevAddr);
-	void Close();
-	TInt PhysicalLinkState(TUint32& aState);
-	TInt BasebandState(TUint32& aState); 
-	TInt PreventRoleSwitch();
-	TInt AllowRoleSwitch();
-	TInt RequestMasterRole();
-	TInt RequestSlaveRole();
-	TInt PreventLowPowerModes(TUint32 aLowPowerModes);
-	TInt AllowLowPowerModes(TUint32 aLowPowerModes);
-	TInt ActivateSniffRequester();
-	TInt ActivateParkRequester();
-	TInt CancelLowPowerModeRequester();
-	TInt RequestExplicitActiveMode(TBool aActive);
-	TInt RequestChangeSupportedPacketTypes(TUint16 aPacketTypes);
-	//THE TWO NOTIFY METHODS BELOW MUST NOT BE CALLED CONCURRENTLY
-	//Method to be used if only the next event should be notified
-	void ActivateNotifierForOneShot(TBTBasebandEvent& aEventNotification, 
-		                            TRequestStatus& aStatus, 
-									TUint32 aEventMask);
-	//Method to be used if it is intended to call it again 
-	//(or call CancelNextBasebandChangeEventNotifier) when it completes 
-	// - this sets up a continuous monitoring of events on the server.
-	//Each time ActivateNotifierForOneShot is called it will either return
-	//the next event in the servers notification queue or if the
-	//queue is empty it will await the next event. 
-	void ActivateNotifierForRecall(TBTBasebandEvent& aEventNotification, 
-		                           TRequestStatus& aStatus, 
-								   TUint32 aEventMask);
-	void ReadNewPhysicalLinkMetricValue(TRequestStatus& aStatus,
-								TDes8& aData,
-								TBTLMIoctls aIoctl);
-	void CancelPhysicalLinkMetricUpdate();
-	void CancelNextBasebandChangeEventNotifier();
-	TInt Authenticate();
-	
-	//API useful for Bluetooth as seen from a device perspective
-	TInt Open(RSocketServ& aSocketServ);
-	void Connect(const TBTDevAddr& aDevAddr, TRequestStatus& aStatus);
-	void Connect(const TPhysicalLinkQuickConnectionToken& aToken, TRequestStatus& aStatus);
-	TInt Broadcast(const TDesC8& aData); // testing broadcast writes
-	TInt ReadRaw(TDes8& aData);
-	TInt Enumerate(RBTDevAddrArray& aBTDevAddrArray, TUint aMaxNumber);
-	void TerminatePhysicalLink(TInt aReason);
-	void TerminatePhysicalLink(TInt aReason, TRequestStatus& aStatus);
-	void TerminatePhysicalLink(TInt aReason, const TBTDevAddr& aDevAddr, TRequestStatus& aStatus);
-	void ShutdownPhysicalLink(TRequestStatus& aStatus);
-	void TerminateAllPhysicalLinks(TInt aReason);
-	void TerminateAllPhysicalLinks(TInt aReason, TRequestStatus& aStatus);
-	TInt SubSessionHandle() const;
-	
-private:
-	TInt RequestRole(TBTLMOptions aRole);
-	TInt RequestEncrypt(THCIEncryptModeFlag aEnable);
-	void LocalComplete(TRequestStatus& aStatus, TInt aErr);
-	void SetClientPending(TRequestStatus& aStatus);
-	void DoConnect(TRequestStatus& aStatus);
-	TInt Enumerate(TDes8& aData);
-	TInt Construct();
 		
-private:
-	TAny*					iUnusedPointer;
-	RSocket					iSocket;
-
-	TRequestStatus*							iClientRequestStatus;
-	TBTSockAddr								iSocketAddress;				
-	TPhysicalLinkQuickConnectionTokenBuf	iConnectToken;
-	TBuf8<1>								iConnectInData; // not used yet - needed tho!
-	TBuf8<1>								iDummySCOShutdownDescriptor;
-	
-	// This data padding has been added to help prevent future binary compatibility breaks	
-	// Neither iPadding1 nor iPadding2 have been zero'd because they are currently not used
-	TUint32     iPadding1; 
-	TUint32     iPadding2; 	
-	};
-
 NONSHARABLE_CLASS(RBTPhysicalLinkAdapter)
 /** Class to enable modification of a physical link:
 
@@ -1745,57 +1354,10 @@ class CBTSynchronousLinkReceiver;
 class CBTSynchronousLinkBaseband;
 
 /**
-@publishedAll
-@released
-
-A pair of transmit and receive bandwidths for use on synchronous Bluetooth links
-*/
-NONSHARABLE_CLASS(TBTSyncBandwidth)
-	{
-	public:
-		IMPORT_C TBTSyncBandwidth();
-		IMPORT_C TBTSyncBandwidth(TUint aBandwidth);
-		
-		TUint32 iTransmit;
-		TUint32 iReceive;
-	
-	private:
-		// This data padding has been added to help prevent future binary compatibility breaks	
-		// Neither iPadding1 nor iPadding2 have been zero'd because they are currently not used
-		TUint32     iPadding1; 
-		TUint32     iPadding2; 		
-	};
-
-/**
 eSCO 64Kbit link utility constant.
 */
 static const TUint KBTSync64KBit = (64000 / 8);
 
-/**
-@internalTechnology
-Used internally to hold eSCO link parameters.  Not intended for use.
-*/
-NONSHARABLE_CLASS(TBTeSCOLinkParams)
-	{
-	public:
-		TBTeSCOLinkParams() {};
-		TBTeSCOLinkParams(TUint aBandwidth, TUint16 aCoding, TUint16 aLatency, TUint8 aRetransmission);
-		
-		TBTSyncBandwidth iBandwidth;
-		TUint16 iCoding;
-		TUint16 iLatency;
-		TUint8 iRetransmissionEffort;	
-	};
-
-enum TSCOType
-/** Bluetooth link SCO type
-@internalTechnology
-*/
-	{
-	ESCO=0x01,	/*!< Synchronous Connection Oriented link */
-	EeSCO=0x02	/*!< eSCO link */
-	};	
-		
 NONSHARABLE_CLASS(CBluetoothSynchronousLink): public CBase
 /** Provides Bluetooth SCO functionality.
 
@@ -1980,27 +1542,33 @@ public:
 	//Callback methods called by active object RunLs.
 	//NB These methods kill the active objects that call them
 	/**
+	This method is for internal sub-system use only and should be not be used otherwise.
 	@internalTechnology
 	*/
 	void HandleCreateConnectionCompleteL(TInt aErr);
 	/**
+	This method is for internal sub-system use only and should be not be used otherwise.
 	@internalTechnology
 	*/
 	void HandleDisconnectCompleteL(TInt aErr);
 	/**
+	This method is for internal sub-system use only and should be not be used otherwise.
 	@internalTechnology
 	*/
 	void HandleDisconnectAllCompleteL(TInt aErr);
 
 	/**
+	This method is for internal sub-system use only and should be not be used otherwise.
 	@internalTechnology
 	*/
 	RSocketServ& SockServer();
 	/**
+	This method is for internal sub-system use only and should be not be used otherwise.
 	@internalTechnology
 	*/
 	RBTBaseband& BTBaseband();
 	/**
+	This method is for internal sub-system use only and should be not be used otherwise.
 	@internalTechnology
 	*/
 	MBluetoothPhysicalLinksNotifier& Notifier();
@@ -2017,66 +1585,6 @@ private:
 	MBluetoothPhysicalLinksNotifier& iNotifier;
 	RSocketServ& iSockServer;
 	RBTBaseband iBTBaseband;
-	};
-
-
-
-
-NONSHARABLE_CLASS(RBluetoothPowerSwitch)
-/** This is intended for controlling whether the Bluetooth hardware is switched on or not.
-
-@publishedPartner
-@deprecated
-@see HCI_v2 documentation
-*/
-	{
-	public:
-
-	IMPORT_C RBluetoothPowerSwitch();
-	IMPORT_C void RequestSwitchOn();
-	IMPORT_C void RequestSwitchOff();
-	};
-
-
-
-class RHCIServerSession;
-class RSocketBasedHciDirectAccess;
-
-NONSHARABLE_CLASS(RHCIDirectAccess)
-/**
-API used for licensee-specific direct HCI access
-
-This class allows vendor-specific messages to be passed through to the HCI for
-customised (licensee-specific) HCI functionality.
-
-Note: No use of this class should be required by default. It is provided to
-assist with hardware workarounds, or link policy not implemented by the
-Bluetooth stack.
-
-Do not use unless entirely familar with this API and the specific HCI in use!!!!
-
-@publishedPartner
-@released
-*/
-	{
-public:
-	IMPORT_C RHCIDirectAccess();
-	//API used for licensee-specific direct HCI access
-	IMPORT_C TInt Open();
-	IMPORT_C TInt Open(RSocketServ& aSocketServ);
-	IMPORT_C void Close();
-
-	IMPORT_C void Ioctl(TUint aCommand, TRequestStatus &aStatus, TDes8* aDesc=NULL,TUint aLevel = KSolBtHCI); 
-	IMPORT_C void CancelIoctl();
-
-	IMPORT_C void AsyncMessage(TUint aCommand, TRequestStatus &aStatus, TDes8* aDesc); 
-	IMPORT_C void CancelAsyncMessage();
-
-	IMPORT_C TInt SubSessionHandle();
-private:
-	RHCIServerSession* iHCIServerSession;
-	RSocketBasedHciDirectAccess* iSocketAccess;
-	TUint32 iReserved; // Padding for possible future "per-copy" state.
 	};
 
 #endif

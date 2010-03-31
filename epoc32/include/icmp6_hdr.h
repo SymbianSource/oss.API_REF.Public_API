@@ -1,9 +1,9 @@
 // Copyright (c) 2004-2009 Nokia Corporation and/or its subsidiary(-ies).
 // All rights reserved.
 // This component and the accompanying materials are made available
-// under the terms of the License "Symbian Foundation License v1.0" to Symbian Foundation members and "Symbian Foundation End User License Agreement v1.0" to non-members
+// under the terms of "Eclipse Public License v1.0"
 // which accompanies this distribution, and is available
-// at the URL "http://www.symbianfoundation.org/legal/licencesv10.html".
+// at the URL "http://www.eclipse.org/legal/epl-v10.html".
 //
 // Initial Contributors:
 // Nokia Corporation - initial contribution.
@@ -31,6 +31,13 @@
 #include <e32def.h>
 #include "in_hdr.h"
 #include <in_sock.h> // IPv6 enhanced in_sock.h
+
+#ifdef SYMBIAN_TCPIPDHCP_UPDATE
+//RFC 5006 definitions
+#define RDNSSADDRSIZE 16
+#define RDNSSOPTION_HDRLENGTH 8
+#define RDNSS_MAX_ADDRESS 4 //4 DNS address shall be processed from RDNSS Option available in RA
+#endif //SYMBIAN_TCPIPDHCP_UPDATE
 
 /**
 * @addtogroup ip_packet_formats
@@ -441,6 +448,7 @@ public:
 		* Gets the value of reachable timer.
 		*/
 		{
+		// coverity[overrun-local]
 		return (i[8] << 24) | (i[9] << 16) | (i[10] << 8) | i[11];
 		}
 	inline TUint32 RetransTimer() const
@@ -448,6 +456,7 @@ public:
 		* Gets the value of retransmit timer.
 		*/
 		{
+		// coverity[overrun-local]
 		return (i[12] << 24) | (i[13] << 16) | (i[14] << 8) | i[15];
 		}
 	//
@@ -484,9 +493,13 @@ public:
 		* @param aTime The timer value
 		*/
 		{
+		// coverity[overrun-local]
 		i[11] = (TUint8)aTime;
+		// coverity[overrun-local]
 		i[10] = (TUint8)(aTime >> 8);
+		// coverity[overrun-local]
 		i[9] = (TUint8)(aTime >> 16);
+		// coverity[overrun-local]
 		i[8] = (TUint8)(aTime >> 24);
 		}
 	inline void SetRetransTimer(TUint32 aTimer)
@@ -495,9 +508,13 @@ public:
 		* @param aTimer The timer value
 		*/
 		{
+		// coverity[overrun-local]
 		i[15] = (TUint8)aTimer;
+		// coverity[overrun-local]
 		i[14] = (TUint8)(aTimer >> 8);
+		// coverity[overrun-local]
 		i[13] = (TUint8)(aTimer >> 16);
+		// coverity[overrun-local]
 		i[12] = (TUint8)(aTimer >> 24);
 		}
 
@@ -1145,6 +1162,68 @@ private:
 		};
 	};
 
+#ifdef SYMBIAN_TCPIPDHCP_UPDATE
+class TInet6OptionICMP_DnsInformationV1
+/**
+* ICMPv6 Recursive DNS Server Option(RFC-5006)
+* IPv6 DNS Configuration based on Router Advertisement
+*
+*  
+@verbatim
+Recursive DNS Server Option
+
+ 0                   1                   2                   3
+ 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+|     Type      |     Length    |  		        Reserved        |
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+|                           Lifetime                            |
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+|                                                               |
+:                     IPv6 Address of RDNSS                     :
+|                                                               |
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+     
+@endverbatim
+* @publishedAll
+* @released
+*/
+	{
+public:
+	inline static TInt MinRdnssOptionLength() {return RDNSSOPTION_HDRLENGTH + RDNSSADDRSIZE;}//24
+	
+	inline static TInt MaxRdnssOptionLength() {return RDNSSOPTION_HDRLENGTH + (RDNSSADDRSIZE*RDNSS_MAX_ADDRESS); }//72
+	
+	inline TInt HeaderLength() const {return RDNSSOPTION_HDRLENGTH;}//8
+	
+	inline TInt Type() const
+		{
+		return i[0];
+		}
+	inline TInt Length() const
+		{
+		return i[1];
+		}
+	inline TUint32 Lifetime() const
+		{
+		return (i[4] << 24) | (i[5] << 16) | (i[6] << 8) | i[7];
+		}
+	inline TIp6Addr &Address() const
+		{
+		return (TIp6Addr &)i[8];
+		}
+	inline TIp6Addr &GetNextAddress(TInt aOffset) const
+		{
+		return (TIp6Addr &)i[aOffset];
+		}
+private:
+	union
+		{
+		TUint8 i[RDNSSOPTION_HDRLENGTH + (RDNSSADDRSIZE * RDNSS_MAX_ADDRESS)];	// The space allocated for MAX LENGTH of 4 DNS address
+		TUint32 iAlign;	// A dummy member to force the 4 byte alignment
+		};
+	};
+#endif //SYMBIAN_TCPIPDHCP_UPDATE
 #endif
 
 /**
@@ -1200,7 +1279,10 @@ const TInt KInet6OptionICMP_Prefix		= 3;
 const TInt KInet6OptionICMP_Redirect	= 4;
 /** MTU.  See TInet6OptionICMP_Mtu. */
 const TInt KInet6OptionICMP_Mtu			= 5;
-
+#ifdef SYMBIAN_TCPIPDHCP_UPDATE
+/** RFC 5006: Recursive DNS Server Option. See TInet6OptionICMP_DnsInformationV1*/
+const TInt KInet6OptionICMP_RDNSS		= 25;
+#endif //SYMBIAN_TCPIPDHCP_UPDATE
 #if 1
 	// Experimental: draft-draves-ipngwg-router-selection-01.txt
 	// Default Router Preferences and More-Specific Routes

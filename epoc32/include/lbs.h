@@ -1,9 +1,9 @@
 // Copyright (c) 2003-2009 Nokia Corporation and/or its subsidiary(-ies).
 // All rights reserved.
 // This component and the accompanying materials are made available
-// under the terms of the License "Symbian Foundation License v1.0" to Symbian Foundation members and "Symbian Foundation End User License Agreement v1.0" to non-members
+// under the terms of "Eclipse Public License v1.0"
 // which accompanies this distribution, and is available
-// at the URL "http://www.symbianfoundation.org/legal/licencesv10.html".
+// at the URL "http://www.eclipse.org/legal/epl-v10.html".
 //
 // Initial Contributors:
 // Nokia Corporation - initial contribution.
@@ -17,6 +17,7 @@
 #define __LBS_H__
 
 #include <lbspositioninfo.h>
+#include <lbsareainfo.h>
 #include <lbsipc.h>
 #include <lbscommon.h>
 #include <lbsrequestor.h>
@@ -35,19 +36,46 @@ of the Open methods of RPositioner to create a "sub-session".
 
 The RPositionServer class can also be used to discover what position
 technology "modules" are available. However, this is only required if a
-client application actually needs to use a particular module.
+client application actually needs to use a particular module. It is also
+used for requests to clear(empty) the last known position store.
+
+Asynchronous requests can be cancelled using the method CancelRequest() with
+a value from the enumeration _TReqestId corresponding to the particular
+operation being cancelled.
 
 @publishedAll
 @released
  */
 	{
 public:
+	/** Type for values defined in _TRequestId
+	@publishedPartner
+	@prototype*/
+	typedef TInt TRequestId;
+
+ 	/** Identification numbers used for cancelling requests.
+ 	Note that the TRequestId enum may be extended in the future by adding
+ 	more enumerated values. To maintain compatibility any unrecognized values 
+ 	must be handled as EReqUnknown.
+ 	@publishedPartner
+	@prototype*/
+	enum _TRequestId
+		{
+		/** Unknown/undefined Id */
+		EReqUnknown						= 0,
+		/** The id of the RPositionServer::NotifyModuleStatusEvent request */
+		EReqNotifyModuleStatusEvent     = 1,
+		/** The id of the RPositionServer::EmptyLastKnownPositionStore request */
+		EReqEmptyLastKnownPositionStore = 2
+		};
+		
+public:
 	IMPORT_C RPositionServer();
 
 	IMPORT_C TInt Connect();
 	IMPORT_C void Close();
 
-	IMPORT_C TInt CancelRequest(TInt aRequestId);
+	IMPORT_C TInt CancelRequest(TRequestId aRequestId);
 	IMPORT_C TVersion Version() const;
 
 	IMPORT_C TInt GetDefaultModuleId(TPositionModuleId& aModuleId) const;
@@ -63,6 +91,8 @@ public:
 	IMPORT_C void NotifyModuleStatusEvent(TPositionModuleStatusEventBase& aStatusEvent,
 	                                      TRequestStatus& aStatus,
 	                                      const TPositionModuleId aModuleId = KPositionNullModuleId) const;
+	                                      
+	IMPORT_C void EmptyLastKnownPositionStore(TRequestStatus& aStatus);
 
 private:
 	void ConstructL();
@@ -83,13 +113,42 @@ class RPositionerSubSessionBase : public RSubSessionBase
 /**
 Abstract base class for all positioning sub-sessions, including RPositioner.
 
+Asynchronous requests issued from derived classess are cancelled using the
+method CancelRequest() with a value from the enumeration _TReqestId corresponding
+to the particular operation being cancelled.
+
 @see RPositioner
 @publishedAll
 @released
  */
 	{
+	
 public:
-	IMPORT_C TInt CancelRequest(TInt aRequestId);
+
+	/** Type for values defined in _TRequestId
+	@publishedPartner
+	@prototype*/
+	typedef TInt TRequestId;
+
+	/** Identification numbers used for cancelling requests.
+ 	Note that the TRequestId enum may be extended in the future by adding
+ 	more enumerated values. To maintain compatibility any unrecognized values 
+ 	must be handled as EReqUnknown.
+ 	@publishedPartner
+	@prototype*/
+	enum _TRequestId
+		{
+		/** Unknown/undefined Id */
+		EReqUnknown					 = 0,
+		/** The id of the GetLastKnownPosition request */
+		EReqGetLastKnownPosition     = 1,
+		/** The id of the GetLastKnownPositionArea request */
+		EReqGetLastKnownPositionArea = 2,
+		/** The id of the ReqNotifyPositionUpdate request */
+		EReqNotifyPositionUpdate     = 3
+		};
+public:
+	IMPORT_C TInt CancelRequest(TRequestId aRequestId);
 
 	IMPORT_C TInt CompleteRequest(TInt aRequestId);
 
@@ -109,9 +168,10 @@ class RPositioner : public RPositionerSubSessionBase
 This class is used to create a sub-session with the server for the
 purpose of obtaining the current position. In addition to actually
 obtaining position information, this class also provides mechanisms
-for obtaining the last known position, the general status of the
-positioning module, changing how often it wishes to receive position
-updates, as well as identifying itself to the location framework. 
+for obtaining the last known position, the last known position with 
+area information, the general status of the positioning module,
+changing how often it wishes to receive position updates, as well as 
+identifying itself to the location framework. 
 
 Before using the class, a primary connection must have already been
 established with the server.
@@ -121,6 +181,7 @@ established with the server.
 @released
  */
 	{
+
 public:
 	IMPORT_C RPositioner();
 
@@ -141,6 +202,11 @@ public:
 
 	IMPORT_C void GetLastKnownPosition(TPositionInfoBase& aPosInfo,
 	                                   TRequestStatus& aStatus) const;
+	                                   
+	IMPORT_C void GetLastKnownPositionArea(TPositionInfoBase& aPosInfo,
+					      				 TPositionAreaInfoBase& aAreaInfo,
+	                                   	 TRequestStatus& aStatus) const;
+
 	IMPORT_C void NotifyPositionUpdate(TPositionInfoBase& aPosInfo,
 	                                   TRequestStatus& aStatus) const;
 
@@ -149,9 +215,6 @@ protected:
 	IMPORT_C virtual void Destruct();
     IMPORT_C virtual TAny* ExtendedInterface(TInt aFunctionNumber, TAny* aPtr1, TAny* aPtr2);
 
-private:
-	void SetRequestorImplL(const RRequestorStack& aRequestorStack) const;
-	
 public:
 	TInt OpenImpl(RPositionServer& aPosServer, TPositionModuleId aModuleId, const TPositionCriteriaBase& aCriteria, TBool aOpenedUsingModuleId);
 private:

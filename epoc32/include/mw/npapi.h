@@ -48,6 +48,8 @@
 #ifndef _NPAPI_H_
 #define _NPAPI_H_
 
+#define GENERIC_CONTEXTS
+
 #ifdef INCLUDE_JAVA
 #include "jri.h"                /* Java Runtime Interface */
 #else
@@ -410,9 +412,74 @@ typedef enum {
 #endif /* XP_MACOSX */
     
     /* Get the id of the currently connected access point */
-    NPNNetworkAccess
+    NPNNetworkAccess,
+    NPNVGenericParameter,
+    NPNVSupportsWindowless
 } NPNVariable;
 
+#ifdef GENERIC_CONTEXTS
+
+union  NPN_GenericParam {
+
+    NPN_GenericParam(int aIntValue)
+    :intValue(aIntValue)
+        {
+        
+        }
+    
+    NPN_GenericParam(bool aBoolValue)
+    :boolValue(aBoolValue)
+        {
+        
+        }
+            
+    NPN_GenericParam(const TDesC& aStrValue)
+    :strValue(aStrValue)
+        {
+        
+        }
+        
+    NPN_GenericParam(void*  aVoidValue)
+    :voidValue(aVoidValue)
+        {
+        
+        }
+    int intValue;
+    bool   boolValue;
+    const TDesC& strValue;
+    void*  voidValue;
+};
+
+
+typedef struct NPN_GenericElement{          
+
+    NPN_GenericElement(const TDesC& aElementId, int aElementValue)
+    :genericElementId(aElementId), genericElementValue(aElementValue)
+        {
+        
+        }
+    
+    NPN_GenericElement(const TDesC& aElementId, bool aElementValue)
+    :genericElementId(aElementId), genericElementValue(aElementValue)
+        {
+        
+        }
+
+    NPN_GenericElement(const TDesC& aElementId, void* aElementValue)
+    :genericElementId(aElementId), genericElementValue(aElementValue)
+        {
+        
+        }
+                        
+    NPN_GenericElement(const TDesC& aElementId, const TDesC& aElementValue)
+    :genericElementId(aElementId), genericElementValue(aElementValue)
+        {
+        
+        }
+    const TDesC&  genericElementId;          
+    NPN_GenericParam genericElementValue;
+} GenericEntry;
+#endif
 /*
  * The type of a NPWindow - it specifies the type of the data structure
  * returned in the window field.

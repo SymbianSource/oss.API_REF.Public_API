@@ -1,9 +1,9 @@
 // Copyright (c) 2004-2009 Nokia Corporation and/or its subsidiary(-ies).
 // All rights reserved.
 // This component and the accompanying materials are made available
-// under the terms of the License "Symbian Foundation License v1.0" to Symbian Foundation members and "Symbian Foundation End User License Agreement v1.0" to non-members
+// under the terms of the License "Eclipse Public License v1.0"
 // which accompanies this distribution, and is available
-// at the URL "http://www.symbianfoundation.org/legal/licencesv10.html".
+// at the URL "http://www.eclipse.org/legal/epl-v10.html".
 //
 // Initial Contributors:
 // Nokia Corporation - initial contribution.
@@ -11,8 +11,8 @@
 // Contributors:
 //
 // Description:
-// wins\inc\variantmediadef.h
-// Media definitions for the Wins Variant.
+// omap3530/beagleboard/inc/variantmediadef.h
+// Media definitions for Beagle variant.
 // Each Media Driver requires the following definitions
 // DRIVECOUNT - The total number of local drive object to be assigned to the Media Driver (1-KMaxLocalDrives)
 // DRIVELIST - A list of the local drive numbers (each separated with a comma) to be assigned to the Media Driver.
@@ -24,7 +24,6 @@
 // - The total number of local drive objects assigned should not exceed KMaxLocalDrives.
 // - Each Media Driver should be assigned a unique set of drive numbers - no conflicts between Media Drivers.
 // - The total number of media objects assigned should not exceed KMaxLocalDrives.
-// 
 //
  
 #ifndef __VARIANTMEDIADEF_H__
@@ -36,22 +35,17 @@
 #define IRAM_NUMMEDIA 1	
 #define IRAM_DRIVENAME "IRam"
 
-// Variant parameters for LFFS Media Driver (MEDLFS.PDD)
-#define LFFS_DRIVECOUNT 1
-#define LFFS_DRIVELIST 8
-#define LFFS_NUMMEDIA 1	
-#define LFFS_DRIVENAME "Flash"
-
 // Variant parameters for the MMC Controller (EPBUSMMC.DLL)
-#define MMC0_DRIVECOUNT 4
-#define MMC0_DRIVELIST 1,2,3,4
-#define MMC0_NUMMEDIA 4	
+#define MMC0_DRIVECOUNT 1
+#define MMC0_DRIVELIST 3
+#define MMC0_NUMMEDIA 1	
 #define MMC0_DRIVENAME "MultiMediaCard0"
 
-// Variant parameters for NAND flash media driver (mednand.pdd)
-#define NAND_DRIVECOUNT 3
-#define NAND_DRIVELIST 5,6,9
-#define NAND_NUMMEDIA 1
+// Variant parameters for the NAND media driver (MEDNAND.PDD)
+// Note that the NANDLOADER code expects the are to be 2 drives/partitions 
+#define NAND_DRIVECOUNT 2
+#define NAND_DRIVELIST 6,7
+#define NAND_NUMMEDIA 1	
 #define NAND_DRIVENAME "Nand"
 
 #endif

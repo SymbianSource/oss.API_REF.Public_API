@@ -2,9 +2,9 @@
 * Copyright (c) 2009 Nokia Corporation and/or its subsidiary(-ies).
 * All rights reserved.
 * This component and the accompanying materials are made available
-* under the terms of the License "Symbian Foundation License v1.0" to Symbian Foundation members and "Symbian Foundation End User License Agreement v1.0" to non-members
+* under the terms of "Eclipse Public License v1.0"
 * which accompanies this distribution, and is available
-* at the URL "http://www.symbianfoundation.org/legal/licencesv10.html".
+* at the URL "http://www.eclipse.org/legal/epl-v10.html".
 *
 * Initial Contributors:
 * Nokia Corporation - initial contribution.
@@ -14,6 +14,7 @@
 * Description: 
 *
 */
+
 
 #ifndef __BLDPRIVATE_HRH 
 #define __BLDPRIVATE_HRH 
@@ -73,6 +74,16 @@ Touch: Advanced components for CS Voice Telephony.
 */ 
 #define FF_TOUCH_CALL_HANDLING                              
  
+/** #FF_WDP_EMMC  
+Select writable demand paging eMMC flash driver build . 
+*/ 
+#undef FF_WDP_EMMC                                         
+ 
+/** #FF_WDP_NAND  
+Select writable demand paging NAND flash driver build. 
+*/ 
+#undef FF_WDP_NAND                                         
+ 
 /** #FF_WS_NCIM  
 This run-time flag is required for enableing NCIM at the run-time. 
 NCIM, here onwards called as "Nokia account".
@@ -95,6 +106,12 @@ varients.
 USED ONLY FOR HELP CONTENT VARIATION 
 */ 
 #undef HLP_ADDITIONAL_CALENDAR                             
+ 
+/** #HLP_APAC_VARIATION  
+Flag to be used for image creation time variation -- need to separate 3G/APAC
+help variants. 
+*/ 
+#undef HLP_APAC_VARIATION                                  
  
 /** #HLP_CAMERA_KEY  
 USED ONLY FOR HELP CONTENT VARIATION 
@@ -155,6 +172,35 @@ be enabled when __JAVA_MMAPI11 is enabled."
 */ 
 #define JSR_135_SUPPORT                                     
  
+/** #NO_CBCP_PARSER_IN_ROM   
+Do not include symbian CBCP parser in rom 
+*/ 
+#define NO_CBCP_PARSER_IN_ROM                               
+ 
+/** #NO_ENP_PARSER_IN_ROM  
+This feature flag can be used to not to include symbian ENP Parser into ROM
+image. 
+*/ 
+#define NO_ENP_PARSER_IN_ROM                                
+ 
+/** #NO_GFP_PARSER_IN_ROM  
+This feature flag can be used to not to include symbian GFP Parser into ROM
+image. 
+*/ 
+#define NO_GFP_PARSER_IN_ROM                                
+ 
+/** #NO_IACP_PARSER_IN_ROM  
+his feature flag can be used to not to include symbian IACP Parser into ROM
+image. 
+*/ 
+#define NO_IACP_PARSER_IN_ROM                               
+ 
+/** #NO_WAPP_PARSER_IN_ROM   
+This feature flag can be used to not to include symbian WAPP parser into ROM
+image. 
+*/ 
+#define NO_WAPP_PARSER_IN_ROM                               
+ 
 /** #RD_XML_PARSER_TOOLCHAIN  
 "Used to turn on and off the use of the arabica and xercesc components in the
 build system, and code in the layout compiler." 
@@ -198,7 +244,7 @@ APIs for monitoring free disk space.
 @see SysUtil::DiskSpaceBelowCriticalLevelL
  
 */ 
-#undef SYMBIAN_BAFL_SYSUTIL                                
+#define SYMBIAN_BAFL_SYSUTIL                                
  
 /** #SYMBIAN_DOS_SERVER_SERVICES  
 Indicate that the DOS Server Services is present. This is needed to turn the RF
@@ -220,18 +266,44 @@ Introduced by PREQ1684 Simple DNS proxy
 This flag can be used to exclude Symbian's d_exc.exe from rom image when
 Symbian's base.iby is included 
 */ 
-#undef SYMBIAN_EXCLUDE_D_EXC                               
+#define SYMBIAN_EXCLUDE_D_EXC                               
  
 /** #SYMBIAN_EXCLUDE_ECAM_STUBPLUGIN  
 This flag is used to exclude Symbian Camera API stub 
 */ 
 #undef SYMBIAN_EXCLUDE_ECAM_STUBPLUGIN                     
  
+/** #SYMBIAN_EXCLUDE_FAX  
+Flag to exclude fax related binaries from images. No runtime variation, only
+used at image creation. 
+*/ 
+#undef SYMBIAN_EXCLUDE_FAX                                 
+ 
+/** #SYMBIAN_EXCLUDE_INFRARED  
+removes symbian infrared components from rom 
+*/ 
+#undef SYMBIAN_EXCLUDE_INFRARED                            
+ 
 /** #SYMBIAN_EXCLUDE_KEYMAP  
 This flag can be used to include/exclude Symbian's KEYMAP_FILE (EKData.dll) from
 rom image if base.iby is included 
 */ 
-#undef SYMBIAN_EXCLUDE_KEYMAP                              
+#define SYMBIAN_EXCLUDE_KEYMAP                              
+ 
+/** #SYMBIAN_EXCLUDE_LIBXML2  
+This feature flag removes libxml2.dll from image. 
+*/ 
+#undef SYMBIAN_EXCLUDE_LIBXML2                             
+ 
+/** #SYMBIAN_EXCLUDE_LIBXML2_DOM_XPATH_API  
+This feature flag removes libxml2.dll from image. 
+*/ 
+#undef SYMBIAN_EXCLUDE_LIBXML2_DOM_XPATH_API               
+ 
+/** #SYMBIAN_EXCLUDE_LIBXML2_SAX_CPARSER_PLUGIN  
+This feature flag removes libxml2.dll from image. 
+*/ 
+#undef SYMBIAN_EXCLUDE_LIBXML2_SAX_CPARSER_PLUGIN          
  
 /** #SYMBIAN_EXCLUDE_LOCATION_MANAGEMENT  
 The macro SYMBIAN_EXCLUDE_LOCATION_MANAGEMENT is used to exclude the location
@@ -256,12 +328,17 @@ Related with PREQ1305
 This flag can be used to exclude Symbian ScDv.dll from rom image when Symbian's
 base.iby is included 
 */ 
-#undef SYMBIAN_EXCLUDE_SCDV                                
+#define SYMBIAN_EXCLUDE_SCDV                                
  
 /** #SYMBIAN_EXCLUDE_SIP  
 Excludes Symbian SIP components.  
 */ 
 #undef SYMBIAN_EXCLUDE_SIP                                 
+ 
+/** #SYMBIAN_EXCLUDE_WIFI  
+Removes Symbian wlan componets 
+*/ 
+#undef SYMBIAN_EXCLUDE_WIFI                                
  
 /** #SYMBIAN_GRAPHICS_ADAPTATION  
 This flag is used to take right graphics adaptation components to the ROM build 
@@ -278,7 +355,12 @@ in symbian_os.hrh.
 /** #SYMBIAN_GRAPHICS_USE_WSERV2  
 WServ2 binaries are used instead of WSERV1 versions. 
 */ 
-#define SYMBIAN_GRAPHICS_USE_WSERV2                         
+#undef SYMBIAN_GRAPHICS_USE_WSERV2                         
+ 
+/** #SYMBIAN_HAL_NONSECUREOFFSET_PERSISTENCE_DISABLED  
+Non secure offset persistence must be disabled in secure time 
+*/ 
+#define SYMBIAN_HAL_NONSECUREOFFSET_PERSISTENCE_DISABLED   1 
  
 /** #SYMBIAN_HAL_PENSTATE_PERSISTENCE_DISABLED  
 Provide an option to allow platform to not save HALData::EPenState attribute. 
@@ -420,7 +502,28 @@ Feature USB Host (and related OTG) binaries are included into romimage
 Introduced by PREQ1872.
  
 */ 
-#undef SYMBIAN_INCLUDE_USB_RNDIS                           
+#define SYMBIAN_INCLUDE_USB_RNDIS                           
+ 
+/** #SYMBIAN_MBUF_POOL_SIZE  
+The size of the MBuf pool is adjustable. The MBuf pool is used for creating
+buffers for communication data.
+
+The MBuf is configurable in c32start.ini :
+\src\common\generic\comms-infras\rootserver\etc\
+It is runtime read configuration file, e.g.:
+
+[Global]
+MBufPoolSize=<initial size>,<max size> [bytes] 
+
+Default MBufPoolSize=262144,262144.
+If single value => interpreted as max size. 
+
+When an initial size is specified the pool grows when necessary until it reaches
+the maximum size. It does not shrink, however, so the RAM is not released until
+the device is rebooted.
+ 
+*/ 
+#define SYMBIAN_MBUF_POOL_SIZE                             0 
  
 /** #SYMBIAN_MULTIMEDIA_A3FDEVSOUND  
 This definition is used in symbian A3F build files.
@@ -442,7 +545,7 @@ the amount of pages should be increased in order to preserve good system
 performance and memory consumption balance. Increasing the value increases the
 memory consumption. 
 */ 
-#define SYMBIAN_ODP_NUMBER_OF_MAX_LIVE_PAGES               4096 
+#define SYMBIAN_ODP_NUMBER_OF_MAX_LIVE_PAGES               0 
  
 /** #SYMBIAN_ODP_NUMBER_OF_MIN_LIVE_PAGES  
 Defines the minimum number of 4k live pages available in the system for code
@@ -463,14 +566,14 @@ policies and procedures.
 
 This define supports PREQ1871. 
 */ 
-#undef SYMBIAN_SYSTEM_STATE_MANAGEMENT                     
+#define SYMBIAN_SYSTEM_STATE_MANAGEMENT                     
  
 /** #SYMBIAN_USE_DOS_SERVER_SERVICES  
 The DOS_SERVER_SERVICES should indicate that the DOS Server Services is present.
 This is needed to turn the RF on in an emergency call when the phone is in
 flight mode. 
 */ 
-#define SYMBIAN_USE_DOS_SERVER_SERVICES                     
+#undef SYMBIAN_USE_DOS_SERVER_SERVICES                     
  
 /** #SYMBIAN_USE_HCI_V2  
 Defines if HCIv2 (bluetooth v2.0) is used in image or not. 
@@ -482,7 +585,7 @@ The macro NOKIA_FEATURE_MANAGER should indicate that the Nokia version of the
 Feature Manager is present. The Feature Manager was part of the CoreOS, and
 there is a Symbian version of it in 9.5. 
 */ 
-#define SYMBIAN_USE_NOKIA_FEATURE_MANAGER                   
+#undef SYMBIAN_USE_NOKIA_FEATURE_MANAGER                   
  
 /** #USE_MSCDB  
 Enable usage of mass storage double buffering. 
@@ -507,7 +610,7 @@ Disables the H2LAN plugin delivered by Symbian OS 9.2 (and later versions)
 /** #__AAC  
 Device supports Advanced Audio Coding (AAC) codec. 
 */ 
-#undef __AAC                                               
+#define __AAC                                               
  
 /** #__ACCESSORY_FW  
 Accessory framework is a Series 60 subsystem that enables adding various
@@ -540,12 +643,12 @@ the build."
 /** #__AMR_NB  
 Device supports Adaptive Multi-Rate (AMR) narrowband codec. 
 */ 
-#undef __AMR_NB                                            
+#define __AMR_NB                                            
  
 /** #__AMR_WB  
 Device supports Adaptive Multi-Rate (AMR) wideband codec. 
 */ 
-#undef __AMR_WB                                            
+#define __AMR_WB                                            
  
 /** #__APPLICATION_CONTROLLABLE_AUDIO_ROUTING  
 "An application UI can control audio routing in addition to adaption layer. If 
@@ -894,6 +997,15 @@ available through Connection Monitor component.
 Device has email UI components. 
 */ 
 #define __EMAIL_UI                                          
+ 
+/** #__ENABLE_BACKSTEPPING  
+A flag that defines whether Backstepping -service is in use in Music Player.
+With Backstepping, MusicSuite and Music Widget interaction with music player is
+much more fluent. Back takes back to Music Suite, instead of Music Player
+library view. This flag will enable compilation of mpxbacksteppingutility, which
+music player uses to implement Backstepping. Synergy Change: ou1cimx1#122317 
+*/ 
+#undef __ENABLE_BACKSTEPPING                               
  
 /** #__EN_POLICY_DOS  
 "ENPolicy provides emergency number policy APIs and is used by phoneserver
@@ -1346,7 +1458,7 @@ This feature activates the Exchange Active Sync UI.
 /** #__MP3  
 Device supports MP3 audio codec. 
 */ 
-#undef __MP3                                               
+#define __MP3                                               
  
 /** #__MROUTER  
 Device uses Symbian MRrouter technology for PC connectivity.  If this feature is
@@ -1681,9 +1793,9 @@ proactive commands or envelope command responses."
 #define __SAT_LANGUAGE_NOTIFICATION                         
  
 /** #__SAT_LAUNCH_BROWSER  
-"If this flag is enabled, upon receiving SAT Launch Browser command, the ME
+When this flag is enabled, upon receiving SAT Launch Browser command, the ME
 shall decide if it is able to execute the command. See details from 3GPP
-specifications." 
+specifications. 
 */ 
 #define __SAT_LAUNCH_BROWSER                                
  
@@ -1821,7 +1933,7 @@ Device supports Calling Name Presentation (CNAP) as defined in GSM 2.96. B
 subscriber is able to see A subscriber's number and name even the caller's ID is
 not stored in the phone. The name of the subscriber comes from network. 
 */ 
-#undef __SERIES60_PHONE_CNAP                               
+#define __SERIES60_PHONE_CNAP                               
  
 /** #__SERIES60_PHONE_NUMBER_GROUPING  
 Deprecated flag. Included for compatibility reasons. Value must equal to
@@ -2090,7 +2202,7 @@ external subsystems.
 Defines whether transition effects are used in UI. Also controls whether the
 effect engine is included in ROM or not. 
 */ 
-#undef __UI_TRANSITION_EFFECTS                             
+#define __UI_TRANSITION_EFFECTS                             
  
 /** #__UI_ZOOM  
 This feature activates the zooming support in Series 60 UI. 
@@ -2130,7 +2242,7 @@ Includes and excludes UI components used in PictBridge printing
 /** #__USB_PTP  
 Includes and excludes PTP (Picture Transfer Protocol) components. 
 */ 
-#define __USB_PTP                                           
+#undef __USB_PTP                                           
  
 /** #__USB_REMOTE_PERSONALITY  
 Includes and excludes S60 USB Remote Personality component. 
@@ -2186,7 +2298,7 @@ Device supports WAP Wireless Identification Module (WIM).
 Device supports Windows Media. In other words it indicates whether WM-related
 components such as ASF-parser and codecs are in place. 
 */ 
-#undef __WINDOWS_MEDIA                                     
+#define __WINDOWS_MEDIA                                     
  
 /** #__WINDOWS_MEDIA_DRM  
 Device supports Windows Media DRM. In other words it indicates whether WMDRM
@@ -2208,4 +2320,4 @@ showing it to user)."
 #define __XSP_EXTENSION_MANAGER                             
  
 
-#endif // __BLDPRIVATE_HRH 
+#endif // __BLDPRIVATE_HRH

@@ -1,9 +1,9 @@
 // Copyright (c) 2004-2009 Nokia Corporation and/or its subsidiary(-ies).
 // All rights reserved.
 // This component and the accompanying materials are made available
-// under the terms of the License "Symbian Foundation License v1.0" to Symbian Foundation members and "Symbian Foundation End User License Agreement v1.0" to non-members
+// under the terms of "Eclipse Public License v1.0"
 // which accompanies this distribution, and is available
-// at the URL "http://www.symbianfoundation.org/legal/licencesv10.html".
+// at the URL "http://www.eclipse.org/legal/epl-v10.html".
 //
 // Initial Contributors:
 // Nokia Corporation - initial contribution.
@@ -17,6 +17,7 @@
 #define __ANIMATIONMIXINS_H__
 
 #include <e32base.h>
+#include <animationdataloaderobserver.h>
 
 /** Interface from a data provider to an animation
 
@@ -145,21 +146,6 @@ public:
 protected:
 	IMPORT_C virtual void MAnimationTickee_Reserved1();
 	IMPORT_C virtual void MAnimationTickee_Reserved2();
-	};
-
-/** Internal interface used by the ICL data loader to communicate with the
-ICL data provider. Not intended for user derivation.
-@internalComponent*/
-class MICLAnimationDataLoaderObserver
-	{
-public:
-	enum TDataLoaderEvent
-		{
-		EImagePartialConvert,
-		EImageConvertComplete,
-		};
-public:	
-	IMPORT_C virtual void DataLoaderEventL(TDataLoaderEvent aMessage, TInt aError) = 0;
 	};
 
 #endif //__ANIMATIONMIXINS_H__

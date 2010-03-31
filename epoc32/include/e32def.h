@@ -2,9 +2,9 @@
 * Copyright (c) 1994-2009 Nokia Corporation and/or its subsidiary(-ies).
 * All rights reserved.
 * This component and the accompanying materials are made available
-* under the terms of the License "Symbian Foundation License v1.0" to Symbian Foundation members and "Symbian Foundation End User License Agreement v1.0" to non-members
+* under the terms of the License "Eclipse Public License v1.0"
 * which accompanies this distribution, and is available
-* at the URL "http://www.symbianfoundation.org/legal/licencesv10.html".
+* at the URL "http://www.eclipse.org/legal/epl-v10.html".
 *
 * Initial Contributors:
 * Nokia Corporation - initial contribution.
@@ -20,8 +20,6 @@
 
 
 
-
-
 #ifndef __E32DEF_H__
 #define __E32DEF_H__
 
@@ -31,48 +29,6 @@
 #ifndef __SUPPORT_CPP_EXCEPTIONS__
 #undef __LEAVE_EQUALS_THROW__
 #endif
-
-
-
-
-
-#ifdef __PROFILING__
-
-/**
-@publishedPartner
-@removed
-*/
-#define __PROFILE_START(aBin) RDebug::ProfileStart(aBin)
-
-/**
-@publishedPartner
-@removed
-*/
-#define __PROFILE_END(aBin)   RDebug::ProfileEnd(aBin)
-
-/**
-@publishedPartner
-@removed
-*/
-#define __PROFILE_RESET(aNumberOfBins) RDebug::ProfileReset(0,aNumberOfBins)
-
-/**
-@publishedPartner
-@removed
-*/
-#define __PROFILE_DISPLAY(aNumberOfBins) \
-			{	TFixedArray<TProfile, aNumberOfBins> result; \
-				RDebug::ProfileResult(result.Begin(), 0, aNumberOfBins); \
-				for (TInt i=0; i<aNumberOfBins; i++)   \
-				RDebug::Print(_L("Profile bin %d:  Calls: %d, Clock ticks: %d\n" ),i,res[i].iCount,result[i].iTime);  \
-			}
-#else /* __PROFILING__ */
-#define __PROFILE_START(aBin) 
-#define __PROFILE_END(aBin)   
-#define __PROFILE_RESET(aNumberOfBins) 
-#define __PROFILE_DISPLAY(aNumberOfBins)
-#endif
-
 
 
 #if defined(__VC32__)
@@ -105,6 +61,16 @@
 @released
 */
 #define EXPORT_C __declspec(dllexport)
+/**
+@publishedAll
+@released
+*/
+#define IMPORT_D __declspec(dllexport)
+/**
+@publishedAll
+@released
+*/
+#define EXPORT_D __declspec(dllexport)
 /**
 @publishedAll
 @released
@@ -158,6 +124,8 @@
 #define __NORETURN_TERMINATOR()
 #define IMPORT_C __declspec(dllexport)
 #define EXPORT_C __declspec(dllexport)
+#define IMPORT_D __declspec(dllexport)
+#define EXPORT_D __declspec(dllexport)
 #define NONSHARABLE_CLASS(x) class x
 #define NONSHARABLE_STRUCT(x) struct x
 #define __NO_THROW throw()
@@ -185,8 +153,13 @@
 #endif
 
 
-
-#if defined(__GCC32__)
+//
+// GCC (ARM) compiler
+//
+#if defined(__GCC32__) && defined(__MARM__)
+#ifndef __GNUC__		/* GCC98r2 doesn't define this for some reason */
+#define __GNUC__	2
+#endif
 #define __NO_CLASS_CONSTS__
 #define __NORETURN__  __attribute__ ((noreturn))
 #ifdef __GCCV3__
@@ -195,12 +168,15 @@
 #define __NORETURN_TERMINATOR()		abort()
 #endif
 #define IMPORT_C
+#define IMPORT_D
 #if !defined __WINS__ && defined _WIN32 /* VC++ Browser Hack */
 #define EXPORT_C
+#define EXPORT_D
 /** @internalTechnology */
 #define asm(x)
 #else
 #define EXPORT_C __declspec(dllexport)
+#define EXPORT_D __declspec(dllexport)
 #endif
 #define NONSHARABLE_CLASS(x) class x
 #define NONSHARABLE_STRUCT(x) struct x
@@ -211,18 +187,12 @@
 #else
 #define TEMPLATE_SPECIALIZATION
 #endif
-#endif
-
-
-
-#ifdef __GCC32__
 /**
 @publishedAll
 @released
 */
 #define __DOUBLE_WORDS_SWAPPED__
 #endif
-
 
 
 /** @internalTechnology */
@@ -297,6 +267,14 @@
 @deprecated
 */
 #define LOCAL_C static
+/**
+@internalAll
+@prototype
+*/
+#ifndef IMPORT_D
+#define IMPORT_D IMPORT_C 
+#endif
+
 /**
 @publishedAll
 @deprecated
@@ -468,7 +446,7 @@ the link object from the start of a list element.
 #if __GNUC__ < 4
 #define _FOFF(c,f)			(((TInt)&(((c *)0x1000)->f))-0x1000)
 #else
-#define _FOFF(c,f)			__builtin_offsetof(c,f)
+#define _FOFF(c,f)			(__builtin_offsetof(c,f))
 #endif
 #endif
 
@@ -570,10 +548,34 @@ typedef long int TInt32;
 @publishedAll
 @released
 
+A signed integer type of the same size as a pointer.
+*/
+typedef TInt32 T_IntPtr;
+typedef TInt32 TIntPtr;
+
+
+
+
+/**
+@publishedAll
+@released
+
 32-bit unsigned integer type; used in Symbian OS to mean a 32-bit
 unsigned integer, independent of the implementation.
 */
 typedef unsigned long int TUint32;
+
+
+
+
+/**
+@publishedAll
+@released
+
+An unsigned integer type of the same size as a pointer.
+*/
+typedef TUint32 T_UintPtr;
+typedef TUint32 TUintPtr;
 
 
 
@@ -746,9 +748,6 @@ Although only a single bit would theoretically be necessary to represent a
 Boolean, a machine word is used instead, so that these quantities can be easily 
 passed. Also, TBool must map onto int because of C++'s interpretation of 
 operands in conditional expressions.
-
-On implementations of Symbian OS in which the compiler supports the ANSI-recommended 
-bool type, TBool will be typedef'ed to bool instead of int.
 */
 typedef int TBool;
 
@@ -761,37 +760,8 @@ typedef int TBool;
 
 Defines a linear (virtual) address type.
 */
-typedef TUint32 TLinAddr;
+typedef T_UintPtr TLinAddr;
 
-/**
-@internalTechnology
-
-A sorted list of all the code segments in ROM that contain an Exception Descriptor.
-
-*/
-typedef struct TRomExceptionSearchTable
-	{
-	/**
-	The number of entries in the following table.
-	*/
-	TInt32 iNumEntries;
-	
-	/**
-	Address of the code segment of each TRomImageHeader that has an Exception Descriptor.
-	*/
-	TLinAddr iEntries[1];
-	} TRomExceptionSearchTable;
-
-/**
-@internalComponent
-*/
-typedef struct TExceptionDescriptor 
-	{
-	TLinAddr iExIdxBase;
-	TLinAddr iExIdxLimit;
-	TLinAddr iROSegmentBase;
-	TLinAddr iROSegmentLimit;
-	} TExceptionDescriptor;
 
 
 #if defined(__GCC32__)
@@ -1341,14 +1311,6 @@ if !(c)p;
 
 #if defined(_DEBUG)
 
-/** 
-@internalComponent
-@deprecated
-*/
-#define __ASSERT_DEBUG_MB(aCond,aPanicNo) (void)((aCond)||(PanicMB(aPanicNo,_L(#aPanicNo),_L(#aCond)),0))
-
-
-
 
 /** 
 @publishedAll
@@ -1656,243 +1618,6 @@ function has caused.
 @see RAllocator::TAllocFail
 */
 #define __UHEAP_CHECKFAILURE User::__DbgCheckFailure(FALSE)
-
-
-
-
-/**
-@publishedPartner
-@released
-
-Marks the start of Kernel heap checking. 
-
-Checking the Kernel heap is only useful when developing Kernel side code such 
-as device drivers and media drivers.
-
-This macro is defined only for debug builds.
-
-This macro must be matched by a corresponding call to __KHEAP_MARKEND or __KHEAP_MARKENDC. 
-Calls to this macro can be nested but each call must be matched by corresponding 
-call to __KHEAP_MARKEND or __KHEAP_MARKENDC.
-
-@see User::__DbgMarkStart()
-@see __KHEAP_MARKEND
-@see __KHEAP_MARKENDC
-*/
-#define __KHEAP_MARK User::__DbgMarkStart(TRUE)
-
-
-
-
-/**
-@publishedPartner
-@released
-
-Checks that the number of allocated cells at the current nested level of the 
-Kernel heap is the same as the specified value. This macro is defined only 
-for debug builds. Checking the Kernel heap is only useful when developing 
-Kernel side code such as device drivers and media drivers.
-
-The macro also takes the name of the file containing this source code statement 
-and the line number of this source code statement; they are displayed as part 
-of the panic category, if the checks fail.
-
-@param aCount The number of heap cells expected to be allocated at
-              the current nest level.
-
-@see User::__DbgMarkCheck()
-@see __UHEAP_CHECK
-*/
-#define __KHEAP_CHECK(aCount) User::__DbgMarkCheck(TRUE,FALSE,aCount,(TText8*)__FILE__,__LINE__)
-
-
-
-
-/**
-@publishedPartner
-@released
-
-Checks that the total number of allocated cells on the Kernel heap is the same 
-as the specified value.
-
-It is only useful when developing Kernel side code such as device drivers 
-and media drivers. 
-
-The macro also takes the name of the file containing this source code statement 
-and the line number of this source code statement; they are displayed as part 
-of the panic category, if the checks fail.
-
-This macro is defined only for debug builds.
-
-@param aCount The total number of heap cells expected to be allocated
-
-@see User::__DbgMarkCheck()
-@see __UHEAP_CHECKALL
-*/
-#define __KHEAP_CHECKALL(aCount) User::__DbgMarkCheck(TRUE,TRUE,aCount,(TText8*)__FILE__,__LINE__)
-
-
-
-
-/**
-@publishedPartner
-@released
-
-Marks the end of Kernel heap checking. The macro expects zero heap cells to 
-remain allocated at the current nest level.
-
-This macro is defined only for debug builds. Checking the Kernel heap is only 
-useful when developing Kernel side code such as device drivers and media drivers.
-
-This macro must match an earlier call to __KHEAP_MARK.
-
-@see User::__DbgMarkEnd()
-@see __KHEAP_MARK
-*/
-#define __KHEAP_MARKEND User::__DbgMarkEnd(TRUE,0)
-
-
-
-
-/**
-@publishedPartner
-@released
-
-Marks the end of Kernel heap checking. The macro expects aCount heap cells 
-to remain allocated at the current nest level.
-
-This macro is defined only for debug builds.
-
-This macro must match an earlier call to __KHEAP_MARK.
-
-@param aCount The number of heap cells expected to remain allocated at
-              the current nest level.
-
-@see User::__DbgMarkEnd()
-@see __KHEAP_MARK
-*/
-#define __KHEAP_MARKENDC(aCount) User::__DbgMarkEnd(TRUE,aCount)
-
-
-
-
-/**
-@publishedPartner
-@released
-
-Simulates Kernel heap allocation failure. The failure occurs on the next call 
-to new or any of the functions which allocate memory from the heap. This macro 
-is defined only for debug builds.
-
-Checking the Kernel heap is only useful when developing Kernel side code such 
-as device drivers and media drivers.
-
-@param aCount The rate of failure - heap allocation fails every aCount attempt.
-
-@see User::__DbgSetAllocFail()
-*/
-#define __KHEAP_FAILNEXT(aCount) User::__DbgSetAllocFail(TRUE,RAllocator::EFailNext,aCount)
-
-/**
-@publishedPartner
-@released
-
-Simulates Kernel heap allocation failures. aBurst failures will occur on the next call 
-to new or any of the functions which allocate memory from the heap. This macro 
-is defined only for debug builds.
-
-Checking the Kernel heap is only useful when developing Kernel side code such 
-as device drivers and media drivers.
-
-@param aCount The heap allocation will fail after aCount-1 allocation attempts. 
-              Note when used with RHeap the maximum value aCount can be set 
-              to is KMaxTUint16.
-@param aBurst The number of allocations that will fail after aCount-1 allocation 
-              attempts.  Note when used with RHeap the maximum value aBurst can be 
-              set to is KMaxTUint16.
-
-
-@see User::__DbgSetBurstAllocFail()
-*/
-#define __KHEAP_BURSTFAILNEXT(aCount,aBurst) User::__DbgSetBurstAllocFail(TRUE,RAllocator::EBurstFailNext,aCount,aBurst)
-
-
-/**
-@publishedPartner
-@released
-
-Simulates Kernel heap allocation failure. 
-
-The failure occurs on subsequent calls to new or any of the functions which 
-allocate memory from this heap.
-
-This macro is defined only for debug builds.
-
-@param aType  The type of failure to be simulated.
-@param aRate The failure rate.
-
-@see RAllocator::TAllocFail
-@see User::__DbgSetAllocFail()
-*/
-#define __KHEAP_SETFAIL(aType,aRate) User::__DbgSetAllocFail(TRUE,aType,aRate)
-
-/**
-@publishedPartner
-@released
-
-Simulates Kernel heap allocation failure. 
-
-The failure occurs on subsequent calls to new or any of the functions which 
-allocate memory from this heap.
-
-This macro is defined only for debug builds.
-
-@param aType  The type of failure to be simulated.
-@param aRate  The failure rate.  Note when used with RHeap the maximum value 
-              aRate can be set to is KMaxTUint16.
-@param aBurst The number of consecutive allocations that will fail.  Note 
-              when used with RHeap the maximum value aBurst can be set to 
-              is KMaxTUint16.
-
-@see RAllocator::TAllocFail
-@see User::__DbgSetBurstAllocFail()
-*/
-#define __KHEAP_SETBURSTFAIL(aType,aRate,aBurst) User::__DbgSetBurstAllocFail(TRUE,aType,aRate,aBurst)
-
-
-
-/**
-@publishedPartner
-@released
-
-Cancels simulated Kernel heap allocation failure. 
-
-Checking the Kernel heap is only useful when developing Kernel side code such 
-as device drivers and media drivers.
-
-This macro is defined only for debug builds.
-
-@see User::__DbgSetAllocFail()
-*/
-#define __KHEAP_RESET User::__DbgSetAllocFail(TRUE,RAllocator::ENone,1)
-
-
-
-
-/**
-@publishedPartner
-@released
-
-Cancels simulated kernel heap allocation failure. 
-It walks the the heap and sets the nesting level for all allocated
-cells to zero.
-
-Checking the kernel heap is only useful when developing kernel side code such 
-as device drivers and media drivers.
-
-This macro is defined only for debug builds.
-*/
-#define __KHEAP_TOTAL_RESET User::__DbgSetAllocFail(TRUE,RAllocator::EReset,1)
 
 /**
 @publishedAll
@@ -2488,239 +2213,6 @@ function has caused.
 */
 #define __UHEAP_CHECKFAILURE ((TUint)0)
 
-
-/**
-@publishedPartner
-@released
-
-Marks the start of Kernel heap checking. 
-
-Checking the Kernel heap is only useful when developing Kernel side code such 
-as device drivers and media drivers.
-
-This macro is defined only for debug builds.
-
-This macro must be matched by a corresponding call to __KHEAP_MARKEND or __KHEAP_MARKENDC. 
-Calls to this macro can be nested but each call must be matched by corresponding 
-call to __KHEAP_MARKEND or __KHEAP_MARKENDC.
-
-@see User::__DbgMarkStart()
-@see __KHEAP_MARKEND
-@see __KHEAP_MARKENDC
-*/
-#define __KHEAP_MARK
-
-
-
-
-/**
-@publishedPartner
-@released
-
-Checks that the number of allocated cells at the current nested level of the 
-Kernel heap is the same as the specified value. This macro is defined only 
-for debug builds. Checking the Kernel heap is only useful when developing 
-Kernel side code such as device drivers and media drivers.
-
-The macro also takes the name of the file containing this source code statement 
-and the line number of this source code statement; they are displayed as part 
-of the panic category, if the checks fail.
-
-@param aCount The number of heap cells expected to be allocated at
-              the current nest level.
-
-@see User::__DbgMarkCheck()
-@see __UHEAP_CHECK
-*/
-#define __KHEAP_CHECK(aCount)
-
-
-
-
-/**
-@publishedPartner
-@released
-
-Checks that the total number of allocated cells on the Kernel heap is the same 
-as the specified value.
-
-It is only useful when developing Kernel side code such as device drivers 
-and media drivers. 
-
-The macro also takes the name of the file containing this source code statement 
-and the line number of this source code statement; they are displayed as part 
-of the panic category, if the checks fail.
-
-This macro is defined only for debug builds.
-
-@param aCount The total number of heap cells expected to be allocated
-
-@see User::__DbgMarkCheck()
-@see __UHEAP_CHECKALL
-*/
-#define __KHEAP_CHECKALL(aCount)
-
-
-
-
-/**
-@publishedPartner
-@released
-
-Marks the end of Kernel heap checking. The macro expects zero heap cells to 
-remain allocated at the current nest level.
-
-This macro is defined only for debug builds. Checking the Kernel heap is only 
-useful when developing Kernel side code such as device drivers and media drivers.
-
-This macro must match an earlier call to __KHEAP_MARK.
-
-@see User::__DbgMarkEnd()
-@see __KHEAP_MARK
-*/
-#define __KHEAP_MARKEND
-
-
-
-
-/**
-@publishedPartner
-@released
-
-Marks the end of Kernel heap checking. The macro expects aCount heap cells 
-to remain allocated at the current nest level.
-
-This macro is defined only for debug builds.
-
-This macro must match an earlier call to __KHEAP_MARK.
-
-@param aCount The number of heap cells expected to remain allocated at
-              the current nest level.
-
-@see User::__DbgMarkEnd()
-@see __KHEAP_MARK
-*/
-#define __KHEAP_MARKENDC(aCount)
-
-
-
-
-/**
-@publishedPartner
-@released
-
-Simulates Kernel heap allocation failure. The failure occurs on the next call 
-to new or any of the functions which allocate memory from the heap. This macro 
-is defined only for debug builds.
-
-Checking the Kernel heap is only useful when developing Kernel side code such 
-as device drivers and media drivers.
-
-@param aCount The rate of failure - heap allocation fails every aCount attempt.
-
-@see User::__DbgSetAllocFail()
-*/
-#define __KHEAP_FAILNEXT(aCount)
-
-/**
-@publishedPartner
-@released
-
-Simulates Kernel heap allocation failures. aBurst failures will occur on the next call 
-to new or any of the functions which allocate memory from the heap. This macro 
-is defined only for debug builds.
-
-Checking the Kernel heap is only useful when developing Kernel side code such 
-as device drivers and media drivers.
-
-@param aCount The heap allocation will fail after aCount-1 allocation attempts.  
-              Note when used with RHeap the maximum value aCount can be set 
-              to is KMaxTUint16.
-@param aBurst The number of allocations that will fail after aCount-1 allocation
-              attempts.  Note when used with RHeap the maximum value aBurst can 
-              be set to is KMaxTUint16.
-
-@see User::__DbgSetBurstAllocFail()
-*/
-#define __KHEAP_BURSTFAILNEXT(aCount,aBurst)
-
-
-
-/**
-@publishedPartner
-@released
-
-Simulates Kernel heap allocation failure. 
-
-The failure occurs on subsequent calls to new or any of the functions which 
-allocate memory from this heap.
-
-This macro is defined only for debug builds.
-
-@param aType  The type of failure to be simulated.
-@param aRate The failure rate.
-
-@see User::__DbgSetAllocFail()
-*/
-#define __KHEAP_SETFAIL(aType,aRate)
-
-/**
-@publishedPartner
-@released
-
-Simulates Kernel heap allocation failure. 
-
-The failure occurs on subsequent calls to new or any of the functions which 
-allocate memory from this heap.
-
-This macro is defined only for debug builds.
-
-@param aType  The type of failure to be simulated.
-@param aRate  The failure rate.  Note when used with RHeap the maximum value 
-              aRate can be set to is KMaxTUint16.
-@param aBurst The number of consecutive allocations that will fail.  Note 
-              when used with RHeap the maximum value aBurst can be set 
-              to is KMaxTUint16.
-
-@see User::__DbgSetBurstAllocFail()
-*/
-#define __KHEAP_SETBURSTFAIL(aType,aRate,aBurst)
-
-
-
-/**
-@publishedPartner
-@released
-
-Cancels simulated Kernel heap allocation failure. 
-
-Checking the Kernel heap is only useful when developing Kernel side code such 
-as device drivers and media drivers.
-
-This macro is defined only for debug builds.
-
-@see User::__DbgSetAllocFail()
-*/
-#define __KHEAP_RESET
-
-
-
-/**
-@publishedPartner
-@released
-
-Cancels simulated kernel heap allocation failure. 
-It walks the the heap and sets the nesting level for all allocated
-cells to zero.
-
-Checking the kernel heap is only useful when developing kernel side code such 
-as device drivers and media drivers.
-
-This macro is defined only for debug builds.
-*/
-#define __KHEAP_TOTAL_RESET
-
-
 /**
 @publishedAll
 @released
@@ -3000,16 +2492,6 @@ function has caused.
 #define __EMULATOR_IMAGE_HEADER(aUid0,aUid1,aUid2,aPriority,aCap,aFlags)
 #endif
 
-#if defined(__OPT__)
-/**
-@internalComponent
-@deprecated
-*/
-#define __ASSERT_OPT(c,p) (void)((c)||(p,0))
-#else
-#define __ASSERT_OPT(c,p)
-#endif
-
 #if defined(_UNICODE)
 #if !defined(UNICODE)
 /**
@@ -3019,19 +2501,6 @@ function has caused.
 #define UNICODE
 #endif
 #endif
-
-#if defined(_DEBUG)
-/**
-@internalComponent
-@deprecated
-*/
-#define __DECLARE_TEST_DEBUG __DECLARE_TEST
-#else
-#define __DECLARE_TEST_DEBUG
-#endif
-
-
-
 
 #if !defined(ASSERT)
 /**
@@ -3044,17 +2513,6 @@ condition is not true.
 @param x A conditional expression which results in true or false.
 */
 #define ASSERT(x) __ASSERT_DEBUG(x,User::Invariant())
-#endif
-
-
-
-
-#ifndef __VALUE_IN_REGS__ 
-/**
-@publishedPartner
-@released
-*/
-#define __VALUE_IN_REGS__ 
 #endif
 
 
@@ -3206,7 +2664,7 @@ argument, these APIs will not emit any form of diagnostic message.
 When this value is used in Platform Security APIs as the value for the aDiagnostic
 argument, these APIs will not emit any form of diagnostic message.
 @publishedPartner
-@release
+@released
 */
 #define KSuppressPlatSecDiagnostic		NULL
 
@@ -3223,6 +2681,7 @@ argument, these APIs will not emit any form of diagnostic message.
 
 #if defined(__VC32__) && (_MSC_VER < 1300)
 #define __PLACEMENT_VEC_NEW_INLINE
+#define __OMIT_VEC_OPERATOR_NEW_DECL__
 #endif /* version of MSVC that doesn't support overloaded operator new[] */
 
 /**
@@ -3234,5 +2693,9 @@ variables passed or returned by value.
 #ifndef __SOFTFP
 #define __SOFTFP
 #endif /* __SOFTFP */
+
+#ifndef SYMBIAN_ENABLE_SPLIT_HEADERS
+#include <e32def_private.h>
+#endif
 
 #endif /* __E32DEF_H__ */

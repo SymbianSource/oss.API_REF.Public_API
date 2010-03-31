@@ -1,9 +1,9 @@
 // Copyright (c) 2005-2009 Nokia Corporation and/or its subsidiary(-ies).
 // All rights reserved.
 // This component and the accompanying materials are made available
-// under the terms of the License "Symbian Foundation License v1.0" to Symbian Foundation members and "Symbian Foundation End User License Agreement v1.0" to non-members
+// under the terms of "Eclipse Public License v1.0"
 // which accompanies this distribution, and is available
-// at the URL "http://www.symbianfoundation.org/legal/licencesv10.html".
+// at the URL "http://www.eclipse.org/legal/epl-v10.html".
 //
 // Initial Contributors:
 // Nokia Corporation - initial contribution.
@@ -104,13 +104,15 @@ public:
 	
 	IMPORT_C void GetActualisedRulesL(CVTzActualisedRules& aActRules) const;
 	IMPORT_C TInt ConvertTime(CVTzActualisedRules& aRules, TTime& aTime, TTzTimeReference aTimerRef) const;
+	
+	IMPORT_C TInt GetOffsetL(const TTime& aTime, TTzTimeReference aTimeRef) const;
+	IMPORT_C TInt SizeOfObject() const;
+	IMPORT_C void CopyL(const CTzRules& aTzRule);
 		
 private:
 	CTzRules();
 	CTzRules(TInt aStartYear, TInt aEndYear);
-	void GetActualisedRulesL(CVTzActualisedRules& aActRules, TInt aYear) const;
-	TInt GetOffsetL(const TTime& aTime, TTzTimeReference aTimeRef) const;
-	TInt AddActualisedRulesL(CVTzActualisedRules& aActRules, TInt aYear) const;
+	void AddActualisedRulesL(CVTzActualisedRules& aActRules, TInt aYear) const;
 	TInt CompareTimesWithRef(TTime aTimeA, TTzTimeReference aTimeARef,
 						     TTime aTimeB, TTzTimeReference aTimeBRef, TInt aStdOffset, TInt aWallOffset,
 						     TTimeIntervalMinutes* aMinutesDifference) const;
@@ -120,6 +122,8 @@ private:
 	TInt16 iEndYear;
 	RArray<TTzRule> iRules;
 	TInt iInitialStdTimeOffset;
+	
+	mutable CVTzActualisedRules* iActualisedRulesCache;
 	};
 
 

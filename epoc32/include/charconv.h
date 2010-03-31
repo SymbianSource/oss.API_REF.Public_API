@@ -1,17 +1,20 @@
-// Copyright (c) 1997-2009 Nokia Corporation and/or its subsidiary(-ies).
-// All rights reserved.
-// This component and the accompanying materials are made available
-// under the terms of the License "Symbian Foundation License v1.0" to Symbian Foundation members and "Symbian Foundation End User License Agreement v1.0" to non-members
-// which accompanies this distribution, and is available
-// at the URL "http://www.symbianfoundation.org/legal/licencesv10.html".
-//
-// Initial Contributors:
-// Nokia Corporation - initial contribution.
-//
-// Contributors:
-//
-// Description:
-//
+/*
+* Copyright (c) 1997-2009 Nokia Corporation and/or its subsidiary(-ies).
+* All rights reserved.
+* This component and the accompanying materials are made available
+* under the terms of "Eclipse Public License v1.0"
+* which accompanies this distribution, and is available
+* at the URL "http://www.eclipse.org/legal/epl-v10.html".
+*
+* Initial Contributors:
+* Nokia Corporation - initial contribution.
+*
+* Contributors:
+*
+* Description: 
+*
+*/
+
 
 #if !defined(__CHARCONV_H__)
 #define __CHARCONV_H__
@@ -177,6 +180,12 @@ GBK
 */
 const TUint KCharacterSetIdentifierGbk=0x10003ecb;
 /** 
+GB18030
+@publishedAll
+@released
+*/
+const TUint KCharacterSetIdentifierGb18030=0x10287038;
+/** 
 Big 5 
 @publishedAll
 @released
@@ -228,10 +237,11 @@ const TUint KCharacterSetIdentifierCP850=0x102825AD;
 
 const TUint KCharacterSetIdentifierUnicodeLittle=0x101f3fae;  //Little Endian Unicode
 const TUint KCharacterSetIdentifierUnicodeBig=0x101f4052; // Big Endian Unicode 
-const TUint KCharacterSetIdentifierUcs2=0x101ff492;
+const TUint KCharacterSetIdentifierUcs2=0x101ff492; 
+
 
 /** 
-Extended SMS 7-bit (not supported before v9.5) 
+Extended SMS 7-bit 
 @publishedAll
 @released
 */
@@ -261,7 +271,141 @@ Spanish
 @released
 */
 const TUint KCharacterSetIdentifierSpanishSingleSms7Bit=0x1028640A;
- 
+
+
+/**
+code page 949
+@publishedAll
+@released
+*/
+const TUint KCharacterSetIdentifierCP949=0x200100FF;
+
+/**
+Shift-JIS with Pictograph
+@publishedAll
+@released 
+*/
+const TUint KCharacterSetIdentifierShiftJisDirectmap=0x101F8691;
+
+/**
+EUC-JP with direct mapped pictograph
+@publishedAll
+@released 
+*/
+const TUint KCharacterSetIdentifierEucJpDirectmap=0x101F86A6;
+
+/**
+EUC-KR 
+@publishedAll
+@released
+*/
+const TUint KCharacterSetIdentifierEUCKR=0x2000E526;
+
+/**
+iscii 
+@publishedAll
+@released
+*/
+const TUint KCharacterSetIdentifierIscii=0x1027508E;
+
+/**
+ISO2022 Korean
+@publishedAll
+@released
+*/
+const TUint KCharacterSetIdentifierIso2022kr=0x20010101;
+
+/**
+KOI8-R Russian
+@publishedAll
+@released
+*/
+const TUint KCharacterSetIdentifierKOI8R=0x101F8778;
+
+/**
+KOI8-U Belorusian/Ukrainian Cyrillic
+@publishedAll
+@released 
+*/
+const TUint KCharacterSetIdentifierKOI8U=0x101F8761;
+
+/**
+KSC5601 Korean
+@publishedAll
+@released 
+*/
+const TUint KCharacterSetIdentifierKsc5601=0x200113CD;
+
+/**
+TIS_620 Thai
+@publishedAll
+@released 
+*/
+const TUint KCharacterSetIdentifierTIS_620=0x101F8549;
+
+/**
+Code page 874 Thai
+@publishedAll
+@released 
+*/
+const TUint KCharacterSetIdentifierWin874=0x101F854A;
+
+/**
+Code page 1250 Eastern European
+@publishedAll
+@released 
+*/
+const TUint KCharacterSetIdentifierWin1250=0x100059D6;
+
+/**
+Code page 1251 Cyrillic
+@publishedAll
+@released 
+*/
+const TUint KCharacterSetIdentifierWin1251=0x100059D7;
+
+/**
+Code page 1253 Greek
+@publishedAll
+@released 
+*/
+const TUint KCharacterSetIdentifierWin1253=0x100059D8;
+
+/**
+Code page 1254 Turkish
+@publishedAll
+@released 
+*/
+const TUint KCharacterSetIdentifierWin1254=0x100059D9;
+
+/**
+Code page 1255 Hebrew
+@publishedAll
+@released 
+*/
+const TUint KCharacterSetIdentifierWin1255=0x101F8547;
+
+/**
+Code page 1256 Arabic
+@publishedAll
+@released 
+*/
+const TUint KCharacterSetIdentifierWin1256=0x101F8548;
+
+/**
+Code page 1257 Baltic
+@publishedAll
+@released 
+*/
+const TUint KCharacterSetIdentifierWin1257=0x100059DA;
+
+/**
+Windows-1258
+@publishedAll
+@released
+*/ 
+const TUint KCharacterSetIdentifierWin1258=0x102073B8;
+
 // note that other character sets than those listed above may be available at run-time, and also that none of the above are necessarily available at run-time
 
 struct SCnvConversionData;
@@ -310,7 +454,7 @@ The class also provides a number of utility functions.
 class CCnvCharacterSetConverter : public CBase
 	{
 public:
-	/** Indicates whether a character set is available or unavailable 
+	/** Indicates whether a character set is available or unavailable
 	for conversion. Used by the second overload of 
 	PrepareToConvertToOrFromL(). */
 	enum TAvailability
@@ -602,9 +746,10 @@ private:
 	TDowngradeForExoticLineTerminatingCharacters iDowngradeForExoticLineTerminatingCharacters;
 	TBuf8<KMaximumLengthOfReplacementForUnconvertibleUnicodeCharacters> iReplacementForUnconvertibleUnicodeCharacters;
 	CStandardNamesAndMibEnums* iStandardNamesAndMibEnums;
-	TBool iFullyConstructed;
+	TBool iTlsDataConstructed;
 	CCharsetCnvCache* iCharsetCnvCache;
 	TBool iIsSystemStandardNamesAndMibEnumsScanned;
 	};
 
 #endif
+

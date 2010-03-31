@@ -1,19 +1,22 @@
 /*
-* Copyright (c) 2002-2005 Nokia Corporation and/or its subsidiary(-ies). 
+* Copyright (c) 2002-2005 Nokia Corporation and/or its subsidiary(-ies).
 * All rights reserved.
 * This component and the accompanying materials are made available
-* under the terms of the License "Symbian Foundation License v1.0" to Symbian Foundation members and "Symbian Foundation End User License Agreement v1.0" to non-members
+* under the terms of "Eclipse Public License v1.0"
 * which accompanies this distribution, and is available
-* at the URL "http://www.symbianfoundation.org/legal/licencesv10.html".
+* at the URL "http://www.eclipse.org/legal/epl-v10.html".
 *
 * Initial Contributors:
 * Nokia Corporation - initial contribution.
 *
 * Contributors:
 *
-* Description: Pointermap class declaration        
+* Description:    Pointermap class declaration        
 *
 */
+
+
+
 
 #ifndef POINTERMAP_H
 #define POINTERMAP_H
@@ -58,8 +61,8 @@ class RSenPointerMap
 
     TInt Find(const K& aKey) const
         {
-        TInt index = KErrNotFound;
-        for (int i = 0; i < iKeys.Count(); i++)
+        TInt index( KErrNotFound );
+        for (TInt i = 0; i < iKeys.Count(); i++)
             {
             if (*iKeys[i] == aKey)
                 {
@@ -69,6 +72,28 @@ class RSenPointerMap
             }
         return index;
         }
+
+    TInt FindReverse(const K& aKey) const
+        {
+        TInt index( KErrNotFound );
+        TInt count( iKeys.Count() );
+        for (TInt i = count-1; i >=0 ; i--)
+            {
+            if (*iKeys[i] == aKey)
+                {
+                index = i;
+                break;
+                }
+            }
+        return index;
+        }
+        
+        
+    TInt RemoveAt( TInt aIndex ) 
+        {
+        K* key = KeyAt( aIndex );
+    	return RemoveByKey( *key );
+    	}
 
     // @return the index of removed key-value pair, or
     // KErrNotFound, if such key was not found
@@ -119,7 +144,7 @@ class RSenPointerMap
     TInt FindValue(const V& aValue) const
         {
         TInt index = KErrNotFound;
-        for (int i = 0; i < iValues.Count(); i++)
+        for (TInt i = 0; i < iValues.Count(); i++)
             {
             if ((iValues[i]) && (*iValues[i] == aValue))
                 {

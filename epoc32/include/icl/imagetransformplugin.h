@@ -1,9 +1,9 @@
 // Copyright (c) 2004-2009 Nokia Corporation and/or its subsidiary(-ies).
 // All rights reserved.
 // This component and the accompanying materials are made available
-// under the terms of the License "Symbian Foundation License v1.0" to Symbian Foundation members and "Symbian Foundation End User License Agreement v1.0" to non-members
+// under the terms of "Eclipse Public License v1.0"
 // which accompanies this distribution, and is available
-// at the URL "http://www.symbianfoundation.org/legal/licencesv10.html".
+// at the URL "http://www.eclipse.org/legal/epl-v10.html".
 //
 // Initial Contributors:
 // Nokia Corporation - initial contribution.
@@ -14,6 +14,7 @@
 // This is the plugin API for the Image Transform framework
 // 
 //
+
 /**
  @file
  @publishedAll
@@ -114,10 +115,12 @@ private:
 	IMPORT_C virtual void ReservedVirtual1();
 	IMPORT_C virtual void ReservedVirtual2();
 	IMPORT_C virtual void ReservedVirtual3();
-	IMPORT_C virtual void ReservedVirtual4();
+public:
+	IMPORT_C virtual CImageTransformPluginExtension* Extension(TUid aExtensionUid, TInt& aError) const;
 
 private:
 	CImageTransformFramework* iFramework;
 	};
 
 #endif // __IMAGETRANSFORMPLUGIN_H__
+

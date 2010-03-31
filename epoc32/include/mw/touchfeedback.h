@@ -2,9 +2,9 @@
 * Copyright (c) 2007-2008 Nokia Corporation and/or its subsidiary(-ies).
 * All rights reserved.
 * This component and the accompanying materials are made available
-* under the terms of the License "Symbian Foundation License v1.0" to Symbian Foundation members and "Symbian Foundation End User License Agreement v1.0" to non-members
+* under the terms of "Eclipse Public License v1.0"
 * which accompanies this distribution, and is available
-* at the URL "http://www.symbianfoundation.org/legal/licencesv10.html".
+* at the URL "http://www.eclipse.org/legal/epl-v10.html".
 *
 * Initial Contributors:
 * Nokia Corporation - initial contribution.
@@ -13,6 +13,7 @@
 *
 * Description:  Interface for using area registry and direct feedback from
 *                applications and UI controls.
+* Part of:      Tactile Feedback.
 *
 */
 
@@ -26,9 +27,9 @@
 #include <coemain.h>
 
 #include <touchlogicalfeedback.h>
+#include <touchfeedbackspec.h>
 
 class CCoeControl;
-
 
 /**
  *  This is the Tactile Feedback interface for UI Controls.
@@ -311,6 +312,11 @@ public:
      * If given control pointer is NULL, then this function call
      * is ignored.
      *
+     * This function only changes feedback type for down event.
+     * To change feedback types for all the events in the feedback area use
+     * function SetFeedbackArea with CFeedbackSpec container class 
+     * definion instead.
+     *
      * @since S60 5.0
      * @param aControl - The control, who has registered the area.
      * @param aIndex   - The index number of the area, that will be changed.
@@ -396,7 +402,7 @@ public:
      * and potentially flushing of window server client-side buffer.
      *
      * @since S60 5.0
-     * @param aControl - The control, who fishes to play feedback.
+     * @param aControl - The control, who wishes to play feedback.
      * @param aType    - The logical feedback type to play.
      */
     virtual void InstantFeedback( const CCoeControl* aControl,
@@ -498,7 +504,8 @@ public:
                                            TBool aEnableAudio ) = 0; 
                                            
     /**
-     * Used for disabling or enabling feedback in the application.
+     * Used for disabling/enabling audio/vibra feedback in
+     * the application.
      *
      * This is identical with the overload which has only one parameter, 
      * with the exception that one can disable audio and vibra feedback 
@@ -513,7 +520,182 @@ public:
      *                        feedback for this application.
      */
     virtual void SetFeedbackEnabledForThisApp( TBool aVibraEnabled,
-                                               TBool aAudioEnabled ) = 0;                                                 
+                                               TBool aAudioEnabled ) = 0;
+
+
+    /**
+     * Used to check whether audio or vibra feedback is enabled for this application.
+     *
+     * Notice that this function only returns what was given as parameter
+     * to SetFeedbackEnabledForThisApp -function. I.e. this function
+     * can return ETrue even if  feedback would be currently disabled
+     * from settings.
+     *
+     * @since S60 5.2
+     * @param aFeedbackType - Feedback type.
+     * @return ETrue if asked feedback type is enabled for this application.
+     */
+    virtual TBool FeedbackEnabledForThisApp( TTouchFeedbackType aFeedbackType ) = 0;
+    
+    /**
+     * Starts continuous feedback if given control has not disabled it.
+     *
+     * Only one continuous feedback per control can be played simultaneously.
+     * Started feedback will be stopped automatically if application loses 
+     * key focus or application crashes or some other control starts
+     * continuous feedback.     
+     * 
+     * If StartFeedback is called again for the same control, then feedback
+     * type and intensity are modified accordingly. This may cause a break
+     * in the feedback effect in case feedback type changes.          
+     *
+     * EnableFeedbackForControl also affects to this function so that
+     * feedback is not given if EnableFeedbackForControl
+     * function has been called with second and third parameter EFalse.
+     * 
+     * @since S60 5.2
+     * @param aControl      - The control, who wishes to play feedback.
+     * @param aType         - The continuous feedback type to play.
+     * @param aPointerEvent - Pointer event which triggered this feedback
+     *                        (give NULL as parameter if no related pointer
+     *                         event available)     
+     * @param aIntensity    - Feedback intensity to begin with. range 0-100%. 
+     *                        Use 50% if no reason to use other value.     
+     * @param aTimeout      - Timeout value to automatically stop continuous 
+     *                        feedback if there's no new Start call within the
+     *                        timeout. Use value 0 if timeout is not used.
+     */
+    virtual void StartFeedback( const CCoeControl* aControl,
+                                TTouchContinuousFeedback aType,
+                                const TPointerEvent* aPointerEvent,
+                                TInt aIntensity,
+                                TTimeIntervalMicroSeconds32 aTimeout ) = 0;
+
+                                
+    /**
+     * This function modifies intensity of continuous feedback on the fly.
+     *
+     * @since S60 5.2
+     * @param aControl      - The control which continuous feedback is modified.
+     * @param aIntensity    - New intensity value. range 0-100%
+     */
+    virtual void ModifyFeedback( const CCoeControl* aControl,
+                                 TInt aIntensity ) = 0;
+
+                                 
+    /**
+     * This function stops continuous feedback.
+     *
+     * @since S60 5.2
+     * @param aControl - The control which continuous feedback is stopped.
+     */
+    virtual void StopFeedback( const CCoeControl* aControl ) = 0;
+
+
+    /**
+     * This function enables or disables audio or/and vibra feedback in
+     * whole device.
+     * 
+     * Tactile feedback is enabled by default, and thus standard 
+     * S60 components (such as CBA, lists and options menu) automatically 
+     * give feedback even if the application itself would make no effort 
+     * for producing feedback.
+     *
+     * Requires WriteDeviceData capability
+     *
+     * @since S60 5.2
+     * @param aFeedbackType - Feedback types to be enabled/disabled defined as
+     *                        a bitmask combination of enumeration items from
+     *                        TTouchFeedbackType
+     * @return KErrNone, or one of standard Symbian OS error codes
+     *         if user has not WriteDeviceData capability. 
+     */
+    virtual TInt SetFeedbackEnabledForDevice( TTouchFeedbackType aFeedbackType ) = 0;
+
+
+    /**
+     * Used to check enabled feedback types for the device.
+     *
+     * Notice that this function only returns what was given as parameter
+     * to SetFeedbackEnabledForDevice -function. I.e. this function
+     * can return ETrue even if  feedback would be currently disabled
+     * from settings.
+     *
+     * @since S60 5.2
+     * @return Enabled/disabled feedback types as bitmask combination.
+     */
+    virtual TTouchFeedbackType FeedbackEnabledForDevice() = 0;
+
+
+    /**
+     * Gives direct feedback if given control has not disabled it.
+     *
+     * This overload is recommended when triggered feedback is related
+     * to pointer event. System uses aPointerEvent to avoiding
+     * two (or more) direct feedbacks for the same pointer event.
+     *
+     * @since S60 5.2
+     * @param aControl      - The control, who wishes to play feedback.
+     * @param aType         - The logical feedback type to play.
+     * @param aPointerEvent - pointer event which triggered this feedback.
+     */
+    virtual void InstantFeedback( const CCoeControl* aControl,
+                                  TTouchLogicalFeedback aType,
+                                  const TPointerEvent& aPointerEvent ) = 0;
+
+
+    /**
+     * Sets or updates rectangular feedback area to registry.
+     *
+     * This overload allows user to set more than one touch event types to
+     * one feedback area. Otherwise the function behaves in the same way
+     * as the overload with separated feedback type and event type parameters.
+     *
+     * @since S60 5.2
+     * @param aControl        - The control handling pointer events on this
+     *                          feedback area.
+     * @param aIndex          - The index number of the area to be added.
+     * @param aRect           - The feedback area rectangle.
+     * @param aFeedbackSpec   - The specification how this feedback area 
+     *                          triggers feedback for different touch events.     
+     * @return KErrNone, or one of standard Symbian OS error codes
+     *         if setting of area to registry failed. 
+     *         Some specific error codes:
+     *         KErrArgument - A NULL pointer was given as first parameter, or
+     *                        the given control does not have any window
+     *                        associated to it.
+     *         KErrNotSupported - Unsupported predefined feedback profile
+     *                            was given as parameter.
+     */
+    virtual TInt SetFeedbackArea( const CCoeControl* aControl, 
+                                  TUint32 aIndex,
+                                  TRect aRect, 
+                                  CFeedbackSpec* aFeedbackSpec ) = 0;
+
+    /**
+     * Gives direct feedback if given control has not disabled it.
+     *
+     * This overload is recommended when triggered feedback is related
+     * to pointer event. System uses aPointerEvent to avoiding
+     * two (or more) direct feedbacks for the same pointer event. Using this 
+     * overload it is also possible to disable unwanted feedback (vibra/audio)
+     * by giving only wanted feedback type as parameter.
+     *
+     * @since S60 5.2
+     * @param aControl      - The control, who wishes to play feedback.
+     * @param aType         - The logical feedback type to play.
+     * @param aFeedbackType - Feedback types to be played as a bitmask 
+     *                        combination of enumeration items from
+     *                        TTouchFeedbackType
+     * @param aPointerEvent - Pointer event, which triggered this feedback.
+     */
+    virtual void InstantFeedback( const CCoeControl* aControl,
+                                  TTouchLogicalFeedback aType,
+                                  TTouchFeedbackType aFeedbackType,
+                                  const TPointerEvent& aPointerEvent ) = 0;
+
+
+
     };
 
 

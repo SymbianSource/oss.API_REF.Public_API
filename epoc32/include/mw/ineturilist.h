@@ -1,9 +1,9 @@
 // Copyright (c) 2007-2009 Nokia Corporation and/or its subsidiary(-ies).
 // All rights reserved.
 // This component and the accompanying materials are made available
-// under the terms of the License "Symbian Foundation License v1.0" to Symbian Foundation members and "Symbian Foundation End User License Agreement v1.0" to non-members
+// under the terms of "Eclipse Public License v1.0"
 // which accompanies this distribution, and is available
-// at the URL "http://www.symbianfoundation.org/legal/licencesv10.html".
+// at the URL "http://www.eclipse.org/legal/epl-v10.html".
 //
 // Initial Contributors:
 // Nokia Corporation - initial contribution.
@@ -15,8 +15,6 @@
 // 
 //
 
-
-
 /**
  @file
  @publishedAll
@@ -27,6 +25,7 @@
 #define __INETURILIST_H__
 
 #include <ineturilistdef.h>
+#include <tldlistdef.h>
 #include <ineturi.h>
 #include <uri8.h>
 #include <babitflags.h>
@@ -106,6 +105,7 @@ public:
 	IMPORT_C TInt GetListType ( const TDesC8& aUri, InetUriList::TServiceType aServiceType, InetUriList::TListType& aListType );
 	
 	IMPORT_C void QueryUriL ( const TQueryArgs& aArgs, MQueryResultsCallback* aQueryCallback, MUriCustomiser* aUriOptimiser =NULL );
+	IMPORT_C void QueryTldInfoL ( const TPolicyQueryArgs& aQueryArgs, TQueryResults& aResultArgs );
 private:
 	CInetUriListImpl* iInetUriListImpl; // // The internal list object that this handle is connected to
 	};

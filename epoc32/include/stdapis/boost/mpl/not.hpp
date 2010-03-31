@@ -1,30 +1,51 @@
-# /* Copyright (C) 2001
-#  * Housemarque Oy
-#  * http://www.housemarque.com
-#  *
-#  * Distributed under the Boost Software License, Version 1.0. (See
-#  * accompanying file LICENSE_1_0.txt or copy at
-#  * http://www.boost.org/LICENSE_1_0.txt)
-#  */
-#
-# /* Revised by Paul Mensonides (2002) */
-#
-# /* See http://www.boost.org for most recent version. */
-#
-# ifndef BOOST_PREPROCESSOR_LOGICAL_NOT_HPP
-# define BOOST_PREPROCESSOR_LOGICAL_NOT_HPP
-#
-# include <boost/preprocessor/config/config.hpp>
-# include <boost/preprocessor/logical/bool.hpp>
-# include <boost/preprocessor/logical/compl.hpp>
-#
-# /* BOOST_PP_NOT */
-#
-# if ~BOOST_PP_CONFIG_FLAGS() & BOOST_PP_CONFIG_EDG()
-#    define BOOST_PP_NOT(x) BOOST_PP_COMPL(BOOST_PP_BOOL(x))
-# else
-#    define BOOST_PP_NOT(x) BOOST_PP_NOT_I(x)
-#    define BOOST_PP_NOT_I(x) BOOST_PP_COMPL(BOOST_PP_BOOL(x))
-# endif
-#
-# endif
+
+#ifndef BOOST_MPL_NOT_HPP_INCLUDED
+#define BOOST_MPL_NOT_HPP_INCLUDED
+
+// Copyright Aleksey Gurtovoy 2000-2004
+//
+// Distributed under the Boost Software License, Version 1.0. 
+// (See accompanying file LICENSE_1_0.txt or copy at 
+// http://www.boost.org/LICENSE_1_0.txt)
+//
+// See http://www.boost.org/libs/mpl for documentation.
+
+// $Source: /cvsroot/boost/boost/boost/mpl/not.hpp,v $
+// $Date: 2004/09/02 15:40:41 $
+// $Revision: 1.3 $
+
+#include <boost/mpl/bool.hpp>
+#include <boost/mpl/aux_/nttp_decl.hpp>
+#include <boost/mpl/aux_/nested_type_wknd.hpp>
+#include <boost/mpl/aux_/na_spec.hpp>
+#include <boost/mpl/aux_/lambda_support.hpp>
+
+namespace boost { namespace mpl {
+
+namespace aux {
+
+template< BOOST_MPL_AUX_NTTP_DECL(long, C_) > // 'long' is intentional here
+struct not_impl
+    : bool_<!C_>
+{
+};
+
+} // namespace aux
+
+
+template<
+      typename BOOST_MPL_AUX_NA_PARAM(T)
+    >
+struct not_
+    : aux::not_impl<
+          BOOST_MPL_AUX_NESTED_TYPE_WKND(T)::value
+        >
+{
+    BOOST_MPL_AUX_LAMBDA_SUPPORT(1,not_,(T))
+};
+
+BOOST_MPL_AUX_NA_SPEC(1,not_)
+
+}}
+
+#endif // BOOST_MPL_NOT_HPP_INCLUDED

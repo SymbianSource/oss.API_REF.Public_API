@@ -1,9 +1,9 @@
 // Copyright (c) 2002-2009 Nokia Corporation and/or its subsidiary(-ies).
 // All rights reserved.
 // This component and the accompanying materials are made available
-// under the terms of the License "Symbian Foundation License v1.0" to Symbian Foundation members and "Symbian Foundation End User License Agreement v1.0" to non-members
+// under the terms of "Eclipse Public License v1.0"
 // which accompanies this distribution, and is available
-// at the URL "http://www.symbianfoundation.org/legal/licencesv10.html".
+// at the URL "http://www.eclipse.org/legal/epl-v10.html".
 //
 // Initial Contributors:
 // Nokia Corporation - initial contribution.
@@ -12,8 +12,6 @@
 //
 // Description:
 //
-
-
 
 /**
  @file
@@ -26,6 +24,10 @@
 #include <e32base.h>
 #include <ecamuids.hrh>
 #include <e32property.h>
+
+#ifndef SYMBIAN_ENABLE_SPLIT_HEADERS
+#include <ecamdef.h>
+#endif
 
 class MFrameBuffer;
 class RWsSession;
@@ -417,41 +419,6 @@ public:
 	TTimeIntervalMicroSeconds iElapsedTime;
 	};
 
-/**
-This class is used to provide extra buffer informations through a custom interface.
-
-@see MCameraImageBuffer
-
-@publishedPartner
-@prototype
-*/
-class MCameraBuffer2 : public MCameraBuffer
-	{
-public:
-	/**
-	Retrieves an array of uids which represents the class identifier used for buffer extension.
-	
-	@param aInterfaceUids
-		   An array of uids which represents the class identifier.
-		   
-	@return The error code.
-	*/
-	virtual TInt GetInterfaceUids(RArray<TUid>& aInterfaceUids) = 0;
-	
-	/**
-	Gets a custom interface for extra buffer information. 
-
-	@param aInterface
-		   The Uid of the particular interface function required for buffer information.
-		   
-	@param aPtrInterface
-		   The client has to cast the custom interface pointer to the appropriate type.	
-
-	@return The error code.
-	*/
-	virtual TInt CustomInterface(TUid aInterface, TAny*& aPtrInterface) = 0;
-	};
-
 /** 
 	Uid used to identify the event that the request to Reserve() has completed
 */
@@ -579,211 +546,6 @@ void CCamera::CCameraAdvancedSettings::GetDisabledSettingsL(RArray<TUid>& aDisab
 */
 static const TUid  KUidECamEventCameraSettingPreCaptureWarning 	= {KUidECamEventCameraSettingPreCaptureWarningUidValue};
 static const TUid  KUidECamEvent2CameraSettingPreCaptureWarning = {KUidECamEventCameraSettingPreCaptureWarningUidValue};
-
-/** 
-Event indicating continuous zoom progess. This event is used for StartContinuousZoomL feature. This is a part of class 
-CCamera::CCameraAdvancedSettings. This event should be packed in TECAMEvent2 class. 
-
-This TUid is available from the following methods only to the API clients using CCamera::New2L() or CCamera::
-NewDuplicate2L():
-void CCamera::CCameraAdvancedSettings::GetSupportedSettingsL(RArray<TUid>& aSettings) const;
-void CCamera::CCameraAdvancedSettings::GetActiveSettingsL(RArray<TUid>& aActiveSettings) const;
-void CCamera::CCameraAdvancedSettings::GetDisabledSettingsL(RArray<TUid>& aDisabledSettings) const;
-
-Note: TECAMEvent2::iParam represents percentage continuous zoom completion.
-
-@note  If zoom direction is EZoomDirectionWide, percentage completion will target minimum possible value as 100%.
-@note  If zoom direction is EZoomDirectionTele, percentage completion will target maximum possible value as 100%.
-
-@publishedPartner
-@prototype
-*/
-static const TUid  KUidECamEvent2CameraSettingContinuousZoomPercentageCompletion  = {KUidECamEvent2CameraSettingContinuousZoomPercentageCompletionUidValue};
-
-/**
-Notifies that unrequested feature changes have occurred. The method GetIndirectFeatureChangesL() is called to
-retrieve the list of unrequested feature changes. The unrequested feature changes are ECAM component wide.
-
-This TUid is available from the following methods only to the API clients using CCamera::New2L() or CCamera::NewDuplicate2L():
-void CCamera::CCameraAdvancedSettings::GetSupportedSettingsL(RArray<TUid>& aSettings) const;
-void CCamera::CCameraAdvancedSettings::GetActiveSettingsL(RArray<TUid>& aActiveSettings) const;
-void CCamera::CCameraAdvancedSettings::GetDisabledSettingsL(RArray<TUid>& aDisabledSettings) const;
-
-Note: TECAMEvent2::iParam represents the TInt used to obtain a uid which represents the requested feature change.
-
-@publishedPartner
-@prototype
-*/
-static const TUid KUidECamEvent2IndirectFeatureChange  = {KUidECamEvent2IndirectFeatureChangeUidValue};
-
-
-/** 
-Viewfinder fading effect has been set.
-This event should be packed in TECAMEvent2 class.
-
-Note: TECAMEvent2::iParam represents viewfinder handle.
-
-@internalTechnology
-*/
-static const TUid KUidECamEvent2ViewFinderFadingEffect = {KUidECamEvent2ViewFinderFadingEffectUidValue};
-				   
-/** 
-Event indicating auto aperture is being used. 
-This event should be packed in TECAMEvent2 class.
-
-This TUid is available from the following methods only to the API clients using CCamera::New2L() or CCamera::
-NewDuplicate2L():
-void CCamera::CCameraAdvancedSettings::GetSupportedSettingsL(RArray<TUid>& aSettings) const;
-void CCamera::CCameraAdvancedSettings::GetActiveSettingsL(RArray<TUid>& aActiveSettings) const;
-void CCamera::CCameraAdvancedSettings::GetDisabledSettingsL(RArray<TUid>& aDisabledSettings) const;
-
-Note: TECAMEvent2::iParam represents actual value of aperture being used if camera is capable of. Otherwise, KErrNotFound will be retrieved.
-
-@internalTechnology
-*/
-static const TUid  KUidECamEvent2CameraSettingAutoAperture  = {KUidECamEvent2CameraSettingAutoApertureUidValue};
-
-/** 
-Event providing focussing feedback. The focussing feedback will be provided whenever the focussing state changes for the
-selected spot combination. 
-This event should be packed in TECAMEvent2 class.
-Note: TECAMEvent2::iParam represents bitfield of chosen spots which are in focus.
-Note: TECAMEvent2::iParam1 represents bitfield of chosen spots which are not in focus.
-
-@internalTechnology
-*/
-static const TUid  KECamEvent2ImageCaptureControlFocussingInformation = {KECamEvent2ImageCaptureControlFocussingInformationUidValue};
-
-/** 
-Focussing spot combination. This event tells about completion of the setting operation for the spot combination.
-This event should be packed in TECAMEvent2 class.
-
-@note  static_cast<CCamera::CCameraAdvancedSettings::TFocusMode>(TECAMEvent2::iParam) represents the focus mode for 
-	   which the spot combination has to be set for receiving focussing feedback.
-
-@internalTechnology
-*/
-static const TUid KUidECamEvent2ImageCaptureControlSpotCombination = {KUidECamEvent2ImageCaptureControlSpotCombinationUidValue};
-
-/** 
-Viewfinder magnification has been set.
-This event should be packed in TECAMEvent2 class.
-
-Note: TECAMEvent2::iParam represents viewfinder handle.
-
-@internalTechnology
-*/
-static const TUid KUidECamEvent2ViewFinderMagnification = {KUidECamEvent2ViewFinderMagnificationUidValue};
-
-/**
-Notifies the current camera reserver that the camera control will be forcefully overtaken by another requesting client 
-after a specific time interval.
-
-This TUid is available from the following methods only to the API clients using CCamera::New2L() or CCamera::NewDuplicate2L():
-void CCamera::CCameraAdvancedSettings::GetSupportedSettingsL(RArray<TUid>& aSettings) const;
-void CCamera::CCameraAdvancedSettings::GetActiveSettingsL(RArray<TUid>& aActiveSettings) const;
-void CCamera::CCameraAdvancedSettings::GetDisabledSettingsL(RArray<TUid>& aDisabledSettings) const;
-
-@note   TTimeIntervalMicroSeconds32(TECAMEvent2::iParam) represents the maximum time to wait. 
-		TECAMEvent2::iParam needs to be passed as argument in order to construct the TTimeIntervalMicroSeconds32 object.
-
-Note: TECAMEvent2::iParam1 represents the priority of the requestor client to whom the camera control will be forcibly 
-passed after a specific time interval.
-
-@internalTechnology
-*/
-static const TUid KUidECamEvent2CameraRequestForcedTimedTakeOver = {KUidECamEvent2CameraRequestForcedTimedTakeOverUidValue};
-
-/**
-Notifies the current camera reserver that another client is requesting for camera control in a specific time interval.
-
-This TUid is available from the following methods only to the API clients using CCamera::New2L() or CCamera::NewDuplicate2L():
-void CCamera::CCameraAdvancedSettings::GetSupportedSettingsL(RArray<TUid>& aSettings) const;
-void CCamera::CCameraAdvancedSettings::GetActiveSettingsL(RArray<TUid>& aActiveSettings) const;
-void CCamera::CCameraAdvancedSettings::GetDisabledSettingsL(RArray<TUid>& aDisabledSettings) const;
-
-@note   TTimeIntervalMicroSeconds32(TECAMEvent2::iParam) represents the maximum requested time within which the current 
-		reserver may release the camera if it wishes to do so.
-		TECAMEvent2::iParam needs to be passed as argument in order to construct the TTimeIntervalMicroSeconds32 object.
-
-Note: TECAMEvent2::iParam1 represents the priority of the requestor client to whom the camera control will be passed 
-should the current reserver wish to do so.
-
-@internalTechnology
-*/
-static const TUid KUidECamEvent2CameraRequestTimedTakeOver = {KUidECamEvent2CameraRequestTimedTakeOverUidValue};
-
-/**
-Notifies the manual gain setting completion for the particular channel.
-
-This TUid is available from the following methods only to the API clients using CCamera::New2L() or CCamera::NewDuplicate2L():
-void CCamera::CCameraAdvancedSettings::GetSupportedSettingsL(RArray<TUid>& aSettings) const;
-void CCamera::CCameraAdvancedSettings::GetActiveSettingsL(RArray<TUid>& aActiveSettings) const;
-void CCamera::CCameraAdvancedSettings::GetDisabledSettingsL(RArray<TUid>& aDisabledSettings) const;
-
-Note: TECAMEvent2::iParam represents the specific channel for which the manual gain value has been set.
-
-@internalTechnology
-*/
-static const TUid KUidECamEvent2CameraSettingManualGain = {KUidECamEvent2CameraSettingManualGainUidValue};
-
-/**
-Retrieves the optimal focussing feedback while using manual focus. This will be issued as a result of setting operation
-CCamera::CCameraAdvancedSettings::SetFocusDistance(TInt aDistance).
-
-This TUid is available from the following methods only to the API clients using CCamera::New2L() or CCamera::NewDuplicate2L():
-void CCamera::CCameraAdvancedSettings::GetSupportedSettingsL(RArray<TUid>& aSettings) const;
-void CCamera::CCameraAdvancedSettings::GetActiveSettingsL(RArray<TUid>& aActiveSettings) const;
-void CCamera::CCameraAdvancedSettings::GetDisabledSettingsL(RArray<TUid>& aDisabledSettings) const;
-
-@note   If TECAMEvent2::iParam > 1, information is unavailable; if TECAMEvent2::iParam < 0, error case. 
-		Otherwise, static_cast<TBool>(TECAMEvent2::iParam) retrieves whether optimal focussing has been achieved or not.
-
-@internalTechnology
-*/
-static const TUid KUidECamEvent2CameraSettingFocusDistance = {KUidECamEvent2CameraSettingFocusDistanceUidValue};
-
-/**
-Instructs the client to change its priority in order to allow the legacy client to get hold of the camera. Client should
-restore their priority when they receive the notification 'KUidECamEventCameraSettingRestoreClientPriority'.
-
-This TUid is available from the following methods only to the API clients using CCamera::New2L() or CCamera::NewDuplicate2L():
-void CCamera::CCameraAdvancedSettings::GetSupportedSettingsL(RArray<TUid>& aSettings) const;
-void CCamera::CCameraAdvancedSettings::GetActiveSettingsL(RArray<TUid>& aActiveSettings) const;
-void CCamera::CCameraAdvancedSettings::GetDisabledSettingsL(RArray<TUid>& aDisabledSettings) const;
-
-Note: TECAMEvent2::iParam represents the target priority to which the client should set itself using the method SetClientPriorityL()
-
-@internalTechnology
-*/
-static const TUid KUidECamEvent2CameraSettingChangeClientPriority  = {KUidECamEvent2CameraSettingChangeClientPriorityUidValue};
-
-/** 
-Event indicating image enhancement setting has been applied. 
-This event should be packed in TECAMEvent2 class.
-
-Note: TECAMEvent2::iParam represents viewfinder handle.
-
-@internalTechnology
-*/
-static const TUid KUidECamEvent2ViewFinderImageEnhancement = {KUidECamEvent2ViewFinderImageEnhancementUidValue};
-
-/**
-Provides the various available schemes for event filtering. This will inform how the listed uids have to be interpreted 
-by the implementation for filtering the events.
-
-@see  CCamera::CCameraAdvancedSettings::RegisterEventsL(TECAMEventFilterScheme aEventFilter, const RArray<TUid>& aEvents);
-@see  CCamera::CCameraAdvancedSettings::GetRegisterEventsL(TECAMEventFilterScheme aEventFilter, RArray<TUid>& aEvents) const;
-
-@internalTechnology
-*/	
-enum TECAMEventFilterScheme
-	{
-	/** Black listing will mean not to receive specific events */
-	EECAMEventFilterSchemeBlackList, 
-	/** White listing will mean to receive only specific events */
-	EECAMEventFilterSchemeWhiteList
-	};
 	
 /**
 Special type of TECAMEvent class used to retrieve some extra information from particular events received
@@ -942,6 +704,7 @@ public:
 	class CCameraPostImageCaptureControl;
 	class CCameraVideoCaptureControl;
     class CCameraDirectSnapshot;
+    class CCameraContinuousZoom;
 
 public:
 	/** Possible still image and video frame formats
@@ -977,19 +740,18 @@ public:
 		EFormatYUV420Interleaved	= 0x0400,
 		/** 4:2:0 format, 8 bits per sample, Y00Y01Y02Y03...U0...V0... */
 		EFormatYUV420Planar			= 0x0800,
-		/** 4:2:2 format, 8 bits per sample, UY0VY1. */
+		/** 4:2:2 format, 8 bits per sample, UY0VY1.  Maps to Graphics' EUidPixelFormatYUV_422Interleaved in pixelformats.h. */
 		EFormatYUV422				= 0x1000,
-		/** 4:2:2 format, 8 bits per sample, Y1VY0U. */
+		/** 4:2:2 format, 8 bits per sample, Y1VY0U.  Maps to Graphics' EUidPixelFormatYUV_422InterleavedReversed in pixelformats.h. */
 		EFormatYUV422Reversed		= 0x2000,
 		/** 4:4:4 format, 8 bits per sample, Y00U00V00 Y01U01V01... */
 		EFormatYUV444				= 0x4000,
 		/** 4:2:0 format, 8 bits per sample, Y00Y01Y02Y03...U0V0... */
 		EFormatYUV420SemiPlanar		= 0x8000,
 		/** CFbsBitmap object with display mode EColor16MU. */
-		EFormatFbsBitmapColor16MU 	= 0x00010000, 	
+		EFormatFbsBitmapColor16MU 	= 0x00010000,
 		/** Motion JPEG for video 
-		@note This value is available only to the API clients using CCamera::New2L() or CCamera::NewDuplicate2L()
-		
+		@note This value is available only to the API clients using CCamera::New2L() or CCamera::NewDuplicate2L().
 		@internalTechnology
 		*/
 		EFormatMJPEG				= 0x00020000,
@@ -997,11 +759,16 @@ public:
 		/** 
 		Compressed H264 video format. 
 		@note This value is available only to the API clients using CCamera::New2L() or CCamera::NewDuplicate2L().
-		
-		@publishedPartner
 		@prototype
 		*/
-		EFormatEncodedH264          = 0x00040000
+		EFormatEncodedH264          = 0x00040000,
+
+		/**
+		4:2:2 format, 8 bits per sample, Y0UY1V. Maps to Graphics' EUidPixelFormatYUV_422Reversed in pixelformats.h.
+		@note This value is available only to the API clients using CCamera::New2L() or CCamera::NewDuplicate2L().
+		@prototype
+		*/
+		EFormatYUV222ReversedV2		= 0x00080000
 		};
 		
 	/** Specifies whether contrast is set automatically. */
@@ -1043,7 +810,8 @@ public:
 	/** Specifies the type of exposure. - EExposureAuto is the default value. */
 	enum TExposure
 		{
-		/** Set exposure automatically. Default, always supported. */
+		/** Set exposure automatically. Default, always supported.
+		This may imply auto aperture so clients may receive a KUidEcamEvent2CameraSettingAutoAperture event notification some time later. */
 		EExposureAuto		= 0x0000,
 		/** Night-time setting for long exposures. */
 		EExposureNight		= 0x0001,
@@ -1063,7 +831,8 @@ public:
 		EExposureProgram 	= 0x0080,
 		/** Aperture setting is given priority. */
 		EExposureAperturePriority 	= 0x0100,
-		/** Shutter speed setting is given priority. */	
+		/** Shutter speed setting is given priority.
+		This may imply auto aperture so clients may receive a KUidEcamEvent2CameraSettingAutoAperture event notification some time later. */
 		EExposureShutterPriority	= 0x0200,
 		/** User selectable exposure value setting. */	
 		EExposureManual				= 0x0400,
@@ -1096,42 +865,42 @@ public:
 		EWBManual 			= 0x0080,
 		/** Shade */
  		EWBShade			= 0x0100,
- 		/** auto skin 
- 		
- 		If New2L()/NewDuplicate2L() are not used to create camera object, this 
-		enum value would be considered as unrecognized and filtered out in 'supported' 
+ 		/** auto skin
+
+ 		If New2L()/NewDuplicate2L() are not used to create camera object, this
+		enum value would be considered as unrecognized and filtered out in 'supported'
 		or 'getter' methods.
  		*/
  		EWBAutoSkin			= 0x0200,
- 		/** horizon 
- 		
- 		If New2L()/NewDuplicate2L() are not used to create camera object, this 
-		enum value would be considered as unrecognized and filtered out in 'supported' 
+ 		/** horizon
+
+ 		If New2L()/NewDuplicate2L() are not used to create camera object, this
+		enum value would be considered as unrecognized and filtered out in 'supported'
 		or 'getter' methods.
 		*/
  		EWBHorizon 			= 0x0400,
- 		/** Daylight Under Water 
- 		
- 		If New2L()/NewDuplicate2L() are not used to create camera object, this 
-		enum value would be considered as unrecognized and filtered out in 'supported' 
+ 		/** Daylight Under Water
+
+ 		If New2L()/NewDuplicate2L() are not used to create camera object, this
+		enum value would be considered as unrecognized and filtered out in 'supported'
 		or 'getter' methods.
 		*/
  		EWBDaylightUnderWater  = 0x0800
 		};
-				
+
 public:
-	/** 
+	/**
 	Determines the number of cameras on the device.
 
     @return Count of cameras present on the device.
 	*/
 	IMPORT_C static TInt CamerasAvailable();
 
-    /** 
+    /**
     @deprecated Use static CCamera* New2L(MCameraObserver2& aObserver,TInt aCameraIndex,TInt aPriority);
-    
+
 	Creates an object representing a camera.
-	
+
 	@param  aObserver
 	        Reference to class derived from MCameraObserver2 designed to receive
 	        notification of asynchronous event completion.
@@ -1149,43 +918,7 @@ public:
 	@leave  KErrNotSupported if aCameraIndex is out of range.
 	@leave  KErrPermissionDenied if the application does not have
 	        the UserEnvironment capability.
-	        
-	@capability	UserEnvironment
-			An application that creates a CCamera object must have
-			the UserEnvironment capability.
 
-    @capability MultimediaDD
-	        A process requesting or using this method that has MultimediaDD capability will
-			always have precedence over a process that does not have MultimediaDD.	
-
-	@note   Applications using this method to create camera object may not receive enums/uids added in future(after being baselined). 
-			To receive them, they should rather use New2L() or NewDuplicate2L(), in which case, they should prepare 
-			themselves to receive unrecognised values.
-	*/
-	IMPORT_C static CCamera* NewL(MCameraObserver2& aObserver,TInt aCameraIndex,TInt aPriority);
-	
-	/** 
-	Creates an object representing a camera. 
-	Clients prepare themselves to receive unrecognised enum, uids etc. 
-	
-	@param  aObserver
-	        Reference to class derived from MCameraObserver2 designed to receive
-	        notification of asynchronous event completion.
-	@param	aCameraIndex
-	        Index from 0 to CamerasAvailable()-1 inclusive specifying the
-	        camera device to use.
-	@param	aPriority
-	        Value from -100 to 100 indicating relative priority of client to
-	        use camera.
-
-	@return Pointer to a fully constructed CCamera object. Ownership is passed
-	        to the caller.
-
-	@leave  KErrNoMemory if out of memory.
-	@leave  KErrNotSupported if aCameraIndex is out of range.
-	@leave  KErrPermissionDenied if the application does not have
-	        the UserEnvironment capability.
-	        
 	@capability	UserEnvironment
 			An application that creates a CCamera object must have
 			the UserEnvironment capability.
@@ -1193,15 +926,51 @@ public:
     @capability MultimediaDD
 	        A process requesting or using this method that has MultimediaDD capability will
 			always have precedence over a process that does not have MultimediaDD.
-	
-	@note   Clients using this creation method should prepare themselves to receive any unrecognised enum values, uids 
+
+	@note   Applications using this method to create camera object may not receive enums/uids added in future(after being baselined).
+			To receive them, they should rather use New2L() or NewDuplicate2L(), in which case, they should prepare
+			themselves to receive unrecognised values.
+	*/
+	IMPORT_C static CCamera* NewL(MCameraObserver2& aObserver,TInt aCameraIndex,TInt aPriority);
+
+	/**
+	Creates an object representing a camera.
+	Clients prepare themselves to receive unrecognised enum, uids etc.
+
+	@param  aObserver
+	        Reference to class derived from MCameraObserver2 designed to receive
+	        notification of asynchronous event completion.
+	@param	aCameraIndex
+	        Index from 0 to CamerasAvailable()-1 inclusive specifying the
+	        camera device to use.
+	@param	aPriority
+	        Value from -100 to 100 indicating relative priority of client to
+	        use camera.
+
+	@return Pointer to a fully constructed CCamera object. Ownership is passed
+	        to the caller.
+
+	@leave  KErrNoMemory if out of memory.
+	@leave  KErrNotSupported if aCameraIndex is out of range.
+	@leave  KErrPermissionDenied if the application does not have
+	        the UserEnvironment capability.
+
+	@capability	UserEnvironment
+			An application that creates a CCamera object must have
+			the UserEnvironment capability.
+
+    @capability MultimediaDD
+	        A process requesting or using this method that has MultimediaDD capability will
+			always have precedence over a process that does not have MultimediaDD.
+
+	@note   Clients using this creation method should prepare themselves to receive any unrecognised enum values, uids
 			from 'supported' or 'getter' methods
 	*/
 	IMPORT_C static CCamera* New2L(MCameraObserver2& aObserver,TInt aCameraIndex,TInt aPriority);
-	
-	/** 
+
+	/**
 	Creates an object representing a camera.
-		
+
 	@param  aObserver
 	        Reference to class derived from MCameraObserver designed to receive
 	        notification of asynchronous event completion.
@@ -1213,23 +982,23 @@ public:
 	@leave  KErrNotSupported if aCameraIndex is out of range.
 	@leave  KErrPermissionDenied if the application does not have
 	        the UserEnvironment capability.
-	        
+
 	@return Pointer to a fully constructed CCamera object. Ownership is passed
 	        to the caller.
-	
+
 	@capability	UserEnvironment
 				An application that creates a CCamera object must have
 				the UserEnvironment capability.
-				
-	@note   Applications using this method to create camera object may not receive enums/uids added in future(after being baselined). 
-			To receive them, they should rather use New2L() or NewDuplicate2L(), in which case, they should prepare 
+
+	@note   Applications using this method to create camera object may not receive enums/uids added in future(after being baselined).
+			To receive them, they should rather use New2L() or NewDuplicate2L(), in which case, they should prepare
 			themselves to receive unrecognised values.
 	*/
 	IMPORT_C static CCamera* NewL(MCameraObserver& aObserver,TInt aCameraIndex);
-	
-	/** 
+
+	/**
 	@deprecated Use static CCamera* NewDuplicate2L(MCameraObserver2& aObserver,TInt aCameraHandle);
-	
+
 	Duplicates the original camera object for use by, for example, multimedia systems.
 
 	May leave with KErrNoMemory or KErrNotFound if aCameraHandle is not valid.
@@ -1720,6 +1489,10 @@ public:
 	@leave  KErrNoMemory
 	@leave  KErrNotReady if PowerOn() hasn't been called successfully.
 	
+	@note  Depending on the ECAM implementation and underlying hardware, preparing both image capture and video capture
+		   at the same time may not be possible. In this case, the recommendation is to unprepare video capture before preparing
+		   image capture if PrepareVideoCaptureL() has already been called.
+	
 	@see 	CCamera::CCameraPreImageCaptureControl::PrepareImageCapture(TPrepareImageParameters aPrepareImageParameters)
 	*/
 	virtual void PrepareImageCaptureL(TFormat aImageFormat,TInt aSizeIndex)=0;
@@ -1750,6 +1523,10 @@ public:
 	@leave   KErrInUse if Reserve() hasn't been called successfully
 	@leave   KErrNotReady if PowerOn()
 	         hasn't been called successfully.
+	
+	@note  Depending on the ECAM implementation and underlying hardware, preparing both image capture and video capture
+		   at the same time may not be possible. In this case, the recommendation is to unprepare video capture before preparing
+		   image capture if PrepareVideoCaptureL() has already been called.
 	
 	@see 	CCamera::CCameraPreImageCaptureControl::PrepareImageCapture(TPrepareImageParameters aPrepareImageParameters)
 	*/
@@ -1815,6 +1592,10 @@ public:
 	@leave  May leave with KErrNotSupported, KErrNoMemory, or KErrNotReady if PowerOn() 
 			hasn't been called successfully.
 	
+	@note  Depending on the ECAM implementation and underlying hardware, preparing both image capture and video capture
+		   at the same time may not be possible. In this case, the recommendation is to unprepare image capture before preparing
+		   video capture if PrepareImageCaptureL() has already been called.
+	
 	@see 	CCamera::CCameraVideoCaptureControl::PrepareVideoCapture(const TPrepareVideoParameters& aPrepareVideoParameters)
 	*/
 	virtual void PrepareVideoCaptureL(TFormat aFormat,TInt aSizeIndex,TInt aRateIndex,TInt aBuffersToUse,TInt aFramesPerBuffer)=0;
@@ -1848,6 +1629,10 @@ public:
 	@leave  KErrNoMemory, 
 	@leave  KErrInUse if Reserve() hasn't been called successfully
 	@leave  KErrNotReady if PowerOn() hasn't been called successfully.
+	
+	@note  Depending on the ECAM implementation and underlying hardware, preparing both image capture and video capture
+		   at the same time may not be possible. In this case, the recommendation is to unprepare image capture before preparing
+		   video capture if PrepareImageCaptureL() has already been called.
 
 	@see 	CCamera::CCameraVideoCaptureControl::PrepareVideoCapture(const TPrepareVideoParameters& aPrepareVideoParameters)
 	*/
@@ -1974,7 +1759,6 @@ public:
 	
 	/**
 	@internalComponent
-	
 	Returns the camera API version no.
 	*/
 	IMPORT_C TInt CameraVersion();
@@ -2051,68 +1835,12 @@ public:
 	TTimeIntervalMicroSeconds iElapsedTime;
 	};
 
-/** Specifies whether the camera is reserved or not.
-	The enumeration list may be extended in future.
-	
-@publishedPartner
-@prototype
-*/
-enum TECamReserveStatus
-	{
-	/** Camera Status unknown */
-	ECameraStatusUnknown,
-	/** Camera is reserved */
-	ECameraReserved,
-	/** Camera is unreserved */
-	ECameraUnReserved
-	};
+#ifndef SYMBIAN_ENABLE_SPLIT_HEADERS
+#include <ecamconst.h>
+#endif
 
-/** Mixin base class for camera clients to handle the notification of Reserve status.
+class MReserveObserver;
 
-Client must implement MReserveObserver in order to handle the notifications and take appropriate steps accordingly. 
-
-@note  By the time client gets unreserved status via callback, the camera may be on its way getting reserved by another client who 
-	   might be continuously polling for it.
-	   So, there is no guarantee that the client will be able to reserve it. But it is guaranteed that the client will
-	   receive the notification about change in reserve status. 
-
-@publishedPartner
-@prototype
-*/
-class MReserveObserver
-	{
-public:
-	/**
-	This notification is send to provide the reserve status for the camera. 
-	
-	@param aCameraIndex
-		   The camera index for which the Reserve status has to be provided.
-		   
-	@param aReserveStatus
-		   The reserve status for the camera.
-		   
-	@param aErrorCode
-		   The error value. 
-		   
-	@note  If error is not KErrNone, then the client is expected to destroy the CCameraStatusWatch retrieved through 
-		   TReservedInfo::SubscribeReserveInfoL and re-subscribe if desired.
-	*/
-	virtual void ReserveStatus(TInt iCameraIndex, TECamReserveStatus aReserveStatus, TInt aErrorCode) =0;
-	};
-
-class CCameraStatusWatch;
-
-/**
-@publishedPartner
-@prototype
-
-Client uses it to asynchronously receive the reserve status of a camera index through MReserveObserver
-*/
-class TReservedInfo
-	{
-public:
-	IMPORT_C static void SubscribeReserveInfoL(MReserveObserver& aReserveObserver, TInt aCameraIndex, CCameraStatusWatch*& aCameraStatusWatch); 
-	};
 
 /**
 An active object class implemented by Symbian and used to subscribe for the updates in the Properties, retrieve the 
@@ -2123,13 +1851,10 @@ Properties and forward the notification to the client.
 */
 class CCameraStatusWatch : public CActive
 	{
-	friend void TReservedInfo::SubscribeReserveInfoL(MReserveObserver& aReserveObserver, TInt aCameraIndex, CCameraStatusWatch*& aCameraStatusWatch);
-
 public:
 	IMPORT_C ~CCameraStatusWatch();
-
-private:
 	static CCameraStatusWatch* NewL(MReserveObserver& aReserveObserver, TInt aCameraIndex, TInt aSecureId);
+private:
 	
 	CCameraStatusWatch(MReserveObserver& aReserveObserver, TInt aCameraIndex, TInt aSecureId);
 	void ConstructL();
@@ -2142,5 +1867,6 @@ private:
 	TInt iCameraIndex;
 	TInt iSecureId;
 	};
+
 	
 #endif // ECAM_H

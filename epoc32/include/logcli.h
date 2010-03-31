@@ -1,9 +1,9 @@
 // Copyright (c) 2003-2009 Nokia Corporation and/or its subsidiary(-ies).
 // All rights reserved.
 // This component and the accompanying materials are made available
-// under the terms of the License "Symbian Foundation License v1.0" to Symbian Foundation members and "Symbian Foundation End User License Agreement v1.0" to non-members
+// under the terms of "Eclipse Public License v1.0"
 // which accompanies this distribution, and is available
-// at the URL "http://www.symbianfoundation.org/legal/licencesv10.html".
+// at the URL "http://www.eclipse.org/legal/epl-v10.html".
 //
 // Initial Contributors:
 // Nokia Corporation - initial contribution.
@@ -32,7 +32,6 @@ class MLogClientChangeObserver;
 // CLogEventType
 //**********************************
 
-class CLogEventType : public CBase
 /** Encapsulates the details of an event type.
 
 An event type is used to associate an event with a user-readable description 
@@ -45,6 +44,7 @@ Event types are identified by UID.
 @publishedAll 
 @released
 */
+class CLogEventType : public CBase
 	{
 public:
 	IMPORT_C static CLogEventType* NewL();
@@ -80,7 +80,6 @@ private:
 // TLogConfig
 //**********************************
 
-class TLogConfig
 /** Encapsulates Log Engine configuration data.
 
 @see CLogClient::GetConfig()
@@ -88,6 +87,7 @@ class TLogConfig
 @publishedAll
 @released
 */
+class TLogConfig
 	{
 public:
 	IMPORT_C TLogConfig();
@@ -121,7 +121,6 @@ public:
 // CLogFilter
 //**********************************
 
-class CLogFilter : public CBase
 /** Specifies the conditions that events must satisfy to appear in a view.
 
 In general, a filter is used to construct the WHERE clause of an SQL 
@@ -139,6 +138,7 @@ specified as UTC rather than local time.
 @publishedAll
 @released
 */
+class CLogFilter : public CBase
 	{
 public:
 	IMPORT_C static CLogFilter* NewL();
@@ -183,6 +183,9 @@ public:
 	void InternalizeL(RReadStream& aStream);
 	void ExternalizeL(RWriteStream& aStream) const;
 	//
+	IMPORT_C void SetSimId(TSimId aSimId);
+	IMPORT_C TSimId SimId() const;
+	//
 private:
 	CLogFilter();
 	void ConstructL();
@@ -200,9 +203,11 @@ private:
 	TUint32 iNullFields;
 	TTime iStartTime;
 	TTime iEndTime;
+#ifdef SYMBIAN_ENABLE_EVENTLOGGER_DUALSIM
+	TSimId iSimId;
+#endif
 	};
 
-class CLogFilterList : public CArrayPtrFlat<const CLogFilter>
 /** A set of event view filters.
 
 Specifically, this is an array of pointers to const CLogFilter objects and 
@@ -214,6 +219,7 @@ is derived from CArrayPtrFlat<const CLogFilter>.
 @publishedAll
 @released
 */
+class CLogFilterList : public CArrayPtrFlat<const CLogFilter>
 	{
 public:
 	IMPORT_C CLogFilterList();
@@ -243,7 +249,6 @@ class CLogChangeConfigClientOp;
 class CLogClearLogClientOp;
 class CLogClearRecentClientOp;
 
-class CLogClient : public CLogBase
 /** Log Engine implementation.
 
 It creates a shared session on the log database and allows log viewers to 
@@ -258,6 +263,7 @@ than local time.
 @publishedAll
 @released
 */
+class CLogClient : public CLogBase
 	{
 public:
 	IMPORT_C static CLogClient* NewL(RFs& aFs, TInt aPriority = CActive::EPriorityStandard);
@@ -277,6 +283,8 @@ public:
 	IMPORT_C void ChangeConfig(const TLogConfig& aConfig, TRequestStatus& aStatus);
 	IMPORT_C void ClearLog(const TTime& aDate, TRequestStatus& aStatus);
 	IMPORT_C void ClearLog(TInt aRecentList, TRequestStatus& aStatus);
+	IMPORT_C void ClearLog(const TTime& aDate, TSimId aSimid, TRequestStatus& aStatus);
+	IMPORT_C void ClearLog(TInt aRecentList, TSimId aSimid, TRequestStatus& aStatus);
 	//
 	IMPORT_C void NotifyChange(TTimeIntervalMicroSeconds32 aDelay, TRequestStatus& aStatus);
 	IMPORT_C void NotifyChangeCancel();

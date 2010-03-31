@@ -111,7 +111,7 @@
 #endif
 
 /* Machine type dependent parameters. */
-#include <machine/param.h>
+#include <stdapis/machine/param.h>
 #ifndef _KERNEL
 #include <sys/limits.h>
 #endif

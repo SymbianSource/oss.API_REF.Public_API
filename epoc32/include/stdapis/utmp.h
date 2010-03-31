@@ -1,7 +1,5 @@
 // utmp.h
-//
-// © Portions copyright (c) 2006 Symbian Software Ltd. All rights reserved.
-//
+
 /*
  * Copyright (c) 1988, 1993
  *	The Regents of the University of California.  All rights reserved.
@@ -35,6 +33,7 @@
  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  *
+ * Portions Copyright (c) 2006 Nokia Corporation and/or its subsidiary(-ies). All rights reserved.
  *	@(#)utmp.h	8.2 (Berkeley) 1/21/94
  * $FreeBSD: src/include/utmp.h,v 1.10 2001/10/27 20:40:54 peter Exp $
  */

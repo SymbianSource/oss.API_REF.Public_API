@@ -1,72 +1,205 @@
-/* boost random.hpp header file
- *
- * Copyright Jens Maurer 2000-2001
- * Distributed under the Boost Software License, Version 1.0. (See
- * accompanying file LICENSE_1_0.txt or copy at
- * http://www.boost.org/LICENSE_1_0.txt)
- *
- * See http://www.boost.org/libs/random for documentation.
- *
- * $Id: random.hpp,v 1.18 2004/07/27 03:43:27 dgregor Exp $
- *
- * Revision history
- *  2000-02-18  portability fixes (thanks to Beman Dawes)
- *  2000-02-21  shuffle_output, inversive_congruential_schrage,
- *              generator_iterator, uniform_smallint
- *  2000-02-23  generic modulus arithmetic helper, removed *_schrage classes,
- *              implemented Streamable and EqualityComparable concepts for 
- *              generators, added Bernoulli distribution and Box-Muller
- *              transform
- *  2000-03-01  cauchy, lognormal, triangle distributions; fixed 
- *              uniform_smallint; renamed gaussian to normal distribution
- *  2000-03-05  implemented iterator syntax for distribution functions
- *  2000-04-21  removed some optimizations for better BCC/MSVC compatibility
- *  2000-05-10  adapted to BCC and MSVC
- *  2000-06-13  incorporated review results
- *  2000-07-06  moved basic templates from namespace detail to random
- *  2000-09-23  warning removals and int64 fixes (Ed Brey)
- *  2000-09-24  added lagged_fibonacci generator (Matthias Troyer)
- *  2001-02-18  moved to individual header files
- */
+//=======================================================================
+// Copyright 1997, 1998, 1999, 2000 University of Notre Dame.
+// Copyright (C) Vladimir Prus 2003
+// Authors: Andrew Lumsdaine, Lie-Quan Lee, Jeremy G. Siek
+//
+// Distributed under the Boost Software License, Version 1.0. (See
+// accompanying file LICENSE_1_0.txt or copy at
+// http://www.boost.org/LICENSE_1_0.txt)
+//=======================================================================
+#ifndef BOOST_GRAPH_RANDOM_HPP
+#define BOOST_GRAPH_RANDOM_HPP
 
-#ifndef BOOST_RANDOM_HPP
-#define BOOST_RANDOM_HPP
+#include <boost/graph/graph_traits.hpp>
+#include <boost/random/uniform_int.hpp>
+#include <boost/random/variate_generator.hpp>
 
-// generators
-#include <boost/random/linear_congruential.hpp>
-#include <boost/random/additive_combine.hpp>
-#include <boost/random/inversive_congruential.hpp>
-#include <boost/random/shuffle_output.hpp>
-#include <boost/random/mersenne_twister.hpp>
-#include <boost/random/lagged_fibonacci.hpp>
-#include <boost/random/ranlux.hpp>
-#include <boost/random/linear_feedback_shift.hpp>
-#include <boost/random/xor_combine.hpp>
+#include <boost/pending/property.hpp>
+#include <boost/graph/properties.hpp>
+
+#include <boost/graph/adjacency_list.hpp>
+#include <boost/graph/copy.hpp>
+#include <boost/mpl/if.hpp>
+#include <boost/type_traits/is_convertible.hpp>
+
+#include <iostream>
 
 namespace boost {
-  typedef random::xor_combine<random::xor_combine<random::linear_feedback_shift<uint32_t, 32, 31, 13, 12, 0>, 0,
-    random::linear_feedback_shift<uint32_t, 32, 29, 2, 4, 0>, 0, 0>, 0,
-                      random::linear_feedback_shift<uint32_t, 32, 28, 3, 17, 0>, 0, 0> taus88;
-} // namespace  boost
 
-// misc
-#include <boost/random/random_number_generator.hpp>
+  // grab a random vertex from the graph's vertex set
+  template <class Graph, class RandomNumGen>
+  typename graph_traits<Graph>::vertex_descriptor
+  random_vertex(Graph& g, RandomNumGen& gen)
+  {
+    if (num_vertices(g) > 1) {
+    #if BOOST_WORKAROUND( __BORLANDC__, BOOST_TESTED_AT(0x581))
+      std::size_t n = std::random( num_vertices(g) );
+    #else
+      uniform_int<> distrib(0, num_vertices(g)-1);
+      variate_generator<RandomNumGen&, uniform_int<> > rand_gen(gen, distrib);
+      std::size_t n = rand_gen();
+    #endif
+      typename graph_traits<Graph>::vertex_iterator
+        i = vertices(g).first;
+      while (n-- > 0) ++i; // std::advance not VC++ portable
+      return *i;
+    } else
+      return *vertices(g).first;
+  }
 
-// distributions
-#include <boost/random/uniform_smallint.hpp>
-#include <boost/random/uniform_int.hpp>
-#include <boost/random/uniform_01.hpp>
-#include <boost/random/uniform_real.hpp>
-#include <boost/random/triangle_distribution.hpp>
-#include <boost/random/bernoulli_distribution.hpp>
-#include <boost/random/cauchy_distribution.hpp>
-#include <boost/random/exponential_distribution.hpp>
-#include <boost/random/geometric_distribution.hpp>
-#include <boost/random/normal_distribution.hpp>
-#include <boost/random/lognormal_distribution.hpp>
-#include <boost/random/poisson_distribution.hpp>
-#include <boost/random/gamma_distribution.hpp>
-#include <boost/random/binomial_distribution.hpp>
-#include <boost/random/uniform_on_sphere.hpp>
+  template <class Graph, class RandomNumGen>
+  typename graph_traits<Graph>::edge_descriptor
+  random_edge(Graph& g, RandomNumGen& gen) {
+    if (num_edges(g) > 1) {
+    #if BOOST_WORKAROUND( __BORLANDC__, BOOST_TESTED_AT(0x581))
+      typename graph_traits<Graph>::edges_size_type
+        n = std::random( num_edges(g) );
+    #else
+      uniform_int<> distrib(0, num_edges(g)-1);
+      variate_generator<RandomNumGen&, uniform_int<> > rand_gen(gen, distrib);
+      typename graph_traits<Graph>::edges_size_type
+        n = rand_gen();
+    #endif
+      typename graph_traits<Graph>::edge_iterator
+        i = edges(g).first;
+      while (n-- > 0) ++i; // std::advance not VC++ portable
+      return *i;
+    } else
+      return *edges(g).first;
+  }
 
-#endif // BOOST_RANDOM_HPP
+  namespace detail {
+    class dummy_property_copier {
+    public:
+      template<class V1, class V2>
+      void operator()(const V1&, const V2&) const {}
+    };
+  }
+
+  template <typename MutableGraph, class RandNumGen>
+  void generate_random_graph1
+    (MutableGraph& g,
+     typename graph_traits<MutableGraph>::vertices_size_type V,
+     typename graph_traits<MutableGraph>::vertices_size_type E,
+     RandNumGen& gen,
+     bool allow_parallel = true,
+     bool self_edges = false)
+  {
+    typedef graph_traits<MutableGraph> Traits;
+    typedef typename Traits::vertices_size_type v_size_t;
+    typedef typename Traits::edges_size_type e_size_t;
+    typedef typename Traits::vertex_descriptor vertex_descriptor;
+
+    // When parallel edges are not allowed, we create a new graph which
+    // does not allow parallel edges, construct it and copy back.
+    // This is not efficient if 'g' already disallow parallel edges,
+    // but that's task for later.
+    if (!allow_parallel) {
+
+      typedef typename boost::graph_traits<MutableGraph>::directed_category dir;
+      typedef typename mpl::if_<is_convertible<dir, directed_tag>,
+          directedS, undirectedS>::type select;
+      adjacency_list<setS, vecS, select> g2;
+      generate_random_graph1(g2, V, E, gen, true, self_edges);
+
+      copy_graph(g2, g, vertex_copy(detail::dummy_property_copier()).
+                        edge_copy(detail::dummy_property_copier()));
+
+    } else {
+
+      for (v_size_t i = 0; i < V; ++i)
+        add_vertex(g);
+
+      for (e_size_t j = 0; j < E; ++j) {
+        vertex_descriptor a = random_vertex(g, gen), b;
+        do {
+          b = random_vertex(g, gen);
+        } while (self_edges == false && a == b);
+        add_edge(a, b, g);
+      }
+    }
+  }
+
+  template <typename MutableGraph, class RandNumGen>
+  void generate_random_graph
+    (MutableGraph& g,
+     typename graph_traits<MutableGraph>::vertices_size_type V,
+     typename graph_traits<MutableGraph>::vertices_size_type E,
+     RandNumGen& gen,
+     bool allow_parallel = true,
+     bool self_edges = false)
+  {
+      generate_random_graph1(g, V, E, gen, allow_parallel, self_edges);
+  }
+
+  template <typename MutableGraph, typename RandNumGen,
+            typename VertexOutputIterator, typename EdgeOutputIterator>
+  void generate_random_graph
+    (MutableGraph& g,
+     typename graph_traits<MutableGraph>::vertices_size_type V,
+     typename graph_traits<MutableGraph>::vertices_size_type E,
+     RandNumGen& gen,
+     VertexOutputIterator vertex_out,
+     EdgeOutputIterator edge_out,
+     bool self_edges = false)
+  {
+    typedef graph_traits<MutableGraph> Traits;
+    typedef typename Traits::vertices_size_type v_size_t;
+    typedef typename Traits::edges_size_type e_size_t;
+    typedef typename Traits::vertex_descriptor vertex_t;
+    typedef typename Traits::edge_descriptor edge_t;
+
+    for (v_size_t i = 0; i < V; ++i)
+      *vertex_out++ = add_vertex(g);
+
+    for (e_size_t j = 0; j < E; ++j) {
+      vertex_t a = random_vertex(g, gen), b;
+      do {
+        b = random_vertex(g, gen);
+      } while (self_edges == false && a == b);
+      edge_t e; bool inserted;
+      tie(e, inserted) = add_edge(a, b, g);
+      if (inserted)
+        *edge_out++ = std::make_pair(source(e, g), target(e, g));
+    }
+  }
+
+  namespace detail {
+
+    template<class Property, class G, class RandomGenerator>
+    void randomize_property(G& g, RandomGenerator& rg,
+                            Property, vertex_property_tag)
+    {
+      typename property_map<G, Property>::type pm = get(Property(), g);
+      typename graph_traits<G>::vertex_iterator vi, ve;
+      for (tie(vi, ve) = vertices(g); vi != ve; ++vi) {
+        pm[*vi] = rg();
+      }
+    }
+
+    template<class Property, class G, class RandomGenerator>
+    void randomize_property(G& g, RandomGenerator& rg,
+                            Property, edge_property_tag)
+    {
+      typename property_map<G, Property>::type pm = get(Property(), g);
+      typename graph_traits<G>::edge_iterator ei, ee;
+      for (tie(ei, ee) = edges(g); ei != ee; ++ei) {
+        pm[*ei] = rg();
+      }
+    }
+  }
+
+  template<class Property, class G, class RandomGenerator>
+  void randomize_property(G& g, RandomGenerator& rg)
+  {
+    detail::randomize_property
+        (g, rg, Property(), typename property_kind<Property>::type());
+  }
+
+
+
+  
+}
+
+
+#endif

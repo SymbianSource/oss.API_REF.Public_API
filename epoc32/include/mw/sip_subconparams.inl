@@ -1,9 +1,9 @@
 // Copyright (c) 2005-2009 Nokia Corporation and/or its subsidiary(-ies).
 // All rights reserved.
 // This component and the accompanying materials are made available
-// under the terms of the License "Symbian Foundation License v1.0" to Symbian Foundation members and "Symbian Foundation End User License Agreement v1.0" to non-members
+// under the terms of "Eclipse Public License v1.0"
 // which accompanies this distribution, and is available
-// at the URL "http://www.symbianfoundation.org/legal/licencesv10.html".
+// at the URL "http://www.eclipse.org/legal/epl-v10.html".
 //
 // Initial Contributors:
 // Nokia Corporation - initial contribution.
@@ -17,12 +17,10 @@
 // 
 //
 
-
-
-
 /**
  @file
  @publishedAll
+ @released
 */
 
 inline CSubConSIPInviteParamSet* CSubConSIPInviteParamSet::NewL(CSubConParameterFamily& aFamily, CSubConParameterFamily::TParameterSetType aType)
@@ -34,9 +32,18 @@ inline CSubConSIPInviteParamSet* CSubConSIPInviteParamSet::NewL(CSubConParameter
 	return obj;
 	}
 
+inline CSubConSIPInviteParamSet* CSubConSIPInviteParamSet::NewL(RParameterFamily& aFamily, RParameterFamily::TParameterSetType aType)
+	{
+	CSubConSIPInviteParamSet* obj = NewL();
+	CleanupStack::PushL(obj);
+	aFamily.AddParameterSetL(obj, aType);
+	CleanupStack::Pop(obj);
+	return obj;
+	}
+
 inline CSubConSIPInviteParamSet* CSubConSIPInviteParamSet::NewL()
 	{
-	STypeId typeId(KSubConSIPParametersUid, KSubConSIPInviteParamsType);
+	STypeId typeId = STypeId::CreateSTypeId(KSubConSIPParametersUid, KSubConSIPInviteParamsType);
 	return static_cast<CSubConSIPInviteParamSet*>(CSubConParameterSet::NewL(typeId));
 	}
 
@@ -145,7 +152,7 @@ inline CSubConSIPSubscribeParamSet* CSubConSIPSubscribeParamSet::NewL(CSubConPar
 
 inline CSubConSIPSubscribeParamSet* CSubConSIPSubscribeParamSet::NewL()
 	{
-	STypeId typeId(KSubConSIPParametersUid, KSubConSIPSubscribeParamsType);
+	STypeId typeId = STypeId::CreateSTypeId(KSubConSIPParametersUid, KSubConSIPSubscribeParamsType);
 	return static_cast<CSubConSIPSubscribeParamSet*>(CSubConParameterSet::NewL(typeId));
 	}
 
@@ -275,7 +282,7 @@ inline CSubConSIPAuthenticateParamSet* CSubConSIPAuthenticateParamSet::NewL(CSub
 
 inline CSubConSIPAuthenticateParamSet* CSubConSIPAuthenticateParamSet::NewL()
 	{
-	STypeId typeId(KSubConSIPParametersUid, KSubConSIPAuthenticateParamsType);
+	STypeId typeId = STypeId::CreateSTypeId(KSubConSIPParametersUid, KSubConSIPAuthenticateParamsType);
 	return static_cast<CSubConSIPAuthenticateParamSet*>(CSubConParameterSet::NewL(typeId));
 	}
 

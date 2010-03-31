@@ -1,9 +1,9 @@
 // Copyright (c) 1995-2009 Nokia Corporation and/or its subsidiary(-ies).
 // All rights reserved.
 // This component and the accompanying materials are made available
-// under the terms of the License "Symbian Foundation License v1.0" to Symbian Foundation members and "Symbian Foundation End User License Agreement v1.0" to non-members
+// under the terms of "Eclipse Public License v1.0"
 // which accompanies this distribution, and is available
-// at the URL "http://www.symbianfoundation.org/legal/licencesv10.html".
+// at the URL "http://www.eclipse.org/legal/epl-v10.html".
 //
 // Initial Contributors:
 // Nokia Corporation - initial contribution.
@@ -311,24 +311,57 @@ public:
 	
 	@return A reference to the calling client's thread. */
 	virtual const RThread &Client()=0;
-	virtual void ReplyBuf(const TDesC8 &aDes)=0;				// Reply a buffer to the client
-	virtual void ReplyBuf(const TDesC16 &aDes)=0;				// Reply a buffer to the client
+	/** Send a reply to the client process in response to a request
+	from the client. 	
+	
+	@see RAnim::CommandReply()
+	
+	@param aDes The data to be sent back to the client
+	 */
+	virtual void ReplyBuf(const TDesC8 &aDes)=0;
+	/** Send a reply to the client process in response to a request
+	from the client. 	
+	
+	@see RAnim::CommandReply()
+	
+	@param aDes The data to be sent back to the client
+	 */
+	virtual void ReplyBuf(const TDesC16 &aDes)=0;				
 	/** Panics the client. 
 	
 	This will result in the client thread being destroyed. */
 	virtual void Panic() const=0;
+	
 	//Event functions
+	
 	/** Switches animation raw event handling on and off.
 	
 	If raw event handling is switched on, then raw events, e.g. pointer, key, or power events
 	are all offered to the animation event handling code's MEventHandler::OfferRawEvent().
 	
+	If Animation works in a window for which advanced pointers have been enabled,
+	then after switching on raw event handling it will receive pointer events from all 
+	detected pointers. Otherwise it will receive events only from one emulated pointer.
+	
 	@param aGetEvents If ETrue, raw events are passed to the animation 
-	event handling code. If EFalse, events are not passed to the animation. */
+	event handling code. If EFalse, events are not passed to the animation. 
+	@see RWindowBase::EnableAdvancedPointers() */
 	virtual void GetRawEvents(TBool aGetEvents) const=0;
 	/** Posts a raw event, just as if it had come from the kernel.
+	  
+	If aRawEvent has pointer-related type (move, switch on, down, up or out of range),
+	then its Z coordinate and iPointerNumber fields will be validated and may be
+	overwritten by WSERV in order to guarantee correct behaviour depending on:
+	1. Pointer Pressure and Proximity support on current platform.
+	2. Multiple pointers support on current platform.
+	3. Animation's awareness of these fields. If Animation works in a window
+	   for which advanced pointers have been enabled, it is assumed that it has
+	   initialized these fields. Otherwise WSERV will assume that these fields have
+	   not been provided and may overwrite them with most appropriate values.
+	For more information about event validation, please refer to System Documentation.
 	
-	@param aRawEvent The raw event */
+	@param aRawEvent The raw event 
+	@see RWindowBase::EnableAdvancedPointers() */
 	virtual void PostRawEvent(const TRawEvent &aRawEvent) const=0;
 	/** Posts a key event.
 	
@@ -504,12 +537,11 @@ public:
 	@param aOrdinalPriority The new ordinal priority of the window.
 	@return KErrNotFound if there is no window group with the specified ID, KErrNone otherwise. */
 	virtual TInt SetOrdinalPosition(TInt aWindowGroupId,TInt aPos,TInt aOrdinalPriority)=0;
-
+	
 	/** Accessor for window configuration.
 
 	@param aWindowConfig Gets filled in with window configuration details. */
 	virtual void WindowConfig(TWindowConfig& aWindowConfig) const=0;
-	
 private:
 	virtual void Reserved1() const;
 	virtual void Reserved2() const;
@@ -563,11 +595,14 @@ public:
 	Note: this function is called automatically by the animation DLL framework in the 
 	Redraw() function. */
 	virtual void ActivateGc()=0;
-	/** Sets the rectangle that this animation is to draw to.
+	/** Sets the rectangle that this animation will draw to. 
 	
 	This function must be called as part of the initialisation/construction of 
 	the CAnim-derived object, i.e. in CAnim::ConstructL(). This is so that the 
-	window server knows which area the animation is operating in.
+	window server knows which area the animation is operating in. Anything that 
+	is drawn by the animation outside this rectangle may not be redrawn correctly
+	as the window server uses this rectangle to decide when the animation should
+	be redrawn.
 	
 	@param aRect The rectangle to be drawn to. */
 	virtual void SetRect(const TRect &aRect)=0;
@@ -677,33 +712,6 @@ public:
 	@return A pointer to the sprite member. */
 	virtual TSpriteMember *GetSpriteMember(TInt aMember) const=0;
 	/** Redraws part of a sprite.
-
-	WSERV1:	
-
-	The updates a sprite on the screen, possibly after the bitmap for a particular 
-	sprite member has been changed.
-	
-	Two types of redraw are possible. A full update takes the bitmap off the screen 
-	and then re-draws it. This is 'safe' in that the screen always reflects 
-	the contents of the sprite bitmap. However it can result in flicker. Use the 
-	aRect parameter to specify the (small) part of the sprite which has been changed, 
-	then any flicker will only occur in this rectangle. 
-	
-	A full update is required if you have removed pixels from the mask, i.e. made 
-	pixels in the sprite transparent when they were not before. If drawing is 
-	additive, e.g. you are using a mask or the draw mode is EDrawModePEN, a partial 
-	update is possible. Otherwise the aFullUpdate argument is ignored and a full 
-	update is always done.
-	
-	Note: if the sprite member aMember is not visible then there is no need for a change 
-	to the display, so the aRect and aFullUpdate parameters are ignored.
-	
-	param aMember The index of the sprite member that is to be updated.
-	param aRect The part of the sprite member which has changed.
-	param aFullUpdate ETrue for a full update, EFalse otherwise.
-
-	WSERV2:
-
 	Updates a sprite on the screen, possibly after the bitmap for a particular 
 	sprite member has been changed.
 	
@@ -713,7 +721,7 @@ public:
 	A full update used to be required if you had removed pixels from the mask, i.e. made 
 	pixels in the sprite transparent when they were not before. If drawing is 
 	additive, e.g. you are using a mask or the draw mode is EDrawModePEN, a partial 
-	update used to be possible. But newer versions of the window-server always do full back to front rendering.
+	update used to be possible. But current versions of the window-server always do full back to front rendering.
 	
 	Note: if the sprite member aMember is not visible then there is no need for a change 
 	to the display, so the aRect and aFullUpdate parameters are ignored.

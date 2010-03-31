@@ -26,7 +26,6 @@
  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  
- * © Portions copyright (c) 2007 Symbian Software Ltd. All rights reserved.
 
  * Copyright (c) 1996 by Internet Software Consortium.
  *
@@ -42,6 +41,7 @@
  * PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS
  * ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS
  * SOFTWARE.
+ * Portions Copyright (c) 2007 Nokia Corporation and/or its subsidiary(-ies). All rights reserved.
  */
 
 /*
@@ -411,7 +411,7 @@ typedef enum __ns_class {
 #define	ns_name_uncompress	__ns_name_uncompress
 
 #ifdef BIND_4_COMPAT
-#include <arpa/nameser_compat.h>
+#include <stdapis/arpa/nameser_compat.h>
 #endif
 
 #endif /* !_ARPA_NAMESER_H_ */

@@ -2,18 +2,23 @@
 * Copyright (c) 2009 Nokia Corporation and/or its subsidiary(-ies).
 * All rights reserved.
 * This component and the accompanying materials are made available
-* under the terms of the License "Symbian Foundation License v1.0" to Symbian Foundation members and "Symbian Foundation End User License Agreement v1.0" to non-members
+* under the terms of "Eclipse Public License v1.0"
 * which accompanies this distribution, and is available
-* at the URL "http://www.symbianfoundation.org/legal/licencesv10.html".
+* at the URL "http://www.eclipse.org/legal/epl-v10.html".
 *
 * Initial Contributors:
 * Nokia Corporation - initial contribution.
 *
 * Contributors:
 *
-* Description: 
+* Description:  Defines Series 60 specific feature constants for common
+*                Feature Manager component. This file is included by
+*                Feature Manager component when building it.
+*                The counterpart for this file is the generic SpdStaticFeatures.hrh.
 *
 */
+
+
 
 /* 
 *

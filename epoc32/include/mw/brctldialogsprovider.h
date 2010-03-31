@@ -36,7 +36,15 @@ enum TBrCtlSelectOptionType
     * OK softkey is available
     * Cancel button is not available
     */
-    ESelectTypeOkOnly
+    ESelectTypeOkOnly,
+    /**
+     * Added enumeration ESelectTypeWithFindPane at offset of 0x100 so that
+     * the limit of different types of dialog boxes can be upto 256.
+     * Any user who wants a list with find pane must "|" with a defined type
+     * above like ESelectTypeNone | ESelectTypeWithFindPane to obtain a list
+     * box with find pane.
+     */
+    ESelectTypeWithFindPane = 0x100
     };
 
 /**
@@ -65,12 +73,12 @@ class TBrCtlImageCarrier;
 * Usage:
 *
 * @code
-*  #include <BrCtlDialogsProvider.h>
+*  #include <brctldialogsprovider.h>
 *
 *
 * @see S60 Platform: Browser Control API Developer's Guide Version 2.0
 * @lib BrowserEngine.lib
-* @file BrCtlDialogsProvider.h
+* @file brctldialogsprovider.h
 * @endcode     *
 */
 class MBrCtlDialogsProvider
@@ -262,10 +270,10 @@ class MBrCtlDialogsProvider
 * The TBrCtlSelectOptionData class represents a list of elements
 * to display in the list box. This class is used for the List Selection Dialog.
 * @code
-*  #include <BrCtlDialogsProvider.h>
+*  #include <brctldialogsprovider.h>
 * @lib BrowserEngine.lib
 * @since 2.8
-* @file BrCtlDialogsProvider.h
+* @file brctldialogsprovider.h
 * @endcode     *
 */
 class TBrCtlSelectOptionData
@@ -391,10 +399,10 @@ class TBrCtlSelectOptionData
 * The CBrCtlObjectInfo class used to represent the information about the
 * plugin object.
 * @code
-*  #include <BrCtlDialogsProvider.h>
+*  #include <brctldialogsprovider.h>
 * @lib BrowserEngine.lib
 * @since 3.0
-* @file BrCtlDialogsProvider.h
+* @file brctldialogsprovider.h
 * @endcode     *
 */
 class CBrCtlObjectInfo : public CBase
@@ -513,10 +521,10 @@ class CBrCtlObjectInfo : public CBase
 * TheTBrCtlImageCarrier class used to give the information about the
 * image.
 * @code
-*  #include <BrCtlDialogsProvider.h>
+*  #include <brctldialogsprovider.h>
 * @lib BrowserEngine.lib
 * @since 2.8
-* @file BrCtlDialogsProvider.h
+* @file brctldialogsprovider.h
 * @endcode     *
 */
 class TBrCtlImageCarrier

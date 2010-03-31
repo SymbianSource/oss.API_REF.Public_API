@@ -1,49 +1,51 @@
 /*
-* Copyright (c) 2002-2006 Nokia Corporation and/or its subsidiary(-ies). 
+* Copyright (c) 2006-2009 Nokia Corporation and/or its subsidiary(-ies).
 * All rights reserved.
 * This component and the accompanying materials are made available
-* under the terms of the License "Symbian Foundation License v1.0" to Symbian Foundation members and "Symbian Foundation End User License Agreement v1.0" to non-members
+* under the terms of "Eclipse Public License v1.0"
 * which accompanies this distribution, and is available
-* at the URL "http://www.symbianfoundation.org/legal/licencesv10.html".
+* at the URL "http://www.eclipse.org/legal/epl-v10.html".
 *
 * Initial Contributors:
 * Nokia Corporation - initial contribution.
 *
 * Contributors:
 *
-* Description:  SDK Publish&Subscribe definitions of the
-*                HW Resource Manager for the Power State API.
-*
-*/
-
-
-#ifndef HWRMPOWERSTATESDKPSKEYS_H
-#define HWRMPOWERSTATESDKPSKEYS_H
-
-// INCLUDES
-#include <e32std.h>
-
-/** 
-* @file hwrmpowerstatesdkpskeys.h
-* 
+* Description:
 * The API provides the P&S power state keys that are updated by the HW Resource 
 * Manager Server. These keys provide up-to-date information on the charging 
 * status, battery level and battery state of the device. Any application may 
 * subscribe to these P&S keys that are updated to receive notifications of 
 * any change in state.
-*
 * This interface relies on the Publish and Subscribe (P&S) interface provided
 * by Symbian. P&S is used by HW Resource Manager to globally publish the power
 * state information.
-*
 * The P&D UID is #KPSUidHWRMPowerState and following keys are provided:
 * - #KHWRMBatteryLevel
 * - #KHWRMBatteryStatus
 * - #KHWRMChargingStatus
+*
 */
+
+
+
+
+/**
+ @file hwrmpowerstatesdkpskeys.h
+ @publishedAll
+ @released
+*/
+
+#ifndef HWRMPOWERSTATESDKPSKEYS_H
+#define HWRMPOWERSTATESDKPSKEYS_H
+
+#include <e32std.h>
 
 /**
 * P&S UID for all power state information keys provided by this API.
+*
+* @publishedAll
+* @released
 */
 const TUid KPSUidHWRMPowerState = { 0x10205041 }; 
 
@@ -51,7 +53,7 @@ const TUid KPSUidHWRMPowerState = { 0x10205041 };
 /**
 * P&S key to represent the battery level of the device. It can also be related
 * to the number of battery bars displayed. This property is updated only when
-* battery level changes. Valid values are defined by the enum #EPSHWRMBatteryLevel
+* battery level changes. Valid values are defined by the enum EPSHWRMBatteryLevel
 * and range from -1 to 7. <br>
 * If an error has occurred or the battery level has not yet been initialized, 
 * the enumeration value of #EBatteryLevelUnknown is used. In all other cases 
@@ -59,24 +61,57 @@ const TUid KPSUidHWRMPowerState = { 0x10205041 };
 * level 7 the highest (battery full).
 *
 * @see EPSHWRMBatteryLevel
+*
+* @publishedAll
+* @released
 */
 const TUint32 KHWRMBatteryLevel = 0x00000001;
 
 /**
 * Battery level of device. Can be related to the number of battery bars 
 * displayed by the device.
+*
+* @publishedAll
+* @released
 */
 enum EPSHWRMBatteryLevel
     {
-    EBatteryLevelUnknown        = -1,   ///< Uninitialized or some other error
-    EBatteryLevelLevel0         = 0,    ///< Lowest battery level
+    /**
+    Uninitialized or some other error
+    */
+    EBatteryLevelUnknown        = -1,   
+    /**
+    Battery level 0. The lowest battery level.
+    */
+    EBatteryLevelLevel0         = 0,   
+    /**
+    Battery level 1.
+    */
     EBatteryLevelLevel1         = 1,
+    /**
+    Battery level 2.
+    */
     EBatteryLevelLevel2         = 2,
+    /**
+    Battery level 3.
+    */
     EBatteryLevelLevel3         = 3,
+    /**
+    Battery level 4.
+    */
     EBatteryLevelLevel4         = 4,
+    /**
+    Battery level 5.
+    */
     EBatteryLevelLevel5         = 5,
+    /**
+    Battery level 6.
+    */
     EBatteryLevelLevel6         = 6,
-    EBatteryLevelLevel7         = 7     ///< Highest battery level
+    /**
+    Battery level 7. The highest battery level.
+    */
+    EBatteryLevelLevel7         = 7     
     };
 
 
@@ -94,18 +129,36 @@ enum EPSHWRMBatteryLevel
 * automatically because of insufficient battery power.  
 *
 * @see EPSHWRMBatteryStatus
+*
+* @publishedAll
+* @released
 */
 const TUint32 KHWRMBatteryStatus = 0x00000002;
 
 /**
 * Battery status of device.
+*
+* @publishedAll
+* @released
 */
 enum EPSHWRMBatteryStatus
     {
-    EBatteryStatusUnknown        = -1, ///< Uninitialized or some other error
-    EBatteryStatusOk             = 0,  ///< This can also be used during charging
-    EBatteryStatusLow            = 1,  ///< Show note to user "Battery low"
-    EBatteryStatusEmpty          = 2   ///< Show "recharge battery" note to user
+    /**
+    Uninitialized or some other error
+    */
+    EBatteryStatusUnknown        = -1, 
+    /**
+    This can also be used during charging
+    */
+    EBatteryStatusOk             = 0,  
+    /**
+    Show note to user "Battery low"
+    */
+    EBatteryStatusLow            = 1,  
+    /**
+    Show "recharge battery" note to user
+    */
+    EBatteryStatusEmpty          = 2   
     };
 
 /**
@@ -113,22 +166,51 @@ enum EPSHWRMBatteryStatus
 * This property is updated only when charging status changes.
 *
 * @see EPSHWRMChargingStatus
+*
+* @publishedAll
+* @released
 */
 const TUint32 KHWRMChargingStatus = 0x00000003;
 
 /**
 * Charging status of device.
+*
+* @publishedAll
+* @released
 */
 enum EPSHWRMChargingStatus
     {
-    EChargingStatusError              = -1, ///< Some error has occurred when charger is connected or charging. 
-    EChargingStatusNotConnected       = 0,  ///< Charger not connected/uninitialized
-    EChargingStatusCharging           = 1,  ///< Device is charging
-    EChargingStatusNotCharging        = 2,  ///< Charger is connected, device not charging
-    EChargingStatusAlmostComplete     = 3,  ///< Charging almost completed
-    EChargingStatusChargingComplete   = 4,  ///< Charging completed
-    EChargingStatusChargingContinued  = 5   ///< Charging continued after brief interruption
+    /**
+    Some error has occurred when charger is connected or charging. 
+    */
+    EChargingStatusError              = -1, 
+    /**
+    Charger not connected/uninitialized
+    */
+    EChargingStatusNotConnected       = 0,  
+    /**
+    Device is charging
+    */
+    EChargingStatusCharging           = 1,  
+    /**
+    Charger is connected, device not charging
+    */
+    EChargingStatusNotCharging        = 2,  
+    /**
+    Charging almost completed
+    */
+    EChargingStatusAlmostComplete     = 3,  
+    /**
+    Charging completed
+    */
+    EChargingStatusChargingComplete   = 4,  
+    /**
+    Charging continued after brief interruption
+    */
+    EChargingStatusChargingContinued  = 5   
     };
 
 
 #endif      // HWRMPOWERSTATESDKPSKEYS_H
+
+// End of File

@@ -1,9 +1,9 @@
 // Copyright (c) 2001-2009 Nokia Corporation and/or its subsidiary(-ies).
 // All rights reserved.
 // This component and the accompanying materials are made available
-// under the terms of the License "Symbian Foundation License v1.0" to Symbian Foundation members and "Symbian Foundation End User License Agreement v1.0" to non-members
+// under the terms of "Eclipse Public License v1.0"
 // which accompanies this distribution, and is available
-// at the URL "http://www.symbianfoundation.org/legal/licencesv10.html".
+// at the URL "http://www.eclipse.org/legal/epl-v10.html".
 //
 // Initial Contributors:
 // Nokia Corporation - initial contribution.
@@ -20,7 +20,7 @@
 
 #include <mmf/server/mmfclip.h>
 #include <mmf/server/mmfdatabuffer.h>
-#include <mmf/common/mmcaf.h>
+#include "mmf/common/mmcaf.h"
 
 class CReadWriteRequest;
 class CTransferBufferCopy;
@@ -49,7 +49,7 @@ private:
 	};
 	
 /**
-@internalTechnology	
+@publishedAll	
 */
 const TUid KFileHandleUid = {0x101FFA19};
 const TUid KMMFileSourceUid = {0x101F7DA9};

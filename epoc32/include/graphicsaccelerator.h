@@ -1,9 +1,9 @@
 // Copyright (c) 2001-2009 Nokia Corporation and/or its subsidiary(-ies).
 // All rights reserved.
 // This component and the accompanying materials are made available
-// under the terms of the License "Symbian Foundation License v1.0" to Symbian Foundation members and "Symbian Foundation End User License Agreement v1.0" to non-members
+// under the terms of "Eclipse Public License v1.0"
 // which accompanies this distribution, and is available
-// at the URL "http://www.symbianfoundation.org/legal/licencesv10.html".
+// at the URL "http://www.eclipse.org/legal/epl-v10.html".
 //
 // Initial Contributors:
 // Nokia Corporation - initial contribution.
@@ -42,8 +42,7 @@ The bitmap can be a hardware bitmap (RHardwareBitmap), or an ordinary bitmap
 class TAcceleratedBitmapInfo
 	{
 public:
-
-    /** The bitmap's display mode. */
+	/** The display mode of the bitmap. */
 	TDisplayMode	iDisplayMode;
 
 	/** The address of the start of the bitmap. */
@@ -52,17 +51,26 @@ public:
 	/** The width and height of the bitmap in pixels. */
 	TSize			iSize;
 	
-	/** The address offset (in bytes) between successive lines in a bitmap. */
+	/** The address offset (in bytes) between successive lines in a bitmap.
+	If the bitmap is compressed the line pitch has no meaning so this data
+	member is set to the negation of the compression type. In the case of
+	an extended bitmap it is -EProprietaryCompression. */
 	TInt			iLinePitch;
 	
-	/** The shift required to obtain the number of bits needed to represent one pixel in the bitmap.
-	The number of bits per pixel is calculated as 1 << iPixelShift */
+	/** The shift required to obtain the number of bits needed to represent one pixel
+	in the bitmap. The number of bits per pixel is calculated as 1 << iPixelShift.
+	In the case of an extended bitmap this data member is set to the bitmap type UID. */
 	TInt			iPixelShift;
 	
-	/** The physical address of the start of the bitmap. This is the address which a 
-	hardware graphics accelerator will use and is zero if the bitmap is not accessible 
-	to hardware graphics accelerators. */
-	TUint8*			iPhysicalAddress;
+	union
+		{
+		/** The physical address of the start of the bitmap. This is the address which a
+		hardware graphics accelerator will use and is zero if the bitmap is not accessible
+		to hardware graphics accelerators. Invalid in the case of an extended bitmap. */
+		TUint8*		iPhysicalAddress;
+		/** In the case of an extended bitmap, the size of the raw bitmap data. */
+		TInt		iDataSize;
+		};
 	};
 
 /**
@@ -431,24 +439,25 @@ iPattern member. */
 	@see CGraphicsContext::TFillRule */
 		EPolygonFillWinding = 2,
 		};
-		
+
+	 		
 /** Bit flags for the specifying the supported rendering orientations. 
 @see  CFbsBitGc::TGraphicsOrientation */
-	enum TOrientationCaps
-		{
-		/** Normal orientation is supported. */
-		EOrientationCapNormal = 1,
-		/** A 90 degree rotation is supported. */
-		EOrientationCapRotated90 = 2,
-		/** A 180 degree rotation is supported. */
-		EOrientationCapRotated180 = 4,
-		/** A 270 degree rotation is supported. */
-		EOrientationCapRotated270 = 8,
-		/** All orientations are supported. */ 
-		EOrientationCapAll = EOrientationCapNormal|EOrientationCapRotated90|EOrientationCapRotated180|EOrientationCapRotated270,
-		};
+ 	enum TOrientationCaps
+ 		{
+ 		/** Normal orientation is supported. */
+ 		EOrientationCapNormal = 1,
+ 		/** A 90 degree rotation is supported. */
+ 		EOrientationCapRotated90 = 2,
+ 		/** A 180 degree rotation is supported. */
+ 		EOrientationCapRotated180 = 4,
+ 		/** A 270 degree rotation is supported. */
+ 		EOrientationCapRotated270 = 8,
+ 		/** All orientations are supported. */ 
+ 		EOrientationCapAll = EOrientationCapNormal|EOrientationCapRotated90|EOrientationCapRotated180|EOrientationCapRotated270
+ 		};
 
-	/** The size of this class in bytes. */
+ 	/** The size of this class in bytes. */
 	TInt			iStructureSize;	// The size of this class
 	
 	/** The version number of the API. */
@@ -521,13 +530,13 @@ iPattern member. */
 	@see TPolygonCaps */
 	TUint			iPolygon;		// TPolygonCaps bit flags
 	
-	/** 
-	iReserved[0] specifies the supported rendering orientations.Uses a bit flags
-	for each TOrientationCaps supported.	
-	@see TOrientationCaps 
-	iReserved[1]-iReserved[3] are reserved for future use. All should be set to zero.
-	*/
-	TUint			iReserved[4];
+ 	/** 
+ 	iReserved[0] specifies the supported rendering orientations.Uses a bit flags
+ 	for each TOrientationCaps supported.	
+ 	@see TOrientationCaps 
+ 	iReserved[1]-iReserved[3] are reserved for future use. All should be set to zero.
+ 	*/
+ 	TUint			iReserved[4];
 	};
 
 

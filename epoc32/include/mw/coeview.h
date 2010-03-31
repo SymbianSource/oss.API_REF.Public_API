@@ -1,9 +1,9 @@
 // Copyright (c) 1997-2009 Nokia Corporation and/or its subsidiary(-ies).
 // All rights reserved.
 // This component and the accompanying materials are made available
-// under the terms of the License "Symbian Foundation License v1.0" to Symbian Foundation members and "Symbian Foundation End User License Agreement v1.0" to non-members
+// under the terms of "Eclipse Public License v1.0"
 // which accompanies this distribution, and is available
-// at the URL "http://www.symbianfoundation.org/legal/licencesv10.html".
+// at the URL "http://www.eclipse.org/legal/epl-v10.html".
 //
 // Initial Contributors:
 // Nokia Corporation - initial contribution.
@@ -20,6 +20,7 @@
 #include <coemain.h> // for CCoeStatic
 
 class CCoeAppUi;
+class TVwsViewEvent;
 
 /** Specifies an interface for views. 
 
@@ -73,34 +74,26 @@ private:
 	TInt iMCoeView_Reserved1;
 	};
 
-/** An interface through which view deactivations can be
-notified to an observer.
-
-Dialogs and other floating windows such as virtual keyboards which should be dismissed
-when a view is deactivated can implement this interface and take any action required.
+/** An interface through which view events can be notified to an observer.
 
 @publishedAll
 @released */
-class MCoeViewDeactivationObserver
+class MCoeViewObserver
 	{
 public:
-	//
-	// Handles the deactivation of the view identified by aViewIdToBeDeactivated before the newly activated
-	// view with id aNewlyActivatedViewId is marked as current.
-	//
-	virtual void HandleViewDeactivation(const TVwsViewId& aViewIdToBeDeactivated,const TVwsViewId& aNewlyActivatedViewId)=0;
+	virtual void HandleViewEventL(const TVwsViewEvent& aEvent)=0;
 protected:
-	IMPORT_C MCoeViewDeactivationObserver();
+	IMPORT_C MCoeViewObserver();
 private:
-	IMPORT_C virtual void MCoeViewDeactivationObserver_Reserved_1();
-	IMPORT_C virtual void MCoeViewDeactivationObserver_Reserved_2();
+	IMPORT_C virtual void MCoeViewObserver_Reserved1();
+	IMPORT_C virtual void MCoeViewObserver_Reserved2();
 private:
-	TInt iMCoeViewDeactivationObserver_Reserved1;
+	TInt iMCoeViewObserver_Reserved1;
 	};
 
 /** An interface through which view activations can be notified to an observer.
 
-@publishedPartner
+@publishedAll
 @released
 */
 class MCoeViewActivationObserver
@@ -120,24 +113,31 @@ private:
 	TInt iMCoeViewActivationObserver_Reserved1;
 	};
 
+/** An interface through which view deactivations can be
+notified to an observer.
 
-/** An interface through which view events can be notified to an observer.
+Dialogs and other floating windows such as virtual keyboards which should be dismissed
+when a view is deactivated can implement this interface and take any action required.
 
-@publishedPartner
+@publishedAll
 @released */
-class MCoeViewObserver
+
+class MCoeViewDeactivationObserver
 	{
 public:
-	virtual void HandleViewEventL(const TVwsViewEvent& aEvent)=0;
+	//
+	// Handles the deactivation of the view identified by aViewIdToBeDeactivated before the newly activated
+	// view with id aNewlyActivatedViewId is marked as current.
+	//
+	virtual void HandleViewDeactivation(const TVwsViewId& aViewIdToBeDeactivated,const TVwsViewId& aNewlyActivatedViewId)=0;
 protected:
-	IMPORT_C MCoeViewObserver();
+	IMPORT_C MCoeViewDeactivationObserver();
 private:
-	IMPORT_C virtual void MCoeViewObserver_Reserved1();
-	IMPORT_C virtual void MCoeViewObserver_Reserved2();
+	IMPORT_C virtual void MCoeViewDeactivationObserver_Reserved_1();
+	IMPORT_C virtual void MCoeViewDeactivationObserver_Reserved_2();
 private:
-	TInt iMCoeViewObserver_Reserved1;
+	TInt iMCoeViewDeactivationObserver_Reserved1;
 	};
-
 
 //
 // Handles any screen device changes that occur while a view is active 

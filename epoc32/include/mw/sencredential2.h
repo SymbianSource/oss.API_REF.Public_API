@@ -2,9 +2,9 @@
 * Copyright (c) 2002-2006 Nokia Corporation and/or its subsidiary(-ies). 
 * All rights reserved.
 * This component and the accompanying materials are made available
-* under the terms of the License "Symbian Foundation License v1.0" to Symbian Foundation members and "Symbian Foundation End User License Agreement v1.0" to non-members
+* under the terms of "Eclipse Public License v1.0"
 * which accompanies this distribution, and is available
-* at the URL "http://www.symbianfoundation.org/legal/licencesv10.html".
+* at the URL "http://www.eclipse.org/legal/epl-v10.html".
 *
 * Initial Contributors:
 * Nokia Corporation - initial contribution.
@@ -67,14 +67,14 @@ class CSenCredential2 : public CSenFragmentBase
         *
         * @since Series60 4.0
         */
-        static CSenCredential2* NewL();
+        IMPORT_C static CSenCredential2* NewL();
 
         /**
         * Basic constructor.
         *
         * @since Series60 4.0
         */
-        static CSenCredential2* NewLC();
+        IMPORT_C static CSenCredential2* NewLC();
 
         /**
         * Basic constructor.
@@ -85,7 +85,7 @@ class CSenCredential2 : public CSenFragmentBase
         * @param aPrefix    is the prefix of this credential
         * @param aAttrs     are the XML attributes of this credential
         */
-        static CSenCredential2* NewL(const TDesC8& aNsUri,
+        IMPORT_C static CSenCredential2* NewL(const TDesC8& aNsUri,
                                      const TDesC8& aLocalName,
                                      const TDesC8& aQName,
                                      const RAttributeArray& aAttributes);
@@ -99,7 +99,7 @@ class CSenCredential2 : public CSenFragmentBase
         * @param aPrefix    is the prefix of this credential
         * @param aAttrs     are the XML attributes of this credential
         */
-        static CSenCredential2* NewLC(const TDesC8& aNsUri,
+        IMPORT_C static CSenCredential2* NewLC(const TDesC8& aNsUri,
                                       const TDesC8& aLocalName,
                                       const TDesC8& aQName,
                                       const RAttributeArray& aAttributes);
@@ -114,7 +114,7 @@ class CSenCredential2 : public CSenFragmentBase
         * @param aAttrs     are the XML attributes of this credential
         * @param aParent    is the parent XML element of this credential
         */
-        static CSenCredential2* NewL(const TDesC8& aNsUri,
+        IMPORT_C static CSenCredential2* NewL(const TDesC8& aNsUri,
                                      const TDesC8& aLocalName,
                                      const TDesC8& aQName,
                                      const RAttributeArray& aAttributes,
@@ -130,7 +130,7 @@ class CSenCredential2 : public CSenFragmentBase
         * @param aAttrs     are the XML attributes of this credential
         * @param aParent    is the parent XML element of this credential
         */
-        static CSenCredential2* NewLC(const TDesC8& aNsUri,
+        IMPORT_C static CSenCredential2* NewLC(const TDesC8& aNsUri,
                                       const TDesC8& aLocalName,
                                       const TDesC8& aQName,
                                       const RAttributeArray& aAttributes,
@@ -148,7 +148,7 @@ class CSenCredential2 : public CSenFragmentBase
         * @param aOwnerDocument is the document which will be the owner of
         *                       the elements of this fragment
         */
-        static CSenCredential2* NewL(const TDesC8& aNsUri,
+        IMPORT_C static CSenCredential2* NewL(const TDesC8& aNsUri,
                                      const TDesC8& aLocalName,
                                      const TDesC8& aQName,
                                      const RAttributeArray& aAttrs,
@@ -167,7 +167,7 @@ class CSenCredential2 : public CSenFragmentBase
         * @param aOwnerDocument is the document which will be the owner of
         *                       the elements of this fragment
         */
-        static CSenCredential2* NewLC(const TDesC8& aNsUri,
+        IMPORT_C static CSenCredential2* NewLC(const TDesC8& aNsUri,
                                            const TDesC8& aLocalName,
                                            const TDesC8& aQName,
                                            const RAttributeArray& aAttrs,

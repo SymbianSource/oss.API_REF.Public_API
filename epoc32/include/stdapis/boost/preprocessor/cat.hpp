@@ -1,48 +1,35 @@
-# /* **************************************************************************
-#  *                                                                          *
-#  *     (C) Copyright Paul Mensonides 2002.
-#  *     Distributed under the Boost Software License, Version 1.0. (See
-#  *     accompanying file LICENSE_1_0.txt or copy at
-#  *     http://www.boost.org/LICENSE_1_0.txt)
-#  *                                                                          *
-#  ************************************************************************** */
+# /* Copyright (C) 2001
+#  * Housemarque Oy
+#  * http://www.housemarque.com
+#  *
+#  * Distributed under the Boost Software License, Version 1.0. (See
+#  * accompanying file LICENSE_1_0.txt or copy at
+#  * http://www.boost.org/LICENSE_1_0.txt)
+#  */
+#
+# /* Revised by Paul Mensonides (2002) */
 #
 # /* See http://www.boost.org for most recent version. */
 #
-# ifndef BOOST_PREPROCESSOR_SEQ_CAT_HPP
-# define BOOST_PREPROCESSOR_SEQ_CAT_HPP
+# ifndef BOOST_PREPROCESSOR_CAT_HPP
+# define BOOST_PREPROCESSOR_CAT_HPP
 #
-# include <boost/preprocessor/arithmetic/dec.hpp>
 # include <boost/preprocessor/config/config.hpp>
-# include <boost/preprocessor/control/if.hpp>
-# include <boost/preprocessor/seq/fold_left.hpp>
-# include <boost/preprocessor/seq/seq.hpp>
-# include <boost/preprocessor/seq/size.hpp>
-# include <boost/preprocessor/tuple/eat.hpp>
 #
-# /* BOOST_PP_SEQ_CAT */
+# /* BOOST_PP_CAT */
 #
-# define BOOST_PP_SEQ_CAT(seq) \
-    BOOST_PP_IF( \
-        BOOST_PP_DEC(BOOST_PP_SEQ_SIZE(seq)), \
-        BOOST_PP_SEQ_CAT_I, \
-        BOOST_PP_SEQ_HEAD(seq) BOOST_PP_TUPLE_EAT_1 \
-    )(seq) \
-    /**/
-# define BOOST_PP_SEQ_CAT_I(seq) BOOST_PP_SEQ_FOLD_LEFT(BOOST_PP_SEQ_CAT_O, BOOST_PP_SEQ_HEAD(seq), BOOST_PP_SEQ_TAIL(seq))
+# if ~BOOST_PP_CONFIG_FLAGS() & BOOST_PP_CONFIG_MWCC()
+#    define BOOST_PP_CAT(a, b) BOOST_PP_CAT_I(a, b)
+# else
+#    define BOOST_PP_CAT(a, b) BOOST_PP_CAT_OO((a, b))
+#    define BOOST_PP_CAT_OO(par) BOOST_PP_CAT_I ## par
+# endif
 #
-# define BOOST_PP_SEQ_CAT_O(s, st, elem) BOOST_PP_SEQ_CAT_O_I(st, elem)
-# define BOOST_PP_SEQ_CAT_O_I(a, b) a ## b
-#
-# /* BOOST_PP_SEQ_CAT_S */
-#
-# define BOOST_PP_SEQ_CAT_S(s, seq) \
-    BOOST_PP_IF( \
-        BOOST_PP_DEC(BOOST_PP_SEQ_SIZE(seq)), \
-        BOOST_PP_SEQ_CAT_S_I, \
-        BOOST_PP_SEQ_HEAD(seq) BOOST_PP_TUPLE_EAT_2 \
-    )(s, seq) \
-    /**/
-# define BOOST_PP_SEQ_CAT_S_I(s, seq) BOOST_PP_SEQ_FOLD_LEFT_ ## s(BOOST_PP_SEQ_CAT_O, BOOST_PP_SEQ_HEAD(seq), BOOST_PP_SEQ_TAIL(seq))
+# if ~BOOST_PP_CONFIG_FLAGS() & BOOST_PP_CONFIG_MSVC()
+#    define BOOST_PP_CAT_I(a, b) a ## b
+# else
+#    define BOOST_PP_CAT_I(a, b) BOOST_PP_CAT_II(a ## b)
+#    define BOOST_PP_CAT_II(res) res
+# endif
 #
 # endif

@@ -18,11 +18,9 @@
 */
 
 
-
-
 /**
  @file
- @publishedPartner
+ @publishedAll
  @released
 */
 
@@ -256,3 +254,4 @@ namespace ContentAccess
 	}
 
 #endif // __CAF_H__
+

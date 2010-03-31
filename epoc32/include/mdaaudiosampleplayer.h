@@ -1,9 +1,9 @@
 // Copyright (c) 1999-2009 Nokia Corporation and/or its subsidiary(-ies).
 // All rights reserved.
 // This component and the accompanying materials are made available
-// under the terms of the License "Symbian Foundation License v1.0" to Symbian Foundation members and "Symbian Foundation End User License Agreement v1.0" to non-members
+// under the terms of "Eclipse Public License v1.0"
 // which accompanies this distribution, and is available
-// at the URL "http://www.symbianfoundation.org/legal/licencesv10.html".
+// at the URL "http://www.eclipse.org/legal/epl-v10.html".
 //
 // Initial Contributors:
 // Nokia Corporation - initial contribution.
@@ -115,23 +115,23 @@ public:
 	IMPORT_C static CMdaAudioPlayerUtility* NewFilePlayerL(const TDesC& aFileName,
 								MMdaAudioPlayerCallback& aCallback,
 								TInt aPriority = EMdaPriorityNormal,
-								TMdaPriorityPreference aPref = EMdaPriorityPreferenceTimeAndQuality,
+								TInt aPref = EMdaPriorityPreferenceTimeAndQuality,
 								CMdaServer* aServer = NULL);
 	IMPORT_C static CMdaAudioPlayerUtility* NewDesPlayerL(const TDesC8& aData,
 								MMdaAudioPlayerCallback& aCallback,
 								TInt aPriority = EMdaPriorityNormal,
-								TMdaPriorityPreference aPref = EMdaPriorityPreferenceTimeAndQuality,
+								TInt aPref = EMdaPriorityPreferenceTimeAndQuality,
 								CMdaServer* aServer = NULL);
 	IMPORT_C static CMdaAudioPlayerUtility* NewDesPlayerReadOnlyL(const TDesC8& aData,
 								MMdaAudioPlayerCallback& aCallback,
 								TInt aPriority = EMdaPriorityNormal,
-								TMdaPriorityPreference aPref = EMdaPriorityPreferenceTimeAndQuality,
+								TInt aPref = EMdaPriorityPreferenceTimeAndQuality,
 								CMdaServer* aServer = NULL);
 
 	// new export from version 7.0
 	IMPORT_C static CMdaAudioPlayerUtility* NewL(MMdaAudioPlayerCallback& aCallback,
 								TInt aPriority = EMdaPriorityNormal,
-								TMdaPriorityPreference aPref = EMdaPriorityPreferenceTimeAndQuality);
+								TInt aPref = EMdaPriorityPreferenceTimeAndQuality);
 
 	IMPORT_C void UseSharedHeap();
 
@@ -169,7 +169,7 @@ public:
 
 	IMPORT_C void SetPosition(const TTimeIntervalMicroSeconds& aPosition);
 
-	IMPORT_C TInt SetPriority(TInt aPriority, TMdaPriorityPreference aPref);
+	IMPORT_C TInt SetPriority(TInt aPriority, TInt aPref);
 
 	IMPORT_C TInt GetVolume(TInt& aVolume);
 

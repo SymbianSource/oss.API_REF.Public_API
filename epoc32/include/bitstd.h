@@ -1,9 +1,9 @@
 // Copyright (c) 1997-2009 Nokia Corporation and/or its subsidiary(-ies).
 // All rights reserved.
 // This component and the accompanying materials are made available
-// under the terms of the License "Symbian Foundation License v1.0" to Symbian Foundation members and "Symbian Foundation End User License Agreement v1.0" to non-members
+// under the terms of "Eclipse Public License v1.0"
 // which accompanies this distribution, and is available
-// at the URL "http://www.symbianfoundation.org/legal/licencesv10.html".
+// at the URL "http://www.eclipse.org/legal/epl-v10.html".
 //
 // Initial Contributors:
 // Nokia Corporation - initial contribution.
@@ -20,6 +20,10 @@
 #include <gdi.h>
 #include <fbs.h>
 #include <bitbase.h>
+
+#ifndef SYMBIAN_ENABLE_SPLIT_HEADERS
+#include <bitgdi/bitgcextradata.h>
+#endif
 
 // For use when testing the code, allows the fast blending to be disabled so back to back comparisons
 // can done be to check either timing or exact output.
@@ -230,49 +234,13 @@ private:
 	};
 
 class CFbsDevice;
+class CFbsDrawDevice;
 class TOpenFontCharMetrics;
 class CGraphicsAccelerator;
 class CWsBitmap;
 class MFastBlend;
-
-/**
-Class used to extend the CFbsBitGc class to avoid BC break. Any data member which needs 
-to be added in CFbsBitGc should be added to this class.
-@internalAll
-@released
-*/
-class CFbsBitGcExtraData:public CBase
-	{
-public:
-	CFbsBitGcExtraData();
-	~CFbsBitGcExtraData();
-	void Reset();
-	inline TInt* PenArray(){return iPenArray;};
-	inline TRgb ShadowColor(){return iShadowColor;}
-	inline void SetPenArray(TInt* aPenArray);
-	inline void SetShadowColor(const TRgb& aShadowColor);
-	inline void ResetPenArray();
-private:
-	TInt* iPenArray;
-	TRgb iShadowColor;
-	};
-
-inline void CFbsBitGcExtraData::SetPenArray(TInt* aPenArray)
-	{
-	delete[] iPenArray;
-	iPenArray = aPenArray;
-	}
-
-inline void CFbsBitGcExtraData::SetShadowColor(const TRgb& aShadowColor)
-	{
-	iShadowColor = aShadowColor;
-	}
-
-inline void CFbsBitGcExtraData::ResetPenArray()
-	{
-	delete[] iPenArray;
-	iPenArray = NULL;
-	}
+class CFbsRasterizer;
+class CFbsBitGcExtraData;
 
 /** 
 Concrete implementation of a bitmapped graphics context.
@@ -414,6 +382,19 @@ public:
 	IMPORT_C TRgb BrushColor();
 	IMPORT_C TRgb PenColor();	
 	IMPORT_C void ChangeDevice(CFbsDevice* aDevice);
+	// New DrawText API's that take in extra paramemters such as context. Extensible.
+	IMPORT_C void DrawText(const TDesC& aText,const TTextParameters* aParam);
+	IMPORT_C void DrawText(const TDesC& aText,const TTextParameters* aParam,const TPoint& aPosition);
+	IMPORT_C void DrawText(const TDesC& aText,const TTextParameters* aParam,const TRect& aBox);
+	IMPORT_C void DrawText(const TDesC& aText,const TTextParameters* aParam,const TRect& aBox,TInt aBaselineOffset,TTextAlign aHrz=ELeft,TInt aMargin=0);
+	IMPORT_C void DrawText(const TDesC& aText,const TTextParameters* aParam,const TRect& aBox,TInt aBaselineOffset,TInt aTextWidth,TTextAlign aHrz=ELeft,TInt aMargin=0);
+	IMPORT_C void DrawTextVertical(const TDesC& aText,const TTextParameters* aParam,TBool aUp);
+	IMPORT_C void DrawTextVertical(const TDesC& aText,const TTextParameters* aParam,const TPoint& aPosition,TBool aUp);
+	IMPORT_C void DrawTextVertical(const TDesC& aText,const TTextParameters* aParam,const TRect& aBox,TBool aUp);
+	IMPORT_C void DrawTextVertical(const TDesC& aText,const TTextParameters* aParam,const TRect& aBox,TInt aBaselineOffset,TBool aUp,TTextAlign aVert=ELeft,TInt aMargin=0);
+	IMPORT_C void DrawTextVertical(const TDesC& aText,const TTextParameters* aParam,const TRect& aBox,TInt aBaselineOffset,TInt aTextWidth,TBool aUp,TTextAlign aVert=ELeft,TInt aMargin=0);
+	IMPORT_C void UpdateJustification(const TDesC& aText,const TTextParameters* aParam);
+	IMPORT_C void UpdateJustificationVertical(const TDesC& aText,const TTextParameters* aParam,TBool aUp);
 private:
 	CFbsBitGc();
 	void AddRect(const TRect& aRect);
@@ -425,7 +406,7 @@ private:
 	void ClipFillLine(TPoint,TPoint);
 	void CopyCharWord(TUint32* aBinaryDataPtr,const TUint8* aData,TInt aBitShift);
 	void CopyCharLine(TUint32* aBinaryDataPtr,TInt aBufferWords,const TUint8* aData,TInt aBitShift,TInt aCharWidth);
-	void DrawText(const TDesC& aText,const TPoint& aPosition,TTextAlign aAlignment,
+	void DrawText(const TDesC& aText,const TTextParameters* aParam,const TPoint& aPosition,TTextAlign aAlignment,
 				  CFont::TTextDirection aDirection,const TRect* aBox = NULL);
 	void DoBitBlt(const TPoint& aDest,CFbsDevice* aDevice,const TRect& aSourceRect);
 	void DoBitBlt(const TPoint& aDest,CBitwiseBitmap* aBitmap,TUint32* aBase,TInt aStride,const TRect& aSourceRect);
@@ -434,7 +415,10 @@ private:
 	void DoBitBltMaskedNonFlicker(const TPoint& aDest,CBitwiseBitmap* aSourceBitmap,TUint32* aSourceBase,const TRect& aSourceRect,CBitwiseBitmap* aMaskBitmap,TUint32* aMaskBase,TBool aInvertMask,const TPoint& aDitherOrigin,TInt aShadowMode);
 	void DoBitBltMaskedNonFlickerSolid(const TPoint& aDest,CBitwiseBitmap* aSourceBitmap,TUint32* aSourceBase,const TRect& aSourceRect,CBitwiseBitmap* aMaskBitmap,TUint32* aMaskBase,TBool aInvertMask,const TPoint& aDitherOrigin,TInt aShadowMode);
 	void DoBitBltMaskedNonFlickerPatterned(const TPoint& aDest,CBitwiseBitmap* aSourceBitmap,TUint32* aSourceBase,const TRect& aSourceRect,CBitwiseBitmap* aMaskBitmap,TUint32* aMaskBase,TBool aInvertMask,const TPoint& aDitherOrigin,TInt aShadowMode);
-	void DoBitBltAlpha(const TPoint& aDest,CBitwiseBitmap* aSourceBitmap,TUint32* aSourceBase,const TRect& aSourceRect,CBitwiseBitmap* aMaskBitmap,TUint32* aMaskBase,const TPoint& aDitherOrigin,TInt aShadowMode, TBool aInvertMask);
+	void DoBitBltAlpha(const TPoint& aDest, CBitwiseBitmap* aSourceBitmap,
+					   TUint32* aSourceBase, const TRect& aSourceRect,
+					   CBitwiseBitmap* aMaskBitmap, TUint32* aMaskBase,
+					   const TPoint& aAlphaPoint, TInt aShadowMode, TBool aInvertMask);
 	void DoBitBltAlpha(const TPoint& aDestPt,
 					   const CBitwiseBitmap* aSrcBmp1,
 					   TUint32* aSrcBmpDataAddr1,
@@ -452,23 +436,23 @@ private:
 	void DoDrawLine(TPoint aStart,TPoint aEnd,TBool aDrawStartPoint);
 	void DoDrawDottedWideLine(const TPoint& pt1,const TPoint& pt2,TBool drawstart,const TRect& screenrect);
 	void DoDrawSolidWideLine(const TPoint& pt1,const TPoint& pt2,TBool drawstart,const TRect& screenrect);
-	void DoDrawText(CFont::TPositionParam& aParam);
+	void DoDrawText(CFont::TPositionParam& aParam,const TInt aEnd);
 	void DoDrawCharacter(const TPoint& aTopLeft,const TSize& aDataSize,const TUint8* aData);
-	void DoDrawTextEx(CFont::TPositionParam& aParam,const CBitmapFont* font);
+	void DoDrawTextEx(CFont::TPositionParam& aParam,const CBitmapFont* font,const TInt aEnd, const TInt aUnderlineStrikethroughOffset);
 	void DoDrawCharacterEx(const TPoint& aTopLeft,const TSize& aDataSize,const TUint8* aData,
 		TBool aBold,TBool aItalic,TInt aSemiAscent);
-	void DoDrawCharacterAntiAliased(const TPoint& aTopLeft,const TSize& aDataSize,const TUint8* aData);
-	void DoDrawTextLarge(CFont::TPositionParam& aParam,const CBitmapFont* font);
+	void DoDrawCharacterAntiAliased(const TPoint& aTopLeft,const TSize& aDataSize,const TUint8* aData, const TGlyphBitmapType aGlyphType);
+	void DoDrawTextLarge(CFont::TPositionParam& aParam,const CBitmapFont* font,const TInt aEnd);
 	void DoDrawCharacterLarge(const TPoint& aTopLeft,const TSize& aDataSize,const TUint8* aData,
 		TBool aBold,TBool aItalic,TInt aSemiAscent,TInt aWidthFactor,TInt aHeightFactor);
 	void DoDrawCharacterExLarge(const TPoint& aTopLeft,const TSize& aDataSize,const TUint8* aData,
 		TBool aBold,TBool aItalic,TInt aSemiAscent,TInt aWidthFactor,TInt aHeightFactor);
 	void DoDrawCharacterMultiplied(const TPoint& aTopLeft,const TSize& aDataSize,const TUint8* aData,
 		TBool aBold,TBool aItalic,TInt aSemiAscent,TInt aWidthMultiplier,TInt aHeightMultiplier);
-	void DoDrawTextVertical(CFont::TPositionParam& aParam,const CBitmapFont* font,TBool aUp);
+	void DoDrawTextVertical(CFont::TPositionParam& aParam,const CBitmapFont* font,TBool aUp,const TInt aEnd);
 	void DoDrawCharacterVertical(const TPoint& aTopLeft,const TSize& aDataSize,const TUint8* aData,
 		TBool aBold,TBool aItalic,TInt aSemiAscent,TInt aWidthFactor,TInt aHeightFactor,TBool aUp);
-	void DoDrawCharacterVerticalAntiAliased(const TPoint& aTopLeft,const TSize& aDataSize,const TUint8* aData,TBool aUp);
+	void DoDrawCharacterVerticalAntiAliased(const TPoint& aTopLeft,const TSize& aDataSize,const TUint8* aData,TBool aUp, TGlyphBitmapType aGlyphBitmapType);
 	void DoPlot(const TPoint& pt);
 	void EllipseFill(const TRect& aRect);
 	void EllipseOutline(const TRect& aRect);
@@ -507,6 +491,11 @@ private:
 	TInt APIExGetShadowColor(TAny*& aShadowColor);
 	TInt FastBlendInterface(const CBitwiseBitmap* aSource, const CBitwiseBitmap* aMask, MFastBlend*& aFastBlend) const;
 	TInt APIExIsFbsBitGc(TAny*& aIsCFbsBitGc);
+	TDisplayMode ScanLineBufferDisplayMode(CFbsDrawDevice* aDrawDevice);
+	TInt BaselineCorrection();
+	CFbsRasterizer* PrepareRasterizerForExtendedBitmap(const CFbsBitmap& aBitmap);
+	CFbsRasterizer* PrepareRasterizerForExtendedBitmap(const CFbsBitmap& aBitmap, const TRect& aDestRect, const TPoint& aOffset);
+	CFbsRasterizer* PrepareRasterizerForExtendedBitmap(const CFbsBitmap& aBitmap, const TRect& aDestRect, const TRect& aSourceRect);
 protected:
 	/** This function should not be used by externals but must retain the
 	same ordinal number to maintain BC, thus is exported.*/
@@ -574,3 +563,4 @@ inline void CFbsBitGc::SetFadingParameters(TUint8 aBlackMap /*=0*/)
 	{SetFadingParameters(aBlackMap,255);}		//255 is the value of white map when not fading
 
 #endif
+

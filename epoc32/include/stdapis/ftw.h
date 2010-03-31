@@ -2,7 +2,7 @@
 
 /*
  * Copyright (c) 2003 Todd C. Miller <Todd.Miller@courtesan.com>
- * © Portions copyright (c) 2007 Symbian Software Ltd. All rights reserved.
+
  *
  * Permission to use, copy, modify, and distribute this software for any
  * purpose with or without fee is hereby granted, provided that the above
@@ -23,6 +23,8 @@
  * $FreeBSD: src/include/ftw.h,v 1.2 2004/08/24 13:00:54 tjr Exp $
  */
 
+/* Portions Copyright (c) 2007 Nokia Corporation and/or its subsidiary(-ies).  All rights reserved.*/
+ 
 #ifndef	_FTW_H
 #define	_FTW_H
 
@@ -60,6 +62,11 @@ struct FTW {
 __BEGIN_DECLS
 
 IMPORT_C int	ftw(const char *, int (*)(const char *, const struct stat *, int), int);
+
+#if defined(SYMBIAN_OE_LARGE_FILE_SUPPORT) && !defined(SYMBIAN_OE_NO_LFS)
+#define ftw64	ftw
+#endif /* SYMBIAN_OE_LARGE_FILE_SUPPORT && !SYMBIAN_OE_NO_LFS */
+
 
 #ifndef __SYMBIAN32__
 IMPORT_C int	nftw(const char *, int (*)(const char *, const struct stat *, int,

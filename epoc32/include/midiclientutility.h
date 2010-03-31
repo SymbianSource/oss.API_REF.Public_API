@@ -1,9 +1,9 @@
 // Copyright (c) 2003-2009 Nokia Corporation and/or its subsidiary(-ies).
 // All rights reserved.
 // This component and the accompanying materials are made available
-// under the terms of the License "Symbian Foundation License v1.0" to Symbian Foundation members and "Symbian Foundation End User License Agreement v1.0" to non-members
+// under the terms of "Eclipse Public License v1.0"
 // which accompanies this distribution, and is available
-// at the URL "http://www.symbianfoundation.org/legal/licencesv10.html".
+// at the URL "http://www.eclipse.org/legal/epl-v10.html".
 //
 // Initial Contributors:
 // Nokia Corporation - initial contribution.
@@ -220,12 +220,12 @@ class CMidiClientUtility : public CBase
 public:
 	IMPORT_C static CMidiClientUtility* NewL(MMidiClientUtilityObserver& aObserver,
 											 TInt aPriority = EMdaPriorityNormal,
-											 TMdaPriorityPreference aPref = EMdaPriorityPreferenceTimeAndQuality);
+											 TInt aPref = EMdaPriorityPreferenceTimeAndQuality);
 	
 	// alternative NewL for selecting shared/separate controller heap(s)
 	IMPORT_C static CMidiClientUtility* NewL(MMidiClientUtilityObserver& aObserver,
 											 TInt aPriority,
-											 TMdaPriorityPreference aPref,
+											 TInt aPref,
 											 TBool aUseSharedHeap);
 
 	/**	Destructor */
@@ -300,7 +300,7 @@ public:
 	IMPORT_C void SetVolumeRampL(const TTimeIntervalMicroSeconds& aRampDuration);
 	IMPORT_C TInt GetBalanceL() const;
 	IMPORT_C void SetBalanceL(TInt aBalance = KMMFBalanceCenter);
-	IMPORT_C void SetPriorityL(TInt aPriority, TMdaPriorityPreference aPref);
+	IMPORT_C void SetPriorityL(TInt aPriority, TInt aPref);
 	IMPORT_C TInt NumberOfMetaDataEntriesL() const;
 	IMPORT_C CMMFMetaDataEntry* GetMetaDataEntryL(TInt aMetaDataIndex) const;
 /**

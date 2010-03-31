@@ -1,9 +1,9 @@
 // Copyright (c) 1997-2009 Nokia Corporation and/or its subsidiary(-ies).
 // All rights reserved.
 // This component and the accompanying materials are made available
-// under the terms of the License "Symbian Foundation License v1.0" to Symbian Foundation members and "Symbian Foundation End User License Agreement v1.0" to non-members
+// under the terms of "Eclipse Public License v1.0"
 // which accompanies this distribution, and is available
-// at the URL "http://www.symbianfoundation.org/legal/licencesv10.html".
+// at the URL "http://www.eclipse.org/legal/epl-v10.html".
 //
 // Initial Contributors:
 // Nokia Corporation - initial contribution.
@@ -55,8 +55,10 @@ class CVersitParser;
 class MVersitPlugIn;
 class CParserPropertyValueCDesCArray;
 
+#ifndef SYMBIAN_ENABLE_SPLIT_HEADERS
 const TInt KRandomnumberlen = 5;
-const TInt KMaxGeneratedfilenamelen =16; 
+const TInt KMaxGeneratedfilenamelen =16;
+#endif 
 //
 // CParserParam
 //
@@ -357,7 +359,8 @@ protected:
 protected:
 	CBufSeg* iValue;
 	};//
-	
+
+#ifndef SYMBIAN_ENABLE_SPLIT_HEADERS	
 NONSHARABLE_CLASS(CParserPropertyValueBinaryFile) : public CParserPropertyValueBinary
 /** A file property value parser.
 
@@ -365,7 +368,7 @@ It is used to store a file handle so that the binary data can be read through th
 It is not used when importing.
 The UID for a binary property value is KVersitPropertyBinaryUid. 
 @publishedPartner
-@prototype
+@released
 */
 	{
 public:
@@ -379,7 +382,7 @@ private:
 private:
 	RFileReadStream iFileStream;
 	};
-
+#endif //SYMBIAN_ENABLE_SPLIT_HEADERS
 //  CParserPropertyValueCDesCArray
 //
 class CParserPropertyValueCDesCArray : public CParserPropertyValue

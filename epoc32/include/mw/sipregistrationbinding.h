@@ -2,9 +2,9 @@
 * Copyright (c) 2006-2009 Nokia Corporation and/or its subsidiary(-ies).
 * All rights reserved.
 * This component and the accompanying materials are made available
-* under the terms of the License "Symbian Foundation License v1.0" to Symbian Foundation members and "Symbian Foundation End User License Agreement v1.0" to non-members
+* under the terms of "Eclipse Public License v1.0"
 * which accompanies this distribution, and is available
-* at the URL "http://www.symbianfoundation.org/legal/licencesv10.html".
+* at the URL "http://www.eclipse.org/legal/epl-v10.html".
 *
 * Initial Contributors:
 * Nokia Corporation - initial contribution.
@@ -26,7 +26,24 @@
 
 // INCLUDES
 #include "sipregistrationcontext.h"
-#include "_sipcodecdefs.h"
+
+//CONSTANTS
+
+/** Property to modify the registration behaviour of the SIP stack. 
+* Property value is of type boolean. When the value is set to false,
+* registration will be attempted without expires value.
+* Default value for this property is true.
+*/
+const TUint32 KSIPSendWithExpires = 200;
+
+/** Property to modify the registration behaviour of the SIP stack.
+* Property value is of type boolean. When the value is set to true,
+* resolved outbound proxy ip of the registration will be used for all
+* transactions which uses this registration context(id). The resolved ip is
+* updated on every successful registration in that context.
+* Default value for this property is false.
+*/
+const TUint32 KSIPCacheOutboundProxyIP = 201;
 
 // FORWARD DECLARATIONS
 class CUri8;
@@ -299,6 +316,15 @@ class CSIPRegistrationBinding :
         *         Ownership is not transferred.
         */
         IMPORT_C const CSIPContactHeader* RegisteredContact() const;
+        
+        /**
+        * Sets/resets properties.
+        * @param aProperty. Property name
+        * @param aValue. Property value
+        * @return KErrSIPInvalidRegistrationState if IsContextActive() is ETrue
+        * @return KErrNotFound if property is not found, KErrNone otherwise
+        */
+        IMPORT_C TInt SetProperty(TUint32 aProperty,TBool aValue);
 
 	public: // New functions, for internal use
 		/**
@@ -307,7 +333,7 @@ class CSIPRegistrationBinding :
  		* @return CRegBindingImplementation
 		*/
 		CRegBindingImplementation& Implementation();
-
+		
 	private: // Constructors
 		CSIPRegistrationBinding();
 
@@ -318,19 +344,20 @@ class CSIPRegistrationBinding :
 						CSIPRouteHeader* aOutboundProxy,
 						CUri8* aRemoteUri,
                         CSIPFromHeader* aFrom);        
-
+		
 	private: // Data
 		CRegBindingImplementation* iImplementation;
 
 	private: // For testing purposes		        
-
-		UNIT_TEST(CSIP_Test)
-        UNIT_TEST(CSIPRegistrationBinding_Test)
-        UNIT_TEST(CSIPInviteDialogAssoc_Test)
-        UNIT_TEST(CSIPSubscribeDialogAssoc_Test)
-        UNIT_TEST(CSIPReferDialogAssoc_Test)
-
-		__DECLARE_TEST;
+#ifdef CPPUNIT_TEST
+		friend class CSIP_Test;
+        friend class CSIPRegistrationBinding_Test;
+        friend class CSIPInviteDialogAssoc_Test;
+        friend class CSIPSubscribeDialogAssoc_Test;
+        friend class CSIPReferDialogAssoc_Test;
+#endif
+		void __DbgTestInvariant() const;
+	
 	};
 
 #endif

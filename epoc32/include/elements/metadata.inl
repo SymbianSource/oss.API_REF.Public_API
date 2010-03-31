@@ -1,53 +1,52 @@
-/**
-* Copyright (c) 2004-2009 Nokia Corporation and/or its subsidiary(-ies).
-* All rights reserved.
-* This component and the accompanying materials are made available
-* under the terms of the License "Symbian Foundation License v1.0" to Symbian Foundation members and "Symbian Foundation End User License Agreement v1.0" to non-members
-* which accompanies this distribution, and is available
-* at the URL "http://www.symbianfoundation.org/legal/licencesv10.html".
-*
-* Initial Contributors:
-* Nokia Corporation - initial contribution.
-*
-* Contributors:
-*
-* Description:
-*
-*/
-
-
-
-
+// Copyright (c) 2004-2009 Nokia Corporation and/or its subsidiary(-ies).
+// All rights reserved.
+// This component and the accompanying materials are made available
+// under the terms of "Eclipse Public License v1.0"
+// which accompanies this distribution, and is available
+// at the URL "http://www.eclipse.org/legal/epl-v10.html".
+//
+// Initial Contributors:
+// Nokia Corporation - initial contribution.
+//
+// Contributors:
+//
+// Description:
+//
 
 /**
- @file MetaData.inl
+ @file 
  @internalTechnology
 */
 
-#ifndef __METADATA_INL__
-#define __METADATA_INL__
+#ifndef __E_METADATA_INL__
+#define __E_METADATA_INL__
 
 namespace Meta
 {
 
 
-STypeId::STypeId()
+STypeId STypeId::CreateSTypeId()
 /**
  * Constructor
  */
 	{
-	iUid.iUid = 0;
-	iType = 0;
+	STypeId id;
+	id.iUid.iUid = 0;
+	id.iType = 0;
+	return id;
 	}
 
-STypeId::STypeId(TUint32 aUid, TUint32 aTypeId)
+STypeId STypeId::CreateSTypeId(TUint32 aUid, TUint32 aTypeId)
 /**
  * Constructor
  */
 	{
-	iUid.iUid = aUid;
-	iType = aTypeId;
+	STypeId id;
+	id.iUid.iUid = aUid;
+	id.iType = aTypeId;
+	return id;
 	}
 
 }	// namespace Meta
-#endif	// __METADATA_INL__
+#endif	// __E_METADATA_INL__
+

@@ -18,11 +18,10 @@
 */
 
 
-
-
 /**
  @file 
- @internalTechnology 
+ @publishedAll
+ @released
 */
  
 #ifndef __PKIXVALIDATIONRESULT_H__
@@ -34,7 +33,6 @@
 class RReadStream;
 /**
  * Base class for CPKIXValidationResult.
- * @internalTechnology
  */
 class CPKIXValidationResultBase : public CBase
 	{
@@ -87,7 +85,9 @@ public:
 	* @return	An array of certificate policies. */
 	IMPORT_C const CArrayPtrFlat<CX509CertPolicyInfo>& Policies() const;
 	
-	/** Resets the validation result object to its default values. */
+	/** Resets the validation result object to its default values. 
+	 * @internalTechnology
+	 */
 	void Reset();
 	
 	/** Sets the error status, and then leaves.
@@ -96,31 +96,41 @@ public:
 	* 
 	* @param aError	The error type that occurred when validating the certificate chain.
 	* @param aCert	The index number identifying the certificate that gave rise to 
-	* 				the error. */
+	* 				the error. 
+    * @internalTechnology
+	*/
 	void SetErrorAndLeaveL(const TValidationError aError, const TInt aCert);
 	
 	/** Sets the error status.
 	* 
 	* @param aError	The error type that occurred when validating the certificate chain.
 	* @param aCert	The index number identifying the certificate that gave rise to 
-	* 				the error. */
+	* 				the error. 
+	* @internalTechnology
+	*/
 	void SetError(const TValidationError aError, const TInt aCert);
 	
 	/** Adds a warning to the validation result.
 	* 
-	* @param aWarning	The warning to be added. */
+	* @param aWarning	The warning to be added. 
+	* @internalTechnology
+	*/
 	void AppendWarningL(TValidationStatus aWarning);
 	
 	/** Adds a policy to the validation result.
 	* 
-	* @param aPolicy	The policy to be added. */
+	* @param aPolicy	The policy to be added.
+	* @internalTechnology
+	*/
 	void AppendPolicyL(CX509CertPolicyInfo& aPolicy);
 
 	/** Removes all policies from the validation result.
 	* 
 	* It is used by the validation process to remove policies it has added when 
 	* the computation cannot complete because of environmental conditions such as 
-	* out of memory, file access failures, etc.. */
+	* out of memory, file access failures, etc..
+	* @internalTechnology
+	*/
 	// (not like signature validation...)
 	void RemovePolicies();
 
@@ -176,8 +186,6 @@ private:
 /** Stores the information regarding the results of a validation of a PKIX 
 * certificate chain. 
 *
-* @publishedAll
-* @released
 * @since v6.0 */
 class CPKIXValidationResult : public CPKIXValidationResultBase
 	{

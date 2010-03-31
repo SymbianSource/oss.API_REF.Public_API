@@ -1,9 +1,9 @@
 // Copyright (c) 1999-2009 Nokia Corporation and/or its subsidiary(-ies).
 // All rights reserved.
 // This component and the accompanying materials are made available
-// under the terms of the License "Symbian Foundation License v1.0" to Symbian Foundation members and "Symbian Foundation End User License Agreement v1.0" to non-members
+// under the terms of "Eclipse Public License v1.0"
 // which accompanies this distribution, and is available
-// at the URL "http://www.symbianfoundation.org/legal/licencesv10.html".
+// at the URL "http://www.eclipse.org/legal/epl-v10.html".
 //
 // Initial Contributors:
 // Nokia Corporation - initial contribution.
@@ -11,78 +11,18 @@
 // Contributors:
 //
 // Description:
+// SMSCLNT.H
 //
-
+/**
+ * @file 
+ * @publishedAll
+ * @released
+ */
 #ifndef __SMSCLNT_H__
 #define __SMSCLNT_H__
 
 #include <mtclbase.h>
 #include <smuthdr.h>
-
-
-/**
-The UID that indentifies the SMS message editor application.
-
-This is the response to the query for the KUidMsvMtmQueryEditorUidValue
-capability.
-
-@see	CSmsClientMtm::QueryCapability
-
-@publishedPartner
-@released
-*/
-const TInt KUidMsgSmsEditorAppVal=0x1000163f;
-
-/**
-The maximum number of SMS PDUs allowed in a concatenated SMS message.
-
-Together with KSmcmMaxCharsInMessageConcatenated7Bit, this is the response to
-the query for the KUidMtmQueryMaxTotalMsgSizeValue capability.
-
-@see	CSmsClientMtm::QueryCapability
-@see	KSmcmMaxCharsInMessageConcatenated7Bit
-
-@internalComponent
-@released
-*/
-const TInt KSmcmMaxMessageNumber=0x32;
-
-/**
-The maximum number of characters in a concatenated SMS PDU.
-
-Together with KSmcmMaxMessageNumber, this is the response to the query for the
-KUidMtmQueryMaxTotalMsgSizeValue capability.
-
-@see	CSmsClientMtm::QueryCapability
-@see	KSmcmMaxCharsInMessageConcatenated7Bit
-
-@internalComponent
-@released
-*/
-const TInt KSmcmMaxCharsInMessageConcatenated7Bit=0x99;
-
-/**
-The maximum number of characters in a non-concatenated SMS PDU.
-
-This is the response to the query for the KUidMtmQueryMaxBodySizeValue
-capability.
-
-@see	CSmsClientMtm::QueryCapability
-
-@internalComponent
-@released
-*/
-const TInt KSmcmMaxTotalMsgSize=160;
-
-/**
-The granularity of the in-memory buffer for CRichText objects.
-
-@see	CRichText::NewL
-
-@internalComponent
-@released
-*/
-const TInt KSmcmRichTextConstant=256;
 
 class CSmsHeader;
 class CSmsMessage;
@@ -118,7 +58,7 @@ CBaseMtm::SetCurrentEntryL API.
 @publishedAll
 @released
 */
-class CSmsClientMtm : public CBaseMtm
+NONSHARABLE_CLASS (CSmsClientMtm) : public CBaseMtm
 	{
 public:
 
@@ -135,8 +75,9 @@ public:
 
 	IMPORT_C void RestoreServiceAndSettingsL();
 	IMPORT_C CSmsSimParamOperation* ReadSimParamsL(TRequestStatus& aObserverRequestStatus);
-	IMPORT_C CSmsSimParamOperation* WriteSimParamsL(const CMobilePhoneSmspList& aList, TRequestStatus& aObserverRequestStatus); 
-	
+	IMPORT_C CSmsSimParamOperation* WriteSimParamsL(const CMobilePhoneSmspList& aList, TRequestStatus& aObserverRequestStatus);
+	IMPORT_C void SaveMessageL(CMsvStore& aEditStore, TMsvEntry& aEntry);
+	IMPORT_C void CreateMessageL(TMsvEntry& aEntry);
 	/** 
 	Sets the character encoding value. The character encoding value options are 7-bit,
 	8-bit and 16-Bit Unicode. By default the character set encoding is 7 bit encoding.

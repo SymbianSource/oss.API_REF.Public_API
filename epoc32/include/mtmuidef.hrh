@@ -1,9 +1,9 @@
 // Copyright (c) 1998-2009 Nokia Corporation and/or its subsidiary(-ies).
 // All rights reserved.
 // This component and the accompanying materials are made available
-// under the terms of the License "Symbian Foundation License v1.0" to Symbian Foundation members and "Symbian Foundation End User License Agreement v1.0" to non-members
+// under the terms of "Eclipse Public License v1.0"
 // which accompanies this distribution, and is available
-// at the URL "http://www.symbianfoundation.org/legal/licencesv10.html".
+// at the URL "http://www.eclipse.org/legal/epl-v10.html".
 //
 // Initial Contributors:
 // Nokia Corporation - initial contribution.
@@ -14,16 +14,15 @@
 // Function ids
 // 
 //
-
-
-
+/**
+ * @file 
+ * @publishedPartner
+ * @released
+ */
 
 /**
- @file
- @publishedAll
- @released
- @publishedPartner
- @released
+* @publishedPartner
+* @released
 */
 #define KMtmUiFunctionPrint			 				0x200000	// KMtmFirstFreeMtmFunctionId + 0x100000
 /**
@@ -62,7 +61,7 @@
 */
 #define KMtmUiFunctionFetchSelected					0x200007
 /**
-* @internalComponent
+* @publishedPartner
 * @released
 */
 #define KMtmFirstFreeMtmUiFunctionId 				0x201000	

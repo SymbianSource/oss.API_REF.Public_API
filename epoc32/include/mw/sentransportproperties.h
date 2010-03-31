@@ -1,19 +1,22 @@
 /*
-* Copyright (c) 2005 Nokia Corporation and/or its subsidiary(-ies). 
+* Copyright (c) 2005 Nokia Corporation and/or its subsidiary(-ies).
 * All rights reserved.
 * This component and the accompanying materials are made available
-* under the terms of the License "Symbian Foundation License v1.0" to Symbian Foundation members and "Symbian Foundation End User License Agreement v1.0" to non-members
+* under the terms of "Eclipse Public License v1.0"
 * which accompanies this distribution, and is available
-* at the URL "http://www.symbianfoundation.org/legal/licencesv10.html".
+* at the URL "http://www.eclipse.org/legal/epl-v10.html".
 *
 * Initial Contributors:
 * Nokia Corporation - initial contribution.
 *
 * Contributors:
 *
-* Description:  Transport properties class declaration     
+* Description:     Transport properties class declaration     
 *
 */
+
+
+
 
 #ifndef SEN_TRANSPORT_PROPERTIES_H
 #define SEN_TRANSPORT_PROPERTIES_H
@@ -41,11 +44,15 @@ _LIT8( KSenConnectionHeartbeat,      "Heartbeat"        );
 _LIT8( KSenConnectionHeartbeatMaxTTL,"MaxTTL"           );
 _LIT8( KSenConnectionHeartbeatMinTTL,"MinTTL"           );
 _LIT8( KSenEndpointResource,         "EndpointResource" );
+_LIT8( KSenConnectionProxyUrl,"ProxyUrl"           );
 
 _LIT8( KNCIMConsumerKeyId,      "ConsumerKeyId"         );
 _LIT8( KNCIMConsumerSecret,     "ConsumerSecret"        );
 _LIT8( KNCIMConsumerServiceId,  "ConsumerServiceId"     );
 _LIT8( KNCIMEndpoint,				"NCIMEndpoint"     );
+_LIT8( KSenConnectionRetryDelta,     "RetryDelta" );
+_LIT8( KSenConnectionRetryMaxTTL,    "RetryMaxTTL");
+_LIT8( KSenConnectionRetryMinTTL,    "RetryMinTTL");
 _LIT8( KNCIMCountry,				"mcc"     );
 
 
@@ -60,6 +67,13 @@ _LIT8( KSenSNAPDoNotPrompt,           "SNAPDoNotPrompt"   );
 // Property type attribute's name for HTTP headers:
 _LIT8( KHttpHeaderType,              "HttpHeader"       );
 _LIT8( KAttachmentFileType,          "FileAttachment"   );
+
+/* Property type attribute's name for Deflate Filters:
+   Set this http transport property for the enabling of
+   http compression.Http data Compression works from 
+   server to client side.
+ */
+_LIT8( KWsPropertyValueHttpFilterDeflate, "HttpFilterDeflate"     );
 
 class CSenTransportProperties : public CSenXmlProperties
     {

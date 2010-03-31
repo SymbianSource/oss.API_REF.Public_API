@@ -1,9 +1,9 @@
 // Copyright (c) 1999-2009 Nokia Corporation and/or its subsidiary(-ies).
 // All rights reserved.
 // This component and the accompanying materials are made available
-// under the terms of the License "Symbian Foundation License v1.0" to Symbian Foundation members and "Symbian Foundation End User License Agreement v1.0" to non-members
+// under the terms of "Eclipse Public License v1.0"
 // which accompanies this distribution, and is available
-// at the URL "http://www.symbianfoundation.org/legal/licencesv10.html".
+// at the URL "http://www.eclipse.org/legal/epl-v10.html".
 //
 // Initial Contributors:
 // Nokia Corporation - initial contribution.
@@ -16,9 +16,6 @@
 // 
 //
 
-
-
-
 /**
  @file
  
@@ -28,10 +25,9 @@
  
 */
 inline const TTimeIntervalMicroSeconds32& TSmsSettings::Timeout() const
-	{
-	return iTimeoutMicroSeconds32;
-	}
-
+    {
+    return iTimeoutMicroSeconds32;
+    }
 
 /**
  *  Sets the time-out value.
@@ -39,10 +35,9 @@ inline const TTimeIntervalMicroSeconds32& TSmsSettings::Timeout() const
  *  @param aTimeout Time-out value 
  */
 inline void TSmsSettings::SetTimeout(const TTimeIntervalMicroSeconds32& aTimeout)
-	{
-	iTimeoutMicroSeconds32=aTimeout;
-	}
-
+    {
+    iTimeoutMicroSeconds32=aTimeout;
+    }
 
 /**
  *  Gets the maximum number of attempts to send an SMS.
@@ -50,10 +45,9 @@ inline void TSmsSettings::SetTimeout(const TTimeIntervalMicroSeconds32& aTimeout
  *  @return Maximum number of attempts to send a SMS 
  */
 inline TInt TSmsSettings::SendTryLimit() const
-	{
-	return iSendTryLimit;
-	}
-
+    {
+    return iSendTryLimit;
+    }
 
 /**
  *  Sets the maximum number of attempts to send an SMS.
@@ -61,10 +55,9 @@ inline TInt TSmsSettings::SendTryLimit() const
  *  @param aLimit Maximum number of attempts to send a SMS 
  */
 inline void TSmsSettings::SetSendTryLimit(TInt aLimit)
-	{
-	iSendTryLimit=aLimit;
-	}
-
+    {
+    iSendTryLimit=aLimit;
+    }
 
 /**
  *  Gets whether the PDU can be deleted from the SIM.
@@ -72,10 +65,9 @@ inline void TSmsSettings::SetSendTryLimit(TInt aLimit)
  *  @return True if the PDU can be deleted from the SIM 
  */
 inline TBool TSmsSettings::DeletePDUsFromSIM() const
-	{
-	return iFlags&ESmsFlagDeletePDUsFromSIM;
-	}
-
+    {
+    return iFlags&ESmsFlagDeletePDUsFromSIM;
+    }
 
 /**
  *  Sets whether the PDU can be deleted from the SIM.
@@ -83,10 +75,9 @@ inline TBool TSmsSettings::DeletePDUsFromSIM() const
  *  @param aDelete True if the PDU can be deleted from the SIM 
  */
 inline void TSmsSettings::SetDeletePDUsFromSIM(TBool aDelete)
-	{
-	iFlags=aDelete? iFlags|ESmsFlagDeletePDUsFromSIM: iFlags&(~ESmsFlagDeletePDUsFromSIM);
-	}
-
+    {
+    iFlags=aDelete? iFlags|ESmsFlagDeletePDUsFromSIM: iFlags&(~ESmsFlagDeletePDUsFromSIM);
+    }
 
 /**
  *  Gets whether the PDU can be deleted from the phone store.
@@ -94,10 +85,9 @@ inline void TSmsSettings::SetDeletePDUsFromSIM(TBool aDelete)
  *  @return True if the PDU can be deleted from the phone store 
  */
 inline TBool TSmsSettings::DeletePDUsFromPhoneStores() const
-	{
-	return iFlags&ESmsFlagDeletePDUsFromPhoneStores;
-	}
-
+    {
+    return iFlags&ESmsFlagDeletePDUsFromPhoneStores;
+    }
 
 /**
  *  Sets whether the PDU can be deleted from the phone store.
@@ -105,10 +95,9 @@ inline TBool TSmsSettings::DeletePDUsFromPhoneStores() const
  *  @param aDelete True if the PDU can be deleted from phone store 
  */
 inline void TSmsSettings::SetDeletePDUsFromPhoneStores(TBool aDelete)
-	{
-	iFlags=aDelete? iFlags|ESmsFlagDeletePDUsFromPhoneStores: iFlags&(~ESmsFlagDeletePDUsFromPhoneStores);
-	}
-
+    {
+    iFlags=aDelete? iFlags|ESmsFlagDeletePDUsFromPhoneStores: iFlags&(~ESmsFlagDeletePDUsFromPhoneStores);
+    }
 
 /**
  *  Gets whether the PDU can be deleted from the combined store.
@@ -116,10 +105,9 @@ inline void TSmsSettings::SetDeletePDUsFromPhoneStores(TBool aDelete)
  *  @return True if the PDU can be deleted from the combined store 
  */
 inline TBool TSmsSettings::DeletePDUsFromCombinedStores() const
-	{
-	return iFlags&ESmsFlagDeletePDUsFromCombinedStores;
-	}
-
+    {
+    return iFlags&ESmsFlagDeletePDUsFromCombinedStores;
+    }
 
 /**
  *  Sets whether the PDU can be deleted from the combined store.
@@ -127,10 +115,9 @@ inline TBool TSmsSettings::DeletePDUsFromCombinedStores() const
  *  @param aDelete True if the PDU can be deleted from the combined store 
  */
 inline void TSmsSettings::SetDeletePDUsFromCombinedStores(TBool aDelete)
-	{
-	iFlags=aDelete? iFlags|ESmsFlagDeletePDUsFromCombinedStores: iFlags&(~ESmsFlagDeletePDUsFromCombinedStores);
-	}
-
+    {
+    iFlags=aDelete? iFlags|ESmsFlagDeletePDUsFromCombinedStores: iFlags&(~ESmsFlagDeletePDUsFromCombinedStores);
+    }
 
 /**
  *  Gets the value of the Reassembly store life time.
@@ -138,10 +125,9 @@ inline void TSmsSettings::SetDeletePDUsFromCombinedStores(TBool aDelete)
  *  @return Reassembly store life time 
  */
 inline const TTimeIntervalMinutes& TSmsSettings::ReassemblyLifetime() const
-	{
-	return iReassemblyLifetime;
-	}
-
+    {
+    return iReassemblyLifetime;
+    }
 
 /**
  *  Sets the value of the Reassembly store life time.
@@ -149,10 +135,9 @@ inline const TTimeIntervalMinutes& TSmsSettings::ReassemblyLifetime() const
  *  @param aReassemblyLifetime Reassembly store life time 
  */
 inline void TSmsSettings::SetReassemblyLifetime(const TTimeIntervalMinutes& aReassemblyLifetime)
-	{
-	iReassemblyLifetime=aReassemblyLifetime;
-	}
-
+    {
+    iReassemblyLifetime=aReassemblyLifetime;
+    }
 
 /**
  *  Gets the value of the segmentation store multiplier.
@@ -160,10 +145,9 @@ inline void TSmsSettings::SetReassemblyLifetime(const TTimeIntervalMinutes& aRea
  *  @return Segmentation store multiplier 
  */
 inline TInt TSmsSettings::KSegmentationLifetimeMultiplier() const
-	{
-	return iKSegmentationLifetimeMultiplier;
-	}
-
+    {
+    return iKSegmentationLifetimeMultiplier;
+    }
 
 /**
  *  Sets the value of the segmentation store multiplier.
@@ -171,10 +155,9 @@ inline TInt TSmsSettings::KSegmentationLifetimeMultiplier() const
  *  @param aKSegmentationLifetimeMultiplier Segmentation store multiplier 
  */
 inline void TSmsSettings::SetKSegmentationLifetimeMultiplier(TInt aKSegmentationLifetimeMultiplier)
-	{
-	iKSegmentationLifetimeMultiplier=aKSegmentationLifetimeMultiplier;
-	}
-
+    {
+    iKSegmentationLifetimeMultiplier=aKSegmentationLifetimeMultiplier;
+    }
 
 /**
  *  Gets the value of the modem initialisation timeout duration.
@@ -182,10 +165,9 @@ inline void TSmsSettings::SetKSegmentationLifetimeMultiplier(TInt aKSegmentation
  *  @return Modem initialisation timeout duration 
  */
 inline const TTimeIntervalMicroSeconds32& TSmsSettings::ModemInitializationTimeout() const
-	{
-	return iModemInitializationTimeoutMicroSeconds32;
-	}
-
+    {
+    return iModemInitializationTimeoutMicroSeconds32;
+    }
 
 /**
  *  Sets the value of the modem initialisation timeout duration.
@@ -193,10 +175,9 @@ inline const TTimeIntervalMicroSeconds32& TSmsSettings::ModemInitializationTimeo
  *  @param aTimeout Modem initialisation timeout duration 
  */
 inline void TSmsSettings::SetModemInitializationTimeout(const TTimeIntervalMicroSeconds32& aTimeout)
-	{
-	iModemInitializationTimeoutMicroSeconds32=aTimeout;
-	}
-
+    {
+    iModemInitializationTimeoutMicroSeconds32=aTimeout;
+    }
 
 /**
  *  Gets the Send Try Timeout value
@@ -204,10 +185,9 @@ inline void TSmsSettings::SetModemInitializationTimeout(const TTimeIntervalMicro
  *  @return Time-out value
  */
 inline const TTimeIntervalMicroSeconds32& TSmsSettings::SendTryTimeout() const
-	{
-	return iSendTryTimeoutMicroSeconds32;
-	}
-
+    {
+    return iSendTryTimeoutMicroSeconds32;
+    }
 
 /**
  *  Sets the Send Try Timeout value.
@@ -215,10 +195,9 @@ inline const TTimeIntervalMicroSeconds32& TSmsSettings::SendTryTimeout() const
  *  @param aTimeout Time-out value
  */
 inline void TSmsSettings::SetSendTryTimeout(const TTimeIntervalMicroSeconds32& aTimeout)
-	{
-	iSendTryTimeoutMicroSeconds32=aTimeout;
-	}
-
+    {
+    iSendTryTimeoutMicroSeconds32=aTimeout;
+    }
 
 /**
  *  Gets the Boot Timer Timeout value
@@ -229,7 +208,6 @@ inline const TTimeIntervalMicroSeconds32& TSmsSettings::BootTimerTimeout()
     {
     return iBootTimerTimeout32;
     }
-
 
 /**
  *  Sets the Boot Timer Timeout value

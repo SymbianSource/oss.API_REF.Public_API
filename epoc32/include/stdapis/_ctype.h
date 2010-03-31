@@ -38,8 +38,7 @@
  * From FreeBSD: src/include/ctype.h,v 1.27 2004/06/23 07:11:39 tjr Exp
  * $FreeBSD: src/include/_ctype.h,v 1.30 2004/08/21 07:00:40 tjr Exp $
  *
- *  © Portions copyright (c) 2006 Nokia Corporation.
- * © Portions copyright (c) 2007 Symbian Software Ltd. All rights reserved.
+ *  Portions Copyright (c) 2006-2007 Nokia Corporation and/or its subsidiary(-ies). All rights reserved.
  */
 
 #ifndef __CTYPE_H_

@@ -1,9 +1,9 @@
 // Copyright (c) 2001-2009 Nokia Corporation and/or its subsidiary(-ies).
 // All rights reserved.
 // This component and the accompanying materials are made available
-// under the terms of the License "Symbian Foundation License v1.0" to Symbian Foundation members and "Symbian Foundation End User License Agreement v1.0" to non-members
+// under the terms of "Eclipse Public License v1.0"
 // which accompanies this distribution, and is available
-// at the URL "http://www.symbianfoundation.org/legal/licencesv10.html".
+// at the URL "http://www.eclipse.org/legal/epl-v10.html".
 //
 // Initial Contributors:
 // Nokia Corporation - initial contribution.
@@ -12,8 +12,6 @@
 //
 // Description:
 //
-
-
 
 /**
  @file httperr.h
@@ -238,7 +236,7 @@ public:
 		/** Unused. ( Panic HTTP-CORE 2 )
 		*/
 		EHeaderParamMissing,
-		/** Unused. ( Panic HTTP-CORE 2 )
+		/** Unused. ( Panic HTTP-CORE 3 )
 		*/
 		EHeaderInvalidPart,
 		/** Mismatch between header's type and its attempted use. ( Panic HTTP-CORE 4 )
@@ -250,7 +248,7 @@ public:
 		/** A transaction error occurred, and the MHFRunError() in use didn't handle it. ( Panic HTTP-CORE 6 )
 		*/
 		ETransactionUnhandledError,
-		/** Attempted to add a filter while there is a transaction outstanding. ( Panic HTTP-CORE 6 )
+		/** Attempted to add a filter while there is a transaction outstanding. ( Panic HTTP-CORE 7 )
 		*/
 		EAddingFilterWithOutstandingTransactions,
 		/** Attempted to add a filter at a position not between the protocol handler and the client. ( Panic HTTP-CORE 8 )
@@ -279,7 +277,10 @@ public:
 		EAuthenticationFilterBadState,
 		/** An invalid filter handle was specified. ( Panic HTTP-CORE 16 )
 		*/
-		EInvalidFilterHandle
+		EInvalidFilterHandle,
+		/** An invalid event ( Panic HTTP-CORE 17 )
+		*/
+		EInvalidEvent
 		};
 
 	//##ModelId=3C4C18740366
@@ -518,6 +519,78 @@ Error encoding the Upgrade field
 @released
 */
 const TInt KErrHttpEncodeUpgrade			= KHttpHeaderEncodeErrorBase - 34;
+/**
+Error encoding the ST field
+@publishedAll
+@released
+*/
+const TInt KErrHttpEncodeST			= KHttpHeaderEncodeErrorBase - 35;
+/**
+Error encoding the USN field
+@publishedAll
+@released
+*/
+const TInt KErrHttpEncodeUSN			= KHttpHeaderEncodeErrorBase - 36;
+/**
+Error encoding the Timeout field
+@publishedAll
+@released
+*/
+const TInt KErrHttpEncodeTimeout			= KHttpHeaderEncodeErrorBase - 37;
+/**
+Error encoding the EXT field
+@publishedAll
+@released
+*/
+const TInt KErrHttpEncodeExt			= KHttpHeaderEncodeErrorBase - 38;
+/**
+Error encoding the SID field
+@publishedAll
+@released
+*/
+const TInt KErrHttpEncodeSID			= KHttpHeaderEncodeErrorBase - 39;
+/**
+Error encoding the NTS field
+@publishedAll
+@released
+*/
+const TInt KErrHttpEncodeNTS			= KHttpHeaderEncodeErrorBase - 40;
+/**
+Error encoding the NT field
+@publishedAll
+@released
+*/
+const TInt KErrHttpEncodeNT			= KHttpHeaderEncodeErrorBase - 41;
+/**
+Error encoding the MX field
+@publishedAll
+@released
+*/
+const TInt KErrHttpEncodeMX			= KHttpHeaderEncodeErrorBase - 42;
+/**
+Error encoding the SEQ field
+@publishedAll
+@released
+*/
+const TInt KErrHttpEncodeSEQ			= KHttpHeaderEncodeErrorBase - 43;
+/**
+Error encoding the MAN field
+@publishedAll
+@released
+*/
+const TInt KErrHttpEncodeMAN			= KHttpHeaderEncodeErrorBase - 44;
+/**
+Error encoding the SoapAction field
+@publishedAll
+@released
+*/
+const TInt KErrHttpEncodeSoapAction			= KHttpHeaderEncodeErrorBase - 45;
+/**
+Error encoding the Callback field
+@publishedAll
+@released
+*/
+const TInt KErrHttpEncodeCallback			= KHttpHeaderEncodeErrorBase - 46;
 
 /**
 Codec decoding errors for values found in HTTP headers
@@ -684,6 +757,12 @@ Error decoding the Content-Disposition field
 @released
 */
 const TInt KErrHttpDecodeContentDisposition	= KHttpHeaderDecodeErrorBase - 14;
+/**
+Error decoding the MAN field.
+@publishedAll
+@released
+*/
+const TInt KErrHttpDecodeMAN	=	KHttpHeaderDecodeErrorBase - 15;
 /**
 Response errors. These represent specific failure cases
 @publishedAll

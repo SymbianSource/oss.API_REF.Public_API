@@ -1,9 +1,9 @@
 // Copyright (c) 2001-2009 Nokia Corporation and/or its subsidiary(-ies).
 // All rights reserved.
 // This component and the accompanying materials are made available
-// under the terms of the License "Symbian Foundation License v1.0" to Symbian Foundation members and "Symbian Foundation End User License Agreement v1.0" to non-members
+// under the terms of "Eclipse Public License v1.0"
 // which accompanies this distribution, and is available
-// at the URL "http://www.symbianfoundation.org/legal/licencesv10.html".
+// at the URL "http://www.eclipse.org/legal/epl-v10.html".
 //
 // Initial Contributors:
 // Nokia Corporation - initial contribution.
@@ -13,10 +13,8 @@
 // Description:
 //
 
-
-
 /**
- @file THTTPHdrVal.h
+ @file
  @warning : This file contains Rose Model ID comments - please do not delete
 */
 
@@ -64,26 +62,26 @@ public: // classes
 	class TQConv
 		{
 	public:
-		/// Construct from a real number representation of 'q'
+		// Construct from a real number representation of 'q'
 	//##ModelId=3B1E66F20282
 		TQConv(TReal aQ);
 
-		/// Construct from a fixed-point representation of 'q'
+		// Construct from a fixed-point representation of 'q'
 	//##ModelId=3B1E66F2028C
 		TQConv(TInt aQ);
 
-		/// Integer cast operator to get the fixed-point representation
+		// Integer cast operator to get the fixed-point representation
 	//##ModelId=3B1E66F20281
 		operator TInt() const;
 
-		/// TReal cast operator to get the real number representation
+		// TReal cast operator to get the real number representation
 	//##ModelId=3B1E66F20280
 		operator TReal() const;
 	private:
-		/// The real number q-value
+		// The real number q-value
 	//##ModelId=3B1E66F2027A
 		TReal iQ;
-		/// The integer fixed-point q-value representation
+		// The integer fixed-point q-value representation
 	//##ModelId=3B1E66F2026E
 		TInt iFQ;
 		};

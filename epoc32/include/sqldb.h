@@ -1,9 +1,9 @@
 // Copyright (c) 2005-2009 Nokia Corporation and/or its subsidiary(-ies).
 // All rights reserved.
 // This component and the accompanying materials are made available
-// under the terms of the License "Symbian Foundation License v1.0" to Symbian Foundation members and "Symbian Foundation End User License Agreement v1.0" to non-members
+// under the terms of "Eclipse Public License v1.0"
 // which accompanies this distribution, and is available
-// at the URL "http://www.symbianfoundation.org/legal/licencesv10.html".
+// at the URL "http://www.eclipse.org/legal/epl-v10.html".
 //
 // Initial Contributors:
 // Nokia Corporation - initial contribution.
@@ -14,8 +14,6 @@
 // SQL Client side API header
 // 
 //
-
-
 
 /**
  @file
@@ -29,6 +27,10 @@
 #include <s32std.h>	//RReadStream, RWriteStream
 #endif
 
+#ifndef SYMBIAN_ENABLE_SPLIT_HEADERS 
+	#include <sqlresourcetester.h>
+#endif
+
 //Forward declarations
 class CSqlSecurityPolicy;
 class RSqlDatabase;
@@ -38,6 +40,24 @@ class CSqlStatementImpl;
 class RSqlColumnReadStream;
 class RSqlParamWriteStream;
 class TSqlScalarFullSelectQuery;
+class RSqlBlob;
+class RSqlBlobReadStream;
+class RSqlBlobWriteStream;
+class TSqlResourceProfiler;
+
+/**
+Used to specify that the ROWID of the most recently inserted record
+from the specified database connection should be used as the ROWID 
+in a call to directly access a blob.
+
+@see RSqlBlobReadStream
+@see RSqlBlobWriteStream
+@see TSqlBlob
+
+@publishedAll
+@released
+*/
+const TInt KSqlLastInsertedRowId = -1;
 
 /**
 A container for the security policies for a shared SQL database.
@@ -228,6 +248,8 @@ A RSqlDatabase object is, in effect, a handle to the SQL database. A client can:
 - attach a SQL database to current database connection by calling RSqlDatabase::Attach().
 - detach a SQL database from current database connection by calling RSqlDatabase::Detach().
 
+The RSqlDatabase handles are not thread-safe.
+
 A client can create either a non-secure database or a secure database,
 depending on the variant of RSqlDatabase::Create() that is used.
 - a non-secure database is created if the RSqlDatabase::Create(const TDesC&) variant is used.
@@ -281,6 +303,10 @@ class RSqlDatabase
 	{
 	friend class RSqlStatement;
 	friend class TSqlScalarFullSelectQuery;
+	friend class RSqlBlob;
+	friend class RSqlBlobReadStream;
+	friend class RSqlBlobWriteStream;
+	friend class TSqlResourceProfiler;
 	
 public:
 	/**
@@ -377,6 +403,20 @@ public:
 		*/
 		ESerializable
 		};
+	/**
+	This structure is used for retrieving the database size and database free space.
+	@see RSqlDatabase::Size(TSize&)
+	*/
+	struct TSize
+		{
+		/** The database size in bytes*/
+		TInt64	iSize;
+		/** The database free space in bytes*/
+		TInt64	iFree;
+		};
+
+	/** If this value is used as an argument of RSqlDatabase::Compact() (aSize argument), then all free space will be removed */
+	enum {EMaxCompaction = -1};
 		
 	IMPORT_C RSqlDatabase();
 	
@@ -409,9 +449,14 @@ public:
 	IMPORT_C void Exec(const TDesC8& aSqlStmt, TRequestStatus& aStatus);
 	
 	IMPORT_C TPtrC LastErrorMessage() const;
+	IMPORT_C TInt64 LastInsertedRowId() const; 
 	
 	IMPORT_C TBool InTransaction() const;
 	IMPORT_C TInt Size() const;
+	IMPORT_C TInt Size(TSize& aSize, const TDesC& aDbName = KNullDesC) const;
+
+	IMPORT_C TInt Compact(TInt64 aSize, const TDesC& aDbName = KNullDesC);
+	IMPORT_C void Compact(TInt64 aSize, TRequestStatus& aStatus, const TDesC& aDbName = KNullDesC);
 	
 	IMPORT_C TInt ReserveDriveSpace(TInt aSize);
 	IMPORT_C void FreeReservedSpace();
@@ -541,7 +586,7 @@ enum TSqlColumnType
 	/**
 	Binary data, a sequence of bytes.
 	*/
-	ESqlBinary 
+	ESqlBinary
 	};
 
 /**
@@ -761,10 +806,18 @@ represented by the type returned by the accessor function.
 If the result is outside the range that can be represented by the type returned
 by the accessor function, then it will be clamped.
 
+Note that when handling blob and text data over 2Mb in size it is recommended that the 
+RSqlBlobReadStream and RSqlBlobWriteStream classes or the TSqlBlob class is used instead. 
+These classes provide a more RAM-efficient way of reading and writing large amounts of 
+blob or text data from a database.
+
 @see KMinTInt
 @see KMaxTInt
 @see KNullDesC
 @see KNullDesC8
+@see RSqlBlobReadStream
+@see RSqlBlobWriteStream
+@see TSqlBlob
 
 @publishedAll
 @released
@@ -800,6 +853,7 @@ public:
 	IMPORT_C TInt BindReal(TInt aParameterIndex, TReal aParameterValue);
 	IMPORT_C TInt BindText(TInt aParameterIndex, const TDesC& aParameterText);
 	IMPORT_C TInt BindBinary(TInt aParameterIndex, const TDesC8& aParameterData);
+	IMPORT_C TInt BindZeroBlob(TInt aParameterIndex, TInt aBlobSize);
 	
 	IMPORT_C TBool IsNull(TInt aColumnIndex) const;
 	IMPORT_C TInt ColumnInt(TInt aColumnIndex) const;
@@ -814,6 +868,9 @@ public:
 	IMPORT_C TInt ColumnBinary(TInt aColumnIndex, TPtrC8& aPtr) const;
 	IMPORT_C TInt ColumnBinary(TInt aColumnIndex, TDes8& aDest) const;
 	
+	IMPORT_C TInt ColumnName(TInt aColumnIndex, TPtrC& aNameDest);
+	IMPORT_C TInt ParameterName(TInt aParameterIndex, TPtrC& aNameDest);
+	IMPORT_C TInt ParamName(TInt aParameterIndex, TPtrC& aNameDest);
 private:
 	CSqlStatementImpl& Impl() const;
 	
@@ -825,12 +882,17 @@ private:
 /**
 The read stream interface.
 
-The class is used for reading the content of a column containing a large
-amount of either binary data or text data.
+The class is used for reading the content of a column containing either 
+binary data or text data.
 
 The class derives from RReadStream, which means that all RReadStream public
 member functions and predefined stream operators \>\> can be used to deal
 with column data.
+
+If the blob or text data is over 2Mb in size then it is recommended that the 
+RSqlBlobReadStream or TSqlBlob class is used instead. These classes provide 
+a more RAM-efficient way of reading large amounts of blob or text data from
+a database.
 
 The following two cases are typical:
 
@@ -886,6 +948,9 @@ else
 	}
 @endcode
 
+@see RSqlBlobReadStream
+@see TSqlBlob
+
 @publishedAll
 @released
 */
@@ -902,12 +967,17 @@ public:
 /**
 The write stream interface.
 
-The class is used to set a large amount of either binary data or text data
-into a parameter. This is a also known as binding a parameter.
+The class is used to set binary data or text data into a parameter. 
+This is a also known as binding a parameter.
 
 The class derives from RWriteStream, which means that all RWriteStream public
 member functions and predefined stream operators \<\< can be used to deal with
 the parameter data.
+
+If the blob or text data is over 2Mb in size then it is recommended that the 
+RSqlBlobWriteStream or TSqlBlob class is used instead. These classes provide 
+a more RAM-efficient way of writing large amounts of blob or text data to
+a database.
 
 The following two cases are typical:
 
@@ -955,6 +1025,9 @@ TInt rc = stmt.Next();//rc = stmt.Exec()
 CleanupStack::PopAndDestroy(&paramStream);
 @endcode
 
+@see RSqlBlobWriteStream
+@see TSqlBlob
+
 @publishedAll
 @released
 */
@@ -969,22 +1042,312 @@ public:
 	};
 
 /**
-TSqlResourceTester class is used internally by the SQL server out of memory and resource leaking
-tests. 
-It provides methods for heap allocation failure simulation and resource checking and counting.
+A direct handle to a blob, used for reading the content of the blob via a streaming interface.
 
-@internalAll
+The target blob is identified using the relevant database connection, table name, 
+column name and ROWID of the record to which the blob belongs (also the attached
+database name if the blob is contained in an attached database).
+
+A blob in this context refers to the content of a BLOB or TEXT column, 
+and a read handle can be opened on both types of column.
+For TEXT columns it is important to note that no conversions are performed on 
+data retrieved using this class - the data is returned as a stream of bytes.
+
+The class derives from RReadStream and provides all of its streaming methods.
+The SizeL() method can be used to check the total size of the blob, in bytes.
+
+It is strongly recommended to use this class for reading the content of large blobs 
+because it significantly reduces the amount of RAM that is used when compared to using the 
+RSqlColumnReadStream, RSqlStatement::ColumnBinary(L) or RSqlStatement::ColumnText(L) APIs.
+
+Specifically, it is recommended to use this class for blobs over 2Mb in size.
+Indeed, in some circumstances where very large blobs are in use it may be impossible
+to read the blob content using the legacy APIs (due to the server's finite RAM capacity), 
+and this class may provide the only way to access the data.
+
+The following code illustrates typical use cases of this class:
+
+CASE 1 - reading large blob data from the last inserted record.
+
+@code
+RSqlDatabase db;
+CleanupClosePushL(db);
+<open/create "db" object>;
+RSqlBlobReadStream rdStrm;
+CleanupClosePushL(rdStrm);
+rdStrm.OpenL(db, <table_name>, <column_name>);
+HBufC8* buffer = HBufC8::NewLC(KBlockSize);
+TPtr8 bufPtr(buffer->Des());
+TInt size = rdStrm.SizeL();
+while(size)
+	{
+	TInt bytesToRead = (size >= KBlockSize) ? KBlockSize : size ;
+	rdStrm.ReadL(bufPtr, bytesToRead); // read the next block of data		
+	<do something with the block of data>
+	size =- bytesToRead;
+	}
+CleanupStack::PopAndDestroy(3); // buffer, rdStrm, db
+@endcode
+
+CASE 2 - reading large blob data from a selection of records.
+
+@code
+RSqlDatabase db;
+CleanupClosePushL(db);
+<open/create "db" object>;
+RSqlStatement stmt;
+CleanupClosePushL(stmt);
+<prepare "stmt" object to SELECT the ROWIDs of a collection of blob objects>;
+TInt rc = 0;
+while((rc = stmt.Next()) == KSqlAtRow)
+	{
+	TInt64 rowid = stmt.ColumnInt64(0);	
+	RSqlBlobReadStream rdStrm;
+	CleanupClosePushL(rdStrm);
+	rdStrm.OpenL(db, <table_name>, <column_name>, rowid);
+	
+	HBufC8* buffer = HBufC8::NewLC(KBlockSize);
+	TPtr8 bufPtr(buffer->Des());
+	TInt size = rdStrm.SizeL();
+	while(size)
+		{
+		TInt bytesToRead = (size >= KBlockSize) ? KBlockSize : size ;
+		rdStrm.ReadL(bufPtr, bytesToRead); // read the next block of data		
+		<do something with the block of data>
+		size =- bytesToRead;
+		}
+	CleanupStack::PopAndDestroy(2); // buffer, rdStrm
+	}
+CleanupStack::PopAndDestroy(2); // stmt, db
+@endcode
+
+@see RSqlBlobWriteStream
+@see RSqlDatabase::LastInsertedRowId()
+
+@publishedAll
 @released
 */
-class TSqlResourceTester
+class RSqlBlobReadStream : public RReadStream
 	{
-public:	
-	IMPORT_C static void Mark();
-	IMPORT_C static void Check();
-	IMPORT_C static TInt Count();
-	IMPORT_C static void SetDbHeapFailure(TInt aAllocFailType,TInt aRate);
-	IMPORT_C static void SetHeapFailure(TInt aAllocFailType,TInt aRate);
+public:						
+	IMPORT_C void OpenL(RSqlDatabase& aDb, const TDesC& aTableName, const TDesC& aColumnName, 
+						TInt64 aRowId = KSqlLastInsertedRowId, const TDesC& aDbName = KNullDesC);
+	IMPORT_C TInt SizeL();
+	};
 
+/**
+A direct handle to a blob, used for writing the content of the blob via a streaming interface.
+
+The target blob is identified using the relevant database connection, table name, 
+column name and ROWID of the record to which the blob belongs (also the attached
+database name if the blob is contained in an attached database).
+
+A blob in this context refers to the content of a BLOB or TEXT column, 
+and a write handle can be opened on both types of column, except if the
+column is indexed, in which case the open call will fail with KSqlErrGeneral.
+For TEXT columns it is important to note that no conversions are performed on data 
+that is stored using this class - the data is simply stored as a stream of bytes.
+
+The class derives from RWriteStream and provides all of its streaming methods.
+The SizeL() method can be used to check the total size of the blob, in bytes.
+Note that this class cannot be used to increase the size of a blob, only to modify 
+the existing contents of a blob. An attempt to write beyond the end of a blob will
+fail with KErrEof.
+
+It is strongly recommended to use this class for writing the content of large blobs 
+because it significantly reduces the amount of RAM that is used when compared to using 
+the RSqlParamWriteStream, RSqlStatement::BindBinary or RSqlStatement::BindText APIs.
+
+Specifically, it is recommended to use this class for blobs over 2Mb in size.
+Indeed, in some circumstances where very large blobs are required it may be impossible
+to create a blob or update its content using the legacy APIs (due to the server's finite 
+RAM capacity), and this class may provide the only way to achieve this.
+
+Using this class in combination with zeroblobs it is possible to create and manipulate 
+blobs that are gigabytes in size. A zeroblob acts as a place-holder for a blob whose 
+content is later written using this class and one can be created using an INSERT 
+statement that either contains the SQLite 'zeroblob()' function or on which 
+RSqlStatement::BindZeroBlob() has been executed.
+Note that a zeroblob should be created in a column after which there are no columns 
+that contain anything other than zeroblobs or NULLs, otherwise the zeroblob must be 
+allocated in full in RAM.
+
+When creating a zeroblob it is recommended, where possible, to create the zeroblob and
+then write the blob content within the same transaction. Otherwise the zeroblob will 
+have to be journalled before being written to.
+
+It is also strongly recommended to execute calls to WriteL() within a transaction. 
+If a leave occurs during a call to WriteL() then the current state of the blob object is
+undefined and a ROLLBACK should be executed to return the blob object to its previous state.
+Note that in order for a ROLLBACK to execute successfully all open RSqlBlobReadStream 
+and RSqlBlobWriteStream handles and all open RSqlStatement objects must be closed 
+before the ROLLBACK is executed.
+
+The following code illustrates typical use cases of this class:
+
+CASE 1 - creating a 5Mb blob.
+
+@code
+RSqlDatabase db;
+CleanupClosePushL(db);
+<open/create "db" object>;
+CleanupStack::PushL(TCleanupItem(&DoRollback, &db)); // rollback function
+TInt err = db.Exec(_L("BEGIN"));
+<check err>
+err = db.Exec(_L("INSERT INTO table1 VALUES(35, zeroblob(5242880))"));
+<check err>
+RSqlBlobWriteStream wrStrm;
+CleanupClosePushL(wrStrm);
+wrStrm.OpenL(db, <table_name>, <column_name>);
+TInt size = wrStrm.SizeL();
+while(size)
+	{
+	TInt bytesToWrite = (size >= KBlockSize) ? KBlockSize : size ;
+	<fill a buffer 'buf' with this amount of the blob data>
+	wrStrm.WriteL(buf); // write the next block of data		
+	size =- bytesToWrite;
+	}
+CleanupStack::PopAndDestroy(&wrStrm);
+CleanupStack::Pop(); // TCleanupItem
+err = db.Exec(_L("COMMIT")); // blob data committed to disk
+<check err>
+CleanupStack::PopAndDestroy(&db);
+@endcode
+
+CASE 2 - updating a large blob in the last inserted record.
+
+@code
+RSqlDatabase db;
+CleanupClosePushL(db);
+<open/create "db" object>;
+CleanupStack::PushL(TCleanupItem(&DoRollback, &db)); // rollback function
+TInt err = db.Exec(_L("BEGIN"));
+<check err>
+RSqlBlobWriteStream wrStrm;
+CleanupClosePushL(wrStrm);
+wrStrm.OpenL(db, <table_name>, <column_name>);
+<fill a buffer 'buf' with the changed blob data>
+wrStrm.WriteL(buf); // update the blob
+CleanupStack::PopAndDestroy(&wrStrm);
+CleanupStack::Pop(); // TCleanupItem
+err = db.Exec(_L("COMMIT")); // blob data committed to disk
+<check err>
+CleanupStack::PopAndDestroy(&db);
+@endcode
+
+@see RSqlBlobReadStream
+@see RSqlDatabase::LastInsertedRowId()
+@see RSqlStatement::BindZeroBlob()
+
+@publishedAll
+@released
+*/
+class RSqlBlobWriteStream : public RWriteStream
+	{
+public:
+	IMPORT_C void OpenL(RSqlDatabase& aDb, const TDesC& aTableName, const TDesC& aColumnName, 
+						TInt64 aRowId = KSqlLastInsertedRowId, const TDesC& aDbName = KNullDesC);
+	IMPORT_C TInt SizeL();
+	};
+
+/**
+Utility class that provides methods for reading and writing the entire content of 
+a blob in a single call.
+
+The target blob is identified using the relevant database connection, table name, 
+column name and ROWID of the record to which the blob belongs (also the attached
+database name if the blob is contained in an attached database).
+
+The behaviour of the RSqlBlobReadStream class and the recommendations for using
+it exist for the Get() and GetLC() methods of this class. Similarly, the behaviour 
+of the RSqlBlobWriteStream class and the recommendations for using it exist for the 
+SetL() method of this class.
+
+In particular, it is strongly recommended to use this class or the RSqlBlobReadStream
+and RSqlBlobWriteStream classes for reading and writing the content of large blobs 
+because it significantly reduces the amount of RAM that is used when compared to using 
+the legacy streaming and RSqlStatement APIs.
+
+Specifically, it is recommended to use this class for blobs over 2Mb in size.
+Indeed, in some circumstances where very large blobs are in use it may be impossible
+to read or write to a blob using the legacy APIs (due to the server's finite 
+RAM capacity), and this class or the RSqlBlobReadStream and RSqlBlobWriteStream classes 
+may provide the only way to achieve this.
+
+It is strongly recommended to execute calls to the SetL() method within a transaction. 
+If a leave occurs during a call to SetL() then the current state of the blob object is 
+undefined and a ROLLBACK should be executed to return the blob object to its previous state.
+Note that in order for a ROLLBACK to execute successfully all open RSqlBlobReadStream 
+and RSqlBlobWriteStream handles and all open RSqlStatement objects must be closed 
+before the ROLLBACK is executed.
+
+When using SetL() to update the content of a zeroblob it is recommended, where possible, 
+to create the zeroblob and then call SetL() within the same transaction. 
+Otherwise the zeroblob will have to be journalled before being written to.
+
+The following code illustrates typical use cases of this class:
+
+CASE 1 - retrieving the entire content of a large blob.
+
+@code
+RSqlDatabase db;
+CleanupClosePushL(db);
+<open/create "db" object>;
+HBufC8* wholeBlob = TSqlBlob::GetLC(db, <table_name>, <column_name>, <rowid>);
+<do something with the blob data>
+CleanupStack::PopAndDestroy(2); // wholeBlob, db
+@endcode
+
+
+CASE 2 - creating a 4Mb blob.
+
+@code
+RSqlDatabase db;
+CleanupClosePushL(db);
+<open/create "db" object>;
+CleanupStack::PushL(TCleanupItem(&DoRollback, &db)); // rollback function
+TInt err = db.Exec(_L("BEGIN"));
+<check err>
+err = db.Exec(_L("INSERT INTO table1 VALUES(99, zeroblob(4194304))"));
+<check err>
+<fill a buffer 'buf' with 4Mb of blob data>
+TSqlBlob::SetL(db, <table_name>, <column_name>, buf);
+CleanupStack::Pop(); // TCleanupItem
+err = db.Exec(_L("COMMIT")); // blob data committed to disk
+<check err>
+CleanupStack::PopAndDestroy(&db);
+@endcode
+
+@see RSqlBlobReadStream
+@see RSqlBlobWriteStream
+@see RSqlDatabase::LastInsertedRowId()
+@see RSqlStatement::BindZeroBlob()
+
+@publishedAll
+@released
+*/
+class TSqlBlob
+	{
+public:					  		  	  
+	IMPORT_C static HBufC8* GetLC(RSqlDatabase& aDb, 	
+					     		  const TDesC& aTableName, 
+					     		  const TDesC& aColumnName, 	
+					     		  TInt64 aRowId = KSqlLastInsertedRowId,
+					     		  const TDesC& aDbName = KNullDesC);
+								  		  	  
+	IMPORT_C static TInt Get(RSqlDatabase& aDb, 	
+					 		 const TDesC& aTableName, 
+					 		 const TDesC& aColumnName, 	
+					 		 TDes8& aBuffer,
+					 		 TInt64 aRowId = KSqlLastInsertedRowId,
+					 		 const TDesC& aDbName = KNullDesC);			 		 
+
+	IMPORT_C static void SetL(RSqlDatabase& aDb, 	
+					  		  const TDesC& aTableName, 
+					  		  const TDesC& aColumnName,
+					  		  const TDesC8& aData,	
+					  		  TInt64 aRowId = KSqlLastInsertedRowId,
+					  		  const TDesC& aDbName = KNullDesC);				  
 	};
 
 /**

@@ -1,9 +1,9 @@
 // Copyright (c) 1999-2009 Nokia Corporation and/or its subsidiary(-ies).
 // All rights reserved.
 // This component and the accompanying materials are made available
-// under the terms of the License "Symbian Foundation License v1.0" to Symbian Foundation members and "Symbian Foundation End User License Agreement v1.0" to non-members
+// under the terms of "Eclipse Public License v1.0"
 // which accompanies this distribution, and is available
-// at the URL "http://www.symbianfoundation.org/legal/licencesv10.html".
+// at the URL "http://www.eclipse.org/legal/epl-v10.html".
 //
 // Initial Contributors:
 // Nokia Corporation - initial contribution.
@@ -35,7 +35,7 @@ static const TInt KMaxBluetoothNameLen = KHCILocalDeviceNameMaxLength;
 **/
 static const TInt KMaxFriendlyNameLen = 100;
 
-/** Length of a bluetooth device name. Retained for binary compatibility.
+/** Length of a bluetooth device name. This is not to be used outside of the sub-system. Retained for binary compatibility.
 @internalComponent
 @deprecated
 **/
@@ -81,12 +81,6 @@ public:
 	IMPORT_C static TBTDeviceName ToUnicodeL(const TBTDeviceName8& aName);
 	IMPORT_C static TBTDeviceName8 ToUTF8L(const TBTDeviceName& aName);
 	};
-	
-/** Defines the granularity of the arrays used in CBTDevice.
-@internalComponent
-@released
-**/
-const TInt KSecurityGranularity=1;
 
 /** Cleanup utility for CBTDeviceArrays.
 
@@ -400,18 +394,6 @@ enum TBTMinorDeviceClassToy
 	/** Game toy device **/
 	EMinorDeviceToyGame = 0x05,					//000101	
 	};
-
-
-/** Minor Device class headset.
-@deprecated
-@internalComponent
-@see TBTMinorDeviceClassAV
-**/
-enum TBTMinorDeviceClassHeadset
-	{										//7    2
-	EHeadsetUnclassified = 0x0,				//000000
-	EHeadsetProfile = 0x1,					//000001
-	};
 	
 /** Encapsulation of device class definitions.
 
@@ -441,12 +423,12 @@ public:
 private:
 	static const TUint32 KStreamVersion = 0x00000001;
 private:
-	TUint32 iDeviceClass;
+	TUint32	iDeviceClass;
 	
 	// This data padding has been added to help prevent future binary compatibility breaks	
 	// Neither iPadding1 nor iPadding2 have been zero'd because they are currently not used
-	TUint32     iPadding1; 
-	TUint32     iPadding2; 
+	TUint32	iPadding1; 
+	TUint32	iPadding2; 
 	};
 
 /** Class to store the security override parameters for a particular remote device.
@@ -500,9 +482,9 @@ public:
 	/** Enumeration to assist in parsing of security settings. */
 	enum TBTDeviceSecuritySettings
 		{
-		ENoAuthenticate	= 0x01, /*!< Don't authenticate the link */
-		ENoAuthorise = 0x02, /*!< Don't authorise the connection */
-		EEncrypt = 0x04, /*!< Encrypt the link */
+		ENoAuthenticate			= 0x01, /*!< Don't authenticate the link @deprecated */
+		ENoAuthorise			= 0x02, /*!< Don't authorise the connection */
+		EEncrypt				= 0x04, /*!< Encrypt the link */
 		EBanned					= 0x08, /*!< Don't connect to the device */
 		EMitmProtectionRequired	= 0x10, /*!< Require the link is MITM protected */
 		};
@@ -511,13 +493,13 @@ private:
 	static const TUint32 KStreamVersion = 0x00000001;
 
 private:
-	TUint8 iSecurity;
-	TUint  iPasskeyMinLength;	
+	TUint8	iSecurity;
+	TUint	iPasskeyMinLength;	
 	
 	// This data padding has been added to help prevent future binary compatibility breaks	
 	// Neither iPadding1 nor iPadding2 have been zero'd because they are currently not used
-	TUint32     iPadding1; 
-	TUint32     iPadding2; 
+	TUint32	iPadding1; 
+	TUint32	iPadding2; 
 	};
 
 /** Class to tie a service uid with a device security setting.
@@ -554,29 +536,9 @@ private:
 	
 	// This data padding has been added to help prevent future binary compatibility breaks	
 	// Neither iPadding1 nor iPadding2 have been zero'd because they are currently not used
-	TUint32     iPadding1; 
-	TUint32     iPadding2; 	
+	TUint32		iPadding1; 
+	TUint32		iPadding2; 	
 	};
-		
-/** For Symbian use only
-@internalAll	
-*/
-NONSHARABLE_CLASS(TBTBasebandParameters)
-	{
-public:
-	IMPORT_C void ExternalizeL(RWriteStream& aStream) const;
-	IMPORT_C void InternalizeL(RReadStream& aStream);			
-
-	TUint8 iPageScanRepetitionMode;			/*!< Page Scan repetition mode of remote device ( valid if > 0 ) */
-	TUint8 iPageScanPeriodMode;				/*!< Page scan period mode of remote device */
-	TUint8 iPageScanMode;					/*!< Page scan mode of remote device ( valid if > 0 ) */
-	TUint16 iClockOffset;					/*!< clock off set of remote device ( valid if > 0 ) */
-	
-private:
-	static const TUint32 KStreamVersion = 0x00000001;
-	};
-
-
 
 /** Stores parameters for a nameless device.
 
@@ -589,29 +551,48 @@ But *not* including names
 NONSHARABLE_CLASS(TBTNamelessDevice)
 	{
 friend class CBTDevice;
+
+private:
+	/** For Symbian use only
+	@internalComponent	
+	*/
+	NONSHARABLE_CLASS(TBTBasebandParameters)
+		{
+	public:
+		void ExternalizeL(RWriteStream& aStream) const;
+		void InternalizeL(RReadStream& aStream);
+
+		TUint8 iPageScanRepetitionMode;			/*!< Page Scan repetition mode of remote device ( valid if > 0 ) */
+		TUint8 iPageScanPeriodMode;				/*!< Page scan period mode of remote device */
+		TUint8 iPageScanMode;					/*!< Page scan mode of remote device ( valid if > 0 ) */
+		TUint16 iClockOffset;					/*!< clock off set of remote device ( valid if > 0 ) */
+		
+	private:
+		static const TUint32 KStreamVersion = 0x00000001;
+		};
 public:
 	
-	IMPORT_C TBTNamelessDevice();	
-	IMPORT_C const TBTDevAddr& Address() const;	
-	IMPORT_C const TBTDeviceClass& DeviceClass() const;	
-	IMPORT_C const TBTLinkKey& LinkKey() const;	
+	IMPORT_C TBTNamelessDevice();
+	IMPORT_C const TBTDevAddr& Address() const;
+	IMPORT_C const TBTDeviceClass& DeviceClass() const;
+	IMPORT_C const TBTLinkKey& LinkKey() const;
 	IMPORT_C TBTLinkKeyType LinkKeyType() const;
-	IMPORT_C TUint8 PageScanRepMode() const;	
-	IMPORT_C TUint8 PageScanMode() const;	
-	IMPORT_C TUint8 PageScanPeriodMode() const;	
-	IMPORT_C TUint16 ClockOffset() const;	
-	IMPORT_C const TTime& Seen() const;		
-	IMPORT_C const TTime& Used() const;		
-	IMPORT_C const TBTDeviceSecurity& GlobalSecurity() const;	
-	IMPORT_C void SetAddress(const TBTDevAddr& aBDAddr);	
-	IMPORT_C void SetDeviceClass(TBTDeviceClass aDeviceClass);		
+	IMPORT_C TUint8 PageScanRepMode() const;
+	IMPORT_C TUint8 PageScanMode() const;
+	IMPORT_C TUint8 PageScanPeriodMode() const;
+	IMPORT_C TUint16 ClockOffset() const;
+	IMPORT_C const TTime& Seen() const;
+	IMPORT_C const TTime& Used() const;
+	IMPORT_C const TBTDeviceSecurity& GlobalSecurity() const;
+	IMPORT_C void SetAddress(const TBTDevAddr& aBDAddr);
+	IMPORT_C void SetDeviceClass(TBTDeviceClass aDeviceClass);
 	IMPORT_C void SetLinkKey(const TBTLinkKey& aLinkKey);
 	IMPORT_C void SetLinkKey(const TBTLinkKey& aLinkKey, TBTLinkKeyType aLinkKeyType);
 	IMPORT_C void SetPageScanRepMode(TUint8 aPageScanRepMode);
 	IMPORT_C void SetPageScanPeriodMode(TUint8 aPageScanPeriodMode);
 	IMPORT_C void SetPageScanMode(TUint8 aPageScanMode);
 	IMPORT_C void SetClockOffset(TUint16 aClockOffSet);
-	IMPORT_C void SetGlobalSecurity(const TBTDeviceSecurity& aSetting); 
+	IMPORT_C void SetGlobalSecurity(const TBTDeviceSecurity& aSetting);
 	IMPORT_C void SetUsed(const TTime& aDateTime);
 	IMPORT_C void SetSeen(const TTime& aDateTime);
 	IMPORT_C TBool IsValidAddress() const;
@@ -634,8 +615,8 @@ public:
 	IMPORT_C void SetPaired(TBool aPaired);
 	IMPORT_C void SetPaired(TBTLinkKeyType aLinkKeyType);
 	IMPORT_C TBool IsValidPaired() const;
-	IMPORT_C const TBTPinCode& PassKey() const;		
-	IMPORT_C void  SetPassKey(const TBTPinCode& aPassKey);		
+	IMPORT_C const TBTPinCode& PassKey() const;
+	IMPORT_C void  SetPassKey(const TBTPinCode& aPassKey);
 	IMPORT_C TBool IsValidPassKey() const;
 	IMPORT_C TUint PassKeyLength() const;
 	IMPORT_C TBool IsValidUiCookie() const;
@@ -643,23 +624,24 @@ public:
 	IMPORT_C TUint32 UiCookie() const;
 	
 	/**	Bitfield of TBTNamelessDevice attributes
+	This enum is to only be used by phone manufacturers, not by application developers.
 	@publishedPartner
 	@released
 	*/	
 	enum TBTDeviceSet
 		{
-		EAddress				= 0x000001, /*!< Device address */
-		EDeviceClass			= 0x000002, /*!< Device class */
-		ELinkKey				= 0x000004, /*!< Link key */
-		EGlobalSecurity			= 0x000008, /*!< Global security settings */
-		EPageScanRepMode		= 0x000010, /*!< Page scan repition mode */
-		EPageScanMode           = 0x000020, /*!< Page scan mode */
-		EPageScanPeriodMode     = 0x000040, /*!< Page scan period */
-		EClockOffset			= 0x000080, /*!< Clock offset */
-		EUsed					= 0x000100, /*!< Last used */
-		ESeen					= 0x000200, /*!< Last seen */
-		EIsPaired				= 0x000400, /*!< Is paired */
-		EPassKey				= 0x000800, /*!< PassKey */
+		EAddress				=	0x000001, /*!< Device address */
+		EDeviceClass			=	0x000002, /*!< Device class */
+		ELinkKey				=	0x000004, /*!< Link key */
+		EGlobalSecurity			=	0x000008, /*!< Global security settings */
+		EPageScanRepMode		=	0x000010, /*!< Page scan repition mode */
+		EPageScanMode			=	0x000020, /*!< Page scan mode */
+		EPageScanPeriodMode		=	0x000040, /*!< Page scan period */
+		EClockOffset			=	0x000080, /*!< Clock offset */
+		EUsed					=	0x000100, /*!< Last used */
+		ESeen					=	0x000200, /*!< Last seen */
+		EIsPaired				=	0x000400, /*!< Is paired */
+		EPassKey				=	0x000800, /*!< PassKey */
 		EUiCookie				=	0x001000, /*!< User interface specific cookie */
 
 		EAllNamelessProperties	= 0x00ffffff, /*!< All nameless properties set */
@@ -676,14 +658,14 @@ private:
 	TTime					iUsed;			/*!< when last connect from/to */
 	TTime					iSeen;			/*!< when last seen in inquiry */
 	TBool					iPaired;		/*!< Whether this device is paired */
-	TBTPinCode				iPassKey;       /*!< PassKey */
+	TBTPinCode				iPassKey;		/*!< PassKey */
 	TBTLinkKeyType			iLinkKeyType;	/*!< Link Key Type */
 	TUint32					iUiCookie;		/*!< The cookie attached to this device by the UI */
 	
-	// This data padding has been added to help prevent future binary compatibility breaks	
+	// This data padding has been added to help prevent future binary compatibility breaks.
 	// iPadding1 has been used for iLinkKeyType
 	// iPadding2 has been used for iUiCookie 
-	TUint32     iPadding3; 
+	TUint32		iPadding3; 
 	TUint32		iPadding4; 
 	};
 
@@ -700,10 +682,10 @@ NONSHARABLE_CLASS(CBTDevice) : public CBase
 friend class TBTNamelessDevice;
 public:
 	
-	IMPORT_C static CBTDevice* NewL(const TBTDevAddr& aBDAddr);	
+	IMPORT_C static CBTDevice* NewL(const TBTDevAddr& aBDAddr);
 	IMPORT_C static CBTDevice* NewLC(const TBTDevAddr& aBDAddr);
 	IMPORT_C static CBTDevice* NewL(const TBTNamelessDevice& aNamelessDevice);
-	IMPORT_C static CBTDevice* NewLC(const TBTNamelessDevice& aNamelessDevice);	
+	IMPORT_C static CBTDevice* NewLC(const TBTNamelessDevice& aNamelessDevice);
 	IMPORT_C static CBTDevice* NewL();
 	IMPORT_C static CBTDevice* NewLC();
 	IMPORT_C ~CBTDevice();
@@ -873,7 +855,7 @@ private:
 
 	Not a complete set of details of the local device
 
-	@publishedPartner
+	@publishedAll
 	@released
 
 */
@@ -917,25 +899,25 @@ protected:
 		ELimitedDiscoverable 		= 0x0020,
 		EAFHChannelAssessmentMode	= 0x0040,
 		EAcceptPairedOnlyMode 		= 0x0080,
-		};	///< Used for indicating if a setting has been set (i.e. not a default/random value) @see iBitMask
+		};	//< Used for indicating if a setting has been set (i.e. not a default/random value) @see iBitMask
 		
 private:		
 	enum
 		{
 		EAFHChannelAssessmentModeValue	= 0x0001,
 		EAcceptPairedOnlyModeValue		= 0x0002,
-		};	///< Used for settings requiring little space: allows new settings ot be introduced without increasing the size of this class @see iSimpleSettings
+		};	//< Used for settings requiring little space: allows new settings ot be introduced without increasing the size of this class @see iSimpleSettings
 			
 		
 
-	TUint			iSetMask;		 ///< Bit mask indicating the data members that have been set
+	TUint			iSetMask;		 //< Bit mask indicating the data members that have been set
 	TBTDevAddr		iAddress;
 	TUint32			iCod;
 	TBTDeviceName8	iLocalName;
 	TUint8			iPowerSetting;
 	THCIScanEnable	iScanEnable;
 	TBool			iLimitedDiscoverable;
-	TUint32			iSimpleSettings; ///< Only first two bits currently used - for AFH Channel Assessment Mode, and Accept Paired Only Mode
+	TUint32			iSimpleSettings; //< Only first two bits currently used - for AFH Channel Assessment Mode, and Accept Paired Only Mode
 	};
 
 

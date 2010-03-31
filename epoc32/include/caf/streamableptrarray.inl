@@ -15,6 +15,14 @@
 *
 */
 
+/**
+ @file
+ @publishedAll
+ @released
+*/
+
+#ifndef STREAMABLEPTRARRAY_INL
+#define STREAMABLEPTRARRAY_INL
 
 namespace ContentAccess
 {
@@ -100,3 +108,6 @@ inline void RStreamablePtrArray<T>::RemoveL(TInt aIndex)
 	iArray.Remove(aIndex);
 	}
 }
+
+#endif // STREAMABLEPTRARRAY_INL
+

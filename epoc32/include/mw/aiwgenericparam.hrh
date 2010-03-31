@@ -2,9 +2,9 @@
 * Copyright (c) 2003-2006 Nokia Corporation and/or its subsidiary(-ies).
 * All rights reserved.
 * This component and the accompanying materials are made available
-* under the terms of the License "Symbian Foundation License v1.0" to Symbian Foundation members and "Symbian Foundation End User License Agreement v1.0" to non-members
+* under the terms of "Eclipse Public License v1.0"
 * which accompanies this distribution, and is available
-* at the URL "http://www.symbianfoundation.org/legal/licencesv10.html".
+* at the URL "http://www.eclipse.org/legal/epl-v10.html".
 *
 * Initial Contributors:
 * Nokia Corporation - initial contribution.
@@ -174,18 +174,19 @@ enum TGenericParamIdValue
 <MCSS_5132_OFF_CYCLE_SW_INT>
 </branchInfo>*/
 // BRANCH 07-04-10 : juhuusit
-#ifdef RD_VOIP_REL_2_2
     ,
     EGenericParamDialMenuServiceEntry   = 270,
     EGenericParamDialMenuServiceOptions = 271
-#endif
 // BRANCH_END 07-04-10 : juhuusit
+
 
 /*<branchInfo originator="gronoff" since="08-28-08" category="new_feature" error=”none”>
 <PF5250_OFF_CYCLE_SW_INT>
 </branchInfo>*/
 // BRANCH 08-28-08: gronoff
     ,
+    EGenericParamCNAP									= 290,
+    
     EGenericParamXSpId                  = 1919,
     EGenericParamFirstName              = 1920,
     EGenericParamLastName               = 1921,
@@ -315,16 +316,17 @@ enum TGenericParamIdValue
 <MCSS_5132_OFF_CYCLE_SW_INT>
 </branchInfo>*/
 // BRANCH 07-04-10 : juhuusit
-#ifdef RD_VOIP_REL_2_2
 #define EGenericParamDialMenuServiceEntryStr            "270"
 #define EGenericParamDialMenuServiceOptionsStr          "271"
-#endif // RD_VOIP_REL_2_2
 // BRANCH_END 07-04-10 : juhuusit
 
 /*<branchInfo originator="gronoff" since="08-28-08" category="new_feature" error=”none”>
 <PF5250_OFF_CYCLE_SW_INT>
 </branchInfo>*/
 // BRANCH 08-28-08: gronoff
+
+#define EGenericParamCNAPStr										"290"
+
 #define EGenericParamXSpIdEntryStr              "1919"
 #define EGenericParamFirstNameEntryStr          "1920"
 #define EGenericParamLastNameEntryStr           "1921"

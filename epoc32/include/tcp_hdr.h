@@ -1,9 +1,9 @@
 // Copyright (c) 2004-2009 Nokia Corporation and/or its subsidiary(-ies).
 // All rights reserved.
 // This component and the accompanying materials are made available
-// under the terms of the License "Symbian Foundation License v1.0" to Symbian Foundation members and "Symbian Foundation End User License Agreement v1.0" to non-members
+// under the terms of "Eclipse Public License v1.0"
 // which accompanies this distribution, and is available
-// at the URL "http://www.symbianfoundation.org/legal/licencesv10.html".
+// at the URL "http://www.eclipse.org/legal/epl-v10.html".
 //
 // Initial Contributors:
 // Nokia Corporation - initial contribution.
@@ -125,9 +125,9 @@ public:
   	inline TInt Unknown() const		  { return iUnknown; }
   	inline void ClearUnknown()		  { iUnknown = 0; }
   
-  	/// Query window scale option from TCP header options.
-  	/// Wscale == 1 means scale factor 1, i.e. shift count of 0 is used in TCP option.
-  	/// Wscale == 0 means that wscale option is not used in TCP header.
+  	// Query window scale option from TCP header options.
+  	// Wscale == 1 means scale factor 1, i.e. shift count of 0 is used in TCP option.
+  	// Wscale == 0 means that wscale option is not used in TCP header.
   	inline TUint WindowScale() const		{ return iWscale; }
 
   	inline void SetWindowScale(TUint8 aWscale)	{ iWscale = aWscale; }
@@ -171,8 +171,8 @@ private:
   	TBool	              iTimeStamps;
   	TBool	              iSackOk;
   	TBool               iSuppressSack;
-  	TUint				iWscale;	///< Window scale option [RFC 1323].
-  	TUint32				iFlags;	///< ETrue if options are to be aligned.
+  	TUint				iWscale;	//< Window scale option [RFC 1323].
+  	TUint32				iFlags;	//< ETrue if options are to be aligned.
 	};
 
 
@@ -267,13 +267,13 @@ public:
 		return i[13] & KTcpCtlURG;
 		}
 
-	/// ECN Echo flag [RFC 3168].
+	// ECN Echo flag [RFC 3168].
 	inline TInt ECE() const
 		{
 		return i[13] & KTcpCtlECE;
 		}
 
-	/// ECN: Congestion Window Reduced [RFC 3168].
+	// ECN: Congestion Window Reduced [RFC 3168].
 	inline TInt CWR() const
 		{
 		return i[13] & KTcpCtlCWR;
@@ -377,13 +377,13 @@ public:
 		i[13] |= KTcpCtlURG;
 		}
 		
-	/// Set ECN Echo flag [RFC 3168].
+	// Set ECN Echo flag [RFC 3168].
 	inline void SetECE()
 		{
 		i[13] |= KTcpCtlECE;
 		}
 		
-	/// Set ECN Congestion Window Reduced [RFC 3168].
+	// Set ECN Congestion Window Reduced [RFC 3168].
 	inline void SetCWR()
 		{
 		i[13] |= KTcpCtlCWR;

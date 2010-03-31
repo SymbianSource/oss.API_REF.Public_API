@@ -1,9 +1,9 @@
 // Copyright (c) 1999-2009 Nokia Corporation and/or its subsidiary(-ies).
 // All rights reserved.
 // This component and the accompanying materials are made available
-// under the terms of the License "Symbian Foundation License v1.0" to Symbian Foundation members and "Symbian Foundation End User License Agreement v1.0" to non-members
+// under the terms of "Eclipse Public License v1.0"
 // which accompanies this distribution, and is available
-// at the URL "http://www.symbianfoundation.org/legal/licencesv10.html".
+// at the URL "http://www.eclipse.org/legal/epl-v10.html".
 //
 // Initial Contributors:
 // Nokia Corporation - initial contribution.
@@ -19,6 +19,7 @@
 
 /**
  @file
+ @publishedAll
 */
 
 #ifndef __GSMUELEM_H__
@@ -35,7 +36,7 @@ class RFs;
 class RReadStream;
 class RWriteStream;
 class CSmsEMSBufferSegmenter;
-
+struct TEncodeParams;
 
 // class declarations
 
@@ -45,22 +46,6 @@ class CSmsEMSBufferSegmenter;
  *  @released 
  */
 const TInt KErrGsmuDecoding = KErrCorrupt;
-/**
- *  @internalComponent
- */
-_LIT8(KMOSES,"\x40\x4d\x64\xd3\x50\x00");
-/**
- *  @internalComponent
- */
-_LIT16(KNETWORK,"NETWORK");
-
-
-// Constants
-/**
- *  @internalComponent
- */
-const TUint8 KSms7BitAlphabetEscapeChar=0x1b;
-
 
 /**
  *  Thin wrapper over TLex8 to provide leaving functions when getting the next
@@ -463,7 +448,7 @@ public:
 	/** Unspecified error cause. */
 		ESmsErrorUnspecified=0xFF,
 
-	/**	@internalComponent	*/
+	/**	@publishedAll	*/
 		ESmsErrorFree=0x100
 		};
 public:
@@ -1220,8 +1205,8 @@ enum TGsmSmsTypeOfNumber
 	 *  	Coded according to 3GPP TS 23.038 - GSM 7-bit default alphabet. 
 	 */
 		EGsmSmsTONAlphaNumeric=0x50,
-		EGsmSmsTONAbbreviatedNumber=0x60,		///< Abbreviated number
-		EGsmSmsTONReserverved=0x70,				///< Reserved for extension
+		EGsmSmsTONAbbreviatedNumber=0x60,		//< Abbreviated number
+		EGsmSmsTONReserverved=0x70,				//< Reserved for extension
 	};
 
 /** Numbering-plan-identification defined in ETSI 3GPP TS 23.040. */
@@ -1309,7 +1294,7 @@ class TGsmSmsTelNumber
 	{
 	public:
         /**
-         *  @internalComponent
+         *  @publishedAll
          *  If the address is an alphanumeric address,
          *  it can represent a voice message waiting indicator
          *  as defined in the Common PCN Handset Specification
@@ -1354,8 +1339,8 @@ class TGsmSmsTelNumber
 
 	public:
 
-		TGsmSmsTypeOfAddress iTypeOfAddress;		///< The type-of-address of iTelNumber
-		TBuf<TGsmSmsTelNumberMaxLen> iTelNumber;	///< Telephone number, in format of iTypeOfAddress
+		TGsmSmsTypeOfAddress iTypeOfAddress;		//< The type-of-address of iTelNumber
+		TBuf<TGsmSmsTelNumberMaxLen> iTelNumber;	//< Telephone number, in format of iTypeOfAddress
 	};
 
 
@@ -1389,6 +1374,9 @@ public:
 	void DecodeL(TGsmuLex8& aPdu);
 	void InternalizeL(RReadStream& aStream);
 	void ExternalizeL(RWriteStream& aStream) const;
+
+	CSmsAddress*  DuplicateL() const;
+
 private:
 	CSmsAddress(CCnvCharacterSetConverter& aCharacterSetConverter,RFs& aFs);
 	void NewBufferL(TInt aLength);
@@ -1495,6 +1483,7 @@ public:
 	inline void SetTimeIntervalMinutes(const TTimeIntervalMinutes& aTimeIntervalMinutes);
 	TTime Time() const;
 	TUint8* EncodeL(TUint8* aPtr) const;
+	TUint8* EncodeL(TUint8* aPtr, const TEncodeParams* aEncodeParams) const;	
 	void DecodeL(TGsmuLex8& aPdu);
 	void InternalizeL(RReadStream& aStream);
 	void ExternalizeL(RWriteStream& aStream) const;
@@ -1736,7 +1725,7 @@ public:
 	/** SC specific use 32. */
 		ESmsIEISCSpecificUse32=0xDF,
 	/**
-	 *  @internalComponent
+	 *  @publishedAll
 	 */
 		ESmsIEMaximum = 0xFF
 		};
@@ -1767,7 +1756,7 @@ protected:
 
 
 /**
- *  @internalComponent
+ *  @publishedAll
  *  
  *  TSmsInformationElementCategories
  *  
@@ -1825,7 +1814,7 @@ private:
 
 
 /**
- *  @internalComponent
+ *  @publishedAll
  */
 typedef CSmsInformationElement::TSmsInformationElementIdentifier TSmsId;
 
@@ -1862,6 +1851,9 @@ public:
 	void DecodeL(TGsmuLex8& aPdu);
 	void InternalizeL(RReadStream& aStream);
 	void ExternalizeL(RWriteStream& aStream) const;
+	
+	CSmsCommandData* DuplicateL() const;
+
 private:
 	CSmsCommandData(TSmsFirstOctet& aFirstOctet);
 
@@ -1917,6 +1909,7 @@ class CSmsUserData : public CBase
 	{
 public:
 	enum {KSmsMaxUserDataSize=140};
+	enum {KSmsMaxUserDataLengthInChars=(KSmsMaxUserDataSize*8)/7};
 
 public:
 	static CSmsUserData* NewL(CCnvCharacterSetConverter& aCharacterSetConverter,RFs& aFs,TSmsFirstOctet& aFirstOctet,const TSmsDataCodingScheme& aDataCodingScheme);
@@ -1960,9 +1953,12 @@ public:
 
 	TUint8* EncodeL(TUint8* aPtr) const;
 	void DecodeL(TGsmuLex8& aPdu);
-	void DecodeL(TGsmuLex8& aPdu, TBool aAcceptTruncation);
+	void DecodeL(TGsmuLex8& aPdu, TBool aAcceptTruncation);	
 	void InternalizeL(RReadStream& aStream);
 	void ExternalizeL(RWriteStream& aStream) const;
+	
+	CSmsUserData* DuplicateL(TSmsFirstOctet& aFirstOctet, const TSmsDataCodingScheme& aDataCodingScheme) const;
+
 private:
 	CSmsUserData(CCnvCharacterSetConverter& aCharacterSetConverter,RFs& aFs,TSmsFirstOctet& aFirstOctet,const TSmsDataCodingScheme& aDataCodingScheme);
 	void ConstructL();
@@ -2080,6 +2076,7 @@ enum TSmsStatusReportScheme
  *  both types of Enhanced Voice Mail Information Element.
  *  
  *  @publishedAll
+ *  @released
  */
 class CEnhancedVoiceMailBoxInformation : public CBase
 {
@@ -2148,6 +2145,7 @@ enum TBitMasks
  *  It is used as one of the attributes a Enhanced Voice Mail Notification.
  *  
  *  @publishedAll
+ *  @released
  */
 class CVoiceMailNotification : public CBase
 {
@@ -2219,6 +2217,7 @@ private:
  *  only the Enhanced Voice Mail Information Element and no other information elements or text.
  *  
  *  @publishedAll
+ *  @released
  */
 class CEnhancedVoiceMailNotification : public CEnhancedVoiceMailBoxInformation
 {
@@ -2257,6 +2256,7 @@ protected:
  *  It is used as one of the attributes of a Enhanced Voice Mail Delete Confirmation.
  *  
  *  @publishedAll
+ *  @released
  */
 class CVoiceMailDeletion : public CBase
 {
@@ -2292,6 +2292,7 @@ protected:
  *  interface provided by the class CSmsEnhancedVoiceMailOperations.
  *  
  *  @publishedAll
+ *  @released
  */
 class CEnhancedVoiceMailDeleteConfirmations : public
       CEnhancedVoiceMailBoxInformation

@@ -1,0 +1,156 @@
+/*
+* Copyright (c) 2004-2007 Nokia Corporation and/or its subsidiary(-ies).
+* All rights reserved.
+* This component and the accompanying materials are made available
+* under the terms of "Eclipse Public License v1.0"
+* which accompanies this distribution, and is available
+* at the URL "http://www.eclipse.org/legal/epl-v10.html".
+*
+* Initial Contributors:
+* Nokia Corporation - initial contribution.
+*
+* Contributors:
+*
+* Description:  Data types for the view definition
+*
+*/
+
+
+#ifndef VPBKCONTACTVIEW_HRH
+#define VPBKCONTACTVIEW_HRH
+
+/**
+ * Default view id value for view definition.
+ */
+#define KVPbkDefaultViewId -1
+
+/**
+ * Sort policy types for the contact view definition.
+ */
+enum TVPbkContactViewSortPolicy
+    {
+    /// Use this together with EVPbkCompositeView if the subviews must
+    /// be showed in order i.e. show all contacts from subView1 and after
+    /// that all contacts from subView2
+    EVPbkOrderedContactView = 0,
+    /// Leaf views are usually always sorted. If this is used together
+    /// with EVPbkCompositeView then the composite merges contacts from
+    /// sorted subviews.
+    EVPbkSortedContactView,
+    /// Used to create an unsorted view which means that contacts are
+    /// showed in the order they have been saved in the store. Not all stores
+    /// support this type. You can never use this in EVPbkCompositeView type
+    /// of view. You can not use this in a subview of the composite view whose
+    /// policy is EVPbkSortedContactView.
+    EVPbkUnsortedContactView
+    };
+
+/**
+ * Contact view types for the contact view definition.
+ */
+enum TVPbkContactViewType
+    {
+    /// Type for the contact leaf view. There is zero subviews.
+    EVPbkContactsView,
+    /// Type for the group leaf view. There is zero subviews.
+    EVPbkGroupsView,
+    /// Type for the folding view. Folding view definition
+    /// should usually have one subview definition that is used
+    /// to create a view when folding view is expanded.
+    EVPbkFoldingView,
+    /// Use this type if the view can have several subviews. If
+    /// there is no subviews then it's interpreted as a placeholder.
+    EVPbkCompositeView
+    };
+
+/**
+ * Defines the sharing of the contact view. 
+ *
+ * A store can have a server that shares the same view for multiple clients
+ * for saving resources. On the other hand the view can be created only
+ * for one client's purpose e.g using a special sort order and in this case
+ * the view is a local view.
+ */
+enum TVPbkContactViewSharing
+    {
+    /// Default value for VPBK_CONTACT_VIEW definition viewSharing.
+    /// Don't set this for CVPbkContactViewDefinition.
+    EVPbkViewSharingUndefined,
+    /// Inform store that is should create a handle to shared view
+    /// that can be used by multiple clients.
+    EVPbkSharedView,
+    /// Inform store that it should create a local view that
+    /// is only used by single client.
+    EVPbkLocalView
+    };
+    
+/**
+ * Contact view flags for the contact view definition. 
+ */
+enum TVPbkContactViewFlag
+    {
+    /// No flags
+    EVPbkContactViewFlagsNone   = 0x00000000,
+    EVPbkExcludeEmptyGroups     = 0x00000001
+    };
+
+/**
+ * In the following filter list the supported contact view filters
+ * are defined.
+ *
+ * Some stores support native and fast filtering for certain filters but
+ * part of the filters can cause performance problems with large contact
+ * number.
+ * E.g. Contacts Model store has optimized filters for:
+ * -EVPbkContactViewFilterEmail
+ * -EVPbkContactViewFilterPhoneNumber
+ * -EVPbkContactViewFilterMobileNumber
+ * -EVPbkContactViewFilterFaxNumber
+ * -EVPbkContactViewFilterRingingTone
+ *
+ * The filters can be combined by using the VPbkContactViewFilterBuilder
+ * services. The combined filter ORs the filters; the returned contacts
+ * match to at least one of the filters.
+ *
+ * @see VPbkContactViewFilterBuilder
+ */
+enum TVPbkContactViewFilter
+    {
+    /// The view is unfiltered; it includes all the contacts
+    EVPbkContactViewFilterNone = 0,
+    /// The filter includes items that have an email address
+    EVPbkContactViewFilterEmail = 1,
+    /// The filter includes items that have a phone number
+    /// (the definition of phone number includes general/mobile/etc. number)
+    EVPbkContactViewFilterPhoneNumber,
+    /// The filter includes items that have a mobile phone number
+    EVPbkContactViewFilterMobileNumber,
+    /// The filter includes items that have a fax number
+    EVPbkContactViewFilterFaxNumber,
+    /// The filter includes items that have a ringing tone defined
+    EVPbkContactViewFilterRingingTone,
+    /// The filter includes items that have a video number
+    EVPbkContactViewFilterVideoNumber       = 1000,
+    /// The filter includes items that have a pager number
+    EVPbkContactViewFilterPagerNumber,
+    /// The filter includes items that have a DTMF field
+    EVPbkContactViewFilterDTMF,
+    /// The filter includes items that have a VoIP number
+    EVPbkContactViewFilterVoIP,
+    /// The filter includes items that are TopContact
+    EVPbkContactViewFilterTopContact
+    };
+
+/**
+ * The version of the contact view definition version structure
+ */
+enum TVPbkContactViewVersion
+    {
+    EVPbkContactViewV1 = 1,
+    EVPbkContactViewV2,
+    EVPbkContactViewV3
+    };
+    
+#endif // VPBKCONTACTVIEW_HRH
+
+// End of File

@@ -1,4 +1,6 @@
 /*
+ * Portions Copyright (c) 2007 Nokia Corporation and/or its subsidiary(-ies). All rights reserved.
+ *
  * Copyright (c) 1997
  * Moscow Center for SPARC Technology
  *
@@ -137,10 +139,22 @@
 #  endif
 #elif defined (__MINGW32__)
 #  define _STLP_PLATFORM "MinGW"
-#  if defined (__GNUC__)
+#  if defined (__GNUC__) || defined (__GCCXML__)
 #    include <stl/config/_gcc.h>
 #  endif
+#  if defined (__SYMBIAN32__)
+#    include <stl/config/stl_symbian.h> /* include the Symbian specific definitions for GCCXML also*/
+#  endif
 #  include <stl/config/_windows.h>
+#elif defined (__SYMBIAN32__)
+#  if defined (__ARMCC__)
+#    include <stl/config/stl_rvct.h>
+#  elif defined (__WINSCW__)
+#    include <stl/config/stl_winscw.h>
+#  elif defined (__GCCE__) || defined (__GCCXML__) /* For both GCC-E and GCCXML platforms*/
+#    include <stl/config/_gcc.h>
+#  endif
+# include <stl/config/stl_symbian.h>
 #elif defined (_WIN32) || defined (__WIN32) || defined (WIN32) || defined (__WIN32__) || \
       defined (__WIN16) || defined (WIN16) || defined (_WIN16)
 #  if defined ( __BORLANDC__ )  /* Borland C++ ( 4.x - 5.x ) */

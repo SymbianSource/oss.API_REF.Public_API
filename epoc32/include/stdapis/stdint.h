@@ -32,7 +32,7 @@
 #include <sys/cdefs.h>
 #include <sys/_types.h>
 
-#include <machine/_stdint.h>
+#include <stdapis/machine/_stdint.h>
 
 #ifndef _INT8_T_DECLARED
 typedef	__int8_t		int8_t;

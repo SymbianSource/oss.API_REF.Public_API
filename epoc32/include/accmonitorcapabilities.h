@@ -1,10 +1,10 @@
 /*
-* Copyright (c) 2006 Nokia Corporation and/or its subsidiary(-ies). 
+* Copyright (c) 2006 Nokia Corporation and/or its subsidiary(-ies).
 * All rights reserved.
 * This component and the accompanying materials are made available
-* under the terms of the License "Symbian Foundation License v1.0" to Symbian Foundation members and "Symbian Foundation End User License Agreement v1.0" to non-members
+* under the terms of "Eclipse Public License v1.0"
 * which accompanies this distribution, and is available
-* at the URL "http://www.symbianfoundation.org/legal/licencesv10.html".
+* at the URL "http://www.eclipse.org/legal/epl-v10.html".
 *
 * Initial Contributors:
 * Nokia Corporation - initial contribution.
@@ -63,7 +63,7 @@ const TAccMonCapability KAccMonCarKit = 2;
 *
 * Description: Constant definition for device type office, e.g. Music Stand.
 */
-const TAccMonCapability KAccMonOffice = 3; 
+const TAccMonCapability KAccMonOffice = 3;
 
 /**
 * Device type capability: KAccMonLoopset
@@ -120,6 +120,15 @@ const TAccMonCapability KAccMonBluetooth = 18;
 * physical connection.
 */
 const TAccMonCapability KAccMonUSB = 19;
+
+/**
+* Physical connection capability: KAccMonHDMI
+*
+* Description: Constant definition for physical connection HDMI
+* connector. If capability is defined accessory has HDMI for its
+* physical connection.
+*/
+const TAccMonCapability KAccMonHDMI = 20;
 
 /**
 * Audio Capabilities
@@ -187,7 +196,7 @@ enum TAccMonAudioOut
 
 /**
 * Bluetooth capability: KAccMonBTHSP
-* Description: Constant definition for Bluetooth profile HS (Headset 
+* Description: Constant definition for Bluetooth profile HS (Headset
 * profile). Accessory supports HS profile.
 */
 const TAccMonCapability KAccMonBTHSP = 97;

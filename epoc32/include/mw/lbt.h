@@ -2,9 +2,9 @@
 * Copyright (c) 2006 Nokia Corporation and/or its subsidiary(-ies).
 * All rights reserved.
 * This component and the accompanying materials are made available
-* under the terms of the License "Symbian Foundation License v1.0" to Symbian Foundation members and "Symbian Foundation End User License Agreement v1.0" to non-members
+* under the terms of "Eclipse Public License v1.0"
 * which accompanies this distribution, and is available
-* at the URL "http://www.symbianfoundation.org/legal/licencesv10.html".
+* at the URL "http://www.eclipse.org/legal/epl-v10.html".
 *
 * Initial Contributors:
 * Nokia Corporation - initial contribution.
@@ -1218,6 +1218,17 @@ class RLbt : public RSubSessionBase
         * Destructor.
         */
         IMPORT_C ~RLbt();
+        
+       /** 
+        * Handles list triggers operation
+        */
+        void HandleListTriggerIdsL();
+        
+       /**
+        * Handles get triggers operation
+        */
+        
+        void HandleGetTriggersL();
     
     private:
        /**
@@ -1284,6 +1295,16 @@ class RLbt : public RSubSessionBase
         * Helper method for get triggers operation.
         */ 
         void GetTriggersInServerL(CBufFlat* aBuf,CLbtListTriggerOptions* aListOptions,TInt& aBufLength );
+        
+        /**
+         * Validates geo area information based on type e.g. Coordinate, Cell, WLan, Hybrid.
+         * 
+         * @panic ELbtErrArgument If invalid.
+         * 
+         * @param[in] aGeoArea the geographical area         
+         * @leave Other standard Symbian error code, such as KErrNoMemory
+         */
+        void ValidateGeoAreaInformationL( CLbtGeoAreaBase* aGeoArea );
         
        /**
         * Symbian 2nd phase construction.

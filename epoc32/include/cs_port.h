@@ -1,9 +1,9 @@
 // Copyright (c) 1997-2009 Nokia Corporation and/or its subsidiary(-ies).
 // All rights reserved.
 // This component and the accompanying materials are made available
-// under the terms of the License "Symbian Foundation License v1.0" to Symbian Foundation members and "Symbian Foundation End User License Agreement v1.0" to non-members
+// under the terms of "Eclipse Public License v1.0"
 // which accompanies this distribution, and is available
-// at the URL "http://www.symbianfoundation.org/legal/licencesv10.html".
+// at the URL "http://www.eclipse.org/legal/epl-v10.html".
 //
 // Initial Contributors:
 // Nokia Corporation - initial contribution.
@@ -13,13 +13,6 @@
 // Description:
 //
 
-#ifndef SYMBIAN_C32_SERCOMMS_V2
-// PLEASE NOTE: This file is part of Version 2 of C32 - that is, the multi-threaded version.
-// The single-threaded C32 version of this file is in c32\Version1\SCOMM
-// All defect fixes should be applied to both versions where appropriate.
-// PLEASE NOTE: This comment is applicable to SercommsV2 but is surrounded by an "#ifndef"
-// to enable the automatic removal of this comment once non-C32 V2 code is removed.
-#endif
 
 
 #ifndef CS_PORT_H
@@ -200,7 +193,7 @@ public:
 	// Pure virtual methods - to be implemented by the CSY
 	//
 
-	/// Called by manager when access count is 0 - CSY port must call 'delete this'
+	// Called by manager when access count is 0 - CSY port must call 'delete this'
 	/** Specifies the protocol for port destruction. It is called by the comms server 
 	when the last client-side reference to a CPort object has been closed and 
 	the CPort must be deleted. The comms server will not delete a CPort other 
@@ -210,9 +203,9 @@ public:
 	its own resources and, when these operations have completed, should delete 
 	this. */
 	virtual void Destruct()=0;
-	/// Queue a read - called by CPort when client wants to read
-	/// Note: if the value in aLength is negative, this means
-	///       ReadOneOrMore and the CSY must invert the number
+	// Queue a read - called by CPort when client wants to read
+	// Note: if the value in aLength is negative, this means
+	//       ReadOneOrMore and the CSY must invert the number
 	/** Specifies the protocol for reading from the port. It is called by the comms 
 	server in response to a RComm::Read() or RComm::ReadOneOrMore() request from 
 	the client.
@@ -229,7 +222,7 @@ public:
 	the client's buffer 
 	@param aLength The amount of data to be read */
 	virtual void StartRead(const TAny* aClientBuffer, TInt aLength)=0;
-	/// Cancel a pending read
+	// Cancel a pending read
 	/** Specifies the protocol for cancelling reading from the port. It is called by 
 	the comms server in response to a RComm::ReadCancel() request from the client or
 	when the iReadTimer timer expires.
@@ -237,7 +230,7 @@ public:
 	The implementation should abort any processing which was taking place as a 
 	result of the read request. Do not call ReadCompleted(). */
 	virtual void ReadCancel()=0;
-	/// Get the size of the receive buffer from the real serial port
+	// Get the size of the receive buffer from the real serial port
 	/** Specifies a protocol for requesting the number of bytes that are currently 
 	waiting in the port's receive buffer. It is called by the comms server in 
 	response to a RComm::QueryReceiveBuffer() request from the client.
@@ -246,7 +239,7 @@ public:
 	from the receive buffer. 
 	@return A system wide error code. */
 	virtual TInt QueryReceiveBuffer(TInt& aLength) const=0;
-	/// reset Tx and Rx buffers
+	// reset Tx and Rx buffers
 	/** Specifies a protocol for resetting the receive and/or transmit buffers to zero 
 	length. It is called by the comms server in response to a RComm::ResetBuffers() 
 	request from the client.
@@ -254,7 +247,7 @@ public:
 	@param aFlags Bitmask of the following flags: KCommResetRx to reset the receive 
 	buffer; KCommResetTx to reset the transmit buffer */
 	virtual void ResetBuffers(TUint aFlags)=0;
-	/// Queue a write - called by CPort when client wants to write
+	// Queue a write - called by CPort when client wants to write
 	/** Specifies the protocol for writing to the port. It is called by the comms server 
 	in response to a RComm::Write() request from the client.
 	
@@ -266,14 +259,14 @@ public:
 	the client's buffer 
 	@param aLength The amount of data to be written */
 	virtual void StartWrite(const TAny* aClientBuffer, TInt aLength)=0;
-	/// Cancel a pending write
+	// Cancel a pending write
 	/** Specifies the protocol for cancelling writing to the port. It is called by 
 	the comms server in response to a RComm::WriteCancel() request from the client.
 	
 	The implementation should abort any processing which was taking place as a 
 	result of the write request. Do not call WriteCompleted(). */
 	virtual void WriteCancel()=0;
-	/// Queue a break
+	// Queue a break
 	/** Specifies the protocol for setting a break condition at the port. It is called 
 	by the comms server in response to a RComm::Break() request from the client.
 	
@@ -281,14 +274,14 @@ public:
 	
 	@param aTime Time period to break for in microseconds */
 	virtual void Break(TInt aTime)=0;
-	/// Cancel a pending break
+	// Cancel a pending break
 	/** Specifies the protocol for cancelling a break request. It is called by the 
 	comms server in response to a RComm::BreakCancel() request from the client.
 	
 	The implementation should abort any processing which was taking place as a 
 	result of the break request. Do not call BreakCompleted(). */
 	virtual void BreakCancel()=0;
-	/// Pass a config request - return in descriptor
+	// Pass a config request - return in descriptor
 	/** Specifies a protocol for getting the current configuration of the serial port. 
 	It is called by the comms server in response to a RComm::GetConfig() request 
 	from the client.
@@ -297,7 +290,7 @@ public:
 	configuration of the serial port 
 	@return A system wide error code */
 	virtual TInt GetConfig(TDes8& aPackage) const=0;
-	/// Set config with package in the descriptor
+	// Set config with package in the descriptor
 	/** Specifies a protocol for setting the configuration of the port. It is called 
 	by the comms server in response to a RComm::SetConfig() request from the client.
 	
@@ -305,14 +298,14 @@ public:
 	values 
 	@return A system error code */
 	virtual TInt SetConfig(const TDesC8& aPackage)=0;
-	/// Set the port to use partial reads/writes
+	// Set the port to use partial reads/writes
 	/** Specifies a protocol for setting the buffer mode. It is called by the comms 
 	server in response to a RComm::SetMode() request from the client.
 	
 	@param aPackage A TCommServerConfig package buffer holding the mode settings 
 	@return A system-wide error code */
 	virtual TInt SetServerConfig(const TDesC8& aPackage)=0;
-	/// Get the server configs from the CSY
+	// Get the server configs from the CSY
 	/** Specifies a protocol for getting the buffer mode. It is called by the comms 
 	server in response to a RComm::Mode() request from the client.
 	
@@ -320,7 +313,7 @@ public:
 	the current buffer mode settings 
 	@return A system error code */
 	virtual TInt GetServerConfig(TDes8& aPackage)=0;
-	/// Read capabilities from the driver
+	// Read capabilities from the driver
 	/** Specifies a protocol for getting the port capabilities. It is called by the 
 	comms server in response to a RComm::Caps() request from the client.
 	
@@ -328,7 +321,7 @@ public:
 	capabilities 
 	@return A system error code */
 	virtual TInt GetCaps(TDes8& aPackage)=0;
-	/// Get the status of the signal pins
+	// Get the status of the signal pins
 	/** Specifies a protocol for getting the status of the serial port control lines. 
 	It is called by the comms server in response to a RComm::GetSignals() request 
 	from the client.
@@ -337,21 +330,21 @@ public:
 	handshaking lines. 
 	@return A system error code */
 	virtual TInt GetSignals(TUint& aSignals)=0;
-	/// Set selected signals to high (logical 1)
+	// Set selected signals to high (logical 1)
 	/** Specifies a protocol for setting serial port control lines. It is called by 
 	the comms server in response to a RComm::SetSignals() request from the client.
 	
 	@param aSignals A bitmask of the handshaking lines to set 
 	@return A system error code */
 	virtual TInt SetSignalsToMark(TUint aSignals)=0;
-	/// Set selected signals to low (logical 0)
+	// Set selected signals to low (logical 0)
 	/** Specifies a protocol for clearing serial port control lines. It is called by 
 	the comms server in response to a RComm::SetSignals() request from the client.
 	
 	@param aSignals A bitmask of the handshaking lines to clear 
 	@return A system error code */
 	virtual TInt SetSignalsToSpace(TUint aSignals)=0;
-	/// Get size of Tx and Rx buffer
+	// Get size of Tx and Rx buffer
 	/** Specifies a protocol for requesting the size of the serial port buffers. It 
 	is called by the comms server in response to a RComm::ReceiveBufferLength() 
 	request from the client.
@@ -359,7 +352,7 @@ public:
 	@param aLength The current size of the serial port buffers in bytes 
 	@return A system error code */
 	virtual TInt GetReceiveBufferLength(TInt& aLength) const=0;
-	/// Set size of Tx and Rx buffer
+	// Set size of Tx and Rx buffer
 	/** Specifies a protocol for setting the size of the serial port buffers. It is 
 	called by the comms server in response to a RComm::SetReceiveBufferLength() 
 	request from the client.
@@ -368,83 +361,83 @@ public:
 	@return A system error code */
 	virtual TInt SetReceiveBufferLength(TInt aLength)=0;
 	virtual void FreeMemory();	// csys have their own implementation, e.g. ECUART
-	/// Notify client when the signals change
+	// Notify client when the signals change
 	/** Specifies the protocol for setting a "signal change" notification. It is called 
 	by the comms server in response to a RComm::NotifySignalChange() request from 
 	the client.
 	
 	@param aSignalMask Signal mask passed by client */
 	virtual void NotifySignalChange(TUint aSignalMask)=0;
-	/// Cancel an outstanding signal change notification
+	// Cancel an outstanding signal change notification
 	/** Specifies the protocol for cancelling a "signal change" notification. It is called 
 	by the comms server in response to a RComm::NotifySignalChangeCancel() request 
 	from the client. */
 	virtual void NotifySignalChangeCancel()=0;
-	/// Notify client when the configation changes
+	// Notify client when the configation changes
 	/** Specifies the protocol for setting a "configuration change" notification. It 
 	is called by the comms server in response to a RComm::NotifyConfigChange() 
 	request from the client. */
 	virtual void NotifyConfigChange()=0;
-	/// Cancel an outstanding config change notification
+	// Cancel an outstanding config change notification
 	/** Specifies the protocol for cancelling a "configuration change" notification. 
 	It is called by the comms server in response to a RComm::NotifyConfigChangeCancel() 
 	request from the client. */
 	virtual void NotifyConfigChangeCancel()=0;
-	/// Notify client when the flow control changes
+	// Notify client when the flow control changes
 	/** Specifies the protocol for setting a "flow control change" notification. It is 
 	called by the comms server in response to a RComm::NotifyFlowControlChange() 
 	request from the client. */
 	virtual void NotifyFlowControlChange()=0;
-	/// Cancel an outstanding flow control change notification
+	// Cancel an outstanding flow control change notification
 	/** Specifies the protocol for cancelling a "flow control change" notification. It 
 	is called by the comms server in response to a RComm::NotifyFlowControlChangeCancel() 
 	request from the client. */
 	virtual void NotifyFlowControlChangeCancel()=0;
-	/// Notify client when a break occurs
+	// Notify client when a break occurs
 	/** Specifies the protocol for setting a "break" notification. It is called by the 
 	comms server in response to a RComm::NotifyBreak() request from the client. */
 	virtual void NotifyBreak()=0;
-	/// Cancel an outstanding break notification
+	// Cancel an outstanding break notification
 	/** Specifies the protocol for cancelling a "break" notification. It is called by 
 	the comms server in response to a RComm::NotifyBreakCancel() request from 
 	the client. */
 	virtual void NotifyBreakCancel()=0;
-	/// Notify client when data is available
+	// Notify client when data is available
 	/** Specifies the protocol for setting a "data available" notification. It is called 
 	
 	by the comms server in response to a RComm::NotifyDataAvailable() request 
 	from the client. */
 	virtual void NotifyDataAvailable()=0;
-	/// Cancel an outstanding data available notification
+	// Cancel an outstanding data available notification
 	/** Specifies the protocol for cancelling a "data available" notification. It is 
 	called by the comms server in response to a RComm::NotifyDataAvailableCancel() 
 	request from the client. */
 	virtual void NotifyDataAvailableCancel()=0;
-	/// Notify client when output buffer is empty
+	// Notify client when output buffer is empty
 	/** Specifies the protocol for setting a transmit buffer empty notification. It 
 	is called by the comms server in response to a RComm::NotifyOutputEmpty() 
 	request from the client. */
 	virtual void NotifyOutputEmpty()=0;
-	/// Cancel an outstanding output empty notification
+	// Cancel an outstanding output empty notification
 	/** Specifies the protocol for cancelling a transmit buffer empty notification. 
 	It is called by the comms server in response to a RComm::NotifyOutputEmptyCancel() 
 	request from the client. */
 	virtual void NotifyOutputEmptyCancel()=0;
-	/// Get the flow control status
+	// Get the flow control status
 	/** Gets flow control status. It is called by the comms server in response to a 
 	RComm::SetMode() request from the client.
 	
 	@param aFlowControl Flow control status to return to the client 
 	@return A system-wide error code */
 	virtual TInt GetFlowControlStatus(TFlowControl& aFlowControl)=0;
-	/// Get the role of this port unit
+	// Get the role of this port unit
 	/** Gets DCE/DTE role. It is called by the comms server in response to a RComm::GetRole() 
 	request from the client.
 	
 	@param aRole On return, DCE/DTE role to return to the client 
 	@return A system-wide error code */
 	virtual TInt GetRole(TCommRole& aRole)=0;
-	/// Set the role of this port unit
+	// Set the role of this port unit
 	/** Sets DCE/DTE role. It is called by the comms server in response to a RComm::Open() 
 	request from the client.
 	
@@ -460,60 +453,60 @@ private:
 	void DoOpenL(CCommSession* aSession, TInternalCommAccess aMode, TCommRole aRole,TBool aIsNew);
 	void DoPreemption();
 
-	TDeltaTimerEntry iReadTimer;  ///< delta timer entry for read timeouts
-	TBool iReadTimerPending;      ///< true if a read timer is pending
-	TDeltaTimerEntry iWriteTimer; ///< delta timer entry for write timeouts
-	TBool iWriteTimerPending;     ///< true if a write timer is pending
-	TInternalCommAccess iMode;    ///< access mode for this port
-	CCommSession* iReadOwner;     ///< pointer to the read session
-	TInt iReadOwnerHandle;        ///< handle to the read session
-	CCommSession* iWriteOwner;    ///< pointer to the write session
-	TInt iWriteOwnerHandle;       ///< handle to the write session
+	TDeltaTimerEntry iReadTimer;  //< delta timer entry for read timeouts
+	TBool iReadTimerPending;      //< true if a read timer is pending
+	TDeltaTimerEntry iWriteTimer; //< delta timer entry for write timeouts
+	TBool iWriteTimerPending;     //< true if a write timer is pending
+	TInternalCommAccess iMode;    //< access mode for this port
+	CCommSession* iReadOwner;     //< pointer to the read session
+	TInt iReadOwnerHandle;        //< handle to the read session
+	CCommSession* iWriteOwner;    //< pointer to the write session
+	TInt iWriteOwnerHandle;       //< handle to the write session
 	// Binary compatible
 	// Was: CCommSession* iBreakOwner;  Replace with:
-	CExtra* iExtra;               ///< pointer to the CExtra object for pre-emptable handling
-#define iBreakOwner (iExtra->iBreakOwner) ///< forwards iBreakOwner to iExtra->iBreakOwner
+	CExtra* iExtra;               //< pointer to the CExtra object for pre-emptable handling
+#define iBreakOwner (iExtra->iBreakOwner) //< forwards iBreakOwner to iExtra->iBreakOwner
 
-	TInt iBreakOwnerHandle;                  ///< handle to the break owner
-	CCommSession* iSignalOwner;              ///< pointer to the signal session
-	TInt iSignalOwnerHandle;                 ///< handle to the signal session
-	CCommSession* iFlowControlOwner;         ///< pointer to the flow control session
-	TInt iFlowControlOwnerHandle;            ///< handle to the flow control session
-	CCommSession* iConfigOwner;              ///< pointer to the config session
-	TInt iConfigOwnerHandle;                 ///< handle to the config session
-	CCommSession* iBreakNotifyOwner;         ///< pointer to the break notify session
-	TInt iBreakNotifyOwnerHandle;            ///< handle to the break notify session
-	CCommSession* iNotifyDataAvailableOwner; ///< pointer to the data available session
-	TInt iNotifyDataAvailableOwnerHandle;    ///< handle to the data available session
-	CCommSession* iNotifyOutputEmptyOwner;   ///< pointer to the output empty session
-	TInt iNotifyOutputEmptyOwnerHandle;      ///< handle to the output empty session
+	TInt iBreakOwnerHandle;                  //< handle to the break owner
+	CCommSession* iSignalOwner;              //< pointer to the signal session
+	TInt iSignalOwnerHandle;                 //< handle to the signal session
+	CCommSession* iFlowControlOwner;         //< pointer to the flow control session
+	TInt iFlowControlOwnerHandle;            //< handle to the flow control session
+	CCommSession* iConfigOwner;              //< pointer to the config session
+	TInt iConfigOwnerHandle;                 //< handle to the config session
+	CCommSession* iBreakNotifyOwner;         //< pointer to the break notify session
+	TInt iBreakNotifyOwnerHandle;            //< handle to the break notify session
+	CCommSession* iNotifyDataAvailableOwner; //< pointer to the data available session
+	TInt iNotifyDataAvailableOwnerHandle;    //< handle to the data available session
+	CCommSession* iNotifyOutputEmptyOwner;   //< pointer to the output empty session
+	TInt iNotifyOutputEmptyOwnerHandle;      //< handle to the output empty session
 
-	RMessagePtr2 iBlockedRead;                ///< pointer to the read request message
-	RMessagePtr2 iBlockedWrite;               ///< pointer to the write request message
-	RMessagePtr2 iBlockedBreak;               ///< pointer to the break request message
+	RMessagePtr2 iBlockedRead;                //< pointer to the read request message
+	RMessagePtr2 iBlockedWrite;               //< pointer to the write request message
+	RMessagePtr2 iBlockedBreak;               //< pointer to the break request message
 
 	/**The encapsulated message*/
-	RMessagePtr2 iBlockedSignalChange;			///< holds the notify signal change message
+	RMessagePtr2 iBlockedSignalChange;			//< holds the notify signal change message
 	/**Private padding to preserve BC with earlier versions*/
 	TInt iBlockedSignalChangeDummyPadding[7];
 
 	/**The encapsulated message*/
-	RMessagePtr2 iBlockedConfigChange;			///< holds the notify config change message
+	RMessagePtr2 iBlockedConfigChange;			//< holds the notify config change message
 	/**Private padding to preserve BC with earlier versions*/
 	TInt iBlockedConfigChangeDummyPadding[7];
 
 	/**The encapsulated message*/
-	RMessagePtr2 iBlockedFlowControlChange;		///< holds the notify flow control change message
+	RMessagePtr2 iBlockedFlowControlChange;		//< holds the notify flow control change message
 	/**Private padding to preserve BC with earlier versions*/
 	TInt iBlockedFlowControlChangeDummyPadding[7];
 
-	RMessagePtr2 iBlockedBreakNotify;         ///< pointer to the notify break request message
-	RMessagePtr2 iBlockedNotifyDataAvailable; ///< pointer to the notify data available request message
-	RMessagePtr2 iBlockedNotifyOutputEmpty;   ///< pointer to the notify output empty request message
+	RMessagePtr2 iBlockedBreakNotify;         //< pointer to the notify break request message
+	RMessagePtr2 iBlockedNotifyDataAvailable; //< pointer to the notify data available request message
+	RMessagePtr2 iBlockedNotifyOutputEmpty;   //< pointer to the notify output empty request message
 
-	CPortManager* iPortManager;              ///< Not Used. Not to be exposed to deriving classes of CPort.
+	CPortManager* iPortManager;              //< Not Used. Not to be exposed to deriving classes of CPort.
 	IMPORT_C virtual void CPort_Reserved1();
-	TAny* iCPort_Reserved;                   ///< reserved pointer
+	TAny* iCPort_Reserved;                   //< reserved pointer
 	};
 
 
@@ -555,7 +548,7 @@ public:
 	// pure virtuals to be implemented by the CSY
 	//
 
-	/// Create a new port for the supplied unit number
+	// Create a new port for the supplied unit number
 	/** Specifies the protocol for creating a new serial port for the protocol. The 
 	comms server calls this function in response to a RComm:Open() call.
 	
@@ -574,7 +567,7 @@ public:
 	
 	@param aUnit The unit number to be created. */
 	virtual CPort* NewPortL(const TUint aUnit)=0;
-	/// Get info about this CSY, fill in the supplied structure.
+	// Get info about this CSY, fill in the supplied structure.
 	/** Specifies the protocol for getting the information about the serial protocol.
 	
 	Implementations should fill in the TSerialInfo structure to reflect the protocol's 
@@ -591,11 +584,11 @@ public:
 protected:
 	/** Module version number. The class should initialise this member with its version 
 	number from its constructor. */
-	TVersion iVersion;                         ///< holds the version of the CSY
+	TVersion iVersion;                         //< holds the version of the CSY
 private:
-	CLibUnloader* iLibUnloader;                ///< pointer to the library unloader
+	CLibUnloader* iLibUnloader;                //< pointer to the library unloader
 	IMPORT_C virtual void CSerial_Reserved1();
-	TAny* iCSerial_Reserved;                   ///< reserved pointer for future BC
+	TAny* iCSerial_Reserved;                   //< reserved pointer for future BC
 	};
 
 /** This typedef defines the form of the ordinal-1 entry point function to a serial 
@@ -605,6 +598,6 @@ class, which will then be used by the comms server.
 Each serial protocol module should only ever create a single serial protocol 
 factory object. If the entry point is called twice without the first factory 
 object being destroyed, this function should leave with KErrGeneral. */
-typedef CSerial *(*TSerialNewL)(); ///< function type of CSY module entry point
+typedef CSerial *(*TSerialNewL)(); //< function type of CSY module entry point
 
 #endif // CS_PORT_H

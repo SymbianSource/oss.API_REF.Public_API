@@ -1,9 +1,9 @@
 // Copyright (c) 1997-2009 Nokia Corporation and/or its subsidiary(-ies).
 // All rights reserved.
 // This component and the accompanying materials are made available
-// under the terms of the License "Symbian Foundation License v1.0" to Symbian Foundation members and "Symbian Foundation End User License Agreement v1.0" to non-members
+// under the terms of "Eclipse Public License v1.0"
 // which accompanies this distribution, and is available
-// at the URL "http://www.symbianfoundation.org/legal/licencesv10.html".
+// at the URL "http://www.eclipse.org/legal/epl-v10.html".
 //
 // Initial Contributors:
 // Nokia Corporation - initial contribution.
@@ -101,19 +101,11 @@ public:
 	/**
     The priority preference that expresses the nature of the priority that can be none, 
 	time (or speed), quality or both time and quality.
+	
+	 Values are known to the adaptation and will be iterpreted accordingly.
 
-	If this is set to EMdaPriorityPreferenceTime then the audio data is time sensitive. The playback 
-	operation fails if it cannot happen when requested but degraded output such as mixing or muting 
-	is allowed.
-
-	If this is set to EMdaPriorityPreferenceQuality then the audio data must be played at the best possible 
-	quality (for example, it must not be degraded by muting or mixing). The playback operation is delayed
-	until the sound device is available for exclusive use.
-
-	If this is set to EMdaPriorityPreferenceTimeAndQuality then the audio data is both time and quality 
-	sensitive. The playback operation fails if it cannot happen immediately at the highest quality.
 	*/
-	TMdaPriorityPreference iPref;
+	TInt iPref;
 	};
 
 /**
@@ -135,7 +127,7 @@ TMdaPackage(KUidMdaDataTypeSettings,aUid,aDerivedSize) {}
 
 /**
 @publishedAll
-@deprecated
+@released
 
 The settings for audio data played through the media server.
 

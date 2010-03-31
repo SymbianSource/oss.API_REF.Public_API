@@ -1,9 +1,9 @@
 // Copyright (c) 2003-2009 Nokia Corporation and/or its subsidiary(-ies).
 // All rights reserved.
 // This component and the accompanying materials are made available
-// under the terms of the License "Symbian Foundation License v1.0" to Symbian Foundation members and "Symbian Foundation End User License Agreement v1.0" to non-members
+// under the terms of "Eclipse Public License v1.0"
 // which accompanies this distribution, and is available
-// at the URL "http://www.symbianfoundation.org/legal/licencesv10.html".
+// at the URL "http://www.eclipse.org/legal/epl-v10.html".
 //
 // Initial Contributors:
 // Nokia Corporation - initial contribution.
@@ -12,8 +12,6 @@
 //
 // Description:
 //
-
-
 
 /**
  @file
@@ -25,7 +23,6 @@
 #define __OBEXCLIENT_H
 
 #include <obextypes.h>
-#include <obex/internal/obextransportconstants.h>
 #include <obexbase.h>
 
 class CObexPacket;
@@ -55,8 +52,7 @@ public:
 	IMPORT_C static CObexClient* NewL(TObexTransportInfo& aObexTransportInfo);
 	IMPORT_C void Connect(TRequestStatus& aStatus);
 	IMPORT_C void Connect(CObexBaseObject& aObject, TRequestStatus& aStatus);	
-	IMPORT_C void ConnectL(CObexBaseObject& aObject, const TDesC& aPassword, 
-													TRequestStatus& aStatus);
+	IMPORT_C void ConnectL(CObexBaseObject& aObject, const TDesC& aPassword, TRequestStatus& aStatus);
 	IMPORT_C void ConnectL(const TDesC& aPassword, TRequestStatus& aStatus);
 	IMPORT_C void Disconnect(TRequestStatus& aStatus);						
 	IMPORT_C void Put(CObexBaseObject& aObject, TRequestStatus& aStatus);
@@ -71,7 +67,7 @@ public:
 	IMPORT_C TAny* ExtensionInterface(TUid aUid);
 
 public:	// Called from CObexNotifyExtendClient
-	void SignalPacketProcessEvent(TObexPacketProcessEvent aEvent);
+	void SignalPacketProcessEvent(TInt aEvent);
 	void TimeOutCompletion();
 	
 private:

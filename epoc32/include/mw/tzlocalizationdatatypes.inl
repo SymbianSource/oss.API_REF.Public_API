@@ -1,9 +1,9 @@
 // Copyright (c) 2004-2009 Nokia Corporation and/or its subsidiary(-ies).
 // All rights reserved.
 // This component and the accompanying materials are made available
-// under the terms of the License "Symbian Foundation License v1.0" to Symbian Foundation members and "Symbian Foundation End User License Agreement v1.0" to non-members
+// under the terms of "Eclipse Public License v1.0"
 // which accompanies this distribution, and is available
-// at the URL "http://www.symbianfoundation.org/legal/licencesv10.html".
+// at the URL "http://www.eclipse.org/legal/epl-v10.html".
 //
 // Initial Contributors:
 // Nokia Corporation - initial contribution.
@@ -35,26 +35,6 @@ Returns the resource ID.
 inline TUint TTzLocalizedId::ResourceId() const
 	{
 	return iResourceId;
-	}
-
-/**
-Returns the UTC offset in minutes.
-This value should only be used for array sorting.
-@return The UTC offset in minutes.
-*/
-inline TInt TTzLocalizedId::UTCOffset() const
-	{
-	return iUTCOffset;
-	}
-
-/**
-Sets the UTC offset in minutes.
-This value should only be used for internal array sorting.
-@param aOffsetInMinutes The new UTC offset in minutes.
-*/
-inline void TTzLocalizedId::SetUTCOffset(TInt aOffsetInMinutes)
-	{
-	iUTCOffset = aOffsetInMinutes;
 	}
 
 //==================================================================
@@ -145,8 +125,10 @@ inline TInt CTzLocalizedArray<T>::Find(T* aEntry,TIdentityRelation<T> aIdentityR
 	return iArray.Find(aEntry,aIdentityRelation);
 	}
 
-#endif //__TZLOCAL_DATATYPES_INL__
+template <class T>
+inline void CTzLocalizedArray<T>::ReserveL(TInt aCount)
+	{
+	iArray.ReserveL(aCount);
+	}
 
-//==================================================================
-// End of file
-//==================================================================
+#endif //__TZLOCAL_DATATYPES_INL__

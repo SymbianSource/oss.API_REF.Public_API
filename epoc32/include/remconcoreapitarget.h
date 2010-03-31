@@ -1,9 +1,9 @@
 // Copyright (c) 2004-2009 Nokia Corporation and/or its subsidiary(-ies).
 // All rights reserved.
 // This component and the accompanying materials are made available
-// under the terms of the License "Symbian Foundation License v1.0" to Symbian Foundation members and "Symbian Foundation End User License Agreement v1.0" to non-members
+// under the terms of "Eclipse Public License v1.0"
 // which accompanies this distribution, and is available
-// at the URL "http://www.symbianfoundation.org/legal/licencesv10.html".
+// at the URL "http://www.eclipse.org/legal/epl-v10.html".
 //
 // Initial Contributors:
 // Nokia Corporation - initial contribution.
@@ -12,8 +12,6 @@
 //
 // Description:
 //
-
-
 
 /**
  @file
@@ -48,6 +46,17 @@ public:
 	*/
 	IMPORT_C static CRemConCoreApiTarget* NewL(CRemConInterfaceSelector& aInterfaceSelector, 
 		MRemConCoreApiTargetObserver& aObserver);
+	/**
+	Factory function.
+	@param aInterfaceSelector The interface selector. The client must have 
+	created one of these first.
+	@param aObserver The observer of this interface.
+	@param aFeatureSupported The Array is used to stote features supportd by the client 
+	
+	@return A new CRemConCoreApiTarget, owned by the interface selector.
+	*/
+	IMPORT_C static CRemConCoreApiTarget* NewL(CRemConInterfaceSelector& aInterfaceSelector, 
+			MRemConCoreApiTargetObserver& aObserver,const RArray<TRemConCoreApiOperationId>& aFeatureSupported);
 	
 	/** Destructor */
 	IMPORT_C ~CRemConCoreApiTarget();
@@ -505,6 +514,7 @@ private:
 	*/
 	CRemConCoreApiTarget(CRemConInterfaceSelector& aInterfaceSelector, 
 		MRemConCoreApiTargetObserver& aObserver);
+    void ConstructL(const RArray<TRemConCoreApiOperationId>& aFeaturesSupported);
 
 private: // utility
 	/**
@@ -528,6 +538,8 @@ private: // utility
 	void HandleSelectDiskFunction(const TDesC8& aData, TRemConCoreApiButtonAction aButton);
 	void HandleSelectAvInputFunction(const TDesC8& aData, TRemConCoreApiButtonAction aButton);
 	void HandleSelectAudioInputFunction(const TDesC8& aData, TRemConCoreApiButtonAction aButton);
+private :
+	void RemConCoreSetFeatures(TBool* aFeatureSupported);
 
 private: // unowned
 	MRemConCoreApiTargetObserver& iObserver;

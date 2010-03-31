@@ -1,9 +1,9 @@
 // Copyright (c) 1999-2009 Nokia Corporation and/or its subsidiary(-ies).
 // All rights reserved.
 // This component and the accompanying materials are made available
-// under the terms of the License "Symbian Foundation License v1.0" to Symbian Foundation members and "Symbian Foundation End User License Agreement v1.0" to non-members
+// under the terms of "Eclipse Public License v1.0"
 // which accompanies this distribution, and is available
-// at the URL "http://www.symbianfoundation.org/legal/licencesv10.html".
+// at the URL "http://www.eclipse.org/legal/epl-v10.html".
 //
 // Initial Contributors:
 // Nokia Corporation - initial contribution.
@@ -11,7 +11,6 @@
 // Contributors:
 //
 // Description:
-// EZLib: COMPRESSOR.H
 // Declaration for Compression class
 // 
 //
@@ -30,6 +29,13 @@ This version of the library supports only one compression method (deflation).  C
 of the DeflateL() function.  The source data is compressed to the target buffer (both source and target contained within 
 the buffer manager argument), and various other arguments distinguish the different compression settings.
 
+Note: In this version of the library a windowBits value of 8 is unsupported due to a problem with the window size being 
+set to 256 bytes. Although a value of 8 will be accepted by the CEZCompressor constructors, as it is being changed 
+internally by Zlib from 8 to 9, it will not be possible to use the same value for decompression. This is because the 
+Zlib functions called by the CEZDecompressor constructors do not make the same change internally and as a result a 
+KEZlibErrData is returned when calling InflateL(). It is therefore advised that for this version of the library 
+windowBits of 9 is used in place of 8.
+
 @publishedAll
 @released
 */
@@ -42,10 +48,10 @@ public:
 		/** Use for normal data */		
 		EDefaultStrategy = Z_DEFAULT_STRATEGY, 
 		
-		/** Force Huffman encoding only (no string match) */
+		/** Use for data produced by a filter (or predictor) */
 		EFiltered = Z_FILTERED, 
 		
-		/** Use for data produced by a filter (or predictor) */
+		/** Force Huffman encoding only (no string match) */
 		EHuffmanOnly = Z_HUFFMAN_ONLY
 		};
 
@@ -117,3 +123,5 @@ public:
 	};
 
 #endif
+
+

@@ -34,7 +34,7 @@ class _STLP_CLASS_DECLSPEC logic_error : public __Named_exception {
 public:
   logic_error(const string& __s) : __Named_exception(__s) {}
 #    ifndef _STLP_USE_NO_IOSTREAMS
-  ~logic_error() _STLP_NOTHROW_INHERENTLY;
+  _STLP_DECLSPEC ~logic_error() _STLP_NOTHROW_INHERENTLY;
 #    endif
 };
 
@@ -42,7 +42,7 @@ class _STLP_CLASS_DECLSPEC runtime_error : public __Named_exception {
 public:
   runtime_error(const string& __s) : __Named_exception(__s) {}
 #    ifndef _STLP_USE_NO_IOSTREAMS
-  ~runtime_error() _STLP_NOTHROW_INHERENTLY;
+  _STLP_DECLSPEC ~runtime_error() _STLP_NOTHROW_INHERENTLY;
 #    endif
 };
 
@@ -50,7 +50,7 @@ class _STLP_CLASS_DECLSPEC domain_error : public logic_error {
 public:
   domain_error(const string& __arg) : logic_error(__arg) {}
 #    ifndef _STLP_USE_NO_IOSTREAMS
-  ~domain_error() _STLP_NOTHROW_INHERENTLY;
+  _STLP_DECLSPEC ~domain_error() _STLP_NOTHROW_INHERENTLY;
 #    endif
 };
 
@@ -58,7 +58,7 @@ class _STLP_CLASS_DECLSPEC invalid_argument : public logic_error {
 public:
   invalid_argument(const string& __arg) : logic_error(__arg) {}
 #    ifndef _STLP_USE_NO_IOSTREAMS
-  ~invalid_argument() _STLP_NOTHROW_INHERENTLY;
+  _STLP_DECLSPEC ~invalid_argument() _STLP_NOTHROW_INHERENTLY;
 #    endif
 };
 
@@ -66,7 +66,7 @@ class _STLP_CLASS_DECLSPEC length_error : public logic_error {
 public:
   length_error(const string& __arg) : logic_error(__arg) {}
 #    ifndef _STLP_USE_NO_IOSTREAMS
-  ~length_error() _STLP_NOTHROW_INHERENTLY;
+  _STLP_DECLSPEC ~length_error() _STLP_NOTHROW_INHERENTLY;
 #    endif
 };
 
@@ -74,7 +74,7 @@ class _STLP_CLASS_DECLSPEC out_of_range : public logic_error {
 public:
   out_of_range(const string& __arg) : logic_error(__arg) {}
 #    ifndef _STLP_USE_NO_IOSTREAMS
-  ~out_of_range() _STLP_NOTHROW_INHERENTLY;
+  _STLP_DECLSPEC ~out_of_range() _STLP_NOTHROW_INHERENTLY;
 #    endif
 };
 
@@ -82,7 +82,7 @@ class _STLP_CLASS_DECLSPEC range_error : public runtime_error {
 public:
   range_error(const string& __arg) : runtime_error(__arg) {}
 #    ifndef _STLP_USE_NO_IOSTREAMS
-  ~range_error() _STLP_NOTHROW_INHERENTLY;
+  _STLP_DECLSPEC ~range_error() _STLP_NOTHROW_INHERENTLY;
 #    endif
 };
 
@@ -90,7 +90,7 @@ class _STLP_CLASS_DECLSPEC overflow_error : public runtime_error {
 public:
   overflow_error(const string& __arg) : runtime_error(__arg) {}
 #    ifndef _STLP_USE_NO_IOSTREAMS
-  ~overflow_error() _STLP_NOTHROW_INHERENTLY;
+  _STLP_DECLSPEC ~overflow_error() _STLP_NOTHROW_INHERENTLY;
 #    endif
 };
 
@@ -98,7 +98,7 @@ class _STLP_CLASS_DECLSPEC underflow_error : public runtime_error {
 public:
   underflow_error(const string& __arg) : runtime_error(__arg) {}
 #    ifndef _STLP_USE_NO_IOSTREAMS
-  ~underflow_error() _STLP_NOTHROW_INHERENTLY;
+  _STLP_DECLSPEC ~underflow_error() _STLP_NOTHROW_INHERENTLY;
 #    endif
 };
 

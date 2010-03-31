@@ -1,9 +1,9 @@
 // Copyright (c) 2004-2009 Nokia Corporation and/or its subsidiary(-ies).
 // All rights reserved.
 // This component and the accompanying materials are made available
-// under the terms of the License "Symbian Foundation License v1.0" to Symbian Foundation members and "Symbian Foundation End User License Agreement v1.0" to non-members
+// under the terms of "Eclipse Public License v1.0"
 // which accompanies this distribution, and is available
-// at the URL "http://www.symbianfoundation.org/legal/licencesv10.html".
+// at the URL "http://www.eclipse.org/legal/epl-v10.html".
 //
 // Initial Contributors:
 // Nokia Corporation - initial contribution.
@@ -15,8 +15,6 @@
 // The server may panic clients with these codes.
 // 
 //
-
-
 
 /**
  @file
@@ -126,13 +124,26 @@ enum TRemConClientPanic
 	*/
 	ERemConClientPanicNoCommand 										= 13,
 
-	/** RRemConTarget::RegisterInterestedAPIs(...) is called on a non-target session
-	(i.e. controller or undefined session). This doesn't make any sense because the 
+	/** RRemConTarget::RegisterInterestedAPIs(...) is called on an undefined session). This doesn't make any sense because the 
 	server only filters incoming commands for the target sessions.
 	
 	The client is paniced for misusing this API.
+	
+	This panic 
 	*/
 	ERemConClientPanicRegisterInterestedAPIsInNonTargetSession			= 14,	
+	
+	/** They client side has sent a corrupt set of supported operation ids.
+	 */
+	ERemConClientPanicCorruptSupportedOperations						= 15,
+	
+	/** RRemConTarget::RegisterInterestedOperations(...) is called on a non-target session
+	(i.e. controller or undefined session). Detailed information about the controller
+	operation support is not required by RemCon.
+	
+	The client is paniced for misusing this API.
+	*/
+	ERemConClientPanicRegisterInterestedOperationsInNonTargetSession	= 16,
 	};
 
 #endif // REMCONSERVERPANIC_H

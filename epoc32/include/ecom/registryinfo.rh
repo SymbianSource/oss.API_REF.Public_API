@@ -1,9 +1,9 @@
 // Copyright (c) 1997-2009 Nokia Corporation and/or its subsidiary(-ies).
 // All rights reserved.
 // This component and the accompanying materials are made available
-// under the terms of the License "Symbian Foundation License v1.0" to Symbian Foundation members and "Symbian Foundation End User License Agreement v1.0" to non-members
+// under the terms of "Eclipse Public License v1.0"
 // which accompanies this distribution, and is available
-// at the URL "http://www.symbianfoundation.org/legal/licencesv10.html".
+// at the URL "http://www.eclipse.org/legal/epl-v10.html".
 //
 // Initial Contributors:
 // Nokia Corporation - initial contribution.
@@ -11,26 +11,17 @@
 // Contributors:
 //
 // Description:
-// The UID identifying client provided CResolver Interface Implementations. 
-// 
 //
-
-
-
 
 /**
  @file
  @publishedAll
  @released
- @internalComponent
 */
-#define CUSTOM_RESOLVER_INTERFACE_UID 0x10009D90
+#include <ecom/registryinfoconst.hrh>
 
-/** 
-The UID identifying Interface Implementation Resource Files. 
-@internalComponent
-*/
-UID2 0x101F747D
+
+UID2 ECOM_RESOURCE_FILE
 
 STRUCT IMPLEMENTATION_INFO
 	{
@@ -61,3 +52,4 @@ STRUCT REGISTRY_INFO
 	LONG	dll_uid;
 	STRUCT	interfaces[];
 	}
+

@@ -2,9 +2,9 @@
 * Copyright (c) 1997-2009 Nokia Corporation and/or its subsidiary(-ies).
 * All rights reserved.
 * This component and the accompanying materials are made available
-* under the terms of the License "Symbian Foundation License v1.0" to Symbian Foundation members and "Symbian Foundation End User License Agreement v1.0" to non-members
+* under the terms of "Eclipse Public License v1.0"
 * which accompanies this distribution, and is available
-* at the URL "http://www.symbianfoundation.org/legal/licencesv10.html".
+* at the URL "http://www.eclipse.org/legal/epl-v10.html".
 *
 * Initial Contributors:
 * Nokia Corporation - initial contribution.
@@ -35,6 +35,7 @@
 #include <eikdpage.h>
 
 #include <AknControl.h>
+#include <aknsconstants.h>
 
 class CEikImage ;
 class CEikDialogPage;
@@ -308,6 +309,13 @@ public:
      */
 	IMPORT_C void SetPointerEventObserver(MPointerEventObserver *aObserver);
 	MPointerEventObserver *PointerEventObserver() const;
+	
+    /** Sets the captionedcontrol to be currently focused or not.
+     * @param aSelected whether captionedcontrol is focused
+     * @param aRedraw whether redraw is needed or not
+     */    
+    void SetCurrent(TBool aSelected, TBool aRedraw );
+    
 protected:
     TRect ViewRect() const;
     TRect EditRect() const;
@@ -378,11 +386,11 @@ private:
     void DoFormCaptionSettingsL(const TDesC& aText);
 private:
     static void FormLayoutControlBitmap(CEikImage* aBitmap, const TRect& aParent, TBool aIsEditable, TBool aSingleLayout, TInt aNumberOfLines);
-    static void FormLayoutControlEdwin(CEikEdwin* aEdwin, const TRect& aParent, TBool aIsEditable, TBool aSingleLayout, TInt aNumberOfLines, TBool aBitmapPresent, TBool aIsFocused);
-    static void FormLayoutControlLabel(CEikLabel* aSlider, const TRect& aParent, TBool aIsEditable, TBool aSingleLayout, TInt aNumberOfLines, TBool aLayoutWithBitmap, TBool aIsFocused, TInt aIconCount);
-    static void FormLayoutControlMfne(CEikMfne* aMfne,  const TRect& aParent, TBool aIsEditable, TBool aSingleLayout, TInt aNumberOfLines, TBool aBitmapPresent, TBool aIsFocused );
-    static void FormLayoutControlPopfield(CAknPopupField* aPopfield, const TRect& aParent, TBool aIsEditable, TBool aSingleLayout, TInt aNumberOfLines, TBool aBitmapPresent, TBool aIsFocused);
-    static void FormLayoutControlSecretEditor(CEikSecretEditor* aSecretEd, const TRect& aParent, TBool aIsEditable, TBool aSingleLayout, TInt aNumberOfLines, TBool aBitmapPresent, TBool aIsFocused );
+    void FormLayoutControlEdwin(CEikEdwin* aEdwin, const TRect& aParent, TBool aIsEditable, TBool aSingleLayout, TInt aNumberOfLines, TBool aBitmapPresent, TBool aIsFocused);
+    void FormLayoutControlLabel(CEikLabel* aSlider, const TRect& aParent, TBool aIsEditable, TBool aSingleLayout, TInt aNumberOfLines, TBool aLayoutWithBitmap, TBool aIsFocused, TInt aIconCount);
+    void FormLayoutControlMfne(CEikMfne* aMfne,  const TRect& aParent, TBool aIsEditable, TBool aSingleLayout, TInt aNumberOfLines, TBool aBitmapPresent, TBool aIsFocused );
+    void FormLayoutControlPopfield(CAknPopupField* aPopfield, const TRect& aParent, TBool aIsEditable, TBool aSingleLayout, TInt aNumberOfLines, TBool aBitmapPresent, TBool aIsFocused);
+    void FormLayoutControlSecretEditor(CEikSecretEditor* aSecretEd, const TRect& aParent, TBool aIsEditable, TBool aSingleLayout, TInt aNumberOfLines, TBool aBitmapPresent, TBool aIsFocused );
     static void FormLayoutControlSlider(CAknSlider* aSlider, const TRect& aParent, TBool aIsEditable, TBool aSingleLayout, TInt aNumberOfLines, TBool aBitmapPresent);
     static void ConvertViewRectToEditRect(TRect& aRect);
     static void ConvertEditRectToViewRect(TRect& aRect);
@@ -418,6 +426,14 @@ private:
     void DrawAsFormInEditMode( const TRect& aRect ) const;
     void DrawAsFormInViewMode( const TRect& aRect ) const;
     void DrawAsFormUnFocusedLine( const TRect& aRect ) const;
+    
+    /**
+     * Returns correct text color index.
+     *
+     * @since S60 5.2
+     * @return Text color index.
+     */
+    TAknsQsnTextColorsIndex TextColorIndex() const;
 
 public:
     CCoeControl* iControl;

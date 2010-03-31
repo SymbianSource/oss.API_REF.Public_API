@@ -1,19 +1,17 @@
-/*
-* Copyright (c) 2002 Nokia Corporation and/or its subsidiary(-ies).
-* All rights reserved.
-* This component and the accompanying materials are made available
-* under the terms of the License "Symbian Foundation License v1.0" to Symbian Foundation members and "Symbian Foundation End User License Agreement v1.0" to non-members
-* which accompanies this distribution, and is available
-* at the URL "http://www.symbianfoundation.org/legal/licencesv10.html".
-*
-* Initial Contributors:
-* Nokia Corporation - initial contribution.
-*
-* Contributors:
-*
-* Description:
-*
-*/
+// Copyright (c) 2002-2009 Nokia Corporation and/or its subsidiary(-ies).
+// All rights reserved.
+// This component and the accompanying materials are made available
+// under the terms of "Eclipse Public License v1.0"
+// which accompanies this distribution, and is available
+// at the URL "http://www.eclipse.org/legal/epl-v10.html".
+//
+// Initial Contributors:
+// Nokia Corporation - initial contribution.
+//
+// Contributors:
+//
+// Description:
+//
 
 #ifndef __MMF_COMMON_PANICCODES_H__
 #define __MMF_COMMON_PANICCODES_H__
@@ -282,7 +280,7 @@ enum TMMFMediaClientPanicCode
 	};
 
 /**
-@internalTechnology
+@publishedAll
 
 Panic codes for the sw codec wrapper
 */
@@ -322,5 +320,36 @@ enum TMMFMediaClientUtilityPanicCode
 	*/
 	EMMFMediaClientUtilityBadArgument
 	};
+
+#ifdef SYMBIAN_MULTIMEDIA_SUBTITLE_SUPPORT
+/**
+@publishedAll
+@released
+
+Panic codes for the video player utility
+*/
+enum TMMFVideoPlayerUtilityPanicCode 
+	{
+	/** File not opened
+	*/
+	EMMFVideoPlayerUtilityFileNotOpened = 1,
+
+	/** Subtitle not supported
+	*/
+	EMMFVideoPlayerUtilitySubtitleNotSupported = 2,
+
+	/** No display window available
+	*/
+	EMMFVideoPlayerUtilityNoWindowAdded = 3,
+
+	/** Subtitle not enabled
+	*/
+	EMMFVideoPlayerUtilitySubtitleNotEnabled = 4,
+
+	/** Subtitle language not supported
+	*/
+	EMMFVideoPlayerUtilitySubtitleLanguageNotSupported = 5
+	};
+#endif //SYMBIAN_MULTIMEDIA_SUBTITLE_SUPPORT
 
 #endif

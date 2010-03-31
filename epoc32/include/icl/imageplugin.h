@@ -1,9 +1,9 @@
 // Copyright (c) 2001-2009 Nokia Corporation and/or its subsidiary(-ies).
 // All rights reserved.
 // This component and the accompanying materials are made available
-// under the terms of the License "Symbian Foundation License v1.0" to Symbian Foundation members and "Symbian Foundation End User License Agreement v1.0" to non-members
+// under the terms of "Eclipse Public License v1.0"
 // which accompanies this distribution, and is available
-// at the URL "http://www.symbianfoundation.org/legal/licencesv10.html".
+// at the URL "http://www.eclipse.org/legal/epl-v10.html".
 //
 // Initial Contributors:
 // Nokia Corporation - initial contribution.
@@ -169,7 +169,7 @@ public:
 	/**
 	@publishedAll
 	@released
-
+	
 	Called by the framework to obtain a pointer to a codec implemented extension.
 
 	@param aExtUid Extension UID normally prefixed KUidImageConv. @see icl_uids.hrh .
@@ -179,7 +179,7 @@ public:
 	/**
 	@publishedAll
 	@released
-
+	
 	Called by the framework on the plugin to apply a clipping rectangle to the image.
 
 	Sets the area of interest of the image to be decoded.
@@ -198,7 +198,7 @@ public:
 	/**
 	@publishedAll
 	@released
-
+	
 	Called by framework on plugin to get the size of decoded image.
 
 	Get the size of the decoded image for the given frame. The calculation will account for any clipping rectangle set,
@@ -313,7 +313,7 @@ public:
 	/**
 	@publishedAll
 	@released
-
+	
 	Called by the framework to obtain a pointer to a codec implemented extension.
 
 	@param aExtUid Extension UID normally prefixed KUidImageConv. @see icl_uids.hrh .
@@ -327,3 +327,4 @@ private:
 
 
 #endif //ImageConversionPlugin_h
+

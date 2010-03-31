@@ -21,7 +21,7 @@
 
 //  INCLUDES
 
-#include <FavouritesHandle.h>
+#include <favouriteshandle.h>
 
 // FORWARD DECLARATION
 
@@ -118,7 +118,7 @@ class RFavouritesFile: public RFavouritesHandle
 
     };
 
-#include <FavouritesFile.inl>
+#include <favouritesfile.inl>
 
 #endif
 

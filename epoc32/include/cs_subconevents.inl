@@ -1,9 +1,9 @@
 // Copyright (c) 2004-2009 Nokia Corporation and/or its subsidiary(-ies).
 // All rights reserved.
 // This component and the accompanying materials are made available
-// under the terms of the License "Symbian Foundation License v1.0" to Symbian Foundation members and "Symbian Foundation End User License Agreement v1.0" to non-members
+// under the terms of "Eclipse Public License v1.0"
 // which accompanies this distribution, and is available
-// at the URL "http://www.symbianfoundation.org/legal/licencesv10.html".
+// at the URL "http://www.eclipse.org/legal/epl-v10.html".
 //
 // Initial Contributors:
 // Nokia Corporation - initial contribution.
@@ -13,11 +13,10 @@
 // Description:
 //
 
-
-
 /**
  @file
  @publishedAll
+ @released
 */
 
 #ifndef __CS_SUBCONEVENTS_INL__
@@ -31,7 +30,7 @@ CSubConGenEventParamsGranted* CSubConGenEventParamsGranted::NewL()
  otherwise leaves with system error code.
 */
 	{
-	STypeId typeId(KSubConnGenericEventsImplUid, KSubConGenericEventParamsGranted);
+	STypeId typeId = STypeId::CreateSTypeId(KSubConnGenericEventsImplUid, KSubConGenericEventParamsGranted);
 	return static_cast<CSubConGenEventParamsGranted*>(CSubConNotificationEvent::NewL(typeId));
 	}
 
@@ -114,7 +113,7 @@ CSubConGenEventParamsChanged* CSubConGenEventParamsChanged::NewL()
  otherwise leaves with system error code.
 */
 	{
-	STypeId typeId(KSubConnGenericEventsImplUid, KSubConGenericEventParamsChanged);
+	STypeId typeId = STypeId::CreateSTypeId(KSubConnGenericEventsImplUid, KSubConGenericEventParamsChanged);
 	return static_cast<CSubConGenEventParamsChanged*>(CSubConNotificationEvent::NewL(typeId));
 	}
 
@@ -144,13 +143,13 @@ void CSubConGenEventParamsChanged::SetError(TInt aError)
 //====================================
 
 CSubConGenEventParamsRejected* CSubConGenEventParamsRejected::NewL()
-/** Creates a rejected parameter event sub-connection. 
+/** Creates a rejected parameter event sub-connection.
 
 @return CSubConGenEventParamsRejected pointer if successful,
  otherwise leaves with system error code.
 */
 	{
-	STypeId typeId(KSubConnGenericEventsImplUid, KSubConGenericEventParamsRejected);
+	STypeId typeId = STypeId::CreateSTypeId(KSubConnGenericEventsImplUid, KSubConGenericEventParamsRejected);
 	return static_cast<CSubConGenEventParamsRejected*>(CSubConNotificationEvent::NewL(typeId));
 	}
 
@@ -191,8 +190,8 @@ void CSubConGenEventParamsRejected::SetFamilyId(TInt aFamilyId)
 @param aFamilyId parameter family type. */
 	{
 	iFamilyId = aFamilyId;
-	}	
-	
+	}
+
 //====================================
 CSubConGenEventDataClientBase::CSubConGenEventDataClientBase()
 	: CSubConNotificationEvent()
@@ -251,13 +250,13 @@ void CSubConGenEventDataClientBase::SetDestAddress(const TSockAddr& aDestAddress
 
 //====================================
 CSubConGenEventDataClientJoined* CSubConGenEventDataClientJoined::NewL()
-/** Creates a data client joined event sub-connection. 
+/** Creates a data client joined event sub-connection.
 
 @return CSubConGenEventDataClientJoined pointer if successful,
  otherwise leaves with system error code.
 */
 	{
-	STypeId typeId(KSubConnGenericEventsImplUid, KSubConGenericEventDataClientJoined);
+	STypeId typeId = STypeId::CreateSTypeId(KSubConnGenericEventsImplUid, KSubConGenericEventDataClientJoined);
 	return static_cast<CSubConGenEventDataClientJoined*>(CSubConNotificationEvent::NewL(typeId));
 	}
 
@@ -270,13 +269,13 @@ CSubConGenEventDataClientJoined::CSubConGenEventDataClientJoined()
 
 //=====================================
 CSubConGenEventDataClientLeft* CSubConGenEventDataClientLeft::NewL()
-/** Creates a data client left event sub-connection. 
+/** Creates a data client left event sub-connection.
 
 @return CSubConGenEventDataClientLeft pointer if successful,
  otherwise leaves with system error code.
 */
 	{
-	STypeId typeId(KSubConnGenericEventsImplUid, KSubConGenericEventDataClientLeft);
+	STypeId typeId = STypeId::CreateSTypeId(KSubConnGenericEventsImplUid, KSubConGenericEventDataClientLeft);
 	return static_cast<CSubConGenEventDataClientLeft*>(CSubConNotificationEvent::NewL(typeId));
 	}
 
@@ -289,13 +288,13 @@ CSubConGenEventDataClientLeft::CSubConGenEventDataClientLeft()
 
 //====================================
 CSubConGenEventSubConDown* CSubConGenEventSubConDown::NewL()
-/** Creates a sub-connection down event. 
+/** Creates a sub-connection down event.
 
 @return a CSubConGenEventSubConDown pointer if successful,
  otherwise leaves with system error code.
 */
 	{
-	STypeId typeId(KSubConnGenericEventsImplUid, KSubConGenericEventSubConDown);
+	STypeId typeId = STypeId::CreateSTypeId(KSubConnGenericEventsImplUid, KSubConGenericEventSubConDown);
 	return static_cast<CSubConGenEventSubConDown*>(CSubConNotificationEvent::NewL(typeId));
 	}
 
@@ -323,3 +322,4 @@ void CSubConGenEventSubConDown::SetError(TInt aError)
 	}
 
 #endif	// __CS_SUBCONEVENTS_INL__
+

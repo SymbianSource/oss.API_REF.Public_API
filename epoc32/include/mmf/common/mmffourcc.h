@@ -7,9 +7,9 @@
 // Copyright (c) 2002-2009 Nokia Corporation and/or its subsidiary(-ies).
 // All rights reserved.
 // This component and the accompanying materials are made available
-// under the terms of the License "Symbian Foundation License v1.0" to Symbian Foundation members and "Symbian Foundation End User License Agreement v1.0" to non-members
+// under the terms of "Eclipse Public License v1.0"
 // which accompanies this distribution, and is available
-// at the URL "http://www.symbianfoundation.org/legal/licencesv10.html".
+// at the URL "http://www.eclipse.org/legal/epl-v10.html".
 //
 // Initial Contributors:
 // Nokia Corporation - initial contribution.
@@ -111,6 +111,13 @@ const TUint32 KMMFFourCCCodeADTS = 0x53544441;		//{'A', 'D', 'T', 'S'}
 */
 const TUint32 KMMFFourCCCodeWMA = 0x414d5720;		//{' ', 'W', 'M', 'A'}
 
+/** Dolby Digital (AC-3)
+*/
+const TUint32 KMMFFourCCCodeAC3 = 0x33434120;		//{' ', 'A', 'C', '3'}
+
+/** Dolby Digital Plus (E-AC-3)
+*/
+const TUint32 KMMFFourCCCodeEAC3 = 0x33434145;		//{'E', 'A', 'C', '3'}
 
 #include <mmf/common/mmfutilities.h>
 

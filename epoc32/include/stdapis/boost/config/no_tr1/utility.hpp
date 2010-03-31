@@ -1,19 +1,28 @@
-//  Boost utility.hpp header file  -------------------------------------------//
+//  (C) Copyright John Maddock 2005.
+//  Use, modification and distribution are subject to the
+//  Boost Software License, Version 1.0. (See accompanying file
+//  LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
+//
+// The aim of this header is just to include <utility> but to do
+// so in a way that does not result in recursive inclusion of
+// the Boost TR1 components if boost/tr1/tr1/utility is in the
+// include search path.  We have to do this to avoid circular
+// dependencies:
+//
 
-//  Copyright 1999-2003 Aleksey Gurtovoy.  Use, modification, and distribution are
-//  subject to the Boost Software License, Version 1.0.  (See accompanying file
-//  LICENSE_1_0.txt or a copy at <http://www.boost.org/LICENSE_1_0.txt>.)
+#ifndef BOOST_CONFIG_UTILITY
+#  define BOOST_CONFIG_UTILITY
 
-//  See <http://www.boost.org/libs/utility/> for the library's home page.
+#  ifndef BOOST_TR1_NO_RECURSION
+#     define BOOST_TR1_NO_RECURSION
+#     define BOOST_CONFIG_NO_UTILITY_RECURSION
+#  endif
 
-#ifndef BOOST_UTILITY_HPP
-#define BOOST_UTILITY_HPP
+#  include <utility>
 
-#include <boost/utility/addressof.hpp>
-#include <boost/utility/base_from_member.hpp>  
-#include <boost/utility/enable_if.hpp>
-#include <boost/checked_delete.hpp>
-#include <boost/next_prior.hpp>
-#include <boost/noncopyable.hpp>
+#  ifdef BOOST_CONFIG_NO_UTILITY_RECURSION
+#     undef BOOST_TR1_NO_RECURSION
+#     undef BOOST_CONFIG_NO_UTILITY_RECURSION
+#  endif
 
-#endif  // BOOST_UTILITY_HPP
+#endif

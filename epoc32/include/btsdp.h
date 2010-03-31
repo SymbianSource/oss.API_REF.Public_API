@@ -1,9 +1,9 @@
 // Copyright (c) 2000-2009 Nokia Corporation and/or its subsidiary(-ies).
 // All rights reserved.
 // This component and the accompanying materials are made available
-// under the terms of the License "Symbian Foundation License v1.0" to Symbian Foundation members and "Symbian Foundation End User License Agreement v1.0" to non-members
+// under the terms of "Eclipse Public License v1.0"
 // which accompanies this distribution, and is available
-// at the URL "http://www.symbianfoundation.org/legal/licencesv10.html".
+// at the URL "http://www.eclipse.org/legal/epl-v10.html".
 //
 // Initial Contributors:
 // Nokia Corporation - initial contribution.
@@ -12,8 +12,6 @@
 //
 // Description:
 //
-
-
 
 /**
  @file
@@ -62,6 +60,8 @@ static const TSdpAttributeID KSdpAttrIdDocumentationURL = 0x000A;
 static const TSdpAttributeID KSdpAttrIdClientExecutableURL = 0x000B;
 /** Icon URL. */
 static const TSdpAttributeID KSdpAttrIdIconURL = 0x000C;
+/** Additional protocol descriptor list. */
+static const TSdpAttributeID KSdpAttrIdAdditionalProtocolDescriptorList = 0x000D;
 
 
 /** PAN Profile Security enforcement */
@@ -170,6 +170,8 @@ static const TInt KAVRemoteControlTargetUUID = 0x110c;
 static const TInt KAdvancedAudioDistributionUUID = 0x110d;
 /** Remote control (service class) UUID */
 static const TInt KAVRemoteControlUUID = 0x110E;
+/** Remote control controller (service class) UUID */
+static const TInt KAVRemoteControlControllerUUID = 0x110F;
 /** PBAP PSE Service Class UUID */
 static const TInt KPbapPseUUID = 0x112F;
   
@@ -674,9 +676,9 @@ an attribute value.
 NONSHARABLE_CLASS(CSdpAttrValueList) : public CSdpAttrValue, public MSdpElementBuilder
 	{
 public:
-	IMPORT_C virtual ~CSdpAttrValueList();
-	IMPORT_C virtual void AcceptVisitorL(MSdpAttributeValueVisitor& aVisitor);
-	IMPORT_C virtual TUint DataSize() const;
+	virtual ~CSdpAttrValueList();
+	virtual void AcceptVisitorL(MSdpAttributeValueVisitor& aVisitor);
+	virtual TUint DataSize() const;
 	IMPORT_C void AppendValueL(CSdpAttrValue* aValue);
 
 	// MSdpElementBuilder interface
@@ -686,19 +688,19 @@ public:
 	@param aSizeDesc Size descriptor
 	@param aData Data field
 	@return Attribute value with added element */
-	IMPORT_C virtual MSdpElementBuilder* BuildUnknownL(TUint8 aType, TUint8 aSizeDesc, const TDesC8& aData);
-	IMPORT_C virtual MSdpElementBuilder* BuildNilL();
-	IMPORT_C virtual MSdpElementBuilder* BuildUintL(const TDesC8& aUint);
-	IMPORT_C virtual MSdpElementBuilder* BuildIntL(const TDesC8& aInt);
-	IMPORT_C virtual MSdpElementBuilder* BuildUUIDL(const TUUID& aUUID);
-	IMPORT_C virtual MSdpElementBuilder* BuildBooleanL(TBool aBool);
-	IMPORT_C virtual MSdpElementBuilder* BuildStringL(const TDesC8& aString);
-	IMPORT_C virtual MSdpElementBuilder* BuildDESL();
-	IMPORT_C virtual MSdpElementBuilder* BuildDEAL();
-	IMPORT_C virtual MSdpElementBuilder* StartListL();
-	IMPORT_C virtual MSdpElementBuilder* EndListL();
-	IMPORT_C virtual MSdpElementBuilder* BuildURLL(const TDesC8& aString);
-	IMPORT_C virtual MSdpElementBuilder* BuildEncodedL(const TDesC8& aString);
+	virtual MSdpElementBuilder* BuildUnknownL(TUint8 aType, TUint8 aSizeDesc, const TDesC8& aData);
+	virtual MSdpElementBuilder* BuildNilL();
+	virtual MSdpElementBuilder* BuildUintL(const TDesC8& aUint);
+	virtual MSdpElementBuilder* BuildIntL(const TDesC8& aInt);
+	virtual MSdpElementBuilder* BuildUUIDL(const TUUID& aUUID);
+	virtual MSdpElementBuilder* BuildBooleanL(TBool aBool);
+	virtual MSdpElementBuilder* BuildStringL(const TDesC8& aString);
+	virtual MSdpElementBuilder* BuildDESL();
+	virtual MSdpElementBuilder* BuildDEAL();
+	virtual MSdpElementBuilder* StartListL();
+	virtual MSdpElementBuilder* EndListL();
+	virtual MSdpElementBuilder* BuildURLL(const TDesC8& aString);
+	virtual MSdpElementBuilder* BuildEncodedL(const TDesC8& aString);
 
 protected:
 	CSdpAttrValueList(MSdpElementBuilder *aBuilder);
@@ -1267,6 +1269,7 @@ public:
 	void FindAttributesL(CSdpServRecord &aRec, MAttributeMatchHandler &aHandler) const;
 	
 	/**
+	This method is for internal sub-system use only, it is not to be used otherwise.
 	@internalTechnology
 	@released
 	*/

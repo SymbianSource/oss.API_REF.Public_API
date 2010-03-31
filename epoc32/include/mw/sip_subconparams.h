@@ -1,9 +1,9 @@
 // Copyright (c) 2005-2009 Nokia Corporation and/or its subsidiary(-ies).
 // All rights reserved.
 // This component and the accompanying materials are made available
-// under the terms of the License "Symbian Foundation License v1.0" to Symbian Foundation members and "Symbian Foundation End User License Agreement v1.0" to non-members
+// under the terms of "Eclipse Public License v1.0"
 // which accompanies this distribution, and is available
-// at the URL "http://www.symbianfoundation.org/legal/licencesv10.html".
+// at the URL "http://www.eclipse.org/legal/epl-v10.html".
 //
 // Initial Contributors:
 // Nokia Corporation - initial contribution.
@@ -16,8 +16,6 @@
 // 
 //
 
-
-
 /**
  @file
  @publishedAll
@@ -28,7 +26,7 @@
 #define SIP_SUBCONPARAMS_H
 
 #include <es_sock.h>
-#include <comms-infras/metabuffer.h>
+#include <comms-infras/es_parameterfamily.h>
 
 /** The numeric value of ECOM plugin identifier for this SubConnection parameter extension.See the assisting *.rss file. */
 const TInt KSubConSIPParametersUid = 0x10274C18;
@@ -59,6 +57,7 @@ public:
 	 @leave 	KErrArgument if the data is not of type TParameterSetType.
 	 */   
 	inline static CSubConSIPInviteParamSet* NewL(CSubConParameterFamily& aFamily, CSubConParameterFamily::TParameterSetType aType);
+	inline static CSubConSIPInviteParamSet* NewL(RParameterFamily& aFamily, RParameterFamily::TParameterSetType aType);
 	inline static CSubConSIPInviteParamSet* NewL();
 	
 	/** Constructor. */
@@ -273,6 +272,6 @@ public:
 	static CSubConExtensionParameterSet* NewL(TAny* aConstructionParameters);
 	};
 
-#include <sip_subconparams.inl>
+#include "SIP_subconparams.inl"
 
 #endif // SIP_SUBCONPARAMS_H

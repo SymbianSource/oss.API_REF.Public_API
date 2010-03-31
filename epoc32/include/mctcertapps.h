@@ -16,11 +16,10 @@
 */
 
 
-
-
 /**
  @file 
- @internalAll
+ @publishedAll
+ @released
 */
  
 #ifndef __MCTCERTAPPS_H__
@@ -31,11 +30,11 @@
 #include <s32file.h>
 #include <ct/mcttokeninterface.h>
 
-/** The UID of certificate application token type */
-const TInt KTokenTypeCertApps = 0x101f7a37;
+#ifndef SYMBIAN_ENABLE_SPLIT_HEADERS
+#include <mctcertappinterface.h>
+#endif
 
-/** The UID of certificate application interface */
-const TInt KInterfaceCertApps = 0x101f7a38;
+
 
 /**
  * Information about a certificate application.
@@ -50,8 +49,6 @@ const TInt KInterfaceCertApps = 0x101f7a38;
  * An application is identified by a UID.  A TCertificateAppInfo contains this
  * and the name of the application.
  * 
- * @publishedAll
- * @released
  */
 class TCertificateAppInfo
 	{
@@ -67,19 +64,6 @@ public:
 private:
 	TUid iUid;                    
 	TName iName;
-	};
-
-/**
- * Interface for certificate applications manager token.
- */
-class MCTCertApps : public MCTTokenInterface
-	{
-public:
-	virtual void AddL(const TCertificateAppInfo& aClient) = 0;
-	virtual void RemoveL(const TUid& aUid) = 0;
-	virtual TInt ApplicationCountL() const = 0;
-	virtual void ApplicationsL(RArray<TCertificateAppInfo>& aAppArray) const = 0;
-	virtual void ApplicationL(const TUid& aUid, TCertificateAppInfo& aInfo) const = 0;
 	};
 
 

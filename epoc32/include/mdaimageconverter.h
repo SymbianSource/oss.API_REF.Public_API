@@ -1,9 +1,9 @@
-// Copyright (c) 2001-2009 Nokia Corporation and/or its subsidiary(-ies).
+// Copyright (c) 1998-2009 Nokia Corporation and/or its subsidiary(-ies).
 // All rights reserved.
 // This component and the accompanying materials are made available
-// under the terms of the License "Symbian Foundation License v1.0" to Symbian Foundation members and "Symbian Foundation End User License Agreement v1.0" to non-members
+// under the terms of "Eclipse Public License v1.0"
 // which accompanies this distribution, and is available
-// at the URL "http://www.symbianfoundation.org/legal/licencesv10.html".
+// at the URL "http://www.eclipse.org/legal/epl-v10.html".
 //
 // Initial Contributors:
 // Nokia Corporation - initial contribution.
@@ -14,6 +14,8 @@
 // BC Version that uses CImageDecode/Encode objects but is essentially source
 // compatible with the old MdaImageConverter calls
 // 
+//
+
 /**
  @file
  @deprecated
@@ -25,7 +27,7 @@
 #include <fbs.h>
 
 #include <icl/imagedata.h>
-#include <mda/client/resource.h>
+#include <mda/common/resource.h>
 #include <mda/client/utility.h>
 #include <mda/common/video.h>
 
@@ -251,10 +253,12 @@ public:
 protected:
 	// Creates relevant iDecoder property - depending on subclass.
 	// Called by "background" AO processing.
+	
 	/**
 	@internalComponent
 	*/
  	void DoOpenL();
+	
 	// From CMdaImageUtility
 	virtual void DoClose();
 private:
@@ -302,6 +306,7 @@ public:
 protected:
 	// Creates relevant <code>iEncoder</code> property - depending on subclass.
 	// Called by "background" AO processing.
+	
 	/**
 	@internalComponent
 	*/
@@ -533,3 +538,4 @@ private:
 	};
 
 #endif
+

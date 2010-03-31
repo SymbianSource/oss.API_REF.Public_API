@@ -2,9 +2,9 @@
 * Copyright (c) 1997-2009 Nokia Corporation and/or its subsidiary(-ies).
 * All rights reserved.
 * This component and the accompanying materials are made available
-* under the terms of the License "Symbian Foundation License v1.0" to Symbian Foundation members and "Symbian Foundation End User License Agreement v1.0" to non-members
+* under the terms of "Eclipse Public License v1.0"
 * which accompanies this distribution, and is available
-* at the URL "http://www.symbianfoundation.org/legal/licencesv10.html".
+* at the URL "http://www.eclipse.org/legal/epl-v10.html".
 *
 * Initial Contributors:
 * Nokia Corporation - initial contribution.
@@ -122,24 +122,35 @@ public:
 	CEikCapCArrayExtension *ExtensionOrNull() const;
 	
 	/**
-	* Scrolls each item by aDelta pixels in y direction.
-	*/
+     * Scrolls each item by aDelta pixels in y direction.
+     */
 	TInt ScrollByPixels( TInt aDelta );
 	
 	/**
-	* Return the index of the line at aYPos.
-	*/
+     * Return the index of the line at aYPos.
+     */
 	TInt YPositionToLineIndex( TInt aYPos ) const;
 	
 	/**
-	* Returns line's top y coordinate.
-	*/
+     * Returns line's top y coordinate.
+     */
 	TInt LineIndexToYPosition( TInt aLine, TInt aTopY ) const;
 	
 	/**
-	* Moves aLine to the visible screen area or out of it.
-	*/
+     * Moves aLine to the visible screen area or out of it.
+     */
 	void MoveLineToScreen( TInt aLine, TInt aTopY, TBool aVisible );
+	
+    /**
+     * Calculates the line that should be focused when a navigation key is
+     * pressed while in form view mode.
+     *
+     * @since S60 5.2
+     * @param aCurrentLine Current line's index.
+     * @param aTopY View's top y coordinate.
+     * @return Line that should be focused.
+     */
+    TInt FocusableLine( TInt aCurrentLine, TInt aTopY );
 	
 private:
     /**

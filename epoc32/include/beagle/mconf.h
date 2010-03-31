@@ -1,9 +1,9 @@
 // Copyright (c) 1998-2009 Nokia Corporation and/or its subsidiary(-ies).
 // All rights reserved.
 // This component and the accompanying materials are made available
-// under the terms of the License "Symbian Foundation License v1.0" to Symbian Foundation members and "Symbian Foundation End User License Agreement v1.0" to non-members
+// under the terms of the License "Eclipse Public License v1.0"
 // which accompanies this distribution, and is available
-// at the URL "http://www.symbianfoundation.org/legal/licencesv10.html".
+// at the URL "http://www.eclipse.org/legal/epl-v10.html".
 //
 // Initial Contributors:
 // Nokia Corporation - initial contribution.
@@ -11,9 +11,8 @@
 // Contributors:
 //
 // Description:
-// template\template_variant\inc\mconf.h
-// Template Persistent Machine Configuration
-// 
+// omap3530/beagleboard\inc\mconf.h
+// Beagle Persistent Machine Configuration
 //
 
 
@@ -33,7 +32,7 @@ public:
     TInt iTy;
     };
 
-class TTemplateMachineConfig : public TMachineConfig
+class TBeagleMachineConfig : public TMachineConfig
 	{
 public:
 	TSoundInfoV1 iSoundInfo;
@@ -47,7 +46,7 @@ public:
 	TDigitizerCalibrateValues iCalibrationFactory;
 	};
 
-typedef TTemplateMachineConfig TActualMachineConfig;
+typedef TBeagleMachineConfig TActualMachineConfig;
 
 inline TActualMachineConfig& TheActualMachineConfig()
 	{return (TActualMachineConfig&)Kern::MachineConfig();}

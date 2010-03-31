@@ -1,9 +1,9 @@
 // Copyright (c) 1997-2009 Nokia Corporation and/or its subsidiary(-ies).
 // All rights reserved.
 // This component and the accompanying materials are made available
-// under the terms of the License "Symbian Foundation License v1.0" to Symbian Foundation members and "Symbian Foundation End User License Agreement v1.0" to non-members
+// under the terms of "Eclipse Public License v1.0"
 // which accompanies this distribution, and is available
-// at the URL "http://www.symbianfoundation.org/legal/licencesv10.html".
+// at the URL "http://www.eclipse.org/legal/epl-v10.html".
 //
 // Initial Contributors:
 // Nokia Corporation - initial contribution.
@@ -13,11 +13,10 @@
 // Description:
 //
 
-
-
 /**
  @file
- @internalComponent
+ @publishedPartner
+ WARNING: For internal use ONLY. Compatibility is not guaranteed in future releases.
 */
 
 #ifndef __EIKALSRV_H__
@@ -32,7 +31,8 @@ class MEikServAlarm;
 class CEikServAlarmAlertSession;
 
 /** 
-@internalComponent
+@publishedPartner
+WARNING: Class for internal use ONLY. Compatibility is not guaranteed in future releases.
 */
 NONSHARABLE_CLASS(CEikServAlarmAlertServer) : public CPolicyServer
 	{
@@ -61,7 +61,8 @@ class CEikAlmControlSupervisor;
 
 /** 
 Helper class for CEikServAlarmAlertSession. Holds response data for queuing
-@internalComponent
+@publishedPartner
+WARNING: Class for internal use ONLY. Compatibility is not guaranteed in future releases.
 */
 NONSHARABLE_CLASS(TAlarmResponse)
 	{
@@ -82,7 +83,8 @@ const TInt KAlertResponseQueueSize = 20;
 
 /**
 Represents a session for a client thread on the server-side.
-@internalComponent 
+@publishedPartner
+WARNING: Class for internal use ONLY. Compatibility is not guaranteed in future releases. 
 */
 NONSHARABLE_CLASS(CEikServAlarmAlertSession) : public CSession2
 	{
@@ -118,15 +120,19 @@ private:
 	RMessage2 iMessage;
 	};
 
+/** WARNING: Function for internal use ONLY. Compatibility is not guaranteed in future releases.*/
 inline TBool CEikServAlarmAlertServer::AlarmAlertIsVisible() const 
 	{ return iSession->AlarmAlertIsVisible(); }
 
+/** WARNING: Function for internal use ONLY. Compatibility is not guaranteed in future releases.*/
 inline TBool CEikServAlarmAlertSession::AlarmAlertIsVisible() const 
 	{ return iVisible; }
 
+/** WARNING: Function for internal use ONLY. Compatibility is not guaranteed in future releases.*/
 inline void CEikServAlarmAlertServer::SessionDied() 
 	{ iSession = NULL; }
 
+/** WARNING: Function for internal use ONLY. Compatibility is not guaranteed in future releases.*/
 inline TTime CEikServAlarmAlertSession::QuietPeriodEndTime() const 
 	{ return iQuietPeriodEndTime; }
 

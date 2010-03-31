@@ -1,9 +1,9 @@
 // Copyright (c) 1998-2009 Nokia Corporation and/or its subsidiary(-ies).
 // All rights reserved.
 // This component and the accompanying materials are made available
-// under the terms of the License "Symbian Foundation License v1.0" to Symbian Foundation members and "Symbian Foundation End User License Agreement v1.0" to non-members
+// under the terms of "Eclipse Public License v1.0"
 // which accompanies this distribution, and is available
-// at the URL "http://www.symbianfoundation.org/legal/licencesv10.html".
+// at the URL "http://www.eclipse.org/legal/epl-v10.html".
 //
 // Initial Contributors:
 // Nokia Corporation - initial contribution.
@@ -12,9 +12,6 @@
 //
 // Description:
 //
-
-
-
 
 /**
  @file
@@ -27,10 +24,9 @@
  
 */
 inline TBool CSmsEventLogger::ClientAvailable() const
-	{
-	return iLogWrapper->ClientAvailable();
-	}
-
+    {
+    return iLogWrapper->ClientAvailable();
+    }
 
 /**
  *  Gets a standard string from the specified resource.
@@ -43,10 +39,9 @@ inline TBool CSmsEventLogger::ClientAvailable() const
  *  codes 
  */
 inline TInt CSmsEventLogger::GetString(TDes& aString, TInt aId) const
-	{
-	return iLogWrapper->Log().GetString(aString,aId);
-	}
-
+    {
+    return iLogWrapper->Log().GetString(aString,aId);
+    }
 
 /**
  *  Gets the current log event.
@@ -56,10 +51,9 @@ inline TInt CSmsEventLogger::GetString(TDes& aString, TInt aId) const
  *  @return Current log event 
  */
 inline CLogEvent& CSmsEventLogger::Event()
-	{
-	return *iLogEvent;
-	}
-
+    {
+    return *iLogEvent;
+    }
 
 /**
  *  Gets the current (const) log event.
@@ -69,10 +63,9 @@ inline CLogEvent& CSmsEventLogger::Event()
  *  @return Current log event 
  */
 inline const CLogEvent& CSmsEventLogger::Event() const
-	{
-	return *iLogEvent;
-	}
-
+    {
+    return *iLogEvent;
+    }
 
 /**
  *  Gets the current event's SMS PDU data.
@@ -82,16 +75,15 @@ inline const CLogEvent& CSmsEventLogger::Event() const
  *  @return Current event's SMS PDU data 
  */
 inline const TLogSmsPduData& CSmsEventLogger::SmsPDUData() const
-	{
-	return iSmsPDUData;
-	}
-
+    {
+    return iSmsPDUData;
+    }
 
 /**
  *  Gets the current event's SMS PDU data.
- *  @internalComponent
+ *  @publishedAll
  */
 inline void CSmsEventLogger::GetStringL(TDes& aString, TInt aId) const
-	{
-	User::LeaveIfError(iLogWrapper->Log().GetString(aString,aId));
-	}
+    {
+    User::LeaveIfError(iLogWrapper->Log().GetString(aString,aId));
+    }

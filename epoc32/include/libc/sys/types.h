@@ -2,9 +2,9 @@
 * Copyright (c) 1997-2009 Nokia Corporation and/or its subsidiary(-ies).
 * All rights reserved.
 * This component and the accompanying materials are made available
-* under the terms of the License "Symbian Foundation License v1.0" to Symbian Foundation members and "Symbian Foundation End User License Agreement v1.0" to non-members
+* under the terms of "Eclipse Public License v1.0"
 * which accompanies this distribution, and is available
-* at the URL "http://www.symbianfoundation.org/legal/licencesv10.html".
+* at the URL "http://www.eclipse.org/legal/epl-v10.html".
 *
 * Initial Contributors:
 * Nokia Corporation - initial contribution.
@@ -17,9 +17,6 @@
 
 
 
-
-
-
 /**
  @file
  @publishedAll
@@ -29,17 +26,15 @@
 #ifndef _SYS_TYPES_H
 #define _SYS_TYPES_H
 
+#ifndef SYMBIAN_ENABLE_SPLIT_HEADERS
+#include <sys/types1.h>
+#endif
+
 # include <stddef.h>	
 # include <machine/types.h>
 
 # ifndef	_POSIX_SOURCE
-/**
-@internalComponent
-*/
 #  define	physadr		physadr_t
-/**
-@internalComponent
-*/
 #  define	quad		quad_t
 
 typedef	unsigned char	u_char;
@@ -81,56 +76,27 @@ typedef int mode_t;
 typedef unsigned int nlink_t;
 
 # ifndef	_POSIX_SOURCE
-/**
-@internalComponent
-*/
 #  define	NBBY	8		/* number of bits in a byte */
 /**
 Select uses bit masks of file descriptors in longs.
 These macros manipulate such bit fields (the filesystem macros use chars).
 FD_SETSIZE may be defined by the user, but the default here
 should be >= NOFILE (param.h).
-@internalComponent
 */
 #  ifndef	FD_SETSIZE
 #	define	FD_SETSIZE	60
 #  endif
-/**
-@internalComponent
-*/
 typedef	long	fd_mask;
-/**
-@internalComponent
-*/
+
 #  define	NFDBITS	(sizeof (fd_mask) * NBBY)	/* bits per mask */
 #  ifndef	howmany
-/**
-@internalComponent
-*/
+
 #	define	howmany(x,y)	(((x)+((y)-1))/(y))
 #  endif
 
 typedef	struct fd_set {
 	fd_mask	fds_bits[howmany(FD_SETSIZE, NFDBITS)];
 } fd_set;
-
-/**
-@internalAll
-*/
-#  define	FD_SET(n, p)	((p)->fds_bits[(n)/NFDBITS] |= (1L << ((n) % NFDBITS)))
-/**
-@internalAll
-*/
-#  define	FD_CLR(n, p)	((p)->fds_bits[(n)/NFDBITS] &= ~(1L << ((n) % NFDBITS)))
-/**
-@internalAll
-*/
-#  define	FD_ISSET(n, p)	((p)->fds_bits[(n)/NFDBITS] & (1L << ((n) % NFDBITS)))
-/**
-@internalAll
-*/
-#  define	FD_ZERO(p)	memset((caddr_t)(p), 0, sizeof (*(p)))
-
 
 # endif	/* _POSIX_SOURCE */
 #undef __go32_types__

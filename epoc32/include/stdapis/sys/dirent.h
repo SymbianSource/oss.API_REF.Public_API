@@ -61,12 +61,21 @@ struct dirent {
 #endif
 };
 
+#if defined(SYMBIAN_OE_LARGE_FILE_SUPPORT) && !defined(SYMBIAN_OE_NO_LFS)
+#define dirent64	dirent
+#endif /* SYMBIAN_OE_LARGE_FILE_SUPPORT && !SYMBIAN_OE_NO_LFS */
+
+
 #ifdef __SYMBIAN32__
 struct wdirent {
 	unsigned long	d_fileno;
 	unsigned short	d_namlen;
 	wchar_t*		d_name;
 };
+
+#if defined(SYMBIAN_OE_LARGE_FILE_SUPPORT) && !defined(SYMBIAN_OE_NO_LFS)
+#define wdirent64	wdirent
+#endif /* SYMBIAN_OE_LARGE_FILE_SUPPORT && !SYMBIAN_OE_NO_LFS */
 
 typedef struct __EPOC32_WDIR WDIR;
 #endif

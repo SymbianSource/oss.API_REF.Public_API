@@ -1,9 +1,9 @@
 // Copyright (c) 2004-2009 Nokia Corporation and/or its subsidiary(-ies).
 // All rights reserved.
 // This component and the accompanying materials are made available
-// under the terms of the License "Symbian Foundation License v1.0" to Symbian Foundation members and "Symbian Foundation End User License Agreement v1.0" to non-members
+// under the terms of "Eclipse Public License v1.0"
 // which accompanies this distribution, and is available
-// at the URL "http://www.symbianfoundation.org/legal/licencesv10.html".
+// at the URL "http://www.eclipse.org/legal/epl-v10.html".
 //
 // Initial Contributors:
 // Nokia Corporation - initial contribution.
@@ -12,8 +12,6 @@
 //
 // Description:
 //
-
-
 
 /**
  @file
@@ -27,13 +25,22 @@
 #include <e32base.h>
 #include <remcon/messagetype.h>
 #include <remcon/clienttype.h>
-#include <remcon/remconclient.h>
+#include <remcon/playertype.h>
 #include <remcon/remconinterfaceif.h>
 #include <remconaddress.h>
 
 class CRemConInterfaceBase;
+class CBulkReceiver;
 class CReceiver;
 class MRemConErrorObserver;
+class RRemConInterfaceFeatures;
+class RSpecificThreadCallBack;
+class CRemConInterfaceDetailsArray;
+class RNestableLock;
+class RRemConController;
+class RRemConTarget;
+class RRemConBulk;
+class RRemCon;
 
 // Panic information
 _LIT(KRemConIfSelPanicCat, "RemConIfSel");
@@ -89,6 +96,10 @@ enum
 	/** An implementation of CRemConInterfaceBase::GetInterface does not 
 	provide an implementation of MRemConInterfaceIf. */
 	ERemConIfSelNoInterfaceImplementation = 10,
+	
+	/** A client has created bulk interfaces in multiple different threads,
+	all bulk interfaces must be created in the same thread*/
+	ERemConIfSelMultipleBulkInterfaceThreads = 11,
 	};
 
 /**
@@ -119,6 +130,18 @@ public:
 	*/
 	IMPORT_C void RegisterInterfaceL(CRemConInterfaceBase& aInterface);
 	
+	/**
+	Register the interface with the selector. This is called by the 
+	interface's BaseConstructL. Takes ownership of aInterface.
+	 This function is not to be called outside of remconinterfacebase.dll. It is available for compatibility with previous
+	 versions, but it is intended to be called only by CRemConInterfaceBase::BaseConstructL.
+	 CRemConInterfaceBase-derived classes should indirectly perform a RegisterInterfaceL, by calling
+	 CRemConInterfaceBase::BaseConstructL from their construction functions.
+	@param aInterface The interface.
+	@param aRemConInterfaceFeatures The operation IDs of the interface.  Ownership is retained by the caller.  Any necessary
+			data will be copied by the interface selector.
+	*/
+	void RegisterInterfaceL(CRemConInterfaceBase& aInterface, RRemConInterfaceFeatures& aRemConInterfaceFeatures);
 	/** 
 	Register an error observer.  This is provided to allow the client to
 	discover when an error has occurred passively.
@@ -183,6 +206,14 @@ public:
 	IMPORT_C void OpenTargetL();
 
 	/**
+	Opens a target session to RemCon.
+	@param aPlayerType The type of player
+	@param aPlayerSubType The sub-type of the player
+	@param aPlayerName  The name of the player in UTF-8.
+	@leave KErrInUse If a target session is already open.
+	*/
+	IMPORT_C void OpenTargetL(TPlayerType aPlayerType, TPlayerSubType aPlayerSubType, const TDesC8& aPlayerName);
+	/**
 	Sends a message to the remote device(s).
 	There should be only one command and response outstanding at any one time.
 	Send cannot be called again until aStatus is completed.
@@ -223,9 +254,18 @@ public:
 		TRemConMessageSubType aMsgSubType,
 		const TDesC8& aData = KNullDesC8());
 
+	/**
+	Sends a 
+	*/
+	IMPORT_C void SendNotify(TRequestStatus& aStatus, 
+			TUid aInterfaceUid,
+			TUint aOperationId, 
+			TRemConMessageType aMsgType,
+			TRemConMessageSubType aMsgSubType,
+			const TDesC8& aData = KNullDesC8());
 	
 	/**
-	@internalTechnology
+	This method is for internal sub-system use only and should be not be used otherwise.
 	Sends a message to the remote device(s), without waiting for the send to complete
 	@param aInterfaceUid The UID of the concrete (outer-layer) interface 
 	sending the message.
@@ -240,7 +280,7 @@ public:
 		const TDesC8& aData = KNullDesC8());
 	
 	/**
-	@internalTechnology
+	This method is for internal sub-system use only and should be not be used otherwise.
 	Sends a message to the remote device(s), without waiting for the send to complete
 	@param aInterfaceUid The UID of the concrete (outer-layer) interface 
 	sending the message.
@@ -265,6 +305,44 @@ public:
 	@return KErrNone.
 	*/
 	IMPORT_C TInt SendCancel(TRemConMessageType aMsgType);
+	
+	/**
+	This method is for internal sub-system use only and should be not be used otherwise.
+	Sends a message to the remote device(s) through the bulk path.
+	There should be only one response outstanding at any one time.
+	Send cannot be called again until aStatus is completed.
+	@panic RemConClient 4 If a send is already outstanding
+	@param aStatus TRequestStatus for asynchronous completion.
+	@param aInterfaceUid The UID of the concrete (outer-layer) interface 
+	sending the message.
+	@param aOperationId The interface-specific operation identifier.
+	@param aData Any associated message data in interface-specific format.
+	*/
+	IMPORT_C void SendBulk(TRequestStatus& aStatus, 
+		TUid aInterfaceUid,
+		TUint aOperationId,
+		const TDesC8& aData = KNullDesC8());
+	
+	/**
+	This method is for internal sub-system use only and should be not be used otherwise.
+	Sends a message to the remote device(s) through the bulk path, without 
+	waiting for the send to complete.
+	@param aInterfaceUid The UID of the concrete (outer-layer) interface 
+	sending the message.
+	@param aOperationId The interface-specific operation identifier.
+	@param aData Any associated message data in interface-specific format.
+	*/
+	IMPORT_C TInt SendBulkUnreliable(
+		TUid aInterfaceUid,
+		TUint aOperationId,
+		const TDesC8& aData = KNullDesC8());
+
+	/**
+	This method is for internal sub-system use only and should be not be used otherwise.
+	Cancels interest in the completion of a BulkSend request.
+	@return KErrNone.
+	*/
+	IMPORT_C TInt SendBulkCancel();
 
 	/**
 	Only called internally, by the Active Object which sucks messages out of 
@@ -272,6 +350,8 @@ public:
 	the type of the session doing the receiving.
 	@param aInterfaceUid Interface UID of the new message.
 	@param aOperationId Operation ID of the new message.
+	@param aMsgSubType The message subtype.
+	@param aRemoteAddress The address of the remote which sent the message.
 	@param aData Data associated with the new message.
 	@param aType The type of session which received the message (from which 
 	the type of the message can be interpolated).
@@ -279,8 +359,21 @@ public:
 	void ReceiveComplete(TUid aInterfaceUid, 
 		TUint aOperationId, 
 		TRemConMessageSubType aMsgSubType,
+		const TRemConAddress& aRemoteAddress,
 		const TDesC8& aData,
 		TRemConClientType aType);
+	
+	/**
+	Only called internally, by the Active Object which sucks messages out of 
+	RemCon. Note that the message type is not given- it is interpolated from 
+	the type of the session doing the receiving.
+	@param aInterfaceUid Interface UID of the new message.
+	@param aOperationId Operation ID of the new message.
+	@param aData Data associated with the new message.
+	*/
+	void BulkReceiveComplete(TUid aInterfaceUid, 
+		TUint aOperationId,
+		const TDesC8& aData);
 
 	/**
 	Only called internally, by the Active Object which sucks messages out of 
@@ -291,6 +384,22 @@ public:
 		   messages can be received.
 	*/
 	void Error(TInt aError);
+	
+	/**
+	Only called internally, by the Active Object which sucks messages out of 
+	RemCon Bulk Server.  This is called in the case of a session error.
+	
+	@param The error that has occurred.  If this is KErrServerTerminated, the
+		   error is fatal and the session must be restarted before any new 
+		   messages can be received.
+	*/
+	void BulkError(TInt aError);
+	
+	/**
+	Only called internally, by the Active Object which sucks messages out of
+	RemCon (bulk server).
+	*/
+	void BulkSessionConnectL();
 
 	/**
 	Getter for the current set of connections in the system (not just those 
@@ -329,23 +438,37 @@ public:
 
 private:
 	CRemConInterfaceSelector();
+	void ConstructL();
 
 private: // utility
 	void AssertSession(RRemCon* aSess, TInt aPanicCode) const;
 	TInt TryToReconnect();
+	TInt TryToReconnectBulk();
+	void OpenTargetCommonL();
+	void RegisterInterfaceCommonL(CRemConInterfaceBase& aInterface, const TDesC8& aFeatures);
+	void RegisterInterestedApisL(TRemConClientType aType);
+	
+	void EstablishBulkThreadBindingL();
+	
+	static TInt StaticBulkCleanup(TAny* aSelf);
+	void BulkCleanup();
+	TBool BulkOpened() const;
 
 private: // owned
-	RPointerArray<CRemConInterfaceBase> iInterfaces;
+	CRemConInterfaceDetailsArray* iInterfaces;
 
-	RRemConController iControllerSession;
-	RRemConTarget iTargetSession;
+	RRemConController* iControllerSession;
+	RRemConTarget* iTargetSession;
+	RRemConBulk* iBulkSession;
 
 	CReceiver* iTargetReceiver;
 	CReceiver* iControllerReceiver;
+	CBulkReceiver* iBulkReceiver;
 
 	/** For all registered interfaces, this is the size of the biggest 
 	operation-associated data lump. */
-	TUint iMaxDataLength;
+	TUint iControlMaxDataLength;
+	TUint iBulkMaxDataLength;
 
 	// The session to use for NotifyConnectionsChange and 
 	// NotifyConnectionsChangeCancel. It doesn't matter which we use- just one 
@@ -356,7 +479,12 @@ private: // owned
 	RRemCon* iNotificationSession;
 	
 	TRemConAddress iAddress;
-
+	
+	RHeap* iBulkHeap;
+	RThread iBulkThread;
+	RHeap* iSharedThreadHeap;
+	RSpecificThreadCallBack* iBulkCleanupCall;
+	RNestableLock*	iLock;
 private: // unowned	
 	MRemConErrorObserver* iErrorObserver;
 	};

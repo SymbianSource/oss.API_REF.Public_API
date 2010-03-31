@@ -47,7 +47,7 @@
 
 /* Machine type dependent parameters. */
 #ifndef __SYMBIAN32__
-#include <machine/endian.h>
+#include <stdapis/machine/endian.h>
 #endif
 
 #include <sys/_types.h>
@@ -217,6 +217,11 @@ typedef	__nlink_t	nlink_t;	/* link count */
 
 #ifndef _OFF_T_DECLARED
 typedef	__off_t		off_t;		/* file offset */
+
+#if defined(SYMBIAN_OE_LARGE_FILE_SUPPORT) && !defined(SYMBIAN_OE_NO_LFS)
+typedef	__off_t		off64_t;	/* 64 bit file offset */
+#endif /* SYMBIAN_OE_LARGE_FILE_SUPPORT && !SYMBIAN_OE_NO_LFS */
+
 #define	_OFF_T_DECLARED
 #endif
 
@@ -330,19 +335,43 @@ __BEGIN_DECLS
 #ifndef _FTRUNCATE_DECLARED
 #define	_FTRUNCATE_DECLARED
 IMPORT_C int	 ftruncate(int, off_t);
+
+#if defined(SYMBIAN_OE_LARGE_FILE_SUPPORT) && !defined(SYMBIAN_OE_NO_LFS)
+#define ftruncate64 ftruncate
+#endif /* SYMBIAN_OE_LARGE_FILE_SUPPORT && !SYMBIAN_OE_NO_LFS */
+
 #endif
+
 #ifndef _LSEEK_DECLARED
 #define	_LSEEK_DECLARED
 IMPORT_C off_t	 lseek(int, off_t, int);
+
+#if defined(SYMBIAN_OE_LARGE_FILE_SUPPORT) && !defined(SYMBIAN_OE_NO_LFS)
+#define lseek64 lseek
+#endif /* SYMBIAN_OE_LARGE_FILE_SUPPORT && !SYMBIAN_OE_NO_LFS */
+
 #endif
+
 #ifndef _MMAP_DECLARED
 #define	_MMAP_DECLARED
 IMPORT_C void *	 mmap(void *, size_t, int, int, int, off_t);
+
+#if defined(SYMBIAN_OE_LARGE_FILE_SUPPORT) && !defined(SYMBIAN_OE_NO_LFS)
+#define mmap64 mmap
+#endif /* SYMBIAN_OE_LARGE_FILE_SUPPORT && !SYMBIAN_OE_NO_LFS */
+
 #endif
+
 #ifndef _TRUNCATE_DECLARED
 #define	_TRUNCATE_DECLARED
 IMPORT_C int	 truncate(const char *, off_t);
+
+#if defined(SYMBIAN_OE_LARGE_FILE_SUPPORT) && !defined(SYMBIAN_OE_NO_LFS)
+#define truncate64 truncate
+#endif /* SYMBIAN_OE_LARGE_FILE_SUPPORT && !SYMBIAN_OE_NO_LFS */
+
 #endif
+
 __END_DECLS
 #endif /* !_KERNEL */
 

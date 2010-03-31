@@ -1,22 +1,29 @@
-// Copyright (c) 1997-2009 Nokia Corporation and/or its subsidiary(-ies).
-// All rights reserved.
-// This component and the accompanying materials are made available
-// under the terms of the License "Symbian Foundation License v1.0" to Symbian Foundation members and "Symbian Foundation End User License Agreement v1.0" to non-members
-// which accompanies this distribution, and is available
-// at the URL "http://www.symbianfoundation.org/legal/licencesv10.html".
-//
-// Initial Contributors:
-// Nokia Corporation - initial contribution.
-//
-// Contributors:
-//
-// Description:
-//
+/*
+* Copyright (c) 1997-2009 Nokia Corporation and/or its subsidiary(-ies).
+* All rights reserved.
+* This component and the accompanying materials are made available
+* under the terms of "Eclipse Public License v1.0"
+* which accompanies this distribution, and is available
+* at the URL "http://www.eclipse.org/legal/epl-v10.html".
+*
+* Initial Contributors:
+* Nokia Corporation - initial contribution.
+*
+* Contributors:
+*
+* Description: 
+*
+*/
+
 
 #if !defined(__CONVDATA_H__)
 #define __CONVDATA_H__
 
 /**
+This structure doesn't intend to be used by external developers.
+For plugin creators, all they need is to include this header file in order to compile. All the plugin data are generated from provided perl scripts. 
+ 
+Any use of this structure externally are not proved to be compatible in future. 
 @internalComponent
 */
 struct SCnvConversionData
@@ -51,7 +58,10 @@ struct SCnvConversionData
 				EOffset,
 				EIndexedTable16,
 				EKeyedTable1616,
-				EKeyedTable16OfIndexedTables16
+				EKeyedTable16OfIndexedTables16,
+				EIndexedTable32,
+				EKeyedTable3232,
+				EKeyedTable32OfIndexedTables32
 				};
 			union UData
 				{
@@ -84,10 +94,42 @@ struct SCnvConversionData
 					TInt iNumberOfKeyedEntries;
 					const SKeyedEntry* iKeyedEntryArray;
 					};
+				struct SIndexedTable32
+					{
+					struct SEntry
+						{
+						TUint32 iOutputCharacterCode;
+						};
+					const SEntry* iEntryArray;
+					};
+				struct SKeyedTable3232
+					{
+					struct SEntry
+						{
+						TUint32 iKey;
+						TUint32 iOutputCharacterCode;
+						};
+					TInt iNumberOfEntries;
+					const SEntry* iEntryArray;
+					};
+				struct SKeyedTable32OfIndexedTables32
+					{
+					struct SKeyedEntry
+						{
+						TUint32 iFirstInputCharacterCodeInIndexedTable;
+						TUint32 iLastInputCharacterCodeInIndexedTable;
+						const TUint32* iIndexedEntryArray;
+						};
+					TInt iNumberOfKeyedEntries;
+					const SKeyedEntry* iKeyedEntryArray;
+					};
 				TInt iOffset;
 				SIndexedTable16 iIndexedTable16;
 				SKeyedTable1616 iKeyedTable1616;
 				SKeyedTable16OfIndexedTables16 iKeyedTable16OfIndexedTables16;
+				SIndexedTable32 iIndexedTable32;
+				SKeyedTable3232 iKeyedTable3232;
+				SKeyedTable32OfIndexedTables32 iKeyedTable32OfIndexedTables32;
 				};
 			TUint iFirstInputCharacterCodeInRange;
 			TUint iLastInputCharacterCodeInRange;
@@ -132,5 +174,22 @@ struct SCnvConversionData
 #define UData_SKeyedTable16OfIndexedTables16(a)	\
 	static_cast<TUint>ARRAY_LENGTH(a), \
 	reinterpret_cast<TUint>(const_cast<SCnvConversionData::SOneDirectionData::SRange::UData::SKeyedTable16OfIndexedTables16::SKeyedEntry *>(a)) 
-
+/**
+@internalComponent
+*/
+#define UData_SIndexedTable32(a) \
+	reinterpret_cast<TUint>(const_cast<SCnvConversionData::SOneDirectionData::SRange::UData::SIndexedTable32::SEntry*>(a)) 
+/**
+@internalComponent
+*/
+#define UData_SKeyedTable3232(a) \
+	static_cast<TUint>ARRAY_LENGTH(a), \
+	reinterpret_cast<TUint>(const_cast<SCnvConversionData::SOneDirectionData::SRange::UData::SKeyedTable3232::SEntry*>(a))
+/**
+@internalComponent
+*/
+#define UData_SKeyedTable32OfIndexedTables32(a)	\
+	static_cast<TUint>ARRAY_LENGTH(a), \
+	reinterpret_cast<TUint>(const_cast<SCnvConversionData::SOneDirectionData::SRange::UData::SKeyedTable32OfIndexedTables32::SKeyedEntry *>(a)) 
 #endif
+

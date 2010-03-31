@@ -1,9 +1,9 @@
 // Copyright (c) 2003-2009 Nokia Corporation and/or its subsidiary(-ies).
 // All rights reserved.
 // This component and the accompanying materials are made available
-// under the terms of the License "Symbian Foundation License v1.0" to Symbian Foundation members and "Symbian Foundation End User License Agreement v1.0" to non-members
+// under the terms of "Eclipse Public License v1.0"
 // which accompanies this distribution, and is available
-// at the URL "http://www.symbianfoundation.org/legal/licencesv10.html".
+// at the URL "http://www.eclipse.org/legal/epl-v10.html".
 //
 // Initial Contributors:
 // Nokia Corporation - initial contribution.
@@ -14,8 +14,6 @@
 // IPv6/IPv4 socket library public header 
 // 
 //
-
-
 
 /**
  @file in_sock.h
@@ -28,6 +26,10 @@
 
 #ifndef __ES_SOCK_H__
 #include <es_sock.h>
+#endif
+
+#ifndef SYMBIAN_ENABLE_SPLIT_HEADERS
+#include <in_sock_internal.h>
 #endif
 
 /**
@@ -149,6 +151,12 @@ const TUint KSolInetRtCtrl		= 0x202;
 const TUint KSolInetDnsCtrl		= 0x204;
 /** Interface query socket options level. @since 7.0 */
 const TUint KSolInetIfQuery		= 0x206;
+#ifdef SYMBIAN_DNS_PUNYCODE
+/** DNS set options level. */
+/**using a new constant instead of KSolInetDnsCtrl
+ */
+const TUint KSolInetDns			= 0x208;
+#endif //SYMBIAN_DNS_PUNYCODE
 //@}
 
 /** Maximum IPv4 address length (bits). */
@@ -772,7 +780,12 @@ enum TIfStatus
 	/** The interface is up, but flowed off. */
 	EIfBusy,
 	/** The interface is down. */
-	EIfDown,
+	EIfDown
+#ifdef SYMBIAN_TCPIPDHCP_UPDATE
+	,
+    /** The interface is not-configured */
+    EIfNotConfigured
+#endif //SYMBIAN_TCPIPDHCP_UPDATE
 	};
 
 class TSoInetInterfaceInfo
@@ -1192,13 +1205,6 @@ const TUint KSoInetIfQueryByIndex	= 0x3;
 */
 const TUint KSoInetIfQueryByName	= 0x4;
 
-/** Load scope vector from iZone (Set) @internalAll */
-const TUint KSoInetIfQuerySetScope	= 0x10;
-/** Set interface to Host mode @internalAll */
-const TUint KSoInetIfQuerySetHost	= 0x11;
-/** Set interface to Router mode @internalAll */
-const TUint KSoInetIfQuerySetRouter	= 0x12;
-
 //@}
 
 /**
@@ -1363,6 +1369,7 @@ public:
 	IMPORT_C static TLinkAddr& Cast(TSockAddr& aAddr);
 	IMPORT_C const static TLinkAddr* Cast(const TSockAddr* aAddr);
 	IMPORT_C static TLinkAddr* Cast(TSockAddr* aAddr);
+
 	};
 
 class TSoInetRouteInfo
@@ -1461,6 +1468,13 @@ const TUint KSoDnsCacheEnable = 0x600;
 * @removed
 * @since 7.0 */
 const TUint KSoDnsCacheFlush = 0x601;
+#ifdef SYMBIAN_DNS_PUNYCODE
+/** Enable International Domain Name support 
+ * @publishedAll
+ * @released
+ */
+const TUint KSoDnsEnableIdn = 0x602;
+#endif //SYMBIAN_DNS_PUNYCODE
 //@}
 
 /**
@@ -1629,6 +1643,24 @@ const TUint KSoTcpNextSendUrgentData = 0x314;
 * Values are: 0 = Disable, 1 = Enable.
 */
 const TUint KSoTcpOobInline = 0x315;
+
+#ifdef SYMBIAN_ADAPTIVE_TCP_RECEIVE_WINDOW
+/**
+* TCP max receive value
+* 
+* Used with SetOpt to set TCP Max recv window size
+*/
+const TUint KSoTcpMaxRecvWin = 0x316;
+/**
+* TCP Receive window size for auto tuning
+* 
+* Used with SetOpt to set TCP Max recv window size
+*/
+const TUint KSoTcpRecvWinAuto = 0x317;
+
+#endif //SYMBIAN_ADAPTIVE_TCP_RECEIVE_WINDOW
+
+
 /** Not supported. @removed */
 const TUint KSOTcpDebugMode = 0x11110000;
 //@}
@@ -1994,18 +2026,6 @@ public:
 */
 const TUint KSoUdpReceiveICMPError = 0x500;
 
-/**
-Set the UDP receive buffer size for a socket in bytes. Overrides global ini parameter
-<tt>udp_recv_buf</tt>. At least one datagram always fits to the buffer, no matter how
-small it is.
-
-Default receive buffer size is 8192 bytes, or the value given in <tt>udp_recv_buf</tt>.
-
-@internalAll
-@released
-*/
-const TUint KSoUdpRecvBuf = 0x501;
- 
 /**
 Modifies address flag of UDP. Flag is used to control whether the socket is bound to
 IP address or not. Binding to specific address and then clearing this flag makes possible

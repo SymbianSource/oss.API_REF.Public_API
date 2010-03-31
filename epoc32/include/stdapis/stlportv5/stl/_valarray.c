@@ -1,6 +1,5 @@
 /*
  *
- * © Portions copyright (c) 2006-2007 Nokia Corporation.  All rights reserved.
  *
  * Copyright (c) 1994
  * Hewlett-Packard Company
@@ -11,13 +10,13 @@
  * Copyright (c) 1997
  * Moscow Center for SPARC Technology
  *
- * Copyright (c) 1999 
+ * Copyright (c) 1999
  * Boris Fomitchev
  *
  * This material is provided "as is", with absolutely no warranty expressed
  * or implied. Any use is at your own risk.
  *
- * Permission to use or copy this software for any purpose is hereby granted 
+ * Permission to use or copy this software for any purpose is hereby granted
  * without fee, provided the above notices are retained on all copies.
  * Permission to modify the code and to distribute modified code is granted,
  * provided the above notices are retained, and a notice that the code was
@@ -49,7 +48,7 @@ valarray<_Tp>& valarray<_Tp>::operator=(const slice_array<_Tp>& __x)
   for (size_t __i = 0;
        __i < __x._M_slice.size();
        ++__i, __index += __x._M_slice.stride())
-    (*this)[__i] = (*(__x._M_array))[__index];
+    (*this)[__i] = __x._M_array[__index];
   return *this;
 }
 
@@ -68,13 +67,12 @@ template <class _Size>
 bool _Gslice_Iter_tmpl<_Size>::_M_incr() {
   size_t __dim = _M_indices.size() - 1;
   ++_M_step;
-  while (true) {
+  for (;;) {
     _M_1d_idx += _M_gslice._M_strides[__dim];
     if (++_M_indices[__dim] != _M_gslice._M_lengths[__dim])
       return true;
     else if (__dim != 0) {
-      _M_1d_idx -=
-	_M_gslice._M_strides[__dim] * _M_gslice._M_lengths[__dim];
+      _M_1d_idx -= _M_gslice._M_strides[__dim] * _M_gslice._M_lengths[__dim];
       _M_indices[__dim] = 0;
       --__dim;
     }
@@ -98,7 +96,7 @@ valarray<_Tp>& valarray<_Tp>::operator=(const gslice_array<_Tp>& __x)
 }
 
 template <class _Tp>
-valarray<_Tp> valarray<_Tp>::operator[](gslice __slice) const
+valarray<_Tp> valarray<_Tp>::operator[](const gslice& __slice) const
 {
   valarray<_Tp> __tmp(__slice._M_size(), _NoInit());
   if (__tmp.size() != 0) {
@@ -172,11 +170,9 @@ valarray<_Tp> valarray<_Tp>::cshift(int __m) const
 {
   valarray<_Tp> __tmp(this->size());
   
-#ifdef __SYMBIAN32__
-	if (!this->size())
-		return __tmp;
-#endif	
-	
+  if( this->size() == 0 )
+ 	  return __tmp;
+
   // Reduce __m to an equivalent number in the range [0, size()).  We
   // have to be careful with negative numbers, since the sign of a % b
   // is unspecified when a < 0.

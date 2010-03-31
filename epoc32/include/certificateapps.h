@@ -18,8 +18,6 @@
 */
 
 
-
-
 /**
  @file 
  @publishedAll
@@ -33,6 +31,7 @@
 #include <s32file.h>
 #include <mctcertapps.h>
 
+class MCTCertApps;
 /**
  * This class is used to access a persistent store which contains the available
  * applications on a device.  It provides an interface to add and retrieve

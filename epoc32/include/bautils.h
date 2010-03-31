@@ -1,9 +1,9 @@
 // Copyright (c) 1997-2009 Nokia Corporation and/or its subsidiary(-ies).
 // All rights reserved.
 // This component and the accompanying materials are made available
-// under the terms of the License "Symbian Foundation License v1.0" to Symbian Foundation members and "Symbian Foundation End User License Agreement v1.0" to non-members
+// under the terms of "Eclipse Public License v1.0"
 // which accompanies this distribution, and is available
-// at the URL "http://www.symbianfoundation.org/legal/licencesv10.html".
+// at the URL "http://www.eclipse.org/legal/epl-v10.html".
 //
 // Initial Contributors:
 // Nokia Corporation - initial contribution.
@@ -43,6 +43,7 @@ typedef TLanguage TLanguagePath[KMaxDowngradeLanguages + 1];
 
 class RFs;
 class CBaflFileSortTable;
+class TDigitizerCalibration;
 
 
 class BaflUtils
@@ -104,6 +105,9 @@ public:
 	IMPORT_C static void InitialiseScreenCalibration(RFs& aFs);
 	IMPORT_C static void InitialiseHAL(RFs& aFs);
 	IMPORT_C static void InitialiseLocale(RFs& aFs);
+	IMPORT_C static void GetEquivalentLanguageList(TLanguage aLang, TLanguagePath& aEquivalents);
+	IMPORT_C static void NearestLanguageFileV2(const RFs& aFs,TFileName& aName, TLanguage& aLanguage);
+
 private:
 	static void DoCopyFileL(RFs& aFs, const TDesC& aSourceFullName, const TDesC& aTargetFullName, TUint aSwitch);
 	static void DoRenameFileL(RFs& aFs, const TDesC& aOldFullName, const TDesC& aNewFullName, TUint aSwitch);

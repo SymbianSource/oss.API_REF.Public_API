@@ -1,9 +1,9 @@
 // Copyright (c) 1997-2009 Nokia Corporation and/or its subsidiary(-ies).
 // All rights reserved.
 // This component and the accompanying materials are made available
-// under the terms of the License "Symbian Foundation License v1.0" to Symbian Foundation members and "Symbian Foundation End User License Agreement v1.0" to non-members
+// under the terms of "Eclipse Public License v1.0"
 // which accompanies this distribution, and is available
-// at the URL "http://www.symbianfoundation.org/legal/licencesv10.html".
+// at the URL "http://www.eclipse.org/legal/epl-v10.html".
 //
 // Initial Contributors:
 // Nokia Corporation - initial contribution.
@@ -26,14 +26,18 @@
 #include <badesca.h>
 #include <baerrhan.h>
 #include <gulcolor.h>
-#include <eikdgfty.h>
 #include <eikaufty.h>
-#include <eiklibry.h>
 #include <eikamnt.h>
 #include <lafmain.h>
 #include <eikvcurs.h>
 #include <babitflags.h>
 #include <eikpicturefactory.h>
+
+#ifndef SYMBIAN_ENABLE_SPLIT_HEADERS
+#include <eikdgfty.h>
+#include <eiklibry.h>
+#endif //SYMBIAN_ENABLE_SPLIT_HEADERS
+#include <eikfctry.h>
 
 class CEikProcess;
 class MEikInfoMsgWin;
@@ -68,29 +72,17 @@ class TApaApplicationFactory;
 class CEikAppServer;
 class CLafSystemFont;
 class RApaLsSession;
+class MEikCDlgDialogFactory;
+class MEikPrintDialogFactory;
+class MEikFileDialogFactory;
+class CEikAutoMenuTitleArray;
+
 
 /**
 @publishedAll
 @released
 */
 typedef void (*TRequestDialogFunc)();
-
-/**
-@internalComponent
-*/
-const TUid KUikonLibraryUid = {KUidUikonLibraryValue};
-
-/**
-Creates the CEikLibrary interface object by calling the first ordinal function which is mapped to NewL method.
-
-The function leaves with KErrBadLibraryEntryPoint if the ordinal 1 function 
-cannot be found.
-
-@publishedPartner
-@released
-*/
-typedef CEikLibrary* (*EikLibraryEntryPoint)();
-
 
 /** An environment for creating controls and utility functions for manipulating 
 them. 
@@ -314,6 +306,7 @@ public: // Internal. Do not use!
 	void PostAppUiInitializeL();
 	TLanguage ApplicationLanguage() const;
 	void PostAppUiDestroy();
+	TInt ConstructorError() const;
 private:
 	IMPORT_C virtual void CEikonEnv_Reserved_1();
 	IMPORT_C virtual void CEikonEnv_Reserved_2();
@@ -445,49 +438,50 @@ public:
 	virtual TBool RunDlgLD(TInt aResource, const TDesC& aTitle, const TDesC& aMsg) = 0;
 	};
 
-
-/**
-@publishedPartner
-@released
-*/
-class MEikAlertWin
-	{
-public:
-	virtual void ConstructL() = 0;
-	virtual void RunAlert(const TDesC& aTitle, const TDesC& aMsg) = 0;
-	virtual void Release() = 0;
-	virtual CEikDialog* AsEikDialog() = 0;
-	inline const CEikDialog* AsEikDialog() const;
-	IMPORT_C virtual CCoeControl* AsCoeControl();
-	inline const CCoeControl* AsCoeControl() const;
-private:
-	IMPORT_C virtual void MEikAlertWin_Reserved2();
-	IMPORT_C virtual void MEikAlertWin_Reserved3();
-	};
-
-
-/**
-@publishedPartner 
-@released 
-*/
-class MEikDebugKeys
-	{
-public:
-	virtual void ConstructL() = 0;
-	virtual void Release() = 0;
-private:
-	IMPORT_C virtual void MEikDebugKeys_Reserved1();
-	IMPORT_C virtual void MEikDebugKeys_Reserved2();
-	IMPORT_C virtual void MEikDebugKeys_Reserved3();
-	};
-
-
 IMPORT_C void InternalizeL(TEikPortFlag& aThing,RReadStream& aStream);
 inline RWriteStream& operator<<(RWriteStream& aStream,const TEikPortFlag& aThing)
 	{aStream.WriteUint8L(aThing);return aStream;}
 inline RReadStream& operator>>(RReadStream& aStream,TEikPortFlag& aThing)
 	{InternalizeL(aThing,aStream);return aStream;}
 
+/**
+@publishedAll
+@released
+*/
+class MEikAlertWin
+    {
+public:
+    virtual void ConstructL() = 0;
+    virtual void RunAlert(const TDesC& aTitle, const TDesC& aMsg) = 0;
+    virtual void Release() = 0;
+    virtual CEikDialog* AsEikDialog() = 0;
+    inline const CEikDialog* AsEikDialog() const;
+    IMPORT_C virtual CCoeControl* AsCoeControl();
+    inline const CCoeControl* AsCoeControl() const;
+private:
+    IMPORT_C virtual void MEikAlertWin_Reserved2();
+    IMPORT_C virtual void MEikAlertWin_Reserved3();
+    };
+
+
+/**
+@publishedAll
+@released 
+*/
+class MEikDebugKeys
+    {
+public:
+    virtual void ConstructL() = 0;
+    virtual void Release() = 0;
+private:
+    IMPORT_C virtual void MEikDebugKeys_Reserved1();
+    IMPORT_C virtual void MEikDebugKeys_Reserved2();
+    IMPORT_C virtual void MEikDebugKeys_Reserved3();
+    };
+
 #include <eikenv.inl>
+#ifndef SYMBIAN_ENABLE_SPLIT_HEADERS
+#include <uikon/eikenvinterface.h>
+#endif //SYMBIAN_ENABLE_SPLIT_HEADERS
 
 #endif	// __EIKENV_H__

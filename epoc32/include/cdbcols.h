@@ -1,9 +1,9 @@
 // Copyright (c) 2006-2009 Nokia Corporation and/or its subsidiary(-ies).
 // All rights reserved.
 // This component and the accompanying materials are made available
-// under the terms of the License "Symbian Foundation License v1.0" to Symbian Foundation members and "Symbian Foundation End User License Agreement v1.0" to non-members
+// under the terms of "Eclipse Public License v1.0"
 // which accompanies this distribution, and is available
-// at the URL "http://www.symbianfoundation.org/legal/licencesv10.html".
+// at the URL "http://www.eclipse.org/legal/epl-v10.html".
 //
 // Initial Contributors:
 // Nokia Corporation - initial contribution.
@@ -15,14 +15,12 @@
 // - Table and column names,
 // - Enums and constants use in tables,
 // - UIDs for notifications
-// 
 //
-
-
+//
 
 /**
  @file
- @publishedAll 
+ @publishedAll
  @deprecated since v9.1. Functionality is replaced with commsdat.
 */
 
@@ -47,7 +45,7 @@ Field type: TUint32 */
 #define OUTGOING_WCDMA									_S("OutgoingGPRS")
 /**
 Not used in v7.0 */
-#define INCOMING_WCDMA									_S("IncomingGPRS")	
+#define INCOMING_WCDMA									_S("IncomingGPRS")
 #define LAN_SERVICE										_S("LANService")	// test use only
 #define PAN_SERVICE_EXTENSIONS							_S("PANServiceExtensions")
 #define WLAN_SERVICE_EXTENSIONS							_S("WLANServiceExtensions")
@@ -87,15 +85,11 @@ It is possible to define only one record for  this table.
 /** Bluetooth security table. */
 #define BT_SECURITY_TABLE								_S("BTSecurityTable")
 /** Bluetooth persist table. */
-#define BT_PERSIST_TABLE								_S("BTPersistTable") 
+#define BT_PERSIST_TABLE								_S("BTPersistTable")
 /** Identifier of the sockets table.*/
 #define SS_PROTO_TABLE									_S("SecureSocketTable")
 /** Agent lookup table identifier*/
 #define AGENT_LOOKUP									_S("AgentLookup")
-/** CDMA2000 packet service table.*/
-#define CDMA2000_PACKET_SERVICE_TABLE					_S("CDMA2000PacketServiceTable")
-/** CDMA2000 default settings.*/
-#define DEFAULT_CDMA2000_SETTINGS_TABLE					_S("DefaultCDMA2000SettingsTable")
 #define VIRTUAL_BEARER									_S("VirtualBearer")
 #define VPN_SERVICE										_S("VpnService")
 #define WLAN_SERVICE_EXTENSION_TABLE					_S("WLANServiceExtensionTable")
@@ -104,7 +98,6 @@ It is possible to define only one record for  this table.
 #define IAP_PRIORITY_SELECTION_POLICY_TABLE				_S("IAPPrioritySelectionPolicyTable")
 #define XML_ACCESS_POINT_TABLE							_S("AccessPoint")
 
-#ifdef SYMBIAN_NON_SEAMLESS_NETWORK_BEARER_MOBILITY
 
 #define AP_PRIORITY_SELECTION_POLICY_TABLE				_S("APPrioritySelectionPolicyTable")
 #define TIER_TABLE										_S("TierTable")
@@ -124,7 +117,6 @@ It is possible to define only one record for  this table.
 #define XML_BEARER_TYPE_TABLE							_S("BearerType")
 #define XML_CONFIG_ACCESS_POINT_TABLE                                                       _S("ConfigAccessPoint")
 
-#endif //SYMBIAN_NON_SEAMLESS_NETWORK_BEARER_MOBILITY
 
 #define	EAP_SEC_TABLE									_S("EAPSecuritySettingsTable")
 #define	TUN_EAP_TABLE									_S("TunnelledEAPSettingsTable")
@@ -133,7 +125,6 @@ It is possible to define only one record for  this table.
 #define EAPSIM_PROTOCOL_TABLE							_S("EapSimProtocolTable")
 #define EAPAKA_PROTOCOL_TABLE							_S("EapAkaProtocolTable")
 
-#ifdef SYMBIAN_NON_SEAMLESS_NETWORK_BEARER_MOBILITY
 
 #define POLICY_SELECTOR_TABLE                     		_S("PolicySelectorTable")
 #define XML_POLICY_SELECTOR_TABLE                 		_S("PolicySelector")
@@ -144,12 +135,11 @@ It is possible to define only one record for  this table.
 #define GENERIC_QOS_TABLE 								_S("GenericQosTable")
 #define XML_GENERIC_QOS_TABLE 							_S("GenericQos")
 
-// need to preserve compatibility, soon to become internalTechnology
-//#ifdef SYMBIAN_NETWORKING_WIFI
+/**
+@internalTechnology
+*/
 #define WIFI_SCANENGINE_TABLE                     		_S("WifiScanEngineTable")
-//#endif //SYMBIAN_NETWORKING_WIFI
 
-#endif //SYMBIAN_NON_SEAMLESS_NETWORK_BEARER_MOBILITY
 
 
 //DEPRECATED : MODEM has been reassigned so as to maintain backwards compatibility
@@ -171,7 +161,7 @@ Field type: TUint32
 /** Number of times to attempt redial when the ISP number is busy.
 
 Field type: TUint32 */
-#define REDIAL_ATTEMPTS									_S("RedialAttempts")				
+#define REDIAL_ATTEMPTS									_S("RedialAttempts")
 /** The bearer for sending SMS.
 
 Values for this are defined by the enum RMobileSmsMessaging::TMobileSmsBearer
@@ -182,13 +172,13 @@ Field type: TUint32 */
 
 Field type: TUint32 */
 #define SMS_RECEIVE_MODE								_S("SmsReceiveMode")		// Takes the values of RMobileSmsMessaging::TMobileSmsReceiveMode from ETel MM
-/** The GPRS attach mode, i.e. whether to attach at the boot-up of the device or 
+/** The GPRS attach mode, i.e. whether to attach at the boot-up of the device or
 at a later time.
 
 Values for this are defined by the enum RPacketService::TAttachMode
 Field type: TUint32 */
 #define GPRS_ATTACH_MODE								_S("GPRSAttachMode")				// Takes the values of RGprs::TGprsAttachMode from ETEL
-/** Whether or not to allow incoming requests for PDP context activation to be automatically 
+/** Whether or not to allow incoming requests for PDP context activation to be automatically
 accepted (when there is a waiting application).
 
 Use a TBool to specify the value.
@@ -203,7 +193,7 @@ Field type: TUint32
 
 @see TCommDbGprsClassCBearer */
 #define GPRS_CLASS_C_BEARER								_S("GPRSClassCBearer")				// Takes the values of TCommDbGprsClassCBearer
-/** The number of connection attempts (preferences) to make. 
+/** The number of connection attempts (preferences) to make.
 
 This is limited to a maximum of 2.
 
@@ -221,7 +211,7 @@ Field type: TUint32 */
 
 Field type: TUint32 */
 #define LOCATION_DATA_FAX								_S("LocationForDataAndFax")
-/** Specifies the location to be used with default modem for phone services such 
+/** Specifies the location to be used with default modem for phone services such
 as SMS.
 
 Field type: TUint32 */
@@ -234,10 +224,10 @@ Field type: TUint32 */
 #define DEFAULT_NETWORK									_S("DefaultNetwork")
 #define BEARER_AVAILABILITY_CHECK_TSY					_S("BearerAvailabilityCheckTSY")
 
-// The following fields define the specific CDMA parameters provisioned through OTA 
-// and  defined in TIA-683B section 3.5.8 
+// The following fields define the specific CDMA parameters provisioned through OTA
+// and  defined in TIA-683B section 3.5.8
 
-/** Operation capability bitmap to indicate which operations are supported by the MS. 
+/** Operation capability bitmap to indicate which operations are supported by the MS.
 Bit allocation:
 
 bit 0 - SimpleIP supported
@@ -246,7 +236,7 @@ bit 1 - MobileIP supported
 
 bit 2 - MobileIP with simple IP fallback supported
 
-bits 3-7 - reserved 
+bits 3-7 - reserved
 
 Field type: TUint32 */
 #define CDMA_OP_CAPABILITY								_S("CDMAOperationCapability")
@@ -269,7 +259,7 @@ bit 0 - CHAP supported
 
 bit 1 - PAP supported
 
-bits 2-7 - reserved 
+bits 2-7 - reserved
 
 Field type: TUint32 */
 #define CDMA_SIMIP_AUTH_SUPPORTED						_S("CDMASimpleIpAuthSupported")
@@ -290,7 +280,7 @@ Bit allocation:
 
 bit 0 - MD5 authentication supported (RFC 3012)
 
-bits 1-7 - reserved 
+bits 1-7 - reserved
 
 Field type: TUint32 */
 #define CDMA_MIP_MN_AAA_AUTH_ALGORITHM					_S("CDMAMobileIpMnAaaAuthAlgorithm")
@@ -298,12 +288,12 @@ Field type: TUint32 */
 
 Field type: TUint32 */
 #define CDMA_MIP_MAX_MN_HA_SS_LENGTH					_S("CDMAMobileIpMaxMnHaSsLength")
-/** Authentication algorithm bitmap (MN-HA) supported by the mobile station. 
+/** Authentication algorithm bitmap (MN-HA) supported by the mobile station.
 Bit allocation:
 
 bit 0 - MD5 authentication supported (RFC 3012)
 
-bits 1-7 - reserved 
+bits 1-7 - reserved
 
 Field type: TUint32 */
 #define CDMA_MIP_MN_HA_AUTH_ALGORITHM					_S("CDMAMobileIpMnHaAuthAlgorithm")
@@ -313,15 +303,10 @@ Field type: TUint32 */
 Field type: TBool*/
 #define PROMPT_FOR_AP									_S("PromptForSnap")
 
-
-#ifndef SYMBIAN_NON_SEAMLESS_NETWORK_BEARER_MOBILITY
-
 /** If default Access Point is defined, use default Access Point. Otherwise use connection preferences.
 
 Field type: TUint32 */
 #define DEFAULT_AP										_S("DefaultSnap")
-
-#else
 
 /** This field differentiate the Bravo selection from the 399 selection
 (needed for implicit scenarios where prefs are not available).
@@ -338,18 +323,29 @@ Field type: TUint32 */
 
 Field type: TBool*/
 #define PROMPT_USER									    _S("PromptUser")
-#endif //SYMBIAN_NON_SEAMLESS_NETWORK_BEARER_MOBILITY
 
-/** This field  defines the default or current IEEE 802.11 regulatory domain or country code. 
+/** This field  defines the default or current IEEE 802.11 regulatory domain or country code.
 Field type: TCommsDatWlanRegDomain */
 #define REGULATORY_DOMAIN						_S("RegulatoryDomain")
+
+#define	WMM_ENABLED										_S("WmmEnabled")
+
+/** This field determines whether to use the country code information or not.
+ *
+ * Field type: TBool */
+#define ENABLE_COUNTRYCODE								_S("EnableCountryCode")
+
+/** This field  defines the default regulatory domain or country code.
+ *
+ * Field type: TDesC */
+#define DEFAULT_REGULATORY_DOMAIN						_S("DefaultRegulatoryDomain")
 
 /**
 Maintained for backwards compatibility.
 Specifies whether to show the connection dialog.
-Field type: TUint32 (Boolean) 
+Field type: TUint32 (Boolean)
 @deprecated v7.0 */
-#define ASK_USER_BEFORE_DIAL							_S("AskUserBeforeDial")		
+#define ASK_USER_BEFORE_DIAL							_S("AskUserBeforeDial")
 /** Identifier of default dial-out IAP.
 
 Field type: TUint32
@@ -388,7 +384,7 @@ Field type: TUint32
 /** Avoids the need for lots of search & replace in migrations from v6.1 */
 #define ECommDbBearerGPRS                               ECommDbBearerWcdma
 
-// Columns common to all tables 
+// Columns common to all tables
 /**Unique ID assigned by the server for identification of records by the server.
 
 Field type: TUint32 */
@@ -399,8 +395,8 @@ This is not present in the some tables.
 Field type: Text. */
 #define COMMDB_NAME										_S("Name")			// Name of the row
 
-// COMMDB_UNUSED_NAME with COMMDB_ID appended, is inserted in the name column of entries that 
-// have been deleted, but are required to be inserted by ceddump, inserted and subsequently 
+// COMMDB_UNUSED_NAME with COMMDB_ID appended, is inserted in the name column of entries that
+// have been deleted, but are required to be inserted by ceddump, inserted and subsequently
 // deleted by ced so that the COMMDB_ID indices are preserved. Such entries may be modified
 // but ideally should not be deleted as this will require all the indices to be recalculated.
 _LIT(COMMDB_UNUSED_NAME, "__UNUSED_ENTRY_DO_NOT_DELETE__");
@@ -417,7 +413,7 @@ Field type: TUint32. This field may be left as NULL. */
 
 Field type: TUint32. This field may not be left as NULL. */
 #define IAP_SERVICE										_S("IAPService")
-/** Name of the service table (e.g. DIAL_OUT_ISP, OUTGOING_GPRS) 
+/** Name of the service table (e.g. DIAL_OUT_ISP, OUTGOING_GPRS)
 in this IAP.
 
 Field type: Text. This field may not be left as NULL. */
@@ -434,13 +430,11 @@ Field type: Text. This field may be left as NULL. */
 
 Field type: TUint32. This field may be left as NULL. */
 #define IAP_NETWORK										_S("IAPNetwork")
-#ifdef SYMBIAN_NETWORKING_UMTSR5
 /** Identifier of the Application secure ID in this IAP.
 
 Field type: TUint32. This field may be left as NULL. */
 #define IAP_APPSID                                      _S("IAPAppSid")
 
-#endif //SYMBIAN_NETWORKING_UMTSR5
 /** Identifier of the weighting for networks in this IAP.
 
 Field type: TUint32. This field may be left as NULL. */
@@ -454,56 +448,56 @@ Field type: TUint32. This field may be left as NULL. */
 #define BCA_STACK										_S("BCAStack") 						///< Comma separated list of BCAs, eg. C32BCA 
 
 // Columns common to all bearer tables using IP and PPP
-#define IF_NAME											_S("IfName")						///< Interface name, e.g. "PPP" or "SLIP"
+#define IF_NAME											_S("IfName")						//< Interface name, e.g. "PPP" or "SLIP"
 
 // Columns common to all service tables using IP and PPP
-#define SERVICE_IF_PARAMS								_S("IfParams")						///< Interface parameter string
-#define SERVICE_IF_NETWORKS								_S("IfNetworks")					///< Comma separated list of network protocols, e.g. "PPP"
+#define SERVICE_IF_PARAMS								_S("IfParams")						//< Interface parameter string
+#define SERVICE_IF_NETWORKS								_S("IfNetworks")					//< Comma separated list of network protocols, e.g. "PPP"
 
 
 /**  When using external IP configuration (MobileIP or DHCP), always reject PPP peer authentication requests.
 If external IP configuration is used and this field is set to TRUE then peer authentication requests are always rejected.
-If external IP configuration is used and this field is set to FALSE then PPP allows authentication to proceed (although it may still fail later). 
+If external IP configuration is used and this field is set to FALSE then PPP allows authentication to proceed (although it may still fail later).
 If this field is not set or absent, the result is the same as when it is set to TRUE. */
-#define SERVICE_IF_EXTERN_IP_CONFIG_ALWAYS_REJECT_AUTH	_S("IfExternIpConfigAlwaysRejectAuth")	
+#define SERVICE_IF_EXTERN_IP_CONFIG_ALWAYS_REJECT_AUTH	_S("IfExternIpConfigAlwaysRejectAuth")
 
-#define SERVICE_IF_PROMPT_FOR_AUTH						_S("IfPromptForAuth")				///< Prompt user for authentication name and password?
-#define SERVICE_IF_AUTH_NAME							_S("IfAuthName")					///< Authentication username used by PPP
-#define SERVICE_IF_AUTH_PASS							_S("IfAuthPass")					///< Authentication password used by PPP
-#define SERVICE_IF_AUTH_RETRIES							_S("AuthRetries")					///< No of times to retry authentication if it fails
-#define SERVICE_IF_CALLBACK_ENABLED						_S("IfCallbackEnabled")				///< Callback enabled?
-#define SERVICE_IF_CALLBACK_TYPE						_S("IfCallbackType")				///< Type of callback if enabled
-#define SERVICE_IF_CALLBACK_INFO						_S("IfCallbackInfo")				///< Info for callback request if enabled
-#define SERVICE_CALLBACK_TIMEOUT						_S("CallbackTimeout")				///< time to wait for callback
-#define SERVICE_IF_SERVER_MODE							_S("IfServerMode")					///< PPP in server mode?
+#define SERVICE_IF_PROMPT_FOR_AUTH						_S("IfPromptForAuth")				//< Prompt user for authentication name and password?
+#define SERVICE_IF_AUTH_NAME							_S("IfAuthName")					//< Authentication username used by PPP
+#define SERVICE_IF_AUTH_PASS							_S("IfAuthPass")					//< Authentication password used by PPP
+#define SERVICE_IF_AUTH_RETRIES							_S("AuthRetries")					//< No of times to retry authentication if it fails
+#define SERVICE_IF_CALLBACK_ENABLED						_S("IfCallbackEnabled")				//< Callback enabled?
+#define SERVICE_IF_CALLBACK_TYPE						_S("IfCallbackType")				//< Type of callback if enabled
+#define SERVICE_IF_CALLBACK_INFO						_S("IfCallbackInfo")				//< Info for callback request if enabled
+#define SERVICE_CALLBACK_TIMEOUT						_S("CallbackTimeout")				//< time to wait for callback
+#define SERVICE_IF_SERVER_MODE							_S("IfServerMode")					//< PPP in server mode?
 
-#define SERVICE_IP_ADDR_FROM_SERVER						_S("IpAddrFromServer")				///< Get IP address from server?
-#define SERVICE_IP_ADDR									_S("IpAddr")						///< IP Address of Interface
-#define SERVICE_IP_NETMASK								_S("IpNetMask")						///< IP Netmask of Interface
-#define SERVICE_IP_GATEWAY								_S("IpGateway")						///< IP Address of Gateway
-#define SERVICE_IP_DNS_ADDR_FROM_SERVER					_S("IpDNSAddrFromServer")			///< Get DNS addresses from server?
-#define SERVICE_IP_NAME_SERVER1							_S("IpNameServer1")					///< IP Address of primary name server reachable through this interface
-#define SERVICE_IP_NAME_SERVER2							_S("IpNameServer2")					///< IP Address of secondary name server reachable through this interface
+#define SERVICE_IP_ADDR_FROM_SERVER						_S("IpAddrFromServer")				//< Get IP address from server?
+#define SERVICE_IP_ADDR									_S("IpAddr")						//< IP Address of Interface
+#define SERVICE_IP_NETMASK								_S("IpNetMask")						//< IP Netmask of Interface
+#define SERVICE_IP_GATEWAY								_S("IpGateway")						//< IP Address of Gateway
+#define SERVICE_IP_DNS_ADDR_FROM_SERVER					_S("IpDNSAddrFromServer")			//< Get DNS addresses from server?
+#define SERVICE_IP_NAME_SERVER1							_S("IpNameServer1")					//< IP Address of primary name server reachable through this interface
+#define SERVICE_IP_NAME_SERVER2							_S("IpNameServer2")					//< IP Address of secondary name server reachable through this interface
 
-#define SERVICE_IP6_DNS_ADDR_FROM_SERVER					_S("Ip6DNSAddrFromServer")			///< Get DNS addresses from server?
-#define SERVICE_IP6_NAME_SERVER1							_S("Ip6NameServer1")					///< IP Address of primary name server reachable through this interface
-#define SERVICE_IP6_NAME_SERVER2							_S("Ip6NameServer2")					///< IP Address of secondary name server reachable through this interface
+#define SERVICE_IP6_DNS_ADDR_FROM_SERVER					_S("Ip6DNSAddrFromServer")			//< Get DNS addresses from server?
+#define SERVICE_IP6_NAME_SERVER1							_S("Ip6NameServer1")					//< IP Address of primary name server reachable through this interface
+#define SERVICE_IP6_NAME_SERVER2							_S("Ip6NameServer2")					//< IP Address of secondary name server reachable through this interface
 
-#define SERVICE_ENABLE_IP_HEADER_COMP	 				_S("EnableIPHeaderComp")			///< Enable IP header compression
-#define SERVICE_ENABLE_LCP_EXTENSIONS					_S("EnableLCPExtension")			///< Enable LCP extension
-#define SERVICE_DISABLE_PLAIN_TEXT_AUTH					_S("DisablePlainTextAuth")			///< Disable plain text authentication
-#define SERVICE_ENABLE_SW_COMP							_S("EnableSWComp")					///< Enable S/W compression
+#define SERVICE_ENABLE_IP_HEADER_COMP	 				_S("EnableIPHeaderComp")			//< Enable IP header compression
+#define SERVICE_ENABLE_LCP_EXTENSIONS					_S("EnableLCPExtension")			//< Enable LCP extension
+#define SERVICE_DISABLE_PLAIN_TEXT_AUTH					_S("DisablePlainTextAuth")			//< Disable plain text authentication
+#define SERVICE_ENABLE_SW_COMP							_S("EnableSWComp")					//< Enable S/W compression
 
-#define SERVICE_IP_ADDR_LEASE_VALID_FROM				_S("IpAddrLeaseValidFrom")			///< Start of address lease (.e.g. a DHCP assigned ip address)
-#define SERVICE_IP_ADDR_LEASE_VALID_TO					_S("IpAddrLeaseValidTo")			///< End of address lease (e.g. a DHCP assigned IP address)
-#define SERVICE_CONFIG_DAEMON_MANAGER_NAME				_S("ConfigDaemonManagerName")		///< Name of the ECOM daemon manager plug-in for NIFMAN used to load a specific configuration daemon (see the next field)
-#define SERVICE_CONFIG_DAEMON_NAME						_S("ConfigDaemonName")				///< Name of the daemon used for address configuration .e.g Dhcp, MobileIp
+#define SERVICE_IP_ADDR_LEASE_VALID_FROM				_S("IpAddrLeaseValidFrom")			//< Start of address lease (.e.g. a DHCP assigned ip address)
+#define SERVICE_IP_ADDR_LEASE_VALID_TO					_S("IpAddrLeaseValidTo")			//< End of address lease (e.g. a DHCP assigned IP address)
+#define SERVICE_CONFIG_DAEMON_MANAGER_NAME				_S("ConfigDaemonManagerName")		//< Name of the ECOM daemon manager plug-in for NIFMAN used to load a specific configuration daemon (see the next field)
+#define SERVICE_CONFIG_DAEMON_NAME						_S("ConfigDaemonName")				//< Name of the daemon used for address configuration .e.g Dhcp, MobileIp
 
 /** Enable link-local multicast name resolution
 
 Field type: TBool. This field may be left as NULL. */
 #define SERVICE_ENABLE_LLMNR						_S("EnableLLMNR")
-#define ISP_SERVICE_ENABLE_LLMNR					SERVICE_ENABLE_LLMNR	
+#define ISP_SERVICE_ENABLE_LLMNR					SERVICE_ENABLE_LLMNR
 #define GPRS_SERVICE_ENABLE_LLMNR					SERVICE_ENABLE_LLMNR
 #define LAN_SERVICE_ENABLE_LLMNR					SERVICE_ENABLE_LLMNR
 #define CDMA_SERVICE_ENABLE_LLMNR					SERVICE_ENABLE_LLMNR
@@ -639,15 +633,15 @@ Field type: Text. This field may be left as NULL. */
 #define ISP_IP_ADDR_LEASE_VALID_FROM					SERVICE_IP_ADDR_LEASE_VALID_FROM
 #define ISP_IP_ADDR_LEASE_VALID_TO						SERVICE_IP_ADDR_LEASE_VALID_TO
 
-/** Name of the ECOM configuration daemon manager component. 
+/** Name of the ECOM configuration daemon manager component.
 This component interfaces with the server identified in ISP_CONFIG_DAEMON_NAME.
 If specified, ISP_CONFIG_DAEMON_NAME should also be specified.
 
 Field type: Text. This field may be left as NULL.  */
 #define ISP_CONFIG_DAEMON_MANAGER_NAME					SERVICE_CONFIG_DAEMON_MANAGER_NAME
-/** Name of the configuration daemon server. This server is used to 
-provide further configuration for a connection, e.g. dynamic IP 
-address assignment. If specified, ISP_CONFIG_DAEMON_MANAGER_NAME 
+/** Name of the configuration daemon server. This server is used to
+provide further configuration for a connection, e.g. dynamic IP
+address assignment. If specified, ISP_CONFIG_DAEMON_MANAGER_NAME
 should also be specified.
 
 Field type: Text. This field may be left as NULL.  */
@@ -674,7 +668,7 @@ Field type: TBool. This field may be left as NULL. */
 
 Field type: TUint32. This field may be left as NULL. */
 #define ISP_BEARER_NAME									_S("BearerName")					// Bearer Name (for GSM)
-/** Connection speed if this is an ISDN, HSCSD or other connection (RMobileCall::TMobileCallDataSpeed 
+/** Connection speed if this is an ISDN, HSCSD or other connection (RMobileCall::TMobileCallDataSpeed
 value).
 
 Field type: TUint32. This field may be left as NULL. */
@@ -683,7 +677,7 @@ Field type: TUint32. This field may be left as NULL. */
 
 Field type: TUint32. This field may be left as NULL. */
 #define ISP_BEARER_CE									_S("BearerCE")						// Bearer CE (for GSM)
-/** Modem initialization string to be used when this ISP is in use. This string 
+/** Modem initialization string to be used when this ISP is in use. This string
 will be copied into the MODEM_ISP_INIT_STRING field by RGenericAgent.
 
 Field type: TUint32. This field may be left as NULL. */
@@ -705,7 +699,7 @@ Field type: TUint32. This field may be left as NULL. */
 
 Field type: TUint32. This field may be left as NULL. */
 #define ISP_REQUESTED_TIME_SLOTS						_S("RequestedTimeSlots")			// Requested time slots if HSCSD connection
-/** Maximum number of time slots for HSCSD which could be requested during this 
+/** Maximum number of time slots for HSCSD which could be requested during this
 connection.
 
 Field type: TUint32. This field may be left as NULL. */
@@ -773,7 +767,7 @@ Field type: TBool. This field may be left as NULL. */
 Field type: TBool. This field may be left as NULL. */
 #define ISP_USE_EDGE									_S("UseEdge")
 
-					
+
 
 // Columns for `OUTGOING_WCDMA` and `INCOMING_WCDMA` tables.
 // The following macros define values for the outgoing and incoming WCDMA table fields.
@@ -822,7 +816,7 @@ Field type: TUint32 from RPacketQoS::TQoSPrecedence. This field may be left as N
 Field type: TUint32 from RPacketQoS::TQoSDelay. This field may be left as NULL. */
 #define GPRS_MIN_DELAY									_S("MinDelay")
 /** Minimum quality of service reliability class.
-		
+
 Field type: TUint32 from RPacketQoS::TQoSReliability. This field may be left as NULL.*/
 #define GPRS_MIN_RELIABILITY							_S("MinReliability")
 /** Minimum quality of service peak throughput class.
@@ -931,15 +925,15 @@ Field type: Text. This field may be left as NULL. */
 #define GPRS_IP_ADDR_LEASE_VALID_FROM					SERVICE_IP_ADDR_LEASE_VALID_FROM
 #define GPRS_IP_ADDR_LEASE_VALID_TO						SERVICE_IP_ADDR_LEASE_VALID_TO
 
-/** Name of the ECOM configuration daemon manager component. 
+/** Name of the ECOM configuration daemon manager component.
 This component interfaces with the server identified in GPRS_CONFIG_DAEMON_NAME.
 If specified, GPRS_CONFIG_DAEMON_NAME should also be specified.
 
 Field type: Text. This field may be left as NULL.  */
 #define GPRS_CONFIG_DAEMON_MANAGER_NAME					SERVICE_CONFIG_DAEMON_MANAGER_NAME
-/** Name of the configuration daemon server. This server is used to 
-provide further configuration for a connection, e.g. dynamic IP 
-address assignment. If specified, GPRS_CONFIG_DAEMON_MANAGER_NAME 
+/** Name of the configuration daemon server. This server is used to
+provide further configuration for a connection, e.g. dynamic IP
+address assignment. If specified, GPRS_CONFIG_DAEMON_MANAGER_NAME
 should also be specified.
 
 Field type: Text. This field may be left as NULL.  */
@@ -959,7 +953,7 @@ Field type: TBool. This field may be left as NULL. */
 Field type: TUint32. This field may be left as NULL. */
 #define	GPRS_AP_TYPE									_S("GprsAccessPointType")
 
-/** If the requested QOS can not be satisfied warn the user after this time in microseconds. 
+/** If the requested QOS can not be satisfied warn the user after this time in microseconds.
 Set to 0xffffffff to disable.
 
 Field type: TUint32. This field may be left as NULL. */
@@ -972,9 +966,9 @@ Field type: TUint32. This field may be left as NULL
 */
 #define QOS_UMTS_R99_AND_ON_TABLE 						_S("UmtsR99QoSAndOn")
 
-// 
+//
 // Columns of the `QOS R99 Parameters` Table.
-// 
+//
 #define GPRS_QOS_REQ_TRAFFIC_CLASS              _S("ReqTrafficClass")
 #define GPRS_QOS_MIN_TRAFFIC_CLASS              _S("MinTrafficClass")
 #define GPRS_QOS_REQ_DELIVERY_ORDER	            _S("ReqDeliveryOrder")
@@ -1004,9 +998,9 @@ Field type: TUint32. This field may be left as NULL
 #define GPRS_QOS_SOURCE_STATISTICS_DESCRIPTOR   _S("SourceStatisticsDescriptor")
 
 
-// 
+//
 // Columns of the `LAN_SERVICE` Table.
-// 
+//
 #define LAN_IF_NETWORKS									SERVICE_IF_NETWORKS
 #define LAN_IP_NETMASK									SERVICE_IP_NETMASK
 #define LAN_IP_GATEWAY									SERVICE_IP_GATEWAY
@@ -1022,15 +1016,15 @@ Field type: TUint32. This field may be left as NULL
 #define LAN_IP_ADDR_LEASE_VALID_FROM					SERVICE_IP_ADDR_LEASE_VALID_FROM
 #define LAN_IP_ADDR_LEASE_VALID_TO						SERVICE_IP_ADDR_LEASE_VALID_TO
 #define LAN_CONFIG_DAEMON_MANAGER_NAME					SERVICE_CONFIG_DAEMON_MANAGER_NAME
-#define LAN_CONFIG_DAEMON_NAME							SERVICE_CONFIG_DAEMON_NAME		
+#define LAN_CONFIG_DAEMON_NAME							SERVICE_CONFIG_DAEMON_NAME
 
 /** used when Bluetooth PAN profile or WLAN is in use */
-#define LAN_SERVICE_EXTENSION_TABLE_NAME				_S("LanServiceExtensionTableName")	
+#define LAN_SERVICE_EXTENSION_TABLE_NAME				_S("LanServiceExtensionTableName")
 #define LAN_SERVICE_EXTENSION_TABLE_RECORD_ID			_S("LanServiceExtensionTableRecordId")
 
-// 
+//
 // Columns of the `PAN_SERVICE_EXTENSION` Table.
-// 
+//
 
 /** PAN role that the local device will act in. To dynamically select a role, use ECommDbPanRoleUnknown.
 Field type: TCommDbBluetoothPanRole.*/
@@ -1053,12 +1047,10 @@ Field type: TBool*/
 /** Whether the agent should prompt the user to select the remote device to which we will connect if we cannot connect to any device specified in the MAC list.
 Field type: TBool*/
 #define PAN_PROMPT_IF_MAC_LIST_FAILS					_S("PromptIfMACListFails")
-#ifdef SYMBIAN_NETWORKING_DHCPSERVER
 /** Whether the device is enabled for NAP service (to be used as a modem) for a particular connection
 Field type: TBool
 */
 #define PAN_NAP_SERVICE_ENABLED							_S("NapServiceEnabled")
-#endif // SYMBIAN_NETWORKING_DHCPSERVER
 
 /** Columns of all bearer tables */
 #define AGENT_NAME								_S("Agent")
@@ -1171,14 +1163,14 @@ Field type: 8-Bit Text. This field may be left as NULL. */
 /** ISP Initialisation string. This field is written from the ISP_INIT_STRING.  Should not be accessed by user.
 
 Field type: 8-Bit Text. This field may be left as NULL. */
-#define MODEM_ISP_INIT_STRING							_S("IspInitString")				// To be written by NetDial from ISP_INIT_STRING.  
+#define MODEM_ISP_INIT_STRING							_S("IspInitString")				// To be written by NetDial from ISP_INIT_STRING.
 
-/** Command to modify the pause created during dialling using the comma character 
+/** Command to modify the pause created during dialling using the comma character
 (',')
 
 Field type: 8-Bit Text. This field may be left as NULL. */
 #define MODEM_DIAL_PAUSE_LENGTH							_S("DialPauseLength")
-/** Command to set the time out the modem uses when establishing a link before 
+/** Command to set the time out the modem uses when establishing a link before
 giving up and returning to command mode.
 
 Field type: 8-Bit Text. This field may be left as NULL. */
@@ -1268,7 +1260,7 @@ Field type: 8-Bit Text. This field may be left as NULL. */
 
 Field type: 8-Bit Text. This field may be left as NULL. */
 #define MODEM_RETURN_TO_FACTORY_DEFS					_S("ReturnToFactoryDefs")
-/** Command the modem to only assert DCD when a carrier is actually detected, i.e. 
+/** Command the modem to only assert DCD when a carrier is actually detected, i.e.
 while the link is up.
 
 Field type: 8-Bit Text. This field may be left as NULL. */
@@ -1384,7 +1376,7 @@ Field type: TUint32. This field may be left as NULL. */
 /*Field type: TUint32. This field may be left as NULL. This is a TCommsDbBearerType value. */
 #define BEARER_TECHNOLOGY								_S("BearerTechnology")
 
-// Columns of the 'LAN Bearer' table 
+// Columns of the 'LAN Bearer' table
 #define LAN_BEARER_AGENT								AGENT_NAME
 #define LAN_BEARER_NIF_NAME								IF_NAME
 #define LAN_BEARER_LDD_FILENAME							_S("LDDFilename")
@@ -1437,7 +1429,7 @@ Field type: TBool. This field may not be left as NULL. */
 Field type: TUint32. This field may not be left as NULL. */
 #define LOCATION_PAUSE_AFTER_DIAL_OUT					_S("PauseAfterDialout")
 
-// Columns of the `CHARGECARD` table 
+// Columns of the `CHARGECARD` table
 // The following macros define values for the Chargecard table fields.
 /** Account number.
 
@@ -1466,14 +1458,14 @@ Field type: Text. This field may be left as NULL. */
 
 Field type: TUint32. This field may not be left as NULL.*/
 #define PROXY_ISP										_S("ISP")							// ISP with which these proxies are associated
-/** The table from which the PROXY_ISP has been taken. 
+/** The table from which the PROXY_ISP has been taken.
 
-This is necessary as GPRS records as well as ISP records can have proxy settings 
-associated with them. 
+This is necessary as GPRS records as well as ISP records can have proxy settings
+associated with them.
 
-If this field is read and its length is zero, the value DIAL_OUT_ISP is returned, 
-as it is assumed that any client that has not written this field is assuming 
-that proxies are only available to the dial out ISP and not other service 
+If this field is read and its length is zero, the value DIAL_OUT_ISP is returned,
+as it is assumed that any client that has not written this field is assuming
+that proxies are only available to the dial out ISP and not other service
 types.
 
 Field type: Text. This field may be left as NULL. */
@@ -1494,15 +1486,15 @@ Field type: Text. This field may not be left as NULL. */
 
 Field type: TUint32. This field may be left as NULL. */
 #define PROXY_PORT_NUMBER								_S("PortNumber")
-/** Semi-colon separated list of the addresses for which the proxy server should 
+/** Semi-colon separated list of the addresses for which the proxy server should
 not be used.
 
 Field type: Long Text. This field may be left as NULL. */
 #define PROXY_EXCEPTIONS								_S("Exceptions")
 
-// Columns of the `WAP_ACCESS_POINT` table. The following macros define values 
+// Columns of the `WAP_ACCESS_POINT` table. The following macros define values
 // for the WAP access point table fields.
-/** Text string indicating the name of the table from which to read the bearer 
+/** Text string indicating the name of the table from which to read the bearer
 information.
 
 This can be WAP_IP_BEARER or WAP_SMS_BEARER.
@@ -1516,7 +1508,7 @@ Field type: Text. This field may be left as NULL. */
 
 // Columns common to the `WAP_IP_BEARER` and `WAP_SMS_BEARER` tables.
 // The following macros define values for the WAP IP bearer and WAP SMS bearer table fields.
-// These tables have no COMMDB_NAME field. 
+// These tables have no COMMDB_NAME field.
 /** ID of the  WAP Access Point record to which this bearer information refers.
 
 Field type: TUint32. This field may not be left as NULL.*/
@@ -1540,7 +1532,7 @@ Field type: TBool. This field may be left as NULL. */
 /** Identifier of a record in the IAP table to be used.
 
 Field type: TUint32. This field may be left as NULL. */
-#define WAP_IAP											_S("IAP")								
+#define WAP_IAP											_S("IAP")
 /** Proxy port number. Required for WAP2.0 only.
 
 Field type: TUint32. This field may not be left as NULL. */
@@ -1597,21 +1589,21 @@ Field type: TUint32. This field may be left as NULL. */
 /** Bluetooth page scan repetition mode.
 
 Field type: TUint32. This field may be left as NULL. */
-#define BT_PAGE_SCAN_REP_MODE							_S("DevicePageScanRepMode") 
+#define BT_PAGE_SCAN_REP_MODE							_S("DevicePageScanRepMode")
 /** Field type: TUint32. This field may be left as NULL. */
-#define BT_PAGE_SCAN_PERIOD_MODE						_S("DevicePageScanPeriodMode") 
+#define BT_PAGE_SCAN_PERIOD_MODE						_S("DevicePageScanPeriodMode")
 /** Field type: TUint32. This field may be left as NULL. */
-#define BT_PAGE_SCAN_MODE								_S("DevicePageScanMode") 
+#define BT_PAGE_SCAN_MODE								_S("DevicePageScanMode")
 /** Internal*/
-#define BT_SPARE										_S("DeviceSpareInfo") 
+#define BT_SPARE										_S("DeviceSpareInfo")
 /** Bluetooth clock offset.
 
 Field type: TUint32. This field may be left as NULL. */
-#define BT_CLK_OFFSET									_S("DeviceClkOffset") 
+#define BT_CLK_OFFSET									_S("DeviceClkOffset")
 /** Bluetooth class of device.
 
 Field type: TUint32. This field may be left as NULL. */
-#define BT_COD											_S("DeviceClassOfDevice") 
+#define BT_COD											_S("DeviceClassOfDevice")
 
 // Additional Columns of the `WAP_SMS_BEARER` table.
 /** Bluetooth security UID.
@@ -1648,7 +1640,7 @@ Field type: TUint8. This field may be left as NULL. */
 #define BT_DFLT_SECURITY_LEVEL  						_S("DefaultSecurityLevel")
 
 
-// Columns of the BT Persistance Table 
+// Columns of the BT Persistance Table
 // The following macros define values for the Bluetooth Persist table fields.
 // This table has no COMMDB_NAME field.
 // These items are all internal and not intended for use.
@@ -1669,7 +1661,7 @@ Field type: TUint8. This field may be left as NULL. */
 #define BT_PERSIST_STATE								_S("PersistState")
 
 
-// Columns for `SS_PROTO_TABLE` table 
+// Columns for `SS_PROTO_TABLE` table
 // The following macros define values for the SS Proto table fields.
 // This table has no COMMDB_NAME field.
 /** Secure Sockets protocol name.
@@ -1796,8 +1788,8 @@ Field type: TBool. This field may be left as NULL. */
 Field type: TBool. This field may be left as NULL. */
 #define DEFAULT_GPRS_USE_EDGE							_S("GprsUseEdge")
 
-// Columns of the `AGENT_LOOKUP` table 
-// The following macros define values for the Agent Lookup fields. 
+// Columns of the `AGENT_LOOKUP` table
+// The following macros define values for the Agent Lookup fields.
 // This table has no COMMDB_NAME field.
 /** The Agent's name.
 
@@ -1808,11 +1800,8 @@ Field type: Text. This field may not be left as NULL. */
 Field type: Text. This field may not be left as NULL. */
 #define AGENT_FILENAME									_S("AgentFilename")
 
-// Columns of the `CDMA2000_PACKET_SERVICE_TABLE` 
-// The following macros define values for the CDMA 2000 Packet Service fields.
-/** IWF name.
 
-Field type: Text. This field must not be left as NULL. */
+/* Field type: Text. This field must not be left as NULL. */
 #define CDMA_IWF_NAME									_S("IwfName")
 /** Mask indicating valid service options.
 
@@ -1906,7 +1895,7 @@ Field type: Text. This field may be left as NULL. */
 
 Field type: Text. This field may be left as NULL. */
 #define CDMA_IF_NETWORKS								SERVICE_IF_NETWORKS
-/** Always reject PPP peer authentication requests when using external IP configuration. 
+/** Always reject PPP peer authentication requests when using external IP configuration.
 
 Field type: TBool. This field may be left as NULL. */
 #define CDMA_IF_EXTERN_IP_CONFIG_ALWAYS_REJECT_AUTH	    SERVICE_IF_EXTERN_IP_CONFIG_ALWAYS_REJECT_AUTH
@@ -1914,7 +1903,7 @@ Field type: TBool. This field may be left as NULL. */
 
 Field type: TBool. This field may not be left as NULL. */
 #define CDMA_IF_PROMPT_FOR_AUTH							SERVICE_IF_PROMPT_FOR_AUTH
-/** Authentication username used by PPP in the Simple IP case or 
+/** Authentication username used by PPP in the Simple IP case or
 by the Mobile IP implementation when Mobile IP is enabled.
 
 Field type: Text. This field may be left as NULL. */
@@ -1968,25 +1957,25 @@ Field type: Text. This field may be left as NULL. */
 
 Field type: Text. This field may be left as NULL. */
 #define CDMA_IP6_NAME_SERVER2							SERVICE_IP6_NAME_SERVER2
-/** IP address valid from this time, 
+/** IP address valid from this time,
 used to store dynamically assigned address lease info.
 
 Field type: Text. This field may be left as NULL. */
 #define CDMA_IP_ADDR_LEASE_VALID_FROM					SERVICE_IP_ADDR_LEASE_VALID_FROM
-/** IP address valid to this time, 
+/** IP address valid to this time,
 used to store dynamically assigned address lease info.
 
 Field type: Text. This field may be left as NULL. */
 #define CDMA_IP_ADDR_LEASE_VALID_TO						SERVICE_IP_ADDR_LEASE_VALID_TO
-/** Name of the ECOM configuration daemon manager component. 
+/** Name of the ECOM configuration daemon manager component.
 This component interfaces with the server identified in CDMA_CONFIG_DAEMON_NAME.
 If specified, CDMA_CONFIG_DAEMON_NAME should also be specified.
 
 Field type: Text. This field may be left as NULL.  */
 #define CDMA_CONFIG_DAEMON_MANAGER_NAME					SERVICE_CONFIG_DAEMON_MANAGER_NAME
-/** Name of the configuration daemon server. This server is used to 
-provide further configuration for a connection, e.g. dynamic IP 
-address assignment. If specified, CDMA_CONFIG_DAEMON_MANAGER_NAME 
+/** Name of the configuration daemon server. This server is used to
+provide further configuration for a connection, e.g. dynamic IP
+address assignment. If specified, CDMA_CONFIG_DAEMON_MANAGER_NAME
 should also be specified.
 
 Field type: Text. This field may be left as NULL.  */
@@ -2003,7 +1992,7 @@ Field type: TBool. This field may be left as NULL. */
 
 Field type: TUint32 from TCommsDbIspType. This field may be left as NULL. */
 #define CDMA_AP_TYPE									_S("ApType")
-/** Notify user if the requested QOS can not be satisfied for this time in microseconds. 
+/** Notify user if the requested QOS can not be satisfied for this time in microseconds.
 Set to 0xffffffff to disable.
 
 Field type: TUint32. This field may be left as NULL. */
@@ -2017,28 +2006,28 @@ Field type: TUint32 from RPacketQoS::TRLPMode. This field may not be left as NUL
 // Deprecated Mobile IP fields
 
 /** Attempt to use the mobile IP protocol.
-   
+
 Field type: TBool. This field may be left as NULL. */
 #define CDMA_MIP										_S("CDMAMobileIP")
 /** Home agent address.
-   
+
 Field type: Text. This field may be left as NULL. */
 #define CDMA_MIP_HA_ADDRESS								_S("HomeAgentAddress")
 
-/** A normal reconnect (informing the user) takes place if not both the PPP link 
-drops and a change in SID or NID is received with in this time (in milliseconds). 
+/** A normal reconnect (informing the user) takes place if not both the PPP link
+drops and a change in SID or NID is received with in this time (in milliseconds).
 If they do, an automatic reconnect takes place.
- 
+
 Field type: TUint32 This field may be left as NULL. */
 #define CDMA_MIP_TIMEOUT								_S("CDMAMobileIPTimeout")
 
-// The following fields define the specific CDMA parameters provisioned through OTA 
+// The following fields define the specific CDMA parameters provisioned through OTA
 // and  defined in TIA-683B section 3.5.8
-// These fields replace the old MIP fields (CDMA_MIP, CDMA_MIP_HA_ADDRESS, 
+// These fields replace the old MIP fields (CDMA_MIP, CDMA_MIP_HA_ADDRESS,
 // CDMA_MIP_TIMEOUT)
 
-/** Defines the type of NAI this record refers to (SimpleIP or MobileIP). 
-Possible values: ECommDbCdmaNaiSimpleIp, ECommDbCdmaNaiMobileIp. Replaces the 
+/** Defines the type of NAI this record refers to (SimpleIP or MobileIP).
+Possible values: ECommDbCdmaNaiSimpleIp, ECommDbCdmaNaiMobileIp. Replaces the
 CDMA_MIP field.
 
 Field type: TUint32. This field must not be left as NULL. */
@@ -2071,7 +2060,7 @@ Field type: TUint32.  This field may be left as NULL. */
 
 Field type: Text. This field may be left as NULL. */
 #define CDMA_MIP_HOME_ADDRESS							_S("CDMAMobileIpHomeAddress")
-/** IP address of the mobile node's primary home agent. 
+/** IP address of the mobile node's primary home agent.
 Replaces the CDMA_MIP_HA_ADDRESS field.
 
 Field type: Text. This field may be left as NULL. */
@@ -2139,13 +2128,6 @@ Field type: TUint32. */
 Field type: TUint32. */
 #define CDMA_SCH_MUX									_S("CDMASchMux")
 
-
-// Columns of the `DEFAULT_CDMA2000_SETTINGS_TABLE` 
-// The following macros define values for the Default CDMA 2000 Settings fields.
-/** The usage of this default. 
-
-Field type: TUint32. This field may be left as NULL. */
-#define DEFAULT_CDMA_USAGE								_S("Usage")
 /** IWF name.
 
 Field type: Text. This field may not be left as NULL. */
@@ -2177,8 +2159,8 @@ Field type: TBool. This field may be left as NULL. */
 
 // Default values for the deprecated Mobile IP fields.
 /** Default CDMA mobile IP?
-   
-Field type: TBool. This field may be left as NULL. 
+
+Field type: TBool. This field may be left as NULL.
 
 @deprecated */
 #define DEFAULT_CDMA_MIP								CDMA_MIP
@@ -2189,8 +2171,8 @@ Field type: Text. This field may be left as NULL.
 @deprecated */
 #define DEFAULT_CDMA_MIP_HA_ADDRESS						CDMA_MIP_HA_ADDRESS
 /** CDMA Mobile IP timeout.
-   
-Field type: TUint32. This field may be left as NULL. 
+
+Field type: TUint32. This field may be left as NULL.
 
 @deprecated */
 #define DEFAULT_CDMA_MIP_TIMEOUT						CDMA_MIP_TIMEOUT
@@ -2204,8 +2186,8 @@ Field type: TUint32. */
 #define DEFAULT_CDMA_SCH_MUX							CDMA_SCH_MUX
 
 
-// The following fields define the specific CDMA parameters provisioned through OTA 
-// and defined in TIA-683B section 3.5.8 
+// The following fields define the specific CDMA parameters provisioned through OTA
+// and defined in TIA-683B section 3.5.8
 
 /** Defines the active operation mode in the mobile station. Possible values:
 
@@ -2221,19 +2203,19 @@ Field type: TUint32. */
 
 Field type: TUint32. */
 #define CDMA_MIP_MAX_NUM_RETRY							_S("CDMAMobileIpMaxNumRetry")
-/** Amount of time between the first and second MobileIP registration requests, 
+/** Amount of time between the first and second MobileIP registration requests,
 while the Mobile Station did not receive a Registration Reply (units of 250ms).
 
 Field type: TUint32. */
 #define CDMA_MIP_FIRST_RETRY_TIMEOUT					_S("CDMAMobileIpFirstRetryTimeout")
-/** Re-registration threshold (time in minutes before the expiration of the registration 
+/** Re-registration threshold (time in minutes before the expiration of the registration
 lifetime).
 
 Field type: TUint32. */
 #define CDMA_MIP_REREG_THRESHOLD						_S("CDMAMobileIpReregThreshold")
 
 /** Columns of the `VIRTUAL_BEARER table` */
-#define VIRTUAL_BEARER_AGENT							AGENT_NAME		
+#define VIRTUAL_BEARER_AGENT							AGENT_NAME
 #define VIRTUAL_BEARER_NIF								IF_NAME
 
 /** Columns of the `VIRTUAL_SERVICE table` */
@@ -2278,12 +2260,8 @@ Field type: TUint32. */
 
 /** Columns of the AccessPoint table */
 #define ACCESS_POINT_GID                            _S("AccessPointGID")
+#define ACCESS_POINT_POLICY	    					_S("AccessPointSelectionPolicy")
 
-#ifdef SYMBIAN_NON_SEAMLESS_NETWORK_BEARER_MOBILITY
-//Unfortunately in the vFuture environment both names are valid for the selectionpolicy field because the
-//configuartion files...
-#define ACCESS_POINT_POLICY	    					_S("SelectionPolicy")
-#define OLD_ACCESS_POINT_POLICY	    				_S("AccessPointSelectionPolicy")
 #define ACCESS_POINT_TIER		        			_S("Tier")
 #define ACCESS_POINT_MCPR	    					_S("MCpr")
 #define ACCESS_POINT_CPR	    					_S("Cpr")
@@ -2293,7 +2271,9 @@ Field type: TUint32. */
 #define ACCESS_POINT_APPSID	    					_S("AppSID")
 #define ACCESS_POINT_CONFIG_AP_ID_LIST              _S("ConfigAPIdList")
 #define ACCESS_POINT_CUSTOM_SELECTION_POLICY        _S("CustomSelectionPolicy")
+#define ACCESS_POINT_PRIORITY	    				_S("Priority")
 
+#define TIER_IMPL_UID								_S("TierImplUid")
 #define TIER_THREAD_NAME							_S("TierThreadName")
 #define TIER_MANAGER_NAME							_S("TierManagerName")
 #define DEFAULT_ACCESS_POINT     					_S("DefaultAccessPoint")
@@ -2302,32 +2282,24 @@ Field type: TUint32. */
 #define CPR_UID										_S("CprUid")
 #define SCPR_UID									_S("SCprUid")
 #define PROTOCOL_UID								_S("ProtocolUid")
-#define PROTOCOL_CONFIG_LOADER_UID                                              _S("ProtocolConfigLoaderUid")
+#define PROTOCOL_CONFIG_LOADER_UID                  _S("ProtocolConfigLoaderUid")
 
-#define PROTOCOL_CONFIG                                                         _S("ProtocolConfig")
-#define LAYER_BELOW                                                             _S("LayerBelow")
+#define PROTOCOL_CONFIG                             _S("ProtocolConfig")
+#define LAYER_BELOW                                 _S("LayerBelow")
 
-#else
-//in the old environment the original name is used.
-#define ACCESS_POINT_POLICY	    					_S("AccessPointSelectionPolicy")
 
-#endif //SYMBIAN_NON_SEAMLESS_NETWORK_BEARER_MOBILITY
-
-// need to preserve compatibility, soon to become internalTechnology
-//#ifdef SYMBIAN_NETWORKING_WIFI
-
+/**
+@internalTechnology
+*/
 #define EAPSIM_PROTOCOL_ID							_S("ProtocolId")
 #define EAPSIM_PROTOCOL_PSEUDONYM 					_S("Pseudonym")
 #define EAPSIM_PROTOCOL_USE_NAI_REALM 				_S("UseNaiRealm")
 #define EAPSIM_PROTOCOL_NAI_REALM 					_S("NaiRealm")
 #define EAPSIM_PROTOCOL_MIN_RANDS 					_S("MinRands")
-
 #define EAPAKA_PROTOCOL_ID							_S("ProtocolId")
 #define EAPAKA_PROTOCOL_PSEUDONYM 					_S("Pseudonym")
 #define EAPAKA_PROTOCOL_USE_NAI_REALM 				_S("UseNaiRealm")
 #define EAPAKA_PROTOCOL_NAI_REALM 					_S("NaiRealm")
-
-//#endif //SYMBIAN_NETWORKING_WIFI
 
 #define SELECTION_POLICY_IAP1			    		_S("IAP1")
 #define SELECTION_POLICY_IAP2			    		_S("IAP2")
@@ -2346,7 +2318,6 @@ Field type: TUint32. */
 #define SELECTION_POLICY_IAP15			    		_S("IAP15")
 #define SELECTION_POLICY_IAPCOUNT                   _S("IAPCOUNT")
 
-#ifdef SYMBIAN_NON_SEAMLESS_NETWORK_BEARER_MOBILITY
 #define SELECTION_POLICY_AP1			    		_S("AP1")
 #define SELECTION_POLICY_AP2			    		_S("AP2")
 #define SELECTION_POLICY_AP3			    		_S("AP3")
@@ -2363,10 +2334,7 @@ Field type: TUint32. */
 #define SELECTION_POLICY_AP14			    		_S("AP14")
 #define SELECTION_POLICY_AP15			    		_S("AP15")
 #define SELECTION_POLICY_APCOUNT                   _S("APCOUNT")
-#endif //SYMBIAN_NON_SEAMLESS_NETWORK_BEARER_MOBILITY
 
-// need to preserve compatibility, soon to become internalTechnology
-//#ifdef SYMBIAN_NETWORKING_WIFI
 #define EAPSIM_PROTOCOL_ID							_S("ProtocolId")
 #define EAPSIM_PROTOCOL_PSEUDONYM 					_S("Pseudonym")
 #define EAPSIM_PROTOCOL_USE_NAI_REALM 				_S("UseNaiRealm")
@@ -2378,30 +2346,25 @@ Field type: TUint32. */
 #define EAPAKA_PROTOCOL_USE_NAI_REALM 				_S("UseNaiRealm")
 #define EAPAKA_PROTOCOL_NAI_REALM 					_S("NaiRealm")
 
-//#endif //SYMBIAN_NETWORKING_WIFI
-
 /** Columns of the `EAP Security Settings table` */
 #define	EAP_SEC_OUTER_EAP_TYPE	 					_S("OuterEapMethodType")
 #define	EAP_SEC_ID  								_S("EapId")
 #define	EAP_SEC_PASSWORD  							_S("EapPassword")
 #define	EAP_SEC_CONFIGID							_S("ConfigId")
 #define	EAP_SEC_DATA 								_S("EAP_Method_Data")
-#ifdef SYMBIAN_WIFI_WPS
 #define EAP_SEC_VENDORID                            _S("EapVendorId")
 #define EAP_SEC_VENDORTYPE                          _S("EapVendorType")
-#endif //SYMBIAN_WIFI_WPS
 
 /** Columns of the `Tunnelled EAP Settings Table` */
 #define	TUN_EAP_INNERTYPE	 						_S("InnerEapMethodType")
 #define TUN_EAP_DATA 								_S("Tun_EAP_Method_Data")
 
-/** Columns of the `EAP-TLS Settings Table` */				
+/** Columns of the `EAP-TLS Settings Table` */
 #define	EAP_TLS_CLIENT_CERT_NAME					_S("ClientCertificateName")
 
-/** Columns of the `LEAP Settings Table` */					
+/** Columns of the `LEAP Settings Table` */
 #define	EAP_LEAP_TIMEOUT					 			_S("LeapTimeout")
 
-#ifdef SYMBIAN_NON_SEAMLESS_NETWORK_BEARER_MOBILITY
 /** Columns of the base `Params Table` */
 #define	STYPEID										_S("STypeId")
 
@@ -2442,16 +2405,14 @@ Field type: TUint32. */
 #define HEADERMODE									_S("HeaderMode")
 //#define QOSNAME										_S("QosName")
 
-// need to preserve compatibility, soon to become internalTechnology
-//#ifdef SYMBIAN_NETWORKING_WIFI
-/** Columns of the `WifiScanEngine Table` */
+/** Columns of the `WifiScanEngine Table`
+@internalTechnology
+*/
 #define SCANPERIODMS								_S("ScanPeriodMs")
 #define RSSIMIN										_S("RSSIMin")
-#define RSSIMAX										_S("RSSIMax")		
-//#endif //SYMBIAN_NETWORKING_WIFI
+#define RSSIMAX										_S("RSSIMax")
 
-#endif //SYMBIAN_NON_SEAMLESS_NETWORK_BEARER_MOBILITY
-	
+
 /** Enumerated sets and bitmasks for the modem speaker `MODEM_BEARER:MODEM_SPEAKER_PREF`. */
 enum TCommsDbModemSpeakerSetting
 	{
@@ -2480,7 +2441,7 @@ enum TCommsDbModemSpeakerVolume
 const TUint KModemCommRoleDCE = 0x1;
 const TUint32 KLinkableFlagTag = 0x80000000;
 
-/** Enumeration used by DIAL_*_ISP:ISP_TYPE, OUTGOING_WCDMA:GPRS_AP_TYPE and CDMA2000_PACKET_SERVICE_TABLE:CDMA_AP_TYPE. */
+/** Enumeration used by DIAL_*_ISP:ISP_TYPE, OUTGOING_WCDMA:GPRS_AP_TYPE. */
 enum TCommsDbIspType
 	{
 	/** ISP internet only. */
@@ -2509,7 +2470,7 @@ enum TCommsDbWapWspOption
 	EWapWspOptionConnectionOriented
 	};
 
-/** 
+/**
 Enum for use in calls to `CCommsDatabase::OpenConnectionPrefTable*LC()`,
 CCommsDatabase::OpenIAPTableViewMatchingBearerSetLC() and
 CCommsDbConnectionPrefTableView::SwapConnectionPreferencesL()
@@ -2535,15 +2496,15 @@ enum TCommDbBearer
 	KCommDbBearerWcdma = 0x2,
 	/** LAN Bearer support. */
 	KCommDbBearerLAN = 0x4,
-	/** CDMA2000 Bearer support. */	
-	KCommDbBearerCdma2000 = 0x8,
 	KCommDbBearerVirtual = 0x10,
 	KCommDbBearerPAN = 0x20,
 	KCommDbBearerWLAN = 0x40
 	};
-#define KCommDbBearerPSD (KCommDbBearerWcdma|KCommDbBearerCdma2000)
 
-/** The dialog preference determines whether or not a user should be prompted with 
+#define DeprecatedCDMA2000 0x8
+#define KCommDbBearerPSD (KCommDbBearerWcdma|DeprecatedCDMA2000)
+
+/** The dialog preference determines whether or not a user should be prompted with
 a dialog at connect time. Used in CCommsDbConnectionPrefTableView::UpdateDialogPrefL() */
 enum TCommDbDialogPref
 	{
@@ -2605,105 +2566,54 @@ const TUid KUidCommDbModemRecordChange =  {0x1000A43D} ;
 /** A record in the `PROXIES` table has been modified or deleted */
 const TUid KUidCommDbProxiesRecordChange = {0x1000A43E};
 
-/** Enum for DATABASE_TYPE field. 
+/** Enum for DATABASE_TYPE field.
 Was deprecated in v7.0 but replaced for BC with v6.1 in v7.0s and v8.0. */
 enum TCommDbDatabaseType
 	{
 	/** Unspecified database type. Any type of database can be opened with this parameter.*/
-	EDatabaseTypeUnspecified =0,	
-	/** The database has an IAP table, which defines sets of ISPs and chargecards that 
+	EDatabaseTypeUnspecified =0,
+	/** The database has an IAP table, which defines sets of ISPs and chargecards that
 	may be used together. */
 	EDatabaseTypeIAP,
-	/** The database is arranged using separate ISP, location, modem and chargecard 
+	/** The database is arranged using separate ISP, location, modem and chargecard
 	tables whose records are not associated by using IAPs.
-	
+
 	ISP type databases are deprecated from version 6.1. */
 	EDatabaseTypeISP
 	};
 
 
-/** Enum for the global setting `CDMA_OP_CAPABILITY` 
-@publishedAll 
+/** Enum for the global setting `CDMA_OP_CAPABILITY`
+@publishedAll
 @released */
 enum TCommDbCdmaOpCapability
 	{
 	/** Simple IP only supported. */
 	ECommDbCdmaOpCapabilitySimpleIp = 0x1,
 	/** Mobile IP only supported. */
-	ECommDbCdmaOpCapabilityMobileIp = 0x2, 
+	ECommDbCdmaOpCapabilityMobileIp = 0x2,
 	/** Mobile IP with Simple IP fallback supported. */
-	ECommDbCdmaOpCapabilityFallback = 0x4  
+	ECommDbCdmaOpCapabilityFallback = 0x4
 	};
 
-/** Enum for the global setting `CDMA_SIMIP_AUTH_SUPPORTED` 
-@publishedAll 
+/** Enum for the global setting `CDMA_SIMIP_AUTH_SUPPORTED`
+@publishedAll
 @released */
 enum TCommDbCdmaSimpIpAuthCapability
 	{
 	/** CHAP supported.  */
-	ECommDbCdmaSimpIpCapabilityChap = 0x1, 
+	ECommDbCdmaSimpIpCapabilityChap = 0x1,
 	/** PAP supported. */
-	ECommDbCdmaSimpIpCapabilityPap = 0x2   
+	ECommDbCdmaSimpIpCapabilityPap = 0x2
 	};
 
-/** Enum for the global settings `CDMA_MIP_MN_AAA_AUTH_ALGORITHM` and 'CDMA_MIP_MN_HA_AUTH_ALGORITHM' 
+/** Enum for the global settings `CDMA_MIP_MN_AAA_AUTH_ALGORITHM` and 'CDMA_MIP_MN_HA_AUTH_ALGORITHM'
 @publishedAll
 @released */
 enum TCommDbCdmaMIpAuthCapability
 	{
 	/**  MD5 authentication is supported (RFC 3012). */
-	ECommDbCdmaMIpMd5 = 0x1 
-	};
-
-/** Enum for the field `DEFAULT_CDMA2000_SETTINGS_TABLE:CDMA_OP_MODE` 
-@publishedAll 
-@released */
-enum TCommDbCdmaOpMode
-	{
-	/** Simple IP only. */
-	ECommDbCdmaOpSimpleIp = 0x0,
-	/** Mobile IP with Simple IP fallback. */	
-	ECommDbCdmaOpFallback = 0x1,  
-	/** Mobile IP only. */   
-	ECommDbCdmaOpMobileIp = 0x2      
-	};
-
-/** Enum for the field `CDMA2000_PACKET_SERVICE_TABLE:CDMA_NAI_TYPE` 
-@publishedAll 
-@released */
-enum TCommDbCdmaNaiType
-	{
-	/** Simple IP only. */
-	ECommDbCdmaNaiSimpleIp = 0, 
-	/** Mobile IP only. */
-	ECommDbCdmaNaiMobileIp		
-	};
-
-/** Enum for the field `CDMA2000_PACKET_SERVICE_TABLE:CDMA_SIMIP_AUTH_ALGORITHM ` 
-@publishedAll 
-@released */
-enum TCommDbCdmaSimpIpAuthAlgorithm
-	{
-	/** No authentication.*/
-	ECommDbCdmaSimpIpAuthNone = 0x0,	 
-	/** PPP CHAP authentication.  */
-	ECommDbCdmaSimpIpAuthChap = 0x1,     
-	/** PPP PAP authentication.*/
-	ECommDbCdmaSimpIpAuthPap = 0x2,  
-	/** PPP CHAP to PAP fallback. */
-	ECommDbCdmaSimpIpAuthFallback = 0x3  
-	};
-
-/** Enum for the fields `CDMA2000_PACKET_SERVICE_TABLE:CDMA_MIP_MN_AAA_AUTH_ALGORITHM` and
-	`CDMA2000_PACKET_SERVICE_TABLE:CDMA_MIP_MN_HA_AUTH_ALGORITHM`
-@publishedAll
-@released */
-enum TCommDbCdmaMIpAuthAlgorithm
-	{
-	/** No authentication. */
-	ECommDbCdmaMIpAuthNone = 0x0,	 
-	/** MD5 authentication (IETF RFC 2002)*/
-	ECommDbCdmaMIpAuthMd5 = 0x1		
+	ECommDbCdmaMIpMd5 = 0x1
 	};
 
 /** Enum for the fields `PAN_SERVICE_EXTENSION:PAN_LOCAL_ROLE` and
@@ -2716,12 +2626,12 @@ enum TCommDbBluetoothPanRole
 	ECommDbPanRoleUnknown = 0x0000,
 	/** PAN-U Role. */
 	ECommDbPanRoleU = 0x1115,
-	/** PAN-NAP Role. */	
+	/** PAN-NAP Role. */
 	ECommDbPanRoleNap = 0x1116,
 	/** PAN-GN Role. */
 	ECommDbPanRoleGn = 0x1117
 	};
-	
+
 /** ENum for the fields `WLAN_SERVICE_EXTENSION:EAP_SEC_OUTER_EAP_TYPE` */
 enum TCommsDatEAPSECOuterEAPType
 	{
@@ -2741,15 +2651,10 @@ enum TCommsDatEAPSECOuterEAPType
 	ECommsDatEAPSecEAPSIM = 0x6,
 	/** EAP-AKA */
 	ECommsDatEAPSecEAPAKA = 0x7,
-#ifndef SYMBIAN_WIFI_WPS	
-	/** EAP-MSCHAPv2 */
-	ECommsDatEAPSecEAPMSCHAPv2 = 0x8
-#else
 	/** EAP-MSCHAPv2 */
 	ECommsDatEAPSecEAPMSCHAPv2 = 0x8,
 	/** EAP-WPS */
 	ECommsDatEAPSecEAPWPS = 0x9
-#endif // SYMBIAN_WIFI_WPS	
 	};
 
 /** ENum for the fields `WLAN_SERVICE_EXTENSION:TUN_EAP_INNERTYPE` */
@@ -2845,7 +2750,7 @@ enum TCommsDatWlanPowerSaveMode
 	/** Max Powersave mode */
 	ECommsDatWlanPowerSaveModeMax = 0x2
 	};
-	
+
 /** ENum for the fields `WLAN_SERVICE_EXTENSION:WLAN_PREAMBLE_TYPE` */
 enum TCommsDatWlanPreambleType
 	{
@@ -2870,8 +2775,157 @@ enum TCommsDatWlanRegDomain
 	ECommsDatWlanRegDomainFrance = 0x32,
 	/** MKK - Japan */
 	ECommsDatWlanRegDomainMKK = 0x40,
+
+	// Country codes
+
+	/** AT - Austria */
+	ECommsDatWlanRegDomainAT = 0x4154,
+	/** AU - Australia */
+	ECommsDatWlanRegDomainAU = 0x4155,
+	/** BE - Belgium */
+	ECommsDatWlanRegDomainBE = 0x4245,
+	/** BR - Brazil */
+	ECommsDatWlanRegDomainBR = 0x4252,
+	/** CA - Canada */
+	ECommsDatWlanRegDomainCA = 0x4341,
+	/** CH - Switzerland */
+	ECommsDatWlanRegDomainCH = 0x4348,
+	/** CN - China */
+	ECommsDatWlanRegDomainCN = 0x434E,
+	/** CY - Cyprus */
+	ECommsDatWlanRegDomainCY = 0x4359,
+	/** CZ - Czech Republic */
+	ECommsDatWlanRegDomainCZ = 0x435A,
+	/** DE - Germany */
+	ECommsDatWlanRegDomainDE = 0x4445,
+	/** DK - Denmark */
+	ECommsDatWlanRegDomainDK = 0x444B,
+	/** EE - Estonia */
+	ECommsDatWlanRegDomainEE = 0x4545,
+	/** ES - Spain */
+	ECommsDatWlanRegDomainES = 0x4553,
+	/** FI - Finland */
+	ECommsDatWlanRegDomainFI = 0x4649,
+	/** FR - France */
+	ECommsDatWlanRegDomainFR = 0x4652,
+	/** GB - United Kingdom */
+	ECommsDatWlanRegDomainGB = 0x4742,
+	/** GR - Greece */
+	ECommsDatWlanRegDomainGR = 0x4752,
+	/** HK - Hong Kong */
+	ECommsDatWlanRegDomainHK = 0x484B,
+	/** HU - Hungary */
+	ECommsDatWlanRegDomainHU = 0x4855,
+	/** ID - Indonesia */
+	ECommsDatWlanRegDomainID = 0x4944,
+	/** IE - Ireland */
+	ECommsDatWlanRegDomainIE = 0x4945,
+	/** IL - Israel */
+	ECommsDatWlanRegDomainIL = 0x494C,
+	/** IS - Iceland */
+	ECommsDatWlanRegDomainIS = 0x4953,
+	/** IT - Italy */
+	ECommsDatWlanRegDomainIT = 0x4954,
+	/** JP - Japan */
+	ECommsDatWlanRegDomainJP = 0x4A50,
+	/** KR - Republic of Korea */
+	ECommsDatWlanRegDomainKR = 0x4B52,
+	/** LT - Lithuania */
+	ECommsDatWlanRegDomainLT = 0x4C54,
+	/** LU - Luxembourg */
+	ECommsDatWlanRegDomainLU = 0x4C55,
+	/** LV - Latvia */
+	ECommsDatWlanRegDomainLV = 0x4C56,
+	/** MY - Malaysia */
+	ECommsDatWlanRegDomainMY = 0x4D59,
+	/** NL - Netherlands */
+	ECommsDatWlanRegDomainNL = 0x4E4C,
+	/** NO - Norway */
+	ECommsDatWlanRegDomainNO = 0x4E4F,
+	/** NZ - New Zealand */
+	ECommsDatWlanRegDomainNZ = 0x4E5A,
+	/** PH - Philippines */
+	ECommsDatWlanRegDomainPH = 0x5048,
+	/** PL - Poland */
+	ECommsDatWlanRegDomainPL = 0x504C,
+	/** PT - Portugal */
+	ECommsDatWlanRegDomainPT = 0x5054,
+	/** SE - Sweden */
+	ECommsDatWlanRegDomainSE = 0x5345,
+	/** SG - Singapore */
+	ECommsDatWlanRegDomainSG = 0x5347,
+	/** SI - Slovenia */
+	ECommsDatWlanRegDomainSI = 0x5349,
+	/** SK - Slovakia */
+	ECommsDatWlanRegDomainSK = 0x534B,
+	/** TH - Thailand */
+	ECommsDatWlanRegDomainTH = 0x5448,
+	/** TW - Taiwan */
+	ECommsDatWlanRegDomainTW = 0x5457,
+	/** US - United States */
+	ECommsDatWlanRegDomainUS = 0x5553,
+	/** ZA - South Africa */
+	ECommsDatWlanRegDomainZA = 0x5A41,
 	/** World */
 	ECommsDatWlanRegDomainWorld = 0xFF
+	};
+
+//Regulatory Domain / Country Code information
+
+struct TCountryInfo
+	{
+	TUint16 iDomain;
+	TUint8  iFirstChannel;
+	TUint8	iNumberOfChannels;
+	TUint8	iMaxTxPower; // in units of dBm
+	};
+
+const struct TCountryInfo KCountryChannels[]= {//put supported channels at beginning of array and fill rest with zeros (0)
+    { ECommsDatWlanRegDomainAT, 1, 11, 20},
+    { ECommsDatWlanRegDomainAU, 1, 11, 23},
+    { ECommsDatWlanRegDomainBE, 1, 13, 20},
+    { ECommsDatWlanRegDomainBR, 1, 11, 60},
+    { ECommsDatWlanRegDomainCA, 1, 11, 60},
+    { ECommsDatWlanRegDomainCH, 1, 11, 20},
+    { ECommsDatWlanRegDomainCN, 1, 13, 22},
+    { ECommsDatWlanRegDomainCY, 1, 11, 60},
+	{ ECommsDatWlanRegDomainCZ, 1, 11, 23},
+    { ECommsDatWlanRegDomainDE, 1, 11, 20},
+    { ECommsDatWlanRegDomainDK, 1, 11, 20},
+    { ECommsDatWlanRegDomainEE, 1, 11, 60},
+    { ECommsDatWlanRegDomainES, 1, 11, 20},
+    { ECommsDatWlanRegDomainFI, 1, 11, 20},
+    { ECommsDatWlanRegDomainFR, 1, 11, 20},
+    { ECommsDatWlanRegDomainGB, 1, 11, 20},
+	{ ECommsDatWlanRegDomainGR, 1, 11, 20},
+    { ECommsDatWlanRegDomainHK, 1, 11, 20},
+    { ECommsDatWlanRegDomainHU, 1, 11, 60},
+    { ECommsDatWlanRegDomainID, 1, 13, 20},
+    { ECommsDatWlanRegDomainIE, 1, 11, 20},
+    { ECommsDatWlanRegDomainIL, 1, 13, 20},
+    { ECommsDatWlanRegDomainIS, 1, 11, 20},
+    { ECommsDatWlanRegDomainIT, 1, 11, 20},
+    { ECommsDatWlanRegDomainJP, 1, 13, 10},
+    { ECommsDatWlanRegDomainKR, 1, 13, 22},
+    { ECommsDatWlanRegDomainLT, 1, 11, 60},
+    { ECommsDatWlanRegDomainLU, 1, 11, 20},
+    { ECommsDatWlanRegDomainLV, 1, 11, 60},
+    { ECommsDatWlanRegDomainMY, 1, 13, 20},
+    { ECommsDatWlanRegDomainNL, 1, 11, 20},
+    { ECommsDatWlanRegDomainNO, 1, 11, 20},
+	{ ECommsDatWlanRegDomainNZ, 1, 11, 60},
+    { ECommsDatWlanRegDomainPH, 1, 11, 60},
+    { ECommsDatWlanRegDomainPL, 1, 11, 20},
+    { ECommsDatWlanRegDomainPT, 1, 11, 20},
+    { ECommsDatWlanRegDomainSE, 1, 11, 20},
+    { ECommsDatWlanRegDomainSG, 1, 13, 23},
+    { ECommsDatWlanRegDomainSI, 1, 11, 60},
+    { ECommsDatWlanRegDomainSK, 1, 11, 60},
+	{ ECommsDatWlanRegDomainTH, 1, 13, 20},
+    { ECommsDatWlanRegDomainTW, 1, 13, 20},
+    { ECommsDatWlanRegDomainUS, 1, 11, 60},
+    { ECommsDatWlanRegDomainZA, 1, 13, 60},
+    { 0,                        0,  0, 0}
 	};
 
 /** ENum for the fields `WLAN_SERVICE_EXTENSION:WLAN_AUTHENTICATION_MODE` */
@@ -2889,14 +2943,10 @@ enum TCommsDatWlanAuthenticationMode
 	ECommsDatWlanAuthenticationModeOPENEAP,
 	/** WPA2 */
 	ECommsDatWlanAuthenticationModeWPA2,
-#ifndef SYMBIAN_WIFI_WPS
 	/* WPA2-PSK */
-	ECommsDatWlanAuthenticationModeWPA2PSK
-#else
 	ECommsDatWlanAuthenticationModeWPA2PSK,
 	/* EAP-WPS */
 	ECommsDatWlanAuthenticationModeEapWps
-#endif //SYMBIAN_WIFI_WPS	
 	};
 
 

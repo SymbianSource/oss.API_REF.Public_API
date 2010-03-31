@@ -1,9 +1,9 @@
 // Copyright (c) 2005-2009 Nokia Corporation and/or its subsidiary(-ies).
 // All rights reserved.
 // This component and the accompanying materials are made available
-// under the terms of the License "Symbian Foundation License v1.0" to Symbian Foundation members and "Symbian Foundation End User License Agreement v1.0" to non-members
+// under the terms of "Eclipse Public License v1.0"
 // which accompanies this distribution, and is available
-// at the URL "http://www.symbianfoundation.org/legal/licencesv10.html".
+// at the URL "http://www.eclipse.org/legal/epl-v10.html".
 //
 // Initial Contributors:
 // Nokia Corporation - initial contribution.
@@ -15,11 +15,10 @@
 // 
 //
 
-
-
 /**
  @file
  @publishedAll
+ @released
 */
 
 
@@ -28,9 +27,11 @@
 #define QOS3GPP_SUBCONPARAMS_INL
 
 /**
-@param      aFamily the sub-connection parameter to which the newly created object is to be added
+@param      aFamily the sub-connection parameter family to which the newly created object is to be added
 @param      aType The type of the set from TParameterSetType (ERequested, EAcceptable or EGranted)
 @return     pointer to the created object
+@publishedAll
+@released Since 9.3
 */
 CSubConQosR99ParamSet* CSubConQosR99ParamSet::NewL(CSubConParameterFamily& aFamily, CSubConParameterFamily::TParameterSetType aType)
     {
@@ -42,15 +43,35 @@ CSubConQosR99ParamSet* CSubConQosR99ParamSet::NewL(CSubConParameterFamily& aFami
     }
 
 /**
+@param      aFamily the parameter family to which the newly created object is to be added
+@param      aType The type of the set from TParameterSetType (ERequested, EAcceptable or EGranted)
 @return     pointer to the created object
+@publishedAll
+@released Since 9.3
+*/
+CSubConQosR99ParamSet* CSubConQosR99ParamSet::NewL(RParameterFamily& aFamily, RParameterFamily::TParameterSetType aType)
+    {
+    CSubConQosR99ParamSet* obj = NewL();
+    CleanupStack::PushL(obj);
+    aFamily.AddParameterSetL(obj, aType);
+    CleanupStack::Pop(obj);
+    return obj;
+    }
+
+/**
+@return     pointer to the created object
+@publishedAll
+@released Since 9.3
 */
 CSubConQosR99ParamSet* CSubConQosR99ParamSet::NewL()
     {
-    STypeId typeId(KSubCon3GPPExtParamsFactoryUid, KSubConQosR99ParamsType);
+    STypeId typeId = STypeId::CreateSTypeId(KSubCon3GPPExtParamsFactoryUid, KSubConQosR99ParamsType);
     return static_cast<CSubConQosR99ParamSet*>(CSubConParameterSet::NewL(typeId));
     }
 
 /**
+@publishedAll
+@released Since 9.3
 */
 CSubConQosR99ParamSet::CSubConQosR99ParamSet()
     : CSubConExtensionParameterSet(),
@@ -71,21 +92,30 @@ CSubConQosR99ParamSet::CSubConQosR99ParamSet()
 
 /** Identifies the current traffic class. Traffic class is; Converstional, Streaming, Interactive or Background.
 See 3GPP TS 23.107.
-@return the traffic class */
+@return the traffic class
+@publishedAll
+@released Since 9.3
+*/
 RPacketQoS::TTrafficClass CSubConQosR99ParamSet::GetTrafficClass() const
     {
     return iTrafficClass;
     }
 
 /** Current delivery order. Indicates whether the bearer shall provide in-sequence SDU delivery or not.
-@return Current delivery order. */
+@return Current delivery order. 
+@publishedAll
+@released Since 9.3
+*/
 RPacketQoS::TDeliveryOrder CSubConQosR99ParamSet::GetDeliveryOrder() const
     {
     return iDeliveryOrder;
     }
 
 /** Current delivery of erroneous SDUs. Indicates whether SDUs detected as erroneous shall be delivered or discarded.
-@return Current delivery of erroneous SDUs. */
+@return Current delivery of erroneous SDUs. 
+@publishedAll
+@released Since 9.3
+*/
 RPacketQoS::TErroneousSDUDelivery CSubConQosR99ParamSet::GetErroneousSDUDelivery() const
     {
     return iDeliveryOfErroneusSdu;
@@ -94,14 +124,20 @@ RPacketQoS::TErroneousSDUDelivery CSubConQosR99ParamSet::GetErroneousSDUDelivery
 /** Indicates the undetected bit error ratio in the delivered SDUs. If no error detection is
 requested, Residual bit error ratio indicates the bit error ratio in
 the delivered SDUs.
-@return the residual bit error ratio. */
+@return the residual bit error ratio. 
+@publishedAll
+@released Since 9.3
+*/
 RPacketQoS::TBitErrorRatio CSubConQosR99ParamSet::GetResidualBitErrorRatio() const
     {
     return iResidualBer;
     }
 
 /** Indicates the fraction of SDUs lost or detected as erroneous.
-@return the SDU error ratio.  */
+@return the SDU error ratio.  
+@publishedAll
+@released Since 9.3
+*/
 RPacketQoS::TSDUErrorRatio CSubConQosR99ParamSet::GetSDUErrorRatio() const
     {
     return iErrorRatio;
@@ -110,7 +146,10 @@ RPacketQoS::TSDUErrorRatio CSubConQosR99ParamSet::GetSDUErrorRatio() const
 /** Current traffic handling priority. Specifies the relative importance for handling of all SDUs
 belonging to the UMTS bearer compared to the SDUs of other bearers. This is defined only for
 Interactive traffic class. See 3GPP TS 23.107
-@return the traffic handling priority. */
+@return the traffic handling priority. 
+@publishedAll
+@released Since 9.3
+*/
 RPacketQoS::TTrafficHandlingPriority CSubConQosR99ParamSet::GetTrafficHandlingPriority() const
     {
     return iPriority;
@@ -119,13 +158,19 @@ RPacketQoS::TTrafficHandlingPriority CSubConQosR99ParamSet::GetTrafficHandlingPr
 /** @return the transfer delay. Indicates maximum delay for 95th percentile of the distribution
 of delay for all delivered SDUs during the lifetime of a bearer service, where delay for an SDU
 is defined as the time from a request to transfer an SDU at one SAP to its delivery at the other
-SAP. */
+SAP. 
+@publishedAll
+@released Since 9.3
+*/
 TInt CSubConQosR99ParamSet::GetTransferDelay() const
     {
     return iTransferDelay;
     }
 
-/** @return the maximum SDU size. */
+/** @return the maximum SDU size. 
+@publishedAll
+@released Since 9.3
+*/
 TInt CSubConQosR99ParamSet::GetMaxSduSize() const
     {
     return iMaxSduSize;
@@ -134,6 +179,8 @@ TInt CSubConQosR99ParamSet::GetMaxSduSize() const
 /** @return Current maximum bitrate for uplink direction. The traffic is conformant with Maximum
 bitrate as long as it follows a token bucket algorithm where token rate equals Maximum bitrate
 and bucket size equals Maximum SDU size.
+@publishedAll
+@released Since 9.3
 */
 TInt CSubConQosR99ParamSet::GetMaxBitrateUplink() const
     {
@@ -141,35 +188,50 @@ TInt CSubConQosR99ParamSet::GetMaxBitrateUplink() const
     }
 
 /** Getter function for the maximum downlink bit rate.
-@return the maximum downlink bit rate. */
+@return the maximum downlink bit rate. 
+@publishedAll
+@released Since 9.3
+*/
 TInt CSubConQosR99ParamSet::GetMaxBitrateDownlink() const
     {
     return iMaxBitrateDownlink;
     }
 
 /** Getter function for the guaranteed uplink bit rate.
-@return the guaranteed uplink bit rate. */
+@return the guaranteed uplink bit rate. 
+@publishedAll
+@released Since 9.3
+*/
 TInt CSubConQosR99ParamSet::GetGuaBitrateUplink() const
     {
     return iGuaBitrateUplink;
     }
 
 /** Getter function for the guaranteed downlink bit rate.
-@return the guaranteed downlink bit rate. */
+@return the guaranteed downlink bit rate. 
+@publishedAll
+@released Since 9.3
+*/
 TInt CSubConQosR99ParamSet::GetGuaBitrateDownlink() const
     {
     return iGuaBitrateDownlink;
     }
 
 /** Sets the traffic class.
-@param aTrafficClass Value to which to set the traffic class. */
+@param aTrafficClass Value to which to set the traffic class. 
+@publishedAll
+@released Since 9.3
+*/
 void CSubConQosR99ParamSet::SetTrafficClass(RPacketQoS::TTrafficClass aTrafficClass)
     {
     iTrafficClass = aTrafficClass;
     }
 
 /** Sets the delivery order. Indicates whether in-sequence SDU delivery shall be provided or not.
-@param aDeliveryOrder Value to which to set the delivery order. */
+@param aDeliveryOrder Value to which to set the delivery order. 
+@publishedAll
+@released Since 9.3
+*/
 void CSubConQosR99ParamSet::SetDeliveryOrder(RPacketQoS::TDeliveryOrder aDeliveryOrder)
     {
     iDeliveryOrder = aDeliveryOrder;
@@ -177,7 +239,10 @@ void CSubConQosR99ParamSet::SetDeliveryOrder(RPacketQoS::TDeliveryOrder aDeliver
 
 /** Sets the handling of the delivery of erroneous SDUs
 @param aDeliveryOfErroneusSdu Value to which to set the dilvery of erroneous SDUs.
-Indicates whether SUDs detected as erroneous shall be delivered or discarded. */
+Indicates whether SUDs detected as erroneous shall be delivered or discarded. 
+@publishedAll
+@released Since 9.3
+*/
 void CSubConQosR99ParamSet::SetErroneousSDUDelivery(RPacketQoS::TErroneousSDUDelivery aDeliveryOfErroneusSdu)
     {
     iDeliveryOfErroneusSdu = aDeliveryOfErroneusSdu;
@@ -185,7 +250,10 @@ void CSubConQosR99ParamSet::SetErroneousSDUDelivery(RPacketQoS::TErroneousSDUDel
 
 /** Sets the residual bit error ratio. Indicates the undetected bit error ratio in the delivered SDUs.
 If no error detection is requested, Residual bit error ratio indicates the bit error ratio in the delivered SDUs.
-@param aResidualBer Value to which to set the residual bit error ratio. */
+@param aResidualBer Value to which to set the residual bit error ratio. 
+@publishedAll
+@released Since 9.3
+*/
 void CSubConQosR99ParamSet::SetResidualBitErrorRatio(RPacketQoS::TBitErrorRatio aResidualBer)
     {
     iResidualBer = aResidualBer;
@@ -194,14 +262,20 @@ void CSubConQosR99ParamSet::SetResidualBitErrorRatio(RPacketQoS::TBitErrorRatio 
 /** Sets the error ratio. Indicates the fraction of SDUs lost or detected as erroneous.
 SDU error ratio is defined only for conforming traffic.
 @param aErrorRatio Sets the error ratio. Indicates the fraction of SDUs lost or detected as erroneous.
-SDU error ratio is defined only for conforming traffic. */
+SDU error ratio is defined only for conforming traffic. 
+@publishedAll
+@released Since 9.3
+*/
 void CSubConQosR99ParamSet::SetSDUErrorRatio(RPacketQoS::TSDUErrorRatio aErrorRatio)
     {
     iErrorRatio = aErrorRatio;
     }
 
 /** Sets the traffic handling priority.
-@param aPriority Value to which to set the traffic handling priority. */
+@param aPriority Value to which to set the traffic handling priority. 
+@publishedAll
+@released Since 9.3
+*/
 void CSubConQosR99ParamSet::SetTrafficHandlingPriority(RPacketQoS::TTrafficHandlingPriority aPriority)
     {
     iPriority = aPriority;
@@ -210,14 +284,20 @@ void CSubConQosR99ParamSet::SetTrafficHandlingPriority(RPacketQoS::TTrafficHandl
 /** Sets the transfer delay. Indicates maximum delay for 95th percentile of the distribution of delay for
 all delivered SDUs during the lifetime of a bearer service, where delay for an SDU is defined as the time
 from a request to transfer an SDU at one SAP to its delivery at the other SAP.
-@param aTransferDelay Value to which to set the transfer delay. */
+@param aTransferDelay Value to which to set the transfer delay. 
+@publishedAll
+@released Since 9.3
+*/
 void CSubConQosR99ParamSet::SetTransferDelay(TInt aTransferDelay)
     {
     iTransferDelay = aTransferDelay;
     }
 
 /** Sets the maximum SDU size. Defines the maximum allowed SDU size.
-@param aMaxSduSize Value to which to set the maximum SDU size. */
+@param aMaxSduSize Value to which to set the maximum SDU size. 
+@publishedAll
+@released Since 9.3
+*/
 void CSubConQosR99ParamSet::SetMaxSduSize(TInt aMaxSduSize)
     {
     iMaxSduSize = aMaxSduSize;
@@ -227,6 +307,8 @@ void CSubConQosR99ParamSet::SetMaxSduSize(TInt aMaxSduSize)
 long as it follows a token bucket algorithm where token rate equals Maximum bitrate and bucket size
 equals Maximum SDU size.
 @param aMaxBitrate Value to which to set the maximum bitrate for uplink direction.
+@publishedAll
+@released Since 9.3
 */
 void CSubConQosR99ParamSet::SetMaxBitrateUplink(TInt aMaxBitrateUplink)
     {
@@ -237,6 +319,8 @@ void CSubConQosR99ParamSet::SetMaxBitrateUplink(TInt aMaxBitrateUplink)
 long as it follows a token bucket algorithm where token rate equals Maximum bitrate and bucket size
 equals Maximum SDU size.
 @param aMaxBitrate Value to which to set the maximum bitrate for downlink direction.
+@publishedAll
+@released Since 9.3
 */
 void CSubConQosR99ParamSet::SetMaxBitrateDownlink(TInt aMaxBitrateDownlink)
     {
@@ -245,6 +329,8 @@ void CSubConQosR99ParamSet::SetMaxBitrateDownlink(TInt aMaxBitrateDownlink)
 
 /** Sets the guaranteed bitrate for uplink direction.
 @param aGuaBitrateUplink Value to which to set the guaranteed SDU size.
+@publishedAll
+@released Since 9.3
 */
 void CSubConQosR99ParamSet::SetGuaBitrateUplink(TInt aGuaBitrateUplink)
     {
@@ -253,6 +339,8 @@ void CSubConQosR99ParamSet::SetGuaBitrateUplink(TInt aGuaBitrateUplink)
 
 /** Sets the guaranteed bitrate for downlink direction.
 @param aGuaBitrateDownlink Value to which to set the guaranteed SDU size.
+@publishedAll
+@released Since 9.3
 */
 void CSubConQosR99ParamSet::SetGuaBitrateDownlink(TInt aGuaBitrateDownlink)
     {
@@ -262,7 +350,7 @@ void CSubConQosR99ParamSet::SetGuaBitrateDownlink(TInt aGuaBitrateDownlink)
 
 #ifdef SYMBIAN_NETWORKING_UMTSR5
 /**
-@param aFamily the sub-connection parameter set family to which the newly created object it to be added.
+@param aFamily the sub-connection parameter family to which the newly created object is to be added
 @param aType The type of the set from TParameterSetType (ERequested, EAcceptable or EGranted)
 @return pointer to the created object
 */
@@ -276,11 +364,25 @@ CSubConImsExtParamSet* CSubConImsExtParamSet::NewL(CSubConParameterFamily& aFami
     }
 
 /**
+@param      aFamily the parameter family to which the newly created object is to be added
+@param      aType The type of the set from TParameterSetType (ERequested, EAcceptable or EGranted)
+@return     pointer to the created object
+*/
+CSubConImsExtParamSet* CSubConImsExtParamSet::NewL(RParameterFamily& aFamily, RParameterFamily::TParameterSetType aType)
+    {
+    CSubConImsExtParamSet* obj = NewL();
+    CleanupStack::PushL(obj);
+    aFamily.AddParameterSetL(obj, aType);
+    CleanupStack::Pop(obj);
+    return obj;
+    }
+
+/**
 @return pointer to the created object
 */
 CSubConImsExtParamSet* CSubConImsExtParamSet::NewL()
     {
-    STypeId typeId(KSubCon3GPPExtParamsFactoryUid, KSubConImsExtParamsType);
+    STypeId typeId = STypeId::CreateSTypeId(KSubCon3GPPExtParamsFactoryUid, KSubConImsExtParamsType);
     return static_cast<CSubConImsExtParamSet*>(CSubConParameterSet::NewL(typeId));
     }
 
@@ -304,7 +406,7 @@ void CSubConImsExtParamSet::SetImsSignallingIndicator(TBool aImsSignallingIndica
     }
 
 /**
-@param      aFamily the sub-connection parameter to which the newly created object is to be added
+@param      aFamily the sub-connection parameter family to which the newly created object is to be added
 @param      aType The type of the set from TParameterSetType (ERequested, EAcceptable or EGranted)
 @return     pointer to the created object
 */
@@ -318,11 +420,25 @@ CSubConQosR5ParamSet* CSubConQosR5ParamSet::NewL(CSubConParameterFamily& aFamily
     }
 
 /**
+@param      aFamily the parameter family to which the newly created object is to be added
+@param      aType The type of the set from TParameterSetType (ERequested, EAcceptable or EGranted)
+@return     pointer to the created object
+*/
+CSubConQosR5ParamSet* CSubConQosR5ParamSet::NewL(RParameterFamily& aFamily, RParameterFamily::TParameterSetType aType)
+    {
+    CSubConQosR5ParamSet* obj = NewL();
+    CleanupStack::PushL(obj);
+    aFamily.AddParameterSetL(obj, aType);
+    CleanupStack::Pop(obj);
+    return obj;
+    }
+
+/**
 @return     pointer to the created object
 */
 CSubConQosR5ParamSet* CSubConQosR5ParamSet::NewL()
     {
-    STypeId typeId(KSubCon3GPPExtParamsFactoryUid, KSubConQosR5ParamsType);
+    STypeId typeId = STypeId::CreateSTypeId(KSubCon3GPPExtParamsFactoryUid, KSubConQosR5ParamsType);
     return static_cast<CSubConQosR5ParamSet*>(CSubConParameterSet::NewL(typeId));
     }
 
@@ -375,6 +491,8 @@ void CSubConQosR5ParamSet::SetSourceStatisticsDescriptor(RPacketQoS::TSourceStat
 
 /** the Media Component number as specified in 3GPP TS 29.207
 @return the media component number portion of the flow identifier
+@publishedAll
+@released Since 9.3
 */
 TUint16 TFlowId::GetMediaComponentNumber() const
     {
@@ -383,6 +501,8 @@ TUint16 TFlowId::GetMediaComponentNumber() const
 
 /** the IP flow number as specified in 3GPP TS 29.207
 @return the IP flow portion of the flow identifier
+@publishedAll
+@released Since 9.3
 */
 TUint16 TFlowId::GetIPFlowNumber() const
     {
@@ -391,6 +511,8 @@ TUint16 TFlowId::GetIPFlowNumber() const
 
 /** Sets the media component number portion of the flow identifier. The Media Component number is specified in 3GPP TS 29.207
 @param aMediaComponentNumber the media component portion of the flow identifier
+@publishedAll
+@released Since 9.3
 */
 void TFlowId::SetMediaComponentNumber(TUint16 aMediaComponentNumber)
     {
@@ -399,6 +521,8 @@ void TFlowId::SetMediaComponentNumber(TUint16 aMediaComponentNumber)
 
 /**
 @param the IP flow portion of the flow identifier.
+@publishedAll
+@released Since 9.3
 */
 void TFlowId::SetIPFlowNumber(TUint16 aIPFlowNumber)
     {
@@ -408,20 +532,30 @@ void TFlowId::SetIPFlowNumber(TUint16 aIPFlowNumber)
 
 //===========================
 // Implementation Extension class
+/**
+@publishedAll
+@released Since 9.3
+*/
 CSubConSBLPR5ExtensionParamSet::CSubConSBLPR5ExtensionParamSet()
     : CSubConExtensionParameterSet()
     {
     }
 
+/**
+@publishedAll
+@released Since 9.3
+*/
 CSubConSBLPR5ExtensionParamSet::~CSubConSBLPR5ExtensionParamSet()
     {
     iFlowIds.Close();
     }
 
 /**
-@param      aFamily the sub-connection parameter set family that this extension parameter set will be added to.
+@param      aFamily the sub-connection parameter family to which the newly created object is to be added
 @param      aType The type of the set from TParameterSetType (ERequested, EAcceptable or EGranted)
 @return     pointer to the created object
+@publishedAll
+@released Since 9.3
 */
 CSubConSBLPR5ExtensionParamSet* CSubConSBLPR5ExtensionParamSet::NewL(CSubConParameterFamily& aFamily, CSubConParameterFamily::TParameterSetType aType)
     {
@@ -433,16 +567,36 @@ CSubConSBLPR5ExtensionParamSet* CSubConSBLPR5ExtensionParamSet::NewL(CSubConPara
     }
 
 /**
+@param      aFamily the parameter family to which the newly created object is to be added
+@param      aType The type of the set from TParameterSetType (ERequested, EAcceptable or EGranted)
 @return     pointer to the created object
+@publishedAll
+@released Since 9.3
+*/
+CSubConSBLPR5ExtensionParamSet* CSubConSBLPR5ExtensionParamSet::NewL(RParameterFamily& aFamily, RParameterFamily::TParameterSetType aType)
+    {
+    CSubConSBLPR5ExtensionParamSet* obj = NewL();
+    CleanupStack::PushL(obj);
+    aFamily.AddParameterSetL(obj, aType);
+    CleanupStack::Pop(obj);
+    return obj;
+    }
+
+/**
+@return     pointer to the created object
+@publishedAll
+@released Since 9.3
 */
 CSubConSBLPR5ExtensionParamSet* CSubConSBLPR5ExtensionParamSet::NewL()
     {
-    STypeId typeId (KSubCon3GPPExtParamsFactoryUid, KSubConnSBLPR5ExtensionParamsType);
+    STypeId typeId = STypeId::CreateSTypeId(KSubCon3GPPExtParamsFactoryUid, KSubConnSBLPR5ExtensionParamsType);
     return static_cast<CSubConSBLPR5ExtensionParamSet*>(CSubConParameterSet::NewL(typeId));
     }
 
 /**
 @return     the media authorisation token
+@publishedAll
+@released Since 9.3
 */
 const TAuthToken& CSubConSBLPR5ExtensionParamSet::GetMAT() const
     {
@@ -451,6 +605,8 @@ const TAuthToken& CSubConSBLPR5ExtensionParamSet::GetMAT() const
 
 /**
 @param      aAuthToken sets the media authorisation token
+@publishedAll
+@released Since 9.3
 */
 void CSubConSBLPR5ExtensionParamSet::SetMAT(const TAuthToken& aAuthToken)
     {
@@ -458,7 +614,9 @@ void CSubConSBLPR5ExtensionParamSet::SetMAT(const TAuthToken& aAuthToken)
     }
 
 /**
-@return     the number of flow indexes in this session
+@return the number of flow indexes in this session
+@publishedAll
+@released Since 9.3
 */
 TInt CSubConSBLPR5ExtensionParamSet::GetNumberOfFlowIds() const
     {
@@ -468,6 +626,8 @@ TInt CSubConSBLPR5ExtensionParamSet::GetNumberOfFlowIds() const
 /**
 @param      aIndex the index of the flow identifier that will be returned.
 @return     the flow identifier at the index given by aIndex.
+@publishedAll
+@released Since 9.3
 */
 const TFlowId& CSubConSBLPR5ExtensionParamSet::GetFlowIdAt(TInt aIndex) const
     {
@@ -476,6 +636,8 @@ const TFlowId& CSubConSBLPR5ExtensionParamSet::GetFlowIdAt(TInt aIndex) const
 
 /**         adds a flow identifier to this session.
 @param      aFlowId the flow indentifier to be added.
+@publishedAll
+@released Since 9.3
 */
 void CSubConSBLPR5ExtensionParamSet::AddFlowIdL(const TFlowId & aFlowId)
     {
@@ -484,3 +646,4 @@ void CSubConSBLPR5ExtensionParamSet::AddFlowIdL(const TFlowId & aFlowId)
 
 #endif
 // QOS3GPP_SUBCONPARAMS_INL
+

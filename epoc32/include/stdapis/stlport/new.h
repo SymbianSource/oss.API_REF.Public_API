@@ -25,7 +25,7 @@
 #  define _STLP_DONT_POP_0x848
 # endif
 
-# if (!(defined( _STLP_WINCE ) || defined (__SYMBIAN32__)) 
+# if (!(defined( _STLP_WINCE ) || defined (__SYMBIAN32__)))
 # if defined (__BORLANDC__)
 #  include <new.>
 # elif (__INTEL_COMPILER >= 800)

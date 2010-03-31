@@ -1,9 +1,9 @@
 // Copyright (c) 1999-2009 Nokia Corporation and/or its subsidiary(-ies).
 // All rights reserved.
 // This component and the accompanying materials are made available
-// under the terms of the License "Symbian Foundation License v1.0" to Symbian Foundation members and "Symbian Foundation End User License Agreement v1.0" to non-members
+// under the terms of "Eclipse Public License v1.0"
 // which accompanies this distribution, and is available
-// at the URL "http://www.symbianfoundation.org/legal/licencesv10.html".
+// at the URL "http://www.eclipse.org/legal/epl-v10.html".
 //
 // Initial Contributors:
 // Nokia Corporation - initial contribution.
@@ -139,7 +139,8 @@ private:
 
 struct TBTManClientServerMessage
 /**
-@internalComponent
+This is to only be used by phone manufacturers, not by application developers. 
+@publishedAll
 */
 	{
 public:
@@ -214,7 +215,10 @@ class RBTRegistry;
 NONSHARABLE_CLASS(CBTRegistryResponse) : public CActive
     /** Retrieves a set of results from the Registry.
 	 
-	This is a helper class that retrieves a set of results as a view from the registry.
+	This is a helper class that retrieves the set of results from a view set-up in the registry.
+	A view is set-up in the registry using RBTRegistry::CreateView.
+	
+	@see RBTRegistry
 	@publishedAll
 	@released
 	*/
@@ -263,6 +267,7 @@ public:
 	IMPORT_C void DeleteAllInView(TRequestStatus& aStatus);	// depends on client process capabilities
 	IMPORT_C void Close();
 	IMPORT_C TInt CloseView();
+	IMPORT_C void NotifyViewChange(TRequestStatus& aStatus);
 	
 
 	void PreLoad(TRequestStatus& aStatus);
@@ -307,6 +312,7 @@ private:
 
 /**
 UID of the PIN entry RNotifier plugin
+This is only to be used with notifiers.
 @publishedPartner
 @released
 */
@@ -314,16 +320,19 @@ const TUid KBTManPinNotifierUid={0x100069c9};
 
 /**
 UID of the authorisation RNotifier plugin
+This is only to be used with notifiers.
 @publishedPartner
 @released
 */
 const TUid KBTManAuthNotifierUid={0x100069cf};
 
 
+
 NONSHARABLE_CLASS(TBTNotifierUpdateParams)
 	/** Sends parameter updates to the notifier.
 	
 	Struct to allow us to send a device name to the Passkey Entry and Authorisation RNotifier plugins.
+	This is only to be used with notifiers.
 	@publishedPartner
 	@released
 	*/
@@ -337,7 +346,7 @@ public:
 
 NONSHARABLE_CLASS(TBTNotifierParams)
 	/** The device name parameter for the security notifier.
-	
+	This is only to be used with notifiers.	
 	@publishedPartner
 	@released
 	*/
@@ -351,7 +360,7 @@ public:
 	
 NONSHARABLE_CLASS(TBTAuthorisationParams) : public TBTNotifierParams
     /** Bluetooth authorisation parameters.
-	 
+	This is only to be used with notifiers.	 
 	Struct to allow us to send params from the security manager to the Authorisation RNotifier plugin.
 	@publishedPartner
 	@released
@@ -364,7 +373,7 @@ public:
 
 NONSHARABLE_CLASS(TBTPasskeyNotifierParams) : public TBTNotifierParams
 	/** The passkey parameter for the security notifier.
-	
+	This is only to be used with notifiers.	
 	@publishedPartner
 	@released
 	*/
@@ -376,11 +385,10 @@ public:
 	TBool iLocallyInitiated;		
 	};
 
-
+// These are only to be used with notifiers.
 typedef TPckgBuf<TBTNotifierUpdateParams> TBTNotifierUpdateParamsPckg; /*!< packagebuf of TBTNotifierUpdateParams*/
 typedef TPckgBuf<TBTNotifierParams> TBTNotifierParamsPckg; /*!< packagebuf of TBTNotifierParams*/
 typedef TPckgBuf<TBTAuthorisationParams> TBTAuthorisationParamsPckg; /*!< packagebuf of TBTAuthorisationParams*/
 typedef TPckgBuf<TBTPasskeyNotifierParams> TBTPasskeyNotifierParamsPckg; /*!< packagebuf of TBTPasskeyNotifierParams*/
-
 
 #endif

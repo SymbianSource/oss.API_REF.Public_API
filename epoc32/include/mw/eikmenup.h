@@ -2,9 +2,9 @@
 * Copyright (c) 1997-1999 Nokia Corporation and/or its subsidiary(-ies).
 * All rights reserved.
 * This component and the accompanying materials are made available
-* under the terms of the License "Symbian Foundation License v1.0" to Symbian Foundation members and "Symbian Foundation End User License Agreement v1.0" to non-members
+* under the terms of "Eclipse Public License v1.0"
 * which accompanies this distribution, and is available
-* at the URL "http://www.symbianfoundation.org/legal/licencesv10.html".
+* at the URL "http://www.eclipse.org/legal/epl-v10.html".
 *
 * Initial Contributors:
 * Nokia Corporation - initial contribution.
@@ -43,6 +43,8 @@ class CEikScrollBar;
 class TEikScrollBarModel;
 class CGulIcon;
 class CEikMenuPaneExtension ;
+class CEikCba;
+class CAknItemActionMenuData;
 
 // CONSTANTS
 const TInt KScaleableTextSeparator = 0x0001;
@@ -252,7 +254,7 @@ inline void CEikMenuPaneItem::CreateExtendedDataBlock()
 
 inline TBool CEikMenuPaneItem::IsScaleableText(const TDesC& aText) const
     {
-    return (aText.Locate(TChar(KScaleableTextSeparator)) == KErrNotFound ? EFalse : ETrue);
+    return aText.Locate( TChar( KScaleableTextSeparator ) ) != KErrNotFound;
     }
 
 
@@ -773,14 +775,7 @@ public: // new functions
      * Deletes dimmed items from the menu item array.
      */
     void FilterDimmedItems();
-    
-    /**
-     * Not implemented.
-     *
-     * @param aWidth Not used.
-     */
-    void ClipMenuItems(TInt aWidth);
-    
+
     /**
      * Gets the menu pane for the cascade menu.
      *
@@ -797,15 +792,7 @@ public: // new functions
      * @leave  KErrArgument Wrong @aItemIndex.
      */
     IMPORT_C CEikMenuPaneItem::SData& ItemDataByIndexL(TInt aItemIndex);
-    
-    /**
-     * Checks if the position of the menu was set from outside.
-     *
-     * @since S60 3.1
-     * @return @c ETrue in case when position of the menu was set from outside.
-     */
-    TBool IsPositionToBeForced() const;
-    
+
     /**
      * Creates and enables a special characters row to be used in the edit 
      * menu.
@@ -824,7 +811,6 @@ public: // new functions
      */
     IMPORT_C TInt MenuItemCommandId( TInt aIndex ) const;
 
-    
     /**
      * Creates and enables a special characters row to be used in the edit menu.
      * The special character row is constructed from the given special character table.
@@ -863,17 +849,89 @@ public: // new functions
      */
     IMPORT_C void ConstructMenuSctRowFromDialogL( TInt aCharCase, TDes& aSpecialChars, TInt aResourceId );
 
+    /**
+     * Sets menu item as item specific command.
+     * 
+     * @param aCommandId The command associated with this menu item.
+     * @param aItemSpecific ETrue to define the menu item item specific,
+     * EFalse otherwise.
+     */
+    IMPORT_C void SetItemSpecific( TInt aCommandId, TBool aItemSpecific );
+
+    /**
+     * Sets the embedded cba to options menu
+     *
+     * @param aCba Cba to embed to menu
+     * 
+     * @since S60 v5.2
+     */
+    void SetEmbeddedCba( CEikCba* aCba );
+
+    /**
+     * Closes and destroys any current cascade menu and takes focus back. Does
+     * nothing if no cascade menu exists.
+     * 
+     * @param aMainMenuClosing ETrue if main menu is also to be closed.
+     */
+    void CloseCascadeMenu( TBool aMainMenuClosing );
+
+    /**
+     * Symbian two-phased constructor for menu panes that are created for
+     * item specific menus.
+     * 
+     * @internal
+     * @since S60 v5.2
+     * @return Created menu pane. Ownership transfers to caller.
+     */
+    static CEikMenuPane* NewItemCommandMenuL( MEikMenuObserver* aObserver );
+
+    /**
+     * Sets item specific commands dimmed.
+     * 
+     * @internal
+     * @since S60 v5.2
+     */
+    void SetItemCommandsDimmed();
+
+    /**
+     * Adds menu items to this menu and item action menu data. 
+     * 
+     * @internal
+     * @since S60 v5.2
+     * @param aMenuData Item action menu data.
+     */
+    void AddMenuItemsToItemActionMenuL(
+            CAknItemActionMenuData& aMenuData );
+
+    /**
+     * Adds cascade menu items to item action menu data.
+     * 
+     * @internal
+     * @since S60 v5.2
+     * @param aCascadeId Cascade menu id.
+     * @param aItemSpecific If ETrue, adds only item specific items.
+     * @param aMenuData Item action menu data.
+     */
+    void AddCascadeMenuItemsToActionMenuL(
+            TInt aCascadeId,
+            TBool aItemSpecific,
+            CAknItemActionMenuData& aMenuData );
+    
+    /**
+     * Enables the default highlight in menu
+     */
+    void SetDefaultHighlight();
+    
 private:
     enum { EInvalidCurrentSize=0x01, EBackgroundFaded=0x02 };
     
 private: // new functions
     TRect CalculateSizeAndPosition() ;
     enum THighlightType {ENoHighlight,EDrawHighlight,ERemoveHighlight};
+    void DrawItem( TInt aItem, THighlightType aHighlight ) const;
     void DrawItem(CWindowGc& aGc,TInt aItem, THighlightType aHighlight) const;
-    void FindHotKeyDisplayText(TDes& aDes,const CEikMenuPaneItem& aItem) const;
     void ReportSelectionMadeL( TBool aAbortTransition = ETrue );
     void ReportCanceled();
-    void GiveVisualFeedback();
     void LaunchCascadeMenuL(TInt aCascadeMenuId);
     void DoLaunchCascadeMenuL(TInt aCascadeMenuId);
     void TryLaunchCascadeMenuL(const CEikMenuPaneItem& aItem);
@@ -888,7 +946,6 @@ private: // new functions
     void UpdateScrollBarThumbs();
     static TInt UpdateScrollBarCallBackL(TAny* aObj);
     TRect ViewRect() const;
-//    TInt NumberOfItemsThatFitInView() const;
     TInt TotalItemHeight() const;
     void ScrollToMakeItemVisible(TInt aItemIndex);
     void Scroll(TInt aAmount);
@@ -896,18 +953,7 @@ private: // new functions
     void CheckCreateScrollerL();
     void ResetItemArray();
     void CreateItemArrayL();
-    void SetVScrollBarFlag();
-    TInt TopHighlightGap() const;
-    TInt BottomHighlightGap() const;
-    TInt EvaluateMaxIconWidth() const;
     void CreateIconFromResourceL(TResourceReader& aReader, CEikMenuPaneItem& aItem) const;
-    // new for AVKON
-    void AnimateMenuPane(const TPoint& aNewPos);
-
-    // To make layout correct
-    TRect ListMenuPane() const;
-    TRect PopupMenuWindow() const;
-    TRect PopupSubmenuWindow() const;
 
     // Skin support for menu
     void UpdateBackgroundContext(const TRect& aWindowRect);
@@ -938,9 +984,28 @@ private : // new functions
 
     // fixes marquee flickering
     friend class CAknMarqueeControl;
-    static TInt RedrawMarqueeEvent( TAny* aControl );
     
     CEikMenuPaneExtension* Extension() const;
+    
+    /**
+     * Creates menu pane's extension object if it doesn't exist yet.
+     */
+    void CheckCreateExtensionL();
+    
+    /**
+     * Calculates the rectangle occupied by an item.
+	 *
+	 * @param aItemIndex Item's index.
+	 * @return Item's rectangle.
+     */
+    TRect ItemRect( TInt aItemIndex ) const;
+    
+    /**
+     * Calculates the height of menu items.
+	 *
+	 * @return Item height.
+     */
+    TInt CalculateItemHeight() const;
 
 protected: // from CoeControl
 
@@ -978,7 +1043,7 @@ public: // From CoeControl.
     /**
      * From @c CoeControl.
      *
-     * Gets the specified component of a compound control. This function should´
+     * Gets the specified component of a compound control. This function should?
      * be implemented by all compound controls.
      *
      * Note:
@@ -992,33 +1057,13 @@ public: // From CoeControl.
     IMPORT_C CCoeControl* ComponentControl(TInt aIndex) const;
     
 protected: // new functions
-    
-    /**
-     * Disables sliding effect
-     * By default is enabled if there is enough memory.
-     *
-     * @since 3.1
-     */
-    void DisableAnimation();
-    
-    /**
-     * The position of the menu will be changed according to the one 
-     * which is specified by arguments in StartDisplayingMenuPane()
-     * By default those arguments are not used.
-     *
-     * @since 3.1
-     * @param aForced @c Etrue if arguments are used.
-     */
-    void SetPositionToBeForced(TBool aForced);
-    
+
     /**
      * Gets the maximum number of items which can be seen simultaneously.
      *
      * @return The maximum number of items which can be seen simultaneously.
      */
     TInt NumberOfItemsThatFitInView() const;
-    
-    void DrawNow();    
     
 private: // data
     friend class CEikMenuButton;
@@ -1041,8 +1086,8 @@ private: // data
     CMenuScroller* iScroller;
     CEikButtonBase* iLaunchingButton; // for popouts only
     TInt iSubPopupWidth; // 0..2
-    TBool iEnableAnimation;
-    CEikMenuPaneExtension* iExtension ;  // iSpare used for extension class pointer.
+    TInt iSpare;
+    CEikMenuPaneExtension* iExtension;
 
     };
 

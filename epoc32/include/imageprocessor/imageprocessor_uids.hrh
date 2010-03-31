@@ -1,0 +1,118 @@
+// Copyright (c) 2008-2009 Nokia Corporation and/or its subsidiary(-ies).
+// All rights reserved.
+// This component and the accompanying materials are made available
+// under the terms of "Eclipse Public License v1.0"
+// which accompanies this distribution, and is available
+// at the URL "http://www.eclipse.org/legal/epl-v10.html".
+//
+// Initial Contributors:
+// Nokia Corporation - initial contribution.
+//
+// Contributors:
+//
+// Description:
+//
+
+/**
+ @file
+ @publishedAll 
+ @released 
+*/
+
+#ifndef IMAGEPROCESSOR_UIDS_HRH
+#define IMAGEPROCESSOR_UIDS_HRH
+
+
+/** @publishedAll 
+DLL UID for ImageProcessor::CImgProcessor framework */
+#define KImageProcessorDllUidValue 0x10285E2A
+
+/** @publishedAll */
+#define KImageProcessorBasePluginDllUidValue 0x10285E2B
+
+/** 
+@publishedAll
+@released
+ECOM interface UID for ImageProcessor::CImgProcessor plugins
+ */
+#define KImageProcessorPluginInterfaceUidValue 0x10285E2C
+
+/** 
+@publishedAll
+@released
+ECOM interface UID for extension interface MImgProcessorPluginPanoramaInput
+ */
+#define KImageProcessorExtensionPanoramaInputUidValue  0x1028668A
+
+
+/** @publishedAll */
+#define KImageProcessorBasePluginUidValue 0x10285E2D
+
+//Effects Uid values
+#define KEffectSepiaUidValue 0x10285E2E
+#define KEffectGrayscaleUidValue 0x10285E2F
+#define KEffectNegativeUidValue 0x10285E30
+#define KEffectGrayscaleNegativeUidValue 0x10285E31
+#define KEffectOilyUidValue 0x10285E32
+#define KEffectPaintUidValue 0x10285E33
+#define KEffectMilkyUidValue 0x10285E34
+#define KEffectFogUidValue 0x10285E35
+
+#define KEffectMirrorLeftToRightUidValue 0x10285E36
+#define KEffectMagicPenUidValue 0x10285E37
+#define KEffectBrightnessUidValue 0x10285E38
+#define KEffectSharpnessUidValue 0x10285E39
+#define KEffectRotationUidValue 0x10285E3A
+#define KEffectContrastUidValue 0x10285E3B
+#define KEffectRgbColorAdjustUidValue 0x10285E3C
+#define KEffectEmbossUidValue 0x10285E3D
+#define KEffectSolarizeUidValue 0x10285E3E
+#define KEffectPosterizeUidValue 0x10285E3F
+#define KEffectStampUidValue 0x10285E40
+#define KEffectSketchUidValue 0x10285E41
+#define KEffectNoiseUidValue 0x10285E42
+#define KEffectMoonlightUidValue 0x10285E43
+#define KEffectFrostedGlassUidValue 0x10285E44
+#define KEffectDespeckleUidValue 0x10285E45
+#define KEffectBlurUidValue 0x10285E46
+#define KEffectColorizationUidValue 0x10285E47
+#define KEffectCartoonUidValue 0x10285E48
+		
+#define KEffectLocalBoostUidValue 0x10285E49
+#define KEffectColorBoostUidValue 0x10285E4A
+#define KEffectWhiteBalanceUidValue 0x10285E4B
+#define KEffectAutoLevelsUidValue 0x10285E4C
+#define KEffectLevelsUidValue 0x10285E4D
+#define KEffectExposureUidValue 0x10285E4E
+#define KEffectSpotLightUidValue 0x10285E4F
+#define KEffectCustomTransformationUidValue 0x10285E50
+#define KEffectAntiqueUidValue 0x10285E51
+	
+//Others
+#define KGeometricalOperationUidValue 0x10285E52
+#define KEffectBorderUidValue 0x10285E53
+
+/** @publishedAll */
+#define KCapsImageProcessorExtensionUidValue 0x10285E54
+
+/** @publishedAll */
+#define KCapsSpmoUtilityDllUidValue 0x10285E55
+
+/** @publishedAll */
+#define KCapsWrapperDllUidValue 0x10285E56
+
+/** @publishedAll */
+#define KCapsImageProcessorExtensionDllUidValue 0x10285E57
+
+/** @publishedAll */
+#define KImageProcessorPluginDllUidValue 0x10285E65
+/** @publishedAll */
+#define KImageProcessorPluginUidValue 0x10285E66 
+
+/** @publishedAll */
+#define KCapsWrapperBaseDllUidValue 0x10285E67
+
+/** @internalTechnology */
+#define KCapsExtensionCapsSessionUidValue 0x10286618
+
+#endif // IMAGEPROCESSOR_UIDS_HRH

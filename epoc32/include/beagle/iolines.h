@@ -1,9 +1,9 @@
 // Copyright (c) 1998-2009 Nokia Corporation and/or its subsidiary(-ies).
 // All rights reserved.
 // This component and the accompanying materials are made available
-// under the terms of the License "Symbian Foundation License v1.0" to Symbian Foundation members and "Symbian Foundation End User License Agreement v1.0" to non-members
+// under the terms of the License "Eclipse Public License v1.0"
 // which accompanies this distribution, and is available
-// at the URL "http://www.symbianfoundation.org/legal/licencesv10.html".
+// at the URL "http://www.eclipse.org/legal/epl-v10.html".
 //
 // Initial Contributors:
 // Nokia Corporation - initial contribution.
@@ -11,9 +11,8 @@
 // Contributors:
 //
 // Description:
-// template\template_variant\inc\iolines.h
-// Variant layer header for Template Platform
-// 
+// omap3530/beagleboard/inc/iolines.h
+// Variant layer header for Beagle Platform
 //
 
 
@@ -22,6 +21,7 @@
 #define __V32TEMPLATEV1_H__
 #include <e32cmn.h>
 #include <kpower.h>
+#include <assp/omap3530_assp/omap3530_assp_priv.h>
 
 //----------------------------------------------------------------------------
 // Variant-specific constants: use #define if constant dependencies are not
@@ -63,30 +63,10 @@ const TUint32 KHoIntContPending			=	0x04;
 // other Variant and external blocks Base adrress offsets to KHwVariantPhysBase
 
 
-// TO DO: (optional)
-//
-// Enumerate here all Variant (2nd level)  interrupt sources. It could be a good idea to enumerate them in a way that 
-// facilitates operating on the corresponding interrupt controller registers (e.g using their value as a shift count)
-//
-//   (EXAMPLE ONLY:)
-enum TTemplateInterruptId
-	{
-	// the top-level bit is set to distinguish from first level (ASSP) Interrupts
-	EXIntIdA=0x80000000,
-	EXIntIdB=0x80000001,
-	// ...
-	EXIntIdZ=0x80000019,
+const TInt KIntIdKeyboard=0; 
 
-	ENumXInts=0x1A
-	};
 
-//
-// TO DO: (optional)
-//
-// Define here some commonly used Variant (2nd level) interrupts
-//
-//   (EXAMPLE ONLY:)
-const TInt KIntIdKeyboard=EXIntIdB;
+class GpioPin;
 
 class Variant
     {
@@ -123,6 +103,10 @@ public:
 	// other functions to access hardware not covered by specific device-drivres, which may be called from drivers
 	// or platform-specifc code
 	// ...
+	IMPORT_C static TInt SetGPIOPin(TInt aId,GpioPin *aPin);
+	IMPORT_C static TInt GetGPIOPin(TInt aId,GpioPin * aPin);
+	IMPORT_C static TInt GetMsTickPeriod();
+	
 public:
 	static TUint32 iBaseAddress;
 	// (optional): May need to have a follower variable to store the value of a read only register initialised at boot time
@@ -130,3 +114,4 @@ public:
     };
 
 #endif
+

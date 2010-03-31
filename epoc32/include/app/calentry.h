@@ -1,9 +1,9 @@
 // Copyright (c) 2005-2009 Nokia Corporation and/or its subsidiary(-ies).
 // All rights reserved.
 // This component and the accompanying materials are made available
-// under the terms of the License "Symbian Foundation License v1.0" to Symbian Foundation members and "Symbian Foundation End User License Agreement v1.0" to non-members
+// under the terms of "Eclipse Public License v1.0"
 // which accompanies this distribution, and is available
-// at the URL "http://www.symbianfoundation.org/legal/licencesv10.html".
+// at the URL "http://www.eclipse.org/legal/epl-v10.html".
 //
 // Initial Contributors:
 // Nokia Corporation - initial contribution.
@@ -18,11 +18,41 @@
 
 #include <calcommon.h>
 
+/** Minimum latitude in degrees.
+@see CCalGeoValue::SetLatLongL
+@publishedAll
+@released
+*/
 const TReal KCalGEOMinLatitude = -90;
+
+/** Maximum latitude in degrees.
+@see CCalGeoValue::SetLatLongL
+@publishedAll
+@released
+*/
 const TReal KCalGEOMaxLatitude  = 90;
+
+/** Minimum longitude in degrees.
+@see CCalGeoValue::SetLatLongL
+@publishedAll
+@released
+*/
 const TReal KCalGEOMinLongitude = -180;
+
+/** Maximum longitude in degrees.
+@see CCalGeoValue::SetLatLongL
+@publishedAll
+@released
+*/
 const TReal KCalGEOMaxLongitude  = 180;
 
+/** Maximum number of decimal places for longitude and latitude values.
+The position specified to CCalGeoValue::SetLatLongL will be truncated 
+to KGEOMaxDecimalPoint decimal places
+@see CCalGeoValue::SetLatLongL
+@publishedAll
+@released
+*/
 const TUint KCalGEOMaxDecimalPlaces = 6;
 
 class CCalAlarm;
@@ -164,7 +194,7 @@ public:
 	is transparent and doesn't block time. Any higher values have an implementation-specific meaning.
 	In the iCalendar specification (RFC 2445), the TRANSP property can be either OPAQUE (blocks time) or TRANSPARENT (doesn't block time).
 	@publishedPartner
-	@prototype
+	@released
 	*/
 	enum TTransp
 		{
@@ -283,18 +313,17 @@ public:
 	IMPORT_C void SetGeoValueL(const CCalGeoValue& aGeoValue);
 	IMPORT_C void ClearGeoValueL();
 
-	// Internal APIs (Used by Java)
 	IMPORT_C TCalTime NextInstanceForLocalUIDL(const TCalTime& aTime) const;
 	IMPORT_C TCalTime PreviousInstanceForLocalUIDL(const TCalTime& aTime) const;
-	
-	IMPORT_C TCalTime FindRptUntilTimeL(TInt aCount);
 
-	
+	IMPORT_C TCalTime FindRptUntilTimeL(TInt aCount);
+    
 public:
 	// Internal APIs
 	static CCalEntry* NewL(CCalEntryImpl* aImpl);
 	CCalEntryImpl* Impl() const;
-	
+	TUint8 ShortFileIdL();
+
 private:
 	void ConstructL(TType aType, HBufC8* aUid, TMethod aMethod, TUint aSeqNum, const TCalTime& aRecurrenceId, CalCommon::TRecurrenceRange aRange);
 	void ConstructL(TType aType, HBufC8* aUid, TMethod aMethod, TUint aSeqNum);
@@ -329,8 +358,8 @@ private:
 
 /** Class representing the geographical location of a calendar entry.
 This corresponds to the GEO property as defined in vCalendar / iCalendar (RFC 2445). It contains a latitude and a longitude.
-@publishedPartner
-@prototype
+@publishedAll
+@released
 */
 NONSHARABLE_CLASS(CCalGeoValue) : public CBase
 	{
@@ -347,3 +376,4 @@ private:
 	};
 
 #endif // __CALENTRY_H__
+

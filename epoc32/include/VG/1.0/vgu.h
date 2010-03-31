@@ -1,9 +1,9 @@
 /*------------------------------------------------------------------------
- * 
- * VGU 1.1 Reference Implementation
+ *
+ * OpenVG 1.0.1 Reference Implementation
  * -------------------------------------
  *
- * Copyright (c) 2008 The Khronos Group Inc.
+ * Copyright (c) 2007-2009 The Khronos Group Inc.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a
  * copy of this software and /or associated documentation files
@@ -26,11 +26,11 @@
  *
  *//**
  * \file
- * \brief	VGU 1.1 API.
+ * \brief	OpenVG VGU 1.0.1 API.
  *//*-------------------------------------------------------------------*/
 
-#ifndef __VG_1_1_VGU_H
-#define __VG_1_1_VGU_H
+#ifndef __VG_1_0_VGU_H
+#define __VG_1_0_VGU_H
 
 #ifndef __VG_VGU_H_
 #error Do not include this file directly. Use <VG/vgu.h>.
@@ -50,23 +50,22 @@
 @publishedAll
 @released
 */
-#ifdef __cplusplus
-extern "C" {
+
+#ifdef __cplusplus 
+extern "C" { 
 #endif
 
 #include <VG/openvg.h>
 
-#define VGU_VERSION_1_0 1
-#define VGU_VERSION_1_1 2
+#define VGU_VERSION_1_0		1
+#define VGU_VERSION_1_0_1	1
 
 #ifndef VGU_API_CALL
-#define VGU_API_CALL IMPORT_C
-#endif
-#ifndef VGU_APIENTRY
-#define VGU_APIENTRY /* nothing */
-#endif
-#ifndef VGU_APIEXIT
-#define VGU_APIEXIT __SOFTFP
+#   if defined(SYMBIAN_VG_DLL_EXPORTS)
+#       define VGU_API_CALL EXPORT_C
+#   else
+#       define VGU_API_CALL IMPORT_C
+#   endif //defined(SYMBIAN_VG_DLL_EXPORTS)
 #endif
 
 typedef enum {
@@ -84,71 +83,57 @@ typedef enum {
   VGU_ARC_PIE                                  = 0xF102
 } VGUArcType;
 
-VGU_API_CALL VGUErrorCode VGU_APIENTRY
-     vguLine(VGPath path,
-        VGfloat x0, VGfloat y0,
-        VGfloat x1, VGfloat y1) VGU_APIEXIT;
+VGU_API_CALL VGUErrorCode vguLine(VGPath path,
+                                  VGfloat x0, VGfloat y0,
+                                  VGfloat x1, VGfloat y1) __SOFTFP;
 
-VGU_API_CALL VGUErrorCode VGU_APIENTRY
-     vguPolygon(VGPath path,
-        const VGfloat * points,
-        VGint count,
-        VGboolean closed) VGU_APIEXIT;
+VGU_API_CALL VGUErrorCode vguPolygon(VGPath path,
+                                     const VGfloat * points, VGint count,
+                                     VGboolean closed);
 
-VGU_API_CALL VGUErrorCode VGU_APIENTRY
-     vguRect(VGPath path,
-        VGfloat x, VGfloat y,
-        VGfloat width, VGfloat height) VGU_APIEXIT;
+VGU_API_CALL VGUErrorCode vguRect(VGPath path,
+                                  VGfloat x, VGfloat y,
+                                  VGfloat width, VGfloat height) __SOFTFP;
 
-VGU_API_CALL VGUErrorCode VGU_APIENTRY
-     vguRoundRect(VGPath path,
-        VGfloat x, VGfloat y,
-        VGfloat width,
-        VGfloat height,
-        VGfloat arcWidth,
-        VGfloat arcHeight) VGU_APIEXIT;
+VGU_API_CALL VGUErrorCode vguRoundRect(VGPath path,
+                                       VGfloat x, VGfloat y,
+                                       VGfloat width, VGfloat height,
+                                       VGfloat arcWidth, VGfloat arcHeight) __SOFTFP;
 
-VGU_API_CALL VGUErrorCode VGU_APIENTRY
-     vguEllipse(VGPath path,
-        VGfloat cx, VGfloat cy,
-        VGfloat width,
-        VGfloat height) VGU_APIEXIT;
+VGU_API_CALL VGUErrorCode vguEllipse(VGPath path,
+                                     VGfloat cx, VGfloat cy,
+                                     VGfloat width, VGfloat height) __SOFTFP;
 
-VGU_API_CALL VGUErrorCode VGU_APIENTRY
-     vguArc(VGPath path,
-        VGfloat x, VGfloat y,
-        VGfloat width, VGfloat height,
-        VGfloat startAngle,
-        VGfloat angleExtent,
-        VGUArcType arcType) VGU_APIEXIT;
+VGU_API_CALL VGUErrorCode vguArc(VGPath path,
+                                 VGfloat x, VGfloat y,
+                                 VGfloat width, VGfloat height,
+                                 VGfloat startAngle, VGfloat angleExtent,
+                                 VGUArcType arcType) __SOFTFP;
 
-VGU_API_CALL VGUErrorCode VGU_APIENTRY
-    vguComputeWarpQuadToSquare(VGfloat sx0, VGfloat sy0,
-        VGfloat sx1, VGfloat sy1,
-        VGfloat sx2, VGfloat sy2,
-        VGfloat sx3, VGfloat sy3,
-        VGfloat * matrix) VGU_APIEXIT;
+VGU_API_CALL VGUErrorCode vguComputeWarpQuadToSquare(VGfloat sx0, VGfloat sy0,
+                                                     VGfloat sx1, VGfloat sy1,
+                                                     VGfloat sx2, VGfloat sy2,
+                                                     VGfloat sx3, VGfloat sy3,
+                                                     VGfloat * matrix) __SOFTFP;
 
-VGU_API_CALL VGUErrorCode VGU_APIENTRY
-    vguComputeWarpSquareToQuad(VGfloat dx0, VGfloat dy0,
-        VGfloat dx1, VGfloat dy1,
-        VGfloat dx2, VGfloat dy2,
-        VGfloat dx3, VGfloat dy3,
-        VGfloat * matrix) VGU_APIEXIT;
+VGU_API_CALL VGUErrorCode vguComputeWarpSquareToQuad(VGfloat dx0, VGfloat dy0,
+                                                     VGfloat dx1, VGfloat dy1,
+                                                     VGfloat dx2, VGfloat dy2,
+                                                     VGfloat dx3, VGfloat dy3,
+                                                     VGfloat * matrix) __SOFTFP;
 
-VGU_API_CALL VGUErrorCode VGU_APIENTRY
-    vguComputeWarpQuadToQuad(VGfloat dx0, VGfloat dy0,
-        VGfloat dx1, VGfloat dy1,
-        VGfloat dx2, VGfloat dy2,
-        VGfloat dx3, VGfloat dy3,
-        VGfloat sx0, VGfloat sy0,
-        VGfloat sx1, VGfloat sy1,
-        VGfloat sx2, VGfloat sy2,
-        VGfloat sx3, VGfloat sy3,
-        VGfloat * matrix) VGU_APIEXIT;
+VGU_API_CALL VGUErrorCode vguComputeWarpQuadToQuad(VGfloat dx0, VGfloat dy0,
+                                                   VGfloat dx1, VGfloat dy1,
+                                                   VGfloat dx2, VGfloat dy2,
+                                                   VGfloat dx3, VGfloat dy3,
+                                                   VGfloat sx0, VGfloat sy0,
+                                                   VGfloat sx1, VGfloat sy1,
+                                                   VGfloat sx2, VGfloat sy2,
+                                                   VGfloat sx3, VGfloat sy3,
+                                                   VGfloat * matrix) __SOFTFP;
 
-#ifdef __cplusplus
+#ifdef __cplusplus 
 } /* extern "C" */
 #endif
 
-#endif /* __VG_1_1_VGU_H */
+#endif /*__VG_1_0_VGU_H */

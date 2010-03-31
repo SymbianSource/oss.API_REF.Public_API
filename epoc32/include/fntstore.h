@@ -1,17 +1,20 @@
-// Copyright (c) 1995-2009 Nokia Corporation and/or its subsidiary(-ies).
-// All rights reserved.
-// This component and the accompanying materials are made available
-// under the terms of the License "Symbian Foundation License v1.0" to Symbian Foundation members and "Symbian Foundation End User License Agreement v1.0" to non-members
-// which accompanies this distribution, and is available
-// at the URL "http://www.symbianfoundation.org/legal/licencesv10.html".
-//
-// Initial Contributors:
-// Nokia Corporation - initial contribution.
-//
-// Contributors:
-//
-// Description:
-//
+/*
+* Copyright (c) 1995-2009 Nokia Corporation and/or its subsidiary(-ies).
+* All rights reserved.
+* This component and the accompanying materials are made available
+* under the terms of "Eclipse Public License v1.0"
+* which accompanies this distribution, and is available
+* at the URL "http://www.eclipse.org/legal/epl-v10.html".
+*
+* Initial Contributors:
+* Nokia Corporation - initial contribution.
+*
+* Contributors:
+*
+* Description: 
+*
+*/
+
 
 #ifndef FNTSTORE_H__
 #define FNTSTORE_H__
@@ -20,10 +23,37 @@
 #include <f32file.h>
 #include <gdi.h>
 #include <openfont.h>
+#include <linkedfonts.h>
+
+
+/** Defines the maximum number of linked typefaces that may be placed in a linked typeface specification 
+WARNING: Constant for internal use ONLY.  Compatibility is not guaranteed in future releases.
+@publishedAll
+@released
+ */
+const TInt KMaxLinkedTypefaces = 12;
+/** Defines the maximum number of linked typeface groups that may be placed in a linked typeface specification
+WARNING: Constant for internal use ONLY.  Compatibility is not guaranteed in future releases.
+@publishedAll
+@released
+ */
+const TInt KMaxLinkedTypefaceGroups = 12;
+
+/** Defines the maximun number of threads that may tranverse the COpenFontSessionCacheList (read-only)
+ @publishedAll
+ @released
+ */ 
+const TInt KSessionCacheSemaphoreCount = 12;
+
+/** Defines the name of the semaphore which is used to exclude threads that may tranverse 
+ * the COpenFontSessionCacheList (read-only) with FBserv.
+ @publishedAll
+ @released
+ */
+_LIT(KSessionCacheSemaphoreName,"FBSSessionCacheSemaphore");
 
 class CLinkedTypefaceSpecification;
-class CLinkedFontSpecification;
-class TLinkedTypefaceSpecArgs;
+class TLinkedTypefaceSpecificationArgs;
 class CFbClient;
 class CFontStoreFile;
 class CFontBitmap;
@@ -32,16 +62,22 @@ class TTypefaceFontBitmap;
 class TShapeHeader;
 class TShapeMessageParameters;
 class CTypefaceSupportInfo;
-
+class COpenFontRasterizer;
+class CLinkedTypefaceGroup;
+IMPORT_C extern const TInt8 KLinkedFontDrive;
+IMPORT_C extern const TUint32 KFontTable_GlyphOutline_CacheMaxMem;
 
 /**
-@internalTechnology
-*/
+WARNING: Class for internal use ONLY.  Compatibility is not guaranteed in future releases.
+@publishedAll
+@released
+ */
 class TCharacterMetrics
 	{
-	public:
+public:
 	IMPORT_C TCharacterMetrics();
 
+public:
 	TInt16 iAscentInPixels;
 	TInt16 iHeightInPixels;
 	TInt16 iLeftAdjustInPixels;
@@ -49,7 +85,6 @@ class TCharacterMetrics
 	TInt16 iRightAdjustInPixels;
 	};
 
-class TAlgStyle
 /** 
 An algorithmic style for how a font is drawn.
 
@@ -62,6 +97,7 @@ of some font management classes. See CWsScreenDevice::GetFontById() for more inf
 @see CFbsTypefaceStore::GetFontById()
 @see CFbsDevice::GetFontById()
 */
+class TAlgStyle
 	{
 public:
 	IMPORT_C TAlgStyle();
@@ -95,8 +131,6 @@ private:
 	TInt8 iHeightFactor;
 	};
 
-class CLinkedFontInformation;
-
 /** 
 Bitmap font class.
 An object of this class may either access and use a bitmap font (a CFontBitmap)
@@ -107,9 +141,9 @@ Stored in a CFontStore.
 */
 class CBitmapFont : public CFont
 	{
+	friend class CFbsFont;
 	friend class CFontStore;
-	friend class CLinkedFontSpecification;
-	friend class CLinkedFontInformation;
+	friend class CFbsBitGc;
 public:
 	// New functions
 	TUid Uid() const;
@@ -128,11 +162,15 @@ public:
 	inline TBool IsOpenFont() const;
 	inline COpenFont* OpenFont() const;
 	inline TGlyphBitmapType GlyphBitmapType() const;
-	IMPORT_C CLinkedFontInformation* LinkedFontInformation() const;
-	IMPORT_C CBitmapFont* NextFontClientSpace() const;
-	IMPORT_C TBool IsLinkedFont()const;
-	IMPORT_C CBitmapFont* FontWithCharacter(TInt aCode, CLinkedFontInformation *&aInfo, TBool aSearchAllFonts, TBool aGetCanonicalDefault) const;
-	
+	IMPORT_C TUint32 UniqueFontId();
+	IMPORT_C TInt GetFontTable(TUint32 aTag, TAny*& aTableContent, 
+	        TInt& aLength, TInt aSessionHandle);
+    IMPORT_C TInt GetGlyphOutline(TUint aCode,  
+            TBool aHinted, TAny*& aOutline, TInt& aLength, TInt aSessionHandle);
+    IMPORT_C void ReleaseGlyphOutlines(TInt aCount, const TUint* aCodes,  
+            TBool aHinted, TInt aSessionHandle);
+    IMPORT_C void ReleaseFontTable(TUint32 aTag, TInt aSessionHandle);
+    
 private:
 	// From CFont
 	IMPORT_C virtual TUid DoTypeUid() const;
@@ -160,6 +198,8 @@ private:
 	TInt Height(TInt aNum) const;
 	CFontBitmap* FontBitmap() const;
 	void InstallOpenFontShaper(COpenFont* aOpenFont, CShaper::TInput& aShaperInput);
+	TInt DoTextWidthInPixels(const TDesC &aText, const TMeasureTextInput* aParam) const;
+	void SetUniqueFontId(TUint32 aUniqueFontId);
 
 private:
 	TFontSpec iFontSpecInTwips;
@@ -169,16 +209,89 @@ public:
 	TAlgStyle iAlgStyle;	// must not move this member
 
 private:
-	// Binary Compatibility warning - data member iOpenFont is referenced by inline methods
-	RHeap* iHeap;
-	TInt iFontBitmapOffset;
-	COpenFont* iOpenFont;	// if iOpenFont is non-null this is an open font and many functions are forwarded to it
+    // Binary Compatibility warning - data member iOpenFont is referenced by inline methods
+    RHeap* iHeap;
+    TInt iFontBitmapOffset;
+    
+    // In order to be able to work with the flexible memory model, iOpenFont is
+    // actually an offset from the address of this class.
+    // iOpenFont's type remains unchanged.
+    // As Qt code that uses OpenFont() must be able to run on new and old versions
+    // of Symbian OS, it must be able to determine whether iOpenFont is a pointer or
+    // an offset at run-time.  Therefore an offset will have its lowest significant bit set to 1.
+    // If iOpenFont is null, this object is not an open font.
+    // Assumption: a pointer always has least significant bit value of zero.
+    COpenFont* iOpenFont; // if iOpenFont is non-null this is an open font and many functions are forwarded to it
 
-#ifdef SYMBIAN_SUPPORT_LINKED_FONTS	
-	CLinkedFontInformation *iFontLinkage;
-#endif	
+    TUint32 iReserved;
+    TUint32 iUniqueFontId; // unique id for this instance of this font
+	};
+
+/**
+WARNING: Class for internal and partner use ONLY.  Compatibility is not guaranteed in future releases.
+@publishedAll
+@released
+ */
+class TLinkedTypefaceGroupArgs
+	{
+public:
+	TInt iGroupId;
+	CLinkedTypefaceGroup::TScalingOption iScalingOption;
+	CLinkedTypefaceGroup::TBaselineShift iBaselineShift;
+	TInt iAntialiasingThreshold;
+	TInt iBoldnessPercentage;
+	TInt iItalicAngle;
+public:
+	void operator =(const CLinkedTypefaceGroup* aRhs);
+	};
+
+class COpenFontLinkedTypefaceElementSpec;
+class COpenFontLinkedTypefaceSpecification;
+
+/**
+WARNING: Class for internal and partner use ONLY.  Compatibility is not guaranteed in future releases.
+@publishedAll
+@released
+ */
+class TLinkedTypefaceElementSpecArgs
+	{
+public:
+	TBufC<KMaxTypefaceNameLength> iName;
+	TBool iIsCanonical;
+	TInt iGroupId;
+	
+	void operator = (const CLinkedTypefaceElementSpec* aRhs);
+	void operator = (const COpenFontLinkedTypefaceElementSpec* aRhs);
+	};
+
+/**
+WARNING: Class for internal and partner use ONLY.  Compatibility is not guaranteed in future releases.
+@publishedAll
+@released
+ */
+class TLinkedTypefaceSpecificationArgs
+	{
+public:
+	TBufC<KMaxTypefaceNameLength> iName;
+	TLinkedTypefaceElementSpecArgs iTypefaces[KMaxLinkedTypefaces];
+	TLinkedTypefaceGroupArgs iGroups[KMaxLinkedTypefaceGroups];
+	TInt	iSize;
+	TInt	iGroupSize;
+	TInt	iCanonicalIndex;
+	
+	IMPORT_C void operator = (const CLinkedTypefaceSpecification& aRhs);
+	IMPORT_C void operator = (const COpenFontLinkedTypefaceSpecification& aRhs);
 	};
 	
+
+
+class TUnhintedOutlineId;
+class THintedOutlineId;
+class CFontTableCache;
+class CUnhintedOutlineCache;
+class CHintedOutlineCache;
+class TFontTableGlyphOutlineCacheMemMonitor;
+
 class CFontStore : public CTypefaceStore
 /** 
 A store for fonts.
@@ -193,11 +306,8 @@ via a rasterizer.
 @released
 */
     {
-#ifdef SYMBIAN_SUPPORT_LINKED_FONTS    
 friend class CLinkedFonts;
-friend class CLinkedFontSpecification;
 friend class CLinkedTypefaceSpecification; 
-#endif
 
 public:
 	IMPORT_C static CFontStore* NewL(RHeap* aHeap);
@@ -234,10 +344,33 @@ public:
 	void IncNumShaperCaches();
 	void DecNumShaperCaches();
 	TInt GetNumShaperCaches();
-	IMPORT_C TInt CreateLinkedTypeface(const TLinkedTypefaceSpecArgs &aLinkedTypefaceSpec, TInt aSession, TInt& aId);
-	IMPORT_C void RemoveLinkedFont(CBitmapFont *aFont);		
-	IMPORT_C TBool IsValidLinkedFontSpecification(TInt aHandle);
+	IMPORT_C TInt CreateLinkedTypeface(const TLinkedTypefaceSpecificationArgs &aLinkedTypefaceSpec, TInt aSession, TInt& aId);
+	IMPORT_C void GetLinkedTypefaceL(TLinkedTypefaceSpecificationArgs &aLinkedTypefaceSpec);
 	IMPORT_C TBool HaveTypefaceFamilyName(const TDesC& aName);
+	IMPORT_C void UpdateLinkedTypefaceL(const TLinkedTypefaceSpecificationArgs& aLinkedTypefaceSpec);
+	IMPORT_C void LoadFontsAtStartupL();
+	IMPORT_C TBool GetFontFilePath(const TDesC& aFontName, TFileName& aFilePath) const;
+    IMPORT_C void CleanupCacheOnFbsSessionTermination(TInt aSessionHandle);
+	
+	TInt CacheFontTable(TUid aFileUid, TUint32 aTag, TAny*& aContent, TInt aLength);
+	TInt ReleaseFontTable(TUid aFileUid, TUint32 aTag, TInt aSessionHandle);
+	TInt FindFontTableInCache(TUid aFileUid, TUint32 aTag, TAny*& aContent, TInt& aLength);
+	TInt IncFontTableRefCount(TUid aFileUid, TUint32 aTag, TInt aSessionHandle);
+	TInt DecFontTableRefCount(TUid aFileUid, TUint32 aTag, TInt aSessionHandle);
+	TInt CacheUnhintedOutline(const TUnhintedOutlineId& aOutlineId, TAny* aData, 
+	        TInt aLength, TAny*& aOutline, TInt& aLen);
+	TInt CacheHintedOutline(const THintedOutlineId& aOutlineId, TAny* aData, TInt aLength,
+	        TAny*& aOutline, TInt& aLen);
+	TInt ReleaseUnhintedOutline(const TUnhintedOutlineId& aOutlineId, TInt aSessionHandle);
+	TInt ReleaseHintedOutline(const THintedOutlineId& aOutlineId, TInt aSessionHandle);
+	TInt IncreaseUnhintedOutlineRefCount(const TUnhintedOutlineId& aOutlineId, TInt aSessionHandle);
+	TInt IncreaseHintedOutlineRefCount(const THintedOutlineId& aOutlineId, TInt aSessionHandle);
+	TInt FindUnhintedOutlineInCache(const TUnhintedOutlineId& aOutlineId, TAny*& aData, 
+	        TInt &aLength);
+	TInt FindHintedOutlineInCache(const THintedOutlineId& aOutlineId, TAny*& aData, TInt& aLength);
+    void CleanupCacheOnOpenFontRemoval(COpenFont* aFont);
+    void CleanupCacheOnOpenFontFileRemoval(COpenFontFile* aFontFile);
+
 private:
 	CFontStore(RHeap* aHeap);
 	void ConstructL();
@@ -254,13 +387,11 @@ private:
 	void GetNearestBitmapFontInPixelsL(CFont*& aFont, TFontSpec& aFontSpec, TInt aMaxHeight);
 	void GetNearestOpenFontInPixelsL(
 	CFont*& aFont, TOpenFontSpec& aActualFontSpec, const TOpenFontSpec& aDesiredFontSpec, TInt aMaxHeight);
-#ifdef SYMBIAN_SUPPORT_LINKED_FONTS	
 	TInt GetNearestRealFontInPixels(CFont*& aFont, const TOpenFontSpec& aFontSpec, TInt aMaxHeight);
 	TInt GetNearestFontInPixelsL(CFont*& aFont, const TOpenFontSpec& aFontSpec, TInt aMaxHeight);
-	TInt CreateLinkedTypefaceL(const TLinkedTypefaceSpecArgs &aLinkedTypefaceSpec, TInt aSession, TInt& aId);
+	TInt CreateLinkedTypefaceL(const TLinkedTypefaceSpecificationArgs &aLinkedTypefaceSpec, TInt aSession, TInt& aId);
 	TInt GetCanonicalIndex(TInt aTypefaceIndex) const;
 	void TypefaceSupportLinked(TTypefaceSupport &aTypefaceSupport, TInt aTypefaceIndex) const;
-#endif	
 	TInt GetNearestFontInPixels(CFont*& aFont, const TOpenFontSpec& aFontSpec, TInt aMaxHeight);
 	void SanityCheckForTtfL(RFile& aFile, TUint aFontFileSize, TBool aStrictChecking);
 	void SanityCheckFontFileL(TParse& aParse);
@@ -269,11 +400,15 @@ private:
 	TInt AddTypefacesToSupportList(COpenFontFile* aOpenFontFile);
 	void RemoveTypefacesFromSupportList(COpenFontFile* aOpenFontFile);
 	TInt FindBitmapFontFileIndexByUid(TUid aUid);
-	TBool IncRefCountOfLoadedFont(const TDesC& aFullName, TUid& aFontUid);
-	TBool LoadFileAsOpenFontL(const TDesC& aFullName, TUid& aFontUid);
-	TUid LoadFileAsBitmapFontL(TParse& aParse);
+	TBool IncRefCountOfLoadedFont(const TParse& aFileName, TUid& aFontUid);
+	TBool LoadFileAsOpenFontL(const TParse& aFileName, TUid& aFontUid);
+	TUid LoadFileAsBitmapFontL(const TParse& aParse);
 	static void CleanupRemoveFontFile(TAny* aCleanupInfo);
-
+	const TAny* FontLinkingInterface() const;
+	TInt ValidateLinkedFontSpecificationL(COpenFontLinkedTypefaceSpecification& aSpec, TBool aOverwrite) const;
+	void GenerateLinkedFontFileL(COpenFontLinkedTypefaceSpecification& aSpec, const TAny* aExtension, TBool aUpdate);
+	void LoadFontsL(const TDesC& aFontsDir);
+	void AddSanityCheckedFontL(const TParse& aFileName, TUid& aUid);
 public:
 	/** The width of 1000 pixels in twips.
 	
@@ -298,7 +433,11 @@ private:
 	CArrayPtrFlat<CFontBitmap> iFontBitmapList;
 	CArrayFixFlat<TTypefaceFontBitmap> iTypefaceFontBitmapList;
 	CArrayPtrFlat<COpenFontFile> iOpenFontFileList;
-	TInt iReserved[6];		// keep iDefaultBitmapType at the correct offset
+	TInt iReserved[2];		// keep iDefaultBitmapType at the correct offset
+    CFontTableCache *iFontTableCache;
+    CUnhintedOutlineCache *iUnhintedOutlineCache;
+    CHintedOutlineCache *iHintedOutlineCache;
+    TFontTableGlyphOutlineCacheMemMonitor *iCacheMemMon;
 	CArrayPtrFlat<COpenFontRasterizer> iOpenFontRasterizerList;
 	COpenFontSessionCacheList* iOpenFontSessionCacheList;
 	TInt iOpenFontUid;
@@ -307,10 +446,9 @@ private:
 	TInt iOpenFontShaperCacheMemUsage;
 	TInt iNumberOfShaperCaches;
 	RPointerArray<CTypefaceSupportInfo> iOpenFontTypefaceSupportList;
-#ifdef SYMBIAN_SUPPORT_LINKED_FONTS	
-	RPointerArray<CLinkedTypefaceSpecification> *iLinkedTypefaceSpecificationList;
-	RPointerArray<CLinkedFontSpecification> *iLinkedFontSpecificationList;
-#endif	
+	RArray<RHandleBase> *iHandleArray;
+	TAny* iUnused2;
+	TUint32 iUniqueFontIdCount;
 	};
 
 // inline functions start here
@@ -327,6 +465,7 @@ inline TBool CBitmapFont::IsOpenFont() const
 	return iOpenFont != NULL;
 	}
 
+
 /** Returns a pointer to the open font being used by the bitmap font object.
 
 @return A pointer to an open font.
@@ -334,7 +473,14 @@ inline TBool CBitmapFont::IsOpenFont() const
 */
 inline COpenFont* CBitmapFont::OpenFont() const
 	{ 
-	return iOpenFont;
+    if (reinterpret_cast<TInt>(iOpenFont) & 1)
+        {
+        return reinterpret_cast<COpenFont*>(const_cast<CBitmapFont*>(PtrAdd(this, reinterpret_cast<TInt>(iOpenFont) & ~1)));
+        }
+    else
+        {
+        return iOpenFont;
+        }
 	}
 
 /** Gets the anti-aliasing setting for the font, see TGlyphBitmapType for 
@@ -377,3 +523,4 @@ inline void CFontStore::SetDefaultBitmapType(TGlyphBitmapType aType)
 	}
 
 #endif
+

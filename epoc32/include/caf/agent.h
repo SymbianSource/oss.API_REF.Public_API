@@ -16,11 +16,9 @@
 */
 
 
-
-
 /**
  @file
- @publishedPartner
+ @publishedAll
  @released
 */
 
@@ -39,9 +37,6 @@ namespace ContentAccess
 	/** Represents the name of a single CAF agent. This allows 
 	applications to reference a particular agent within the 
 	Content Access Framework.
-
-	@publishedPartner
-	@released
 	*/
 	class TAgent 
 		{
@@ -53,18 +48,12 @@ namespace ContentAccess
 
 		/** The UID of the agent DLL
 		@return The UID of the agent ECOM implementation DLL 
-
-		@internalComponent
-		@released
 		*/
 		TUid ImplementationUid() const;
 
 		/** Set the value of this TAgent
 		@param aName The name of the agent
 		@param aUid The agent implementation Uid
-		
-		@internalComponent
-		@released
 		*/
 		void SetValue(const TDesC& aName, TUid aUid);
 

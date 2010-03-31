@@ -15,16 +15,14 @@
 *
 */
 
-
-
 #ifndef CDOWNLOADMGRUIDOWNLOADSLIST_H
 #define CDOWNLOADMGRUIDOWNLOADSLIST_H
 
 //  INCLUDES
-#include <CDownloadMgrUiBase.h>
-#include <DownloadMgrClient.h>
-#include <HttpDownloadMgrCommon.h>
-#include <DownloadsListDlgObserver.h>
+#include <cdownloadmgruibase.h>
+#include <downloadmgrclient.h>
+#include <httpdownloadmgrcommon.h>
+#include <downloadslistdlgobserver.h>
 
 #include <AiwServiceHandler.h>
 #include <AiwCommon.hrh>
@@ -146,6 +144,17 @@ NONSHARABLE_CLASS( CDownloadMgrUiDownloadsList ) :
         */
         inline TBool IsProgressiveDownloadEnabled() {return iProgressiveDownload; }
         
+        /**
+        * Gets the value of downloadlist hide
+        * @return TBool 
+        */
+        inline TBool GetDownloadHide() { return iDownloadListHide; }
+#ifdef BRDO_SINGLE_CLICK_ENABLED_FF
+        /**
+        * Adding Aiw Commands to the given MenuPane
+        */
+        void AIWPlugInMenusL(TInt aResourceId,CEikMenuPane* aMenuPane);
+#endif        
 
     public: // Functions from CDownloadMgrUiBase
 
@@ -239,6 +248,13 @@ NONSHARABLE_CLASS( CDownloadMgrUiDownloadsList ) :
                                       
         void LaunchFileManagerApplication();
 
+    public:
+        /**
+        * Sets the value of downloadlist hide
+        * @return void 
+        */
+        void SetDownloadListHide( TBool aHide );
+
     private:  // Data
         
         CDownloadsListExtension*    iExtension; ///< Extension class. Owned.
@@ -256,6 +272,7 @@ NONSHARABLE_CLASS( CDownloadMgrUiDownloadsList ) :
 		TBool						iIsCancelInProgress;
 		TBool                       iPlatformSupportsGallery;
 
+        TBool                       iDownloadListHide;
     private: // Friend classes
 
         friend class CDownloadsListExtension;

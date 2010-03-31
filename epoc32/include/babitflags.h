@@ -1,9 +1,9 @@
 // Copyright (c) 1999-2009 Nokia Corporation and/or its subsidiary(-ies).
 // All rights reserved.
 // This component and the accompanying materials are made available
-// under the terms of the License "Symbian Foundation License v1.0" to Symbian Foundation members and "Symbian Foundation End User License Agreement v1.0" to non-members
+// under the terms of "Eclipse Public License v1.0"
 // which accompanies this distribution, and is available
-// at the URL "http://www.symbianfoundation.org/legal/licencesv10.html".
+// at the URL "http://www.eclipse.org/legal/epl-v10.html".
 //
 // Initial Contributors:
 // Nokia Corporation - initial contribution.
@@ -19,9 +19,9 @@
 // System includes
 #include <e32std.h>
 
-///////////////////////////////////////////////////////////////////////////////////////
+//
 // ----> TBitFlagsT (header)
-///////////////////////////////////////////////////////////////////////////////////////
+//
 template <class T>
 class TBitFlagsT
 /**
@@ -31,9 +31,9 @@ flags in an abstract fashion.
 @released
 */
 	{
-///////////////////////////////////////////////////////////////////////////////////////
+//
 public:										// CONSTRUCT
-///////////////////////////////////////////////////////////////////////////////////////
+//
 
 	/**
 	 * Default constructor - initialize all flags to zero
@@ -51,9 +51,9 @@ public:										// CONSTRUCT
 	 */
 	inline TBitFlagsT(const TBitFlagsT& aFlags);
 
-///////////////////////////////////////////////////////////////////////////////////////
+//
 public:										// MANIPULATORS
-///////////////////////////////////////////////////////////////////////////////////////
+//
 
 	/**
 	 * Set all the flags
@@ -89,9 +89,9 @@ public:										// MANIPULATORS
 	 */
 	inline void								Toggle(TInt aFlagIndex);
 
-///////////////////////////////////////////////////////////////////////////////////////
+//
 public:										// OPERATORS
-///////////////////////////////////////////////////////////////////////////////////////
+//
 
 	/**
 	 * Check if a particular flag is set or not
@@ -113,9 +113,9 @@ public:										// OPERATORS
 	 */
 	inline TBool							operator==(const TBitFlagsT& aFlags);
 
-///////////////////////////////////////////////////////////////////////////////////////
+//
 public:										// ACCESS
-///////////////////////////////////////////////////////////////////////////////////////
+//
 
 	/**
 	 * Check if a particular flag is set
@@ -138,18 +138,18 @@ public:										// ACCESS
 	 */
 	inline void								SetValue(T aFlags) { iFlags = aFlags; }
 
-///////////////////////////////////////////////////////////////////////////////////////
+//
 private:									// INTERNAL
-///////////////////////////////////////////////////////////////////////////////////////
+//
 
 	/**
 	 * Generate a mask for a particular flag
 	 */
 	inline T								FlagMask(TInt aFlagIndex) const;
 
-///////////////////////////////////////////////////////////////////////////////////////
+//
 public:										// MEMBER DATA
-///////////////////////////////////////////////////////////////////////////////////////
+//
 	
 	// The underlying object container which represents the flags.
 	T										iFlags;
@@ -183,9 +183,9 @@ typedef TBitFlagsT<TUint32>	TBitFlags32;
 typedef TBitFlags32 TBitFlags;
 
 
-///////////////////////////////////////////////////////////////////////////////////////
+//
 // ----> TBitFlagsT (inlines)
-///////////////////////////////////////////////////////////////////////////////////////
+//
 template <class T>
 inline TBitFlagsT<T>::TBitFlagsT() : iFlags(T(0)) 
 	{}
@@ -204,7 +204,18 @@ inline T TBitFlagsT<T>::FlagMask(TInt aFlagIndex) const
 
 template <class T>
 inline TBool TBitFlagsT<T>::IsSet(TInt aFlagIndex) const
-	{ return iFlags & FlagMask(aFlagIndex); }
+	{ 
+	// All out-of-range values should return  false
+	if(aFlagIndex <= ((sizeof(T)<<3)-1) )
+		{
+		return iFlags & FlagMask(aFlagIndex);
+		}
+	else
+		{
+		return EFalse;
+		}
+	 
+	}
 
 template <class T>
 inline TBool TBitFlagsT<T>::IsClear(TInt aFlagIndex) const

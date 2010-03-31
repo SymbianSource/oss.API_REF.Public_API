@@ -2,9 +2,9 @@
 * Copyright (c) 2009 Nokia Corporation and/or its subsidiary(-ies).
 * All rights reserved.
 * This component and the accompanying materials are made available
-* under the terms of the License "Symbian Foundation License v1.0" to Symbian Foundation members and "Symbian Foundation End User License Agreement v1.0" to non-members
+* under the terms of "Eclipse Public License v1.0"
 * which accompanies this distribution, and is available
-* at the URL "http://www.symbianfoundation.org/legal/licencesv10.html".
+* at the URL "http://www.eclipse.org/legal/epl-v10.html".
 *
 * Initial Contributors:
 * Nokia Corporation - initial contribution.
@@ -15,12 +15,16 @@
 *
 */
 
+
 #ifndef __BLDPUBLIC_HRH
 #define __BLDPUBLIC_HRH
 
-//Defining only language 01 for SF build purposes
-#define LANGUAGE_IDS LANG sc 01  
+#define LANGUAGE_IDS LANG sc 37 102 42 44 45 25 07 18 01 10 129 158 160 159 157 161 49 50 09 02 51 103 03 54 57 30 17 15 59 327 05 32 65 67 68 70 326 08 27 13 76 31 78 16 79 26 28 04 83 06 39 29 33 14 93 94 96 
 
+/** #Camera 
+Container for camera specific features
+*/
+#undef Camera                                             
 
 /** #FF_3D_RINGING_TONES 
 Device supports 3D ringing tones.
@@ -32,6 +36,15 @@ Cell Broadcasting support on 3G mode.
 */
 #undef FF_3G_CELLBROADCAST                                
 
+/** #FF_ABC_AGRESSIVE_UI 
+Display driver will provide an interface for switching Automatic Brightness
+Control (ABC). More agressive Automatic Display Control (ABC) UI for display
+driver will be in Settings display plug in, and as configurable for products,
+but not neccessarily available for user. The agressive UI for ABC is
+enabled/disabled by the feature flag.  
+*/
+#undef FF_ABC_AGRESSIVE_UI                                
+
 /** #FF_ADAPTIVE_WLAN_SCANNING_SUPPORT 
 Adaptive WLAN Scanning (AWS) is a component that tells WLAN engine how often to
 perform WLAN background scanning. AWS listens and receives events from other
@@ -39,6 +52,14 @@ components, concludes what would be the preferred scanning period, and then
 tells it to WLAN engine.
 */
 #undef FF_ADAPTIVE_WLAN_SCANNING_SUPPORT                  
+
+/** #FF_ADDITIONAL_FONTS 
+This flag is to enable new font supports namely equivalents of Arial, Times New
+Roman, Courier for content viewing mainly to be used in browser. If this flag is
+not enabled it means it will continue to have only current fonts and no
+additional font support.
+*/
+#define FF_ADDITIONAL_FONTS                                
 
 /** #FF_AI_WLANSNIFFER_WIDGET 
 Flag for WLANSniffer Homescreen widget.
@@ -49,6 +70,12 @@ Flag for WLANSniffer Homescreen widget.
 Camcorder requires support from the Asynchronous File Save Queue.
 */
 #define FF_ASYNCH_FILE_SAVE_QUEUE                          
+
+/** #FF_AT_COMMANDS_TEST_AUTOMATION 
+Using FF_AT_COMMANDS_TEST_AUTOMATION will either include or exclude
+atcmdplugin.dll from ROM
+*/
+#undef FF_AT_COMMANDS_TEST_AUTOMATION                     
 
 /** #FF_AUDIO_MESSAGING_INCLUDE_IN_ROM 
 This flags controls whether the Audio Messaing ROM files are included in the
@@ -63,15 +90,15 @@ update the device time, date and country/city automatically in phone start-up.
 #undef FF_AUDT                                            
 
 /** #FF_AUTO_REDIAL_FOR_VIDEO_CALL 
-"This flag indicates redial sequence, when video call is not succeeded for
-certain reasons."
+This flag indicates redial sequence, when video call is not succeeded for
+certain reasons.
 */
 #define FF_AUTO_REDIAL_FOR_VIDEO_CALL                      
 
 /** #FF_AVKON_EMOTION_ICON_ENABLED 
 to enable/disable the emotion icon support in avkon editor control
 */
-#undef FF_AVKON_EMOTION_ICON_ENABLED                      
+#define FF_AVKON_EMOTION_ICON_ENABLED                      
 
 /** #FF_BIRTHDAY_IMPROVEMENT 
 This feature flag is required for the enabling/disabling customized birthday &
@@ -80,14 +107,31 @@ into 3.2.3 platform.
 
 The requirement is 
 
-Bâ€™day & Anniversary Notification for MyFaves contact
+B’day & Anniversary Notification for MyFaves contact
 
-â€¢	Picture of the MyFaves contact in the popup which can be masked as circular
+•	Picture of the MyFaves contact in the popup which can be masked as circular
 
-â€¢	Currently Birthday notification is same as any other Calendar alarm
+•	Currently Birthday notification is same as any other Calendar alarm
 
 */
 #undef FF_BIRTHDAY_IMPROVEMENT                            
+
+/** #FF_BLUETOOTH_DATA_PROFILES_DISABLED 
+This flag is used to turn off bluetooth data profiles, and is to be used as part
+of Enterprise Disabling of Bluetooth, allowing the device to use bluetooh for
+hands free purposes only
+*/
+#undef FF_BLUETOOTH_DATA_PROFILES_DISABLED                
+
+/** #FF_BLUETOOTH_DISABLED 
+Flag used to disable all Bluetooth functionality in the device.  This will be
+used for Enterprise Disabling of Bluetooth.  
+
+This flag is required to be used instead of the __BT flag so that the Bluetooth
+UI is still present after Bluetooth has been disabled, allowing the user to be
+notified of why they cannot use it if they attempt to
+*/
+#undef FF_BLUETOOTH_DISABLED                              
 
 /** #FF_BROWSER_PROGRESSIVE_DOWNLOAD 
 This feature flag is needed to enable/disable the progressiveness of the
@@ -95,11 +139,21 @@ downloads in download manager server and its clients.
 */
 #define FF_BROWSER_PROGRESSIVE_DOWNLOAD                    
 
+/** #FF_CAL_MEETING_REQUEST_UI 
+With this flag it is selected if Meeting Request UI included with flag
+FF_MEETING_REQUEST_UI is available on Calendar side or not. If flag is not
+defined MRUI is available only when MR Emails are opened from Email application.
+If flag is defined then meeting requests can be opened also from Calendar
+application and Calendar application will offer possibility to create new
+meeting requests.
+*/
+#undef FF_CAL_MEETING_REQUEST_UI                          
+
 /** #FF_CAPACITIVE_DISPLAY 
 Device uses capacitive touch technology in its display.
 
 */
-#undef FF_CAPACITIVE_DISPLAY                              
+#define FF_CAPACITIVE_DISPLAY                              
 
 /** #FF_CHINESE_FONTS_HIRES 
 This flag controls whether Chinese variants use TrueType fonts instead of the
@@ -120,6 +174,11 @@ font technology is irrelevant, high resolution being the operative keywords.
 */
 #undef FF_CHINESE_FONTS_HIRES                             
 
+/** #FF_CHINESE_SELECTION_KEY 
+Device uses this flag to differentiate if selection key existed
+*/
+#undef FF_CHINESE_SELECTION_KEY                           
+
 /** #FF_CLOCK_MULTIPROCOL_SUPPORT 
 This flag shall be used to determine if product programs need clock's
 multiprotocol support, i.e. getting time information from different time source
@@ -128,6 +187,11 @@ multiprotocol feature support can be made on or off. When multiprotocol support
 is off, then default NITZ protocol shall be choosen.
 */
 #undef FF_CLOCK_MULTIPROCOL_SUPPORT                       
+
+/** #FF_CMAIL_INTEGRATION 
+5250+ specific features in Cmail are variated with this flag.
+*/
+#undef FF_CMAIL_INTEGRATION                               
 
 /** #FF_COMMSDAT_CREATION_FROM_XML 
 There will be a new component in S60 called CommsDatCreator (CDC) that will
@@ -158,6 +222,12 @@ WLAN settings.
 */
 #define FF_CONNECTION_OVERRIDE                             
 
+/** #FF_CONTACTS_COMPANY_NAMES 
+When enabled, contacts’ company names are shown after first+last name in
+Phonebook Names list.
+*/
+#undef FF_CONTACTS_COMPANY_NAMES                          
+
 /** #FF_CONTACTS_GROUP_FUNCTIONALITY 
 We need a feature flag for ROM Creation time variation. The Phonebook2
 application is constructed on a plugin based architecture. This design allows
@@ -168,7 +238,21 @@ their own contact group functionality we need a feature flag so that the variant
 can remove the platform group plugin component. This allow the component to be
 removed from the ROM image, thus making the ROM size smaller.
 */
-#undef FF_CONTACTS_GROUP_FUNCTIONALITY                    
+#define FF_CONTACTS_GROUP_FUNCTIONALITY                    
+
+/** #FF_CONTACTS_MERGE 
+If enabled, then phonebook UI contains the command for Merge.
+*/
+#define FF_CONTACTS_MERGE                                  
+
+/** #FF_CONTACTS_MYCARD 
+This feature flag controls whether phonebook application supports MyCard.
+If flag is enabled:
+- Phonebook has MyCard item at top of names list
+- The user can open MyCard view from phonebook
+- Other applications can launch the MyCard view 
+*/
+#define FF_CONTACTS_MYCARD                                 
 
 /** #FF_CONTACTS_NICKNAME 
 The nickname functionality needs a feature flag for the following reasons:
@@ -198,6 +282,45 @@ maintain existing performance, see above description
 */
 #undef FF_CONTACTS_NICKNAME                               
 
+/** #FF_CONTACTS_PREDICTIVE_SEARCH 
+When enabled, User can turn on/off Phonebook’s predictive search functionality,
+using an item in Names list’s Option-menu.
+*/
+#undef FF_CONTACTS_PREDICTIVE_SEARCH                      
+
+/** #FF_CONTACTS_REMOTE_LOOKUP 
+When enabled, and a remote search service is installed in device, item “Search
+remotely” is shown in Phonebook Names list.
+*/
+#define FF_CONTACTS_REMOTE_LOOKUP                          
+
+/** #FF_CONTACTS_SOCIAL 
+When flag is enabled, phonebook application has the following features:
+- Names list shows social status texts
+- Contact Card shows social status text & allows jumping to external social
+application.
+- MyCard shows social status text & allows jumping to external social
+application.
+- MyCard has button(s) that show(s) presence & allow jumping to external IM
+application.
+
+*/
+#define FF_CONTACTS_SOCIAL                                 
+
+/** #FF_CONTEXT_FRAMEWORK_V2 
+This flag enables Context Framework version 2.
+*/
+#undef FF_CONTEXT_FRAMEWORK_V2                            
+
+/** #FF_CONTEXT_PROFILES 
+Context profiles enable the device to automatically adapt in users every day
+life and combine current Profiles functionality with concepted and studied
+Situations functionality. If the flag sets to true, context profiles are
+enabled. If flase, otherwises.
+
+*/
+#undef FF_CONTEXT_PROFILES                                
+
 /** #FF_CUSTOMER_HELPS_IN_USE 
 Customer helps are included into image based on this flag.
 */
@@ -211,10 +334,45 @@ users.
 */
 #define FF_DEVICE_DIAGNOSTICS_APP                          
 
+/** #FF_DEVICE_ENCRYPTION_FEATURE 
+This flag is required for Device Encryption feature which goes to Symbian
+Foundation. The existing flag (FF_NATIVE_FILE_ENCRYPTION) will exclusively be
+used by NFE, which doesn't go to SF. Hence a different flag is required for all
+those middleware and application layer components of DE.
+*/
+#define FF_DEVICE_ENCRYPTION_FEATURE                       
+
+/** #FF_DISABLE_OMA_SUPL_V2 
+When this flag is ON SUPL v2.0 is NOT supported. Note that this flag is a
+negative flag in order to minimize the risk for the master code line.
+*/
+#undef FF_DISABLE_OMA_SUPL_V2                             
+
+/** #FF_DM_BROWSER_ADAPTER 
+Browser adaper is used by Device Management to Set/Get the browser settings from
+the operator server. This feature is requested by CMCC. The feature flag is used
+to differentiate between Nokia Specific implemenation and OMA DM implementation.
+*/
+#define FF_DM_BROWSER_ADAPTER                              
+
+/** #FF_DM_CONNMO_ADAPTER 
+OMA Device Management Connectivity Managment Object (ConnMO) provides management
+of connectivity settings. This flag will help in enabling ConnMO plugin.
+*/
+#undef FF_DM_CONNMO_ADAPTER                               
+
 /** #FF_DM_INSTALL_SECURITY 
 OMA DM SW installer implementation included in build.
 */
 #undef FF_DM_INSTALL_SECURITY                             
+
+/** #FF_DM_STREAMING_ADAPTER 
+Streaming adapter is used by Device Mangement to Set/Get the streaming settings
+from the operator server. CMCC has requested support for this new adapter. This
+feature flag is used to differentiate the Nokia specfic implementation and OMA
+DM implementation.
+*/
+#define FF_DM_STREAMING_ADAPTER                            
 
 /** #FF_DUAL_LANGUAGE_SUPPORT 
 This Flag is used to develop support for dual language feature. This is an
@@ -222,6 +380,11 @@ enhancement to the basic prediction feature where words predicted will come from
 2 different language databases.
 */
 #undef FF_DUAL_LANGUAGE_SUPPORT                           
+
+/** #FF_DUAL_MODEM 
+Flag for developing Dual Modem feature
+*/
+#undef FF_DUAL_MODEM                                      
 
 /** #FF_EMAIL_FRAMEWORK 
 Defines whether the product includes the email multiprotocol framework. When the
@@ -284,6 +447,21 @@ used if some special functionality is needed.
 */
 #undef FF_EMPTY_COMMSDAT                                  
 
+/** #FF_ENABLE_ISI_COMMUNICATION_IN_USB_CHARGING_MODE 
+Feature info adaptation will read the PP-bit value from ISA info server and map
+the value of PP bit into KFeatureIdCertTesting. SSM then will read
+KFeatureIdCertificationTesting and if system is in USB charging mode , then
+start USB components into the mode where ISI communication is possible.
+*/
+#undef FF_ENABLE_ISI_COMMUNICATION_IN_USB_CHARGING_MODE   
+
+/** #FF_ENHANCED_CALENDAR_EVENT_UI 
+This flag controls inclusion of enhanced Calendar Event Viewers and Editors that
+replace standard ones and provide consistent look and feel with Meeting Request
+UI included with flag FF_MEETING_REQUEST_UI.
+*/
+#undef FF_ENHANCED_CALENDAR_EVENT_UI                      
+
 /** #FF_FARSI_CALENDAR 
 S60 calendar should provide possibility to integrate Farsi calendar application
 to S60 calendar.
@@ -311,11 +489,31 @@ FMTX application and Nseries Music Player support for FMTX
 */
 #define FF_FMTX                                            
 
+/** #FF_FMTX_RDS_TEXT 
+Flag to enable RDS text transmission through FM transmitter (FMTX). Runtime
+variation needed in SysAp. FMTX UI SW uses this flag in .iby files so it is not
+runtime variated in UI SW.
+
+RDS text transmission not enabled currently (ELZG-7PE3G9) 
+*/
+#undef FF_FMTX_RDS_TEXT                                   
+
 /** #FF_FULLSCR_HWR_INPUT 
 Indicates whether a device needs fullscreen HWR (HandWritingRecognition) input
 or not.
 */
-#define FF_FULLSCR_HWR_INPUT                               
+#undef FF_FULLSCR_HWR_INPUT                               
+
+/** #FF_GENERIC_ACCESS_NETWORK 
+Generic Access Network (GAN), previously known as Unlicensed Mobile Access (UMA)
+technology provides access to GSM/3G and GPRS mobile services over unlicensed
+spectrum technologies. By deploying GAN technology, service providers can enable
+subscribers to roam and handover between cellular networks and public and
+private unlicensed wireless networks using dual-mode mobile handsets. However
+GAN needed some platform changes to be fully functional and those changes must
+be run time variable.
+*/
+#undef FF_GENERIC_ACCESS_NETWORK                          
 
 /** #FF_GENERIC_FONTS_ASSETS 
 This flag is used to check if generic font assets are to be used, this is used
@@ -461,11 +659,25 @@ Generic QWERTY framework and 2nd generation text input engine integration
 */
 #undef FF_INTELLIGENT_TEXT_INPUT                          
 
+/** #FF_ITI_VIRTUAL_TOUCH_FIRST_GENERATION_SUPPORT 
+ITI feature (2nd generation text input features) are enabled in 5.0 & 9.1 TBD,
+i.e MCL, but these features are not supported in touch input modes like Virtual
+ITU-T, VKB & FSQ. Hence, to support 1st generation features to touch input
+methods, this flag is required.
+
+*/
+#undef FF_ITI_VIRTUAL_TOUCH_FIRST_GENERATION_SUPPORT      
+
 /** #FF_JAVA_GLOBAL_INDICATORS_API 
 Enables Java Global Indicator API. Global Indicator API can be used to add
 indicators to phone status pane.
 */
 #undef FF_JAVA_GLOBAL_INDICATORS_API                      
+
+/** #FF_KEYPAD_NO_SEND_KEY 
+Device does not have a send key to activate phone call.
+*/
+#undef FF_KEYPAD_NO_SEND_KEY                              
 
 /** #FF_LAYOUT_360_640_NONTOUCH 
 New non touch NHD (=QHD) resolution. Flag determine which layout dlls are put to
@@ -473,10 +685,20 @@ hw image.
 */
 #undef FF_LAYOUT_360_640_NONTOUCH                         
 
+/** #FF_LAYOUT_360_640_TOUCH_NHD4 
+layout for nhd4
+*/
+#undef FF_LAYOUT_360_640_TOUCH_NHD4                       
+
 /** #FF_LAYOUT_360_640_TOUCH_QHD2 
 Layout data for QHD2_TOUCH resolution.
 */
 #undef FF_LAYOUT_360_640_TOUCH_QHD2                       
+
+/** #FF_LAYOUT_480_640_TOUCH_VGA4 
+layout for vga4
+*/
+#undef FF_LAYOUT_480_640_TOUCH_VGA4                       
 
 /** #FF_LAYOUT_480_640_VGA3 
 Layout data for VGA3 resolution.
@@ -490,10 +712,20 @@ to hw image.
 */
 #undef FF_LAYOUT_640_360_NONTOUCH                         
 
+/** #FF_LAYOUT_640_360_TOUCH_NHD4 
+layout for nhd4
+*/
+#undef FF_LAYOUT_640_360_TOUCH_NHD4                       
+
 /** #FF_LAYOUT_640_360_TOUCH_QHD2 
 Layout data for QHD2 TOUCH resolution.
 */
 #undef FF_LAYOUT_640_360_TOUCH_QHD2                       
+
+/** #FF_LAYOUT_640_480_TOUCH_VGA4 
+layout for vga4 landscape
+*/
+#undef FF_LAYOUT_640_480_TOUCH_VGA4                       
 
 /** #FF_LAYOUT_640_480_VGA3 
 Layout data for VGA3 resolution.
@@ -503,7 +735,7 @@ Layout data for VGA3 resolution.
 /** #FF_LBT_ENGINE 
 To enable/disable LBT engine from S60. By default this should be ON
 The Location Triggering subsystem provides a service to applications for
-notifications based on the userâ€™s location. Applications can create and remove
+notifications based on the user’s location. Applications can create and remove
 location based triggers, and applications can be notified or started when one of
 their triggers is fired, i.e. the triggering conditions are met
 Feature wiki : https://s60wiki.nokia.com/S60Wiki/Location_based_triggering
@@ -531,6 +763,12 @@ BREl : 405-1781
 */
 #define FF_LBT_MGTUI                                       
 
+/** #FF_LIMITED_MESSAGE_AND_ALARM_TONE_SIZE 
+When this flag is on the message alert tones and alarm (calendar, clock) tones
+maximum size is defined by cenrep key KProEngRingingToneMaxSize
+*/
+#undef FF_LIMITED_MESSAGE_AND_ALARM_TONE_SIZE             
+
 /** #FF_LINKED_FONTS_CHINESE 
 For enabling linked font in Chinese a new feature flag FF_LINKED_FONTS_CHINESE
 is needed.
@@ -541,10 +779,32 @@ in Chinese variants only.
 */
 #undef FF_LINKED_FONTS_CHINESE                            
 
+/** #FF_LIVETV 
+support for DVBH live tv 1.1 (using bluetooth accessory SU-33W)
+*/
+#undef FF_LIVETV                                          
+
+/** #FF_LOCATION_MW_APE_CENTRIC_ARCH_SUPPORT 
+S60 Location FW and its related components are going to change to support APE
+Centric architecture. In order to toggle architecture support between new and
+old,we have introduced this flag. If this flag is ON, then new architecture will
+get into use. If its OFF then old architecure will get into use.
+*/
+#undef FF_LOCATION_MW_APE_CENTRIC_ARCH_SUPPORT            
+
 /** #FF_MDS_CAMERA_SUPPORT 
 Enables camera application support for Metadata system.
 */
 #define FF_MDS_CAMERA_SUPPORT                              
+
+/** #FF_MECO_XMPP 
+XMPP is an Instant Messaging Protocol. MECO (MEssaging COnvergence)
+implementation of XMPP is disabled by the use of this flag. This is to be used
+for run-time purposes. If this flag is false, then the functionality covered by
+this flag cannot be used although the library itself exists.
+
+*/
+#undef FF_MECO_XMPP                                       
 
 /** #FF_MEETING_REQUEST_UI 
 Meeting request UI from Custom SW will be is part of Common Email. This new flag
@@ -553,7 +813,7 @@ UI (viewer) is visible to Email application as Ecom plugin.
 
 If the flag is not defined, MR UI related components are not in ROM.
 */
-#define FF_MEETING_REQUEST_UI                              
+#undef FF_MEETING_REQUEST_UI                              
 
 /** #FF_MENU_TEXTURE_PRELOADING 
 In Menu (AppShell) application the performance of changing the folder has been
@@ -569,6 +829,21 @@ This flags controls whether the MMS Postcard ROM files are included in the
 build.
 */
 #undef FF_MMS_POSTCARD_INCLUDE_IN_ROM                     
+
+/** #FF_MPX_VIDEO_PLAYER 
+When this flag is on, MPX framework in platform supports video playback and
+mpxvideoplayer.exe is included in ROM. Platform's default video player is
+mpxvideoplayer.exe. This flag can be used at build time, if necessary, to decide
+if code can be build against services provided by MPX video player instead of
+libraries provided by Media Player and Video Center, which both are replaced by
+MPX Video Player.
+*/
+#define FF_MPX_VIDEO_PLAYER                                
+
+/** #FF_MTP_CONTROLLER 
+The feature enables device to support MTP Controller service
+*/
+#define FF_MTP_CONTROLLER                                  
 
 /** #FF_NCD_ENGINE 
 This flag enables building the NCD Engine to S60 release.
@@ -631,7 +906,7 @@ by switching the boolean flag defined/undefined.
 This feature enables OMA SCOMO feature in "application management component".
 
 */
-#undef FF_OMA_SCOMO_ADAPTER                               
+#define FF_OMA_SCOMO_ADAPTER                               
 
 /** #FF_OOM_MONITOR2_COMPONENT 
 Feature flag for controlling the inclusion of Out-of-Memory2 component into the
@@ -656,7 +931,7 @@ displaying these information by swtich on/off of this flag.
 /** #FF_PLATFORM_SIMULATOR 
 Platform Simulator product makes it possible to execute software on simulated
 target hardware using a Windows or Linux workstation. Platform Simulator is
-based on ARMÂ® RealViewÂ® tools that support modeling terminal hardware using LISA
+based on ARM® RealView® tools that support modeling terminal hardware using LISA
 language. Platform Simulator runs any OS e.g. S60 or Linux. The OS is introduced
 to the simulator as a core image loaded into the simulated flash memory. 
 
@@ -683,7 +958,7 @@ On enabling this feature flag pnpprovfilter.dll will be created and this feature
 flag is used to enable PNPProvisioning HTTP filter which by passes the download
 manager launching PNPMS provisioning engine.
 */
-#define FF_PNPMS_PROV_FILTER                               
+#undef FF_PNPMS_PROV_FILTER                               
 
 /** #FF_PNPMS_SERVICE_HELP_PLUGIN 
 This feature flag is required for launching PNPMS application from general
@@ -693,7 +968,7 @@ General Settings/Control Panel. Service Help will launch browser on selection
 and direct the browser with predefined PnPMS server URL where user can download
 provisioning settings over HTTP from web server.
 */
-#define FF_PNPMS_SERVICE_HELP_PLUGIN                       
+#undef FF_PNPMS_SERVICE_HELP_PLUGIN                       
 
 /** #FF_POWER_SAVE 
 "Power save mode is a collection of features which are put in a power saving
@@ -717,10 +992,25 @@ dialog for changing the authentication type.
 */
 #undef FF_PROV_AUTHTYPE_PLUGIN                            
 
+/** #FF_QT 
+Generic feature flag for for QT based features (to be used in image creation and
+run-time variation)
+*/
+#undef FF_QT                                              
+
 /** #FF_QWERTY_FN_KEY 
 The device has a Fn key
 */
 #undef FF_QWERTY_FN_KEY                                   
+
+/** #FF_RFSUICON_ERASE_ALL_DATA 
+This feature flag is required to either enable or disable the display of “Erase
+all data” icon (deep RFS) in S60 UI menu. Using this feature flag the
+functioanlity can either be totally enabled or disabled. Not all devices may
+require this feature and hence it needs to be configurable.
+
+*/
+#undef FF_RFSUICON_ERASE_ALL_DATA                         
 
 /** #FF_RND_COMMSDAT 
 The override flags FF_EMPTY_COMMSDAT, FF_VANILLA_COMMSDAT and FF_RND_COMMSDAT
@@ -753,7 +1043,7 @@ used if some special functionality is needed.
 The device has multidirectional "rocker" key.
 
 */
-#undef FF_ROCKER_KEY                                      
+#define FF_ROCKER_KEY                                      
 
 /** #FF_ROM_INCLUDE_ALF 
 This flags controls whether the UI Accelerator toolkit (ALF) is included in the
@@ -764,7 +1054,7 @@ build.
 /** #FF_RUNTIME_DEVICE_CAPABILITY_CONFIGURATION 
 To enable the feature to variate the device capability on runtime
 */
-#undef FF_RUNTIME_DEVICE_CAPABILITY_CONFIGURATION         
+#define FF_RUNTIME_DEVICE_CAPABILITY_CONFIGURATION         
 
 /** #FF_S60_HELPS_IN_USE 
 Platform helps are included into image based on this flag.
@@ -802,11 +1092,41 @@ display it in the application shell if desired.
 */
 #undef FF_SHOW_MMPLAYER                                   
 
+/** #FF_SIP_CUSTOM_PDP_HANDLING 
+Controls the handling of PDP activation failures in operator specified method
+*/
+#undef FF_SIP_CUSTOM_PDP_HANDLING                         
+
+/** #FF_SMALL_SCREEN_TOUCH 
+for small physical screen but big resolution and touch(for example 2.4" vga
+touch)
+*/
+#undef FF_SMALL_SCREEN_TOUCH                              
+
 /** #FF_STARTUP_OMA_DM_SUPPORT 
 The flag will be used to enable receiving OMA CP/DM messages during system
 start-up in those devices that need the feature.
 */
 #undef FF_STARTUP_OMA_DM_SUPPORT                          
+
+/** #FF_STROKE_INPUTMODE_IN_TAIWAN 
+The flag to switch stroke input mode in taiwan language. This flag is introduced
+from 9.2
+*/
+#undef FF_STROKE_INPUTMODE_IN_TAIWAN                      
+
+/** #FF_SUPL_IMSI_GENERATED_SERVER_PRIORITY_DEFAULT 
+When this flag is enabled IMSI based autogenerated SUPL server has higher
+priority on the SUPL server list than the hard coded servers from startup
+settings DB
+*/
+#undef FF_SUPL_IMSI_GENERATED_SERVER_PRIORITY_DEFAULT     
+
+/** #FF_SYNCML_STATUS_EXTENDED_ERROR_CODES 
+When this flag is ON it is possible to write extended syncml error codes to sync
+log
+*/
+#undef FF_SYNCML_STATUS_EXTENDED_ERROR_CODES              
 
 /** #FF_TACTICONS 
 Tacticons are haptic effects that can be played by the applications to indicate
@@ -814,7 +1134,7 @@ success or failure of actions. Tacticons can be also automatically played
 together with some Sound IDs.
 
 */
-#undef FF_TACTICONS                                       
+#define FF_TACTICONS                                       
 
 /** #FF_TACTILE_FEEDBACK 
 Device supports Tactile Feedback. Tactile feedback is produced by UI components
@@ -827,7 +1147,13 @@ and applications on pointer down events. Actual physical feedback effect
 This is the feature flag to allow branching of the code flow based on the
 capability check or SID check for the third party applications.
 */
-#undef FF_TARM_CAPABILITY_BASED_ACCESS                    
+#define FF_TARM_CAPABILITY_BASED_ACCESS                    
+
+/** #FF_TARM_CAPABILITY_CHECKING 
+This is a feature flag to decide the code flow base on either the Application
+capability check or the SID check in case of third party applications
+*/
+#undef FF_TARM_CAPABILITY_CHECKING                        
 
 /** #FF_TCP_MYFAVES_FEATURE 
 The feature flag is to turn ON/OFF MyFaves feature in a S60 3.2 complementary
@@ -841,6 +1167,11 @@ Complementary package(both International & US)on S60 3.2.3. This feature flag is
 valid for MyProfile UI & MyProfile synchronization.
 */
 #undef FF_TCP_MYPROFILE                                   
+
+/** #FF_TD_SCDMA 
+This is a feature flag used to turn on/off TD-SCDMA releated features
+*/
+#undef FF_TD_SCDMA                                        
 
 /** #FF_THEME_HAZE 
 Haze theme is included in ROM image.
@@ -885,6 +1216,20 @@ The flag excludes all S60 USB host and OTG related components.
 */
 #undef FF_USB_HOST                                        
 
+/** #FF_USB_MODEM 
+FF_USB_MODEM will be used to en/disable PAM(Phone As Modem) feature. When flag
+is enabled, the feature is included in image.
+
+KFeatureIdUsbModem is used for runtime variant.
+
+*/
+#undef FF_USB_MODEM                                       
+
+/** #FF_USE_DEFAULT_KEYMAP 
+Default Keymappings are included into image based on this flag
+*/
+#undef FF_USE_DEFAULT_KEYMAP                              
+
 /** #FF_USE_EGPRS_ICON 
 The flag is used to enable EGPRS icon in the status pane. If the flag is
 disabled, GPRS icon must be shown instead of EGPRS icon.
@@ -900,7 +1245,15 @@ C=Phone memory, E=Internal mass storage and F=Memory card.
 The flag affects how S60 components see the drives setup from estart
 txt-file(s).
 */
-#undef FF_USE_MASS_STORAGE_CONFIG                         
+#define FF_USE_MASS_STORAGE_CONFIG                         
+
+/** #FF_USE_NAVIKEY_FOR_VOLUME 
+This feature flag is used to enable/disable the use of the navikey for volume
+adjustment. In products with no dedicated side volume key, this flag can be
+enabled. When the flag is enabled, the "up" navikey is used to increment volume
+by one step, and the "down" navikey is used to decrement volume by one step. 
+*/
+#undef FF_USE_NAVIKEY_FOR_VOLUME                          
 
 /** #FF_USE_ZI_ENGINE 
 On enabling this feature flag eZitext engine will be part of the Image and
@@ -934,6 +1287,12 @@ used if some special functionality is needed.
 
 */
 #undef FF_VANILLA_COMMSDAT                                
+
+/** #FF_VIDEO_AUDIO_BRANDING 
+When this flag is set on, videoplayer UI supports audio track type based
+branding elements.
+*/
+#undef FF_VIDEO_AUDIO_BRANDING                            
 
 /** #FF_VIRTUAL_FULLSCR_QWERTY_INPUT 
 Indicates whether a device needs Virtual full-screen qwerty input or not.
@@ -975,18 +1334,6 @@ interface for video decoding and postprocessing.
 */
 #undef FF_WEBVIDEO_PH2                                    
 
-/** #FF_WLANSNIFFER 
-The purpose of the flag is to control whether the WlanSniffer2 application is to
-be integrated into 3.2 product builds or not.
-*/
-#undef FF_WLANSNIFFER                                     
-
-/** #FF_WLANSNIFFER_VOIP_ENHANCEMENTS 
-The WLAN Sniffer VoIP enhancements will provide easy way to connect to VoIP
-service via Sniffer's Active Idle plugin.
-*/
-#undef FF_WLANSNIFFER_VOIP_ENHANCEMENTS                   
-
 /** #FF_WLAN_EXTENSIONS 
 Device supports extended WLAN functionalities e.g. for association and
 authentication.
@@ -1012,7 +1359,7 @@ authentication and data link protection.
 This feature flag is used only for including WAPI binaries to ROM. WAPI
 functionality can be (run-time) enabled with FF_WLAN_WAPI.
 */
-#undef FF_WLAN_WAPI_INCLUDE_IN_ROM                        
+#define FF_WLAN_WAPI_INCLUDE_IN_ROM                        
 
 /** #FF_XML_IDLE_THEME_BASIC_IDLE 
 Controls if Basic idle theme is going to image or not.
@@ -1038,7 +1385,7 @@ Controls if Navibar idle theme is going to image or not.
 The default language that is selected during bootup (this selection is
 overridden by the sim language selection). 
 */
-#define LANGPACK_DEFAULTLANG                               
+#define LANGPACK_DEFAULTLANG                               DEFINED
 
 /** #LANGUAGE_ARABIC 
 included Arabic
@@ -1331,6 +1678,23 @@ included Vietnamese
 */
 #define LANGUAGE_VIETNAMESE                                
 
+/** #SYMBIAN_INCLUDE_LOCATION_NPE_DSM 
+To Include the AGPS NPE Integration module.
+
+*/
+#undef SYMBIAN_INCLUDE_LOCATION_NPE_DSM                   
+
+/** #SYMBIAN_INCLUDE_LOCATION_SUPL_POS_INIT 
+Includes the SUPL Pos message plugin.
+*/
+#undef SYMBIAN_INCLUDE_LOCATION_SUPL_POS_INIT             
+
+/** #SYMBIAN_INCLUDE_LOCATION_SUPL_PROXY 
+Includes the SUPL proxy protocol module and supporting APIs (Terminal initiation
+API, Pos message API, Privacy request API, Network privacy API).
+*/
+#undef SYMBIAN_INCLUDE_LOCATION_SUPL_PROXY                
+
 /** #__3D_MENU 
 3D Menu feature enhances Application Shell with animating 3D icons.
 */
@@ -1340,7 +1704,7 @@ included Vietnamese
 This flag indicates that the 3GP Extention feature is supported in
 MetadataUtility.
 */
-#undef __3GP_EXTENTION                                    
+#define __3GP_EXTENTION                                    
 
 /** #__AAC_ENCODER_PLUGIN 
 Device supports all-ARM AAC encoding capabilities.
@@ -1353,16 +1717,16 @@ Device supports all-ARM AAC+ and Enhanced AAC+ decoding capabilities
 #define __AAC_PLUS_DECODER_PLUGIN                          
 
 /** #__ACTIVE_IDLE 
-"The Active Idle includes several plugins to display different content.
+The Active Idle includes several plugins to display different content.
 Additional feature flags for them will be requested separately as the necessity
 for them to be optional arises.At the moment this flag will cover all Active
-Idle mandatory features."
+Idle mandatory features.
 */
 #undef __ACTIVE_IDLE                                      
 
 /** #__ALLOW_UPGRADE_HELIX 
-"Support for Aftermarket update of Codecs, and File Formats. To allow the helix
-dlls to be upgraded using a SISX file. "
+Support for Aftermarket update of Codecs, and File Formats. To allow the helix
+dlls to be upgraded using a SISX file.
 */
 #define __ALLOW_UPGRADE_HELIX                              
 
@@ -1372,9 +1736,9 @@ Device supports internal (HS)CSD in application UIs.
 #undef __APP_CSD_SUPPORT                                  
 
 /** #__AUDIO_EFFECTS_API 
-"Device supports utility APIs and framework for Series 60 Audio applications to
+Device supports utility APIs and framework for Series 60 Audio applications to
 enable predefined audio effects with audio play/record utilities. Features lilke
-Volume, Graphical Equalizer, Reverb are possible."
+Volume, Graphical Equalizer, Reverb are possible.
 */
 #define __AUDIO_EFFECTS_API                                
 
@@ -1412,9 +1776,9 @@ General settings application supports controlling display brightness.
 #undef __BRIGHTNESS_CONTROL                               
 
 /** #__BTIC_BINARIES_CHECK_ENABLED 
-"In addition to the SWI certificate store check (defined by __BTIC_ENABLED),
-also binaries (having TCB or DRM capability) in c: drive are integrity checked
-during boot."
+In addition to the SWI certificate store check (defined by __BTIC_ENABLED), also
+binaries (having TCB or DRM capability) in c: drive are integrity checked during
+boot.
 */
 #undef __BTIC_BINARIES_CHECK_ENABLED                      
 
@@ -1473,9 +1837,9 @@ user area image."
 #undef __CUSTOMISED_RFS                                   
 
 /** #__DEFAULT_CONNECTION 
-Initial connection selection enables automatic 'usage of default destination
+Initial connection selection enables automatic usage of default destination
 groups (like Internet) instead of single IAPs when starting network connections.
-Deprecated in 5.0.
+Deprecated in S60 5.0.
 */
 #undef __DEFAULT_CONNECTION                               
 
@@ -1532,13 +1896,13 @@ Device supports equalizer.
 /** #__FLASH_LITE_BROWSER_PLUGIN 
 Device supports Macromedia Flash Lite plugin for Web Browser
 */
-#undef __FLASH_LITE_BROWSER_PLUGIN                        
+#define __FLASH_LITE_BROWSER_PLUGIN                        
 
 /** #__FLASH_LITE_VIEWER 
 Device supports Macromedia Flash Lite Viewer for opening and playing Flash
 content files (.SWF).
 */
-#undef __FLASH_LITE_VIEWER                                
+#define __FLASH_LITE_VIEWER                                
 
 /** #__FM_RADIO 
 Device contains support for FM radio (TunerUtility and RadioServer components).
@@ -1551,7 +1915,7 @@ Device supports handwriting recognition input.
 #define __HANDWRITING_RECOGNITION_INPUT                    
 
 /** #__HSXPA_SUPPORT 
-"When the feature flag is set, HSDPA setting item is visible for the user."
+When the feature flag is set, HSDPA setting item is visible for the user.
 */
 #define __HSXPA_SUPPORT                                    
 
@@ -1577,31 +1941,31 @@ channel."
 AAC CMMFCodec (all-ARM software implementation) is included in build  to be used
 by some other client than controller plug-in component.
 */
-#undef __INCLUDE_AAC_CMMFCODEC                            
+#define __INCLUDE_AAC_CMMFCODEC                            
 
 /** #__INCLUDE_AMR_NB_CMMFCODEC 
 AMR NB CMMFCodec (all-ARM software implementation) is included in build to be
 used by some other client  than controller plug-in component.
 */
-#undef __INCLUDE_AMR_NB_CMMFCODEC                         
+#define __INCLUDE_AMR_NB_CMMFCODEC                         
 
 /** #__INCLUDE_AMR_WB_CMMFCODEC 
 AMR WB CMMFCodec (all-ARM software implementation) is included in build  to be
 used by some other client than controller plug-in component.
 */
-#undef __INCLUDE_AMR_WB_CMMFCODEC                         
+#define __INCLUDE_AMR_WB_CMMFCODEC                         
 
 /** #__INCLUDE_EAACPLUS_CMMFCODEC 
 This flag is used to indicate that the eAAC+ soft codec should be included in
 ROM.
 */
-#undef __INCLUDE_EAACPLUS_CMMFCODEC                       
+#define __INCLUDE_EAACPLUS_CMMFCODEC                       
 
 /** #__INCLUDE_MP3_CMMFCODEC 
 MP3 CMMFCodec (all-ARM software implementation) is included in build  to be used
 by some other client than controller plug-in component.
 */
-#undef __INCLUDE_MP3_CMMFCODEC                            
+#define __INCLUDE_MP3_CMMFCODEC                            
 
 /** #__INCLUDE_QCELP_CMMFCODEC 
 QCELP CMMFCodec (all-ARM software implementation) is included in build  to be
@@ -1690,8 +2054,8 @@ Device has internal GPS hardware.
 #undef __LOCATIONGPSHW                                    
 
 /** #__LOCATION_CENTRE 
-"Support for Location Centre. When enabled, Location Centre will be visible in
-Application Shell."
+Support for Location Centre. When enabled, Location Centre will be visible in
+Application Shell.
 */
 #define __LOCATION_CENTRE                                  
 
@@ -1703,7 +2067,7 @@ Device supports macrodia flash 6.
 /** #__MEDIA_TRANSFER_PROTOCOL 
 Device supports MTP application.
 */
-#undef __MEDIA_TRANSFER_PROTOCOL                          
+#define __MEDIA_TRANSFER_PROTOCOL                          
 
 /** #__MMS_POSTCARD 
 Flag is used ro incorporate Postcard application into the release.
@@ -1733,8 +2097,8 @@ variation only.
 #define __MTP_PROTOCOL_SUPPORT                             
 
 /** #__NEWSTICKER 
-"This feature displays a 'CNN type' ticker of text pushed via cell broadcast,
-onto the idle screen of the phone."
+This feature displays a 'CNN type' ticker of text pushed via cell broadcast,
+onto the idle screen of the phone.
 */
 #undef __NEWSTICKER                                       
 
@@ -1747,7 +2111,7 @@ is combined to some other hard key."
 /** #__OMA_POC 
 OMA Push-to-talk over Cellular.
 */
-#define __OMA_POC                                          
+#undef __OMA_POC                                          
 
 /** #__ON_SCREEN_DIALER 
 This flag indicates that the dialer.dll is included to the rom image and
@@ -1762,9 +2126,9 @@ rendering
 #define __OPENGL_ES_3DAPI                                  
 
 /** #__OPENGL_ES_SW_IMPLEMENTATION 
-"Device has a software implementation of OpenGL ES and EGL. No hardware support.
+Device has a software implementation of OpenGL ES and EGL. No hardware support.
 If __OPENGL_ES_3DAPI is enabled, either HW or SW implementation should exist. If
-HW is not present, this flag should be enabled."
+HW is not present, this flag should be enabled.
 */
 #define __OPENGL_ES_SW_IMPLEMENTATION                      
 
@@ -1776,9 +2140,9 @@ cache.  Contents of this cache will remain from one browser session to the next
 #define __OPERATOR_CACHE                                   
 
 /** #__OPERATOR_MENU 
-"Device contains Operator menu application.  It is a wrapper to Browser
+Device contains Operator menu application.  It is a wrapper to Browser
 application and allows using operator specific application icon (and label), and
-allows opening wanted URL initially."
+allows opening wanted URL initially.
 */
 #define __OPERATOR_MENU                                    
 
@@ -1957,7 +2321,7 @@ Device supports configuring IMPS using SyncML.
 /** #__SYNCML_DM_OBEX 
 Device supports device management over OBEX.
 */
-#undef __SYNCML_DM_OBEX                                   
+#define __SYNCML_DM_OBEX                                   
 
 /** #__SYNCML_DM_OTA 
 SyncML DM OMA provisioning adapter.
@@ -2079,7 +2443,7 @@ instead of using the codec through HWDevice.
 /** #__VFP_HW_SUPPORT 
 The device supports for vector floating-point (VFP) architecture
 */
-#undef __VFP_HW_SUPPORT                                   
+#define __VFP_HW_SUPPORT                                   
 
 /** #__VIBRA 
 Indicates whether a device has a vibra support.
@@ -2145,4 +2509,54 @@ of XDM
 */
 #define __XDM_XCAP                                         
 
-#endif // __BLDPUBLIC_HRH 
+/** Features added from bldcustomsw.hrh (copied from bldcustomsw.hrh)*/
+
+/** #FF_MTP_ALBUM_ART */
+#undef FF_MTP_ALBUM_ART
+
+/** #FF_MUSIC_PATH_PLUGIN */
+#undef FF_MUSIC_PATH_PLUGIN
+
+/** #FF_POWER_KEY_AS_KEYGUARD */
+#undef FF_POWER_KEY_AS_KEYGUARD
+
+/** #FF_DISPLAY_NETWORK_NAME_AFTER_CS_REGISTRATION */
+#undef FF_DISPLAY_NETWORK_NAME_AFTER_CS_REGISTRATION
+
+/** #FF_MANUAL_SELECTION_POPULATED_PLMN_LIST */
+#undef FF_MANUAL_SELECTION_POPULATED_PLMN_LIST
+
+/** #FF_MOBILITY_MANAGEMENT_ERRORS */
+#undef FF_MOBILITY_MANAGEMENT_ERRORS
+
+/** #FF_SERVICE_CALL_WHILE_PHONE_LOCKED */
+#undef FF_SERVICE_CALL_WHILE_PHONE_LOCKED
+
+/** #FF_LOCATIONSYSUI_HIDE_POSITIONING_MENU */
+#undef FF_LOCATIONSYSUI_HIDE_POSITIONING_MENU
+
+/** #FF_MASTER_RESET_AND_CLEAR_SUBMENU */
+#undef FF_MASTER_RESET_AND_CLEAR_SUBMENU
+
+/** #FF_SIMLOCK_UI */
+#undef FF_SIMLOCK_UI
+
+/** #FF_ENTRY_POINT_FOR_VIDEO_SHARE */
+#undef FF_ENTRY_POINT_FOR_VIDEO_SHARE
+
+/** #FF_IMS_DEREGISTRATION_IN_OFFLINE */
+#undef FF_IMS_DEREGISTRATION_IN_OFFLINE
+
+/** #FF_IMS_DEREGISTRATION_IN_RFS */
+#undef FF_IMS_DEREGISTRATION_IN_RFS
+
+/** #FF_IMS_DEREGISTRATION_IN_VPN */
+#undef FF_IMS_DEREGISTRATION_IN_VPN
+
+/** #FF_INTRANET_BROWSING */
+#undef FF_INTRANET_BROWSING         
+
+/** #FF_HOME_SCREEN_EASY_DIALING */
+#define FF_HOME_SCREEN_EASY_DIALING                                  
+
+#endif // __BLDPUBLIC_HRH

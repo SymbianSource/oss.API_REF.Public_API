@@ -1,5 +1,4 @@
 /*
- * © Portions copyright (c) 2007 Symbian Software Ltd. All rights reserved.
  * Copyright (c) 1982, 1986, 1989, 1993
  *      The Regents of the University of California.  All rights reserved.
  * Redistribution and use in source and binary forms, with or without
@@ -26,6 +25,7 @@
  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  *
+ * Portions Copyright (c) 2007 Nokia Corporation and/or its subsidiary(-ies). All rights reserved.
  *      From: @(#)if.h  8.1 (Berkeley) 6/10/93
  * $FreeBSD: src/sys/net/if_var.h,v 1.18.2.16 2003/04/15 18:11:19 fjoe Exp $
  * $DragonFly: src/sys/net/if_var.h,v 1.40 2007/09/09 03:51:25 sephe Exp $
@@ -40,7 +40,7 @@
 #endif
 #endif //__SYMBIAN32__
 #ifndef _NET_IF_H_
-#include <net/if.h>
+#include <stdapis/net/if.h>
 #endif
  
  /*

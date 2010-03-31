@@ -1,29 +1,34 @@
-
-#ifndef BOOST_MPL_LAMBDA_HPP_INCLUDED
-#define BOOST_MPL_LAMBDA_HPP_INCLUDED
-
-// Copyright Aleksey Gurtovoy 2001-2004
+// -- lambda.hpp -- Boost Lambda Library -----------------------------------
+// Copyright (C) 1999, 2000 Jaakko Järvi (jaakko.jarvi@cs.utu.fi)
 //
-// Distributed under the Boost Software License, Version 1.0. 
-// (See accompanying file LICENSE_1_0.txt or copy at 
+// Distributed under the Boost Software License, Version 1.0. (See
+// accompanying file LICENSE_1_0.txt or copy at
 // http://www.boost.org/LICENSE_1_0.txt)
 //
-// See http://www.boost.org/libs/mpl for documentation.
+// For more information, see http://lambda.cs.utu.fi 
 
-// $Source: /cvsroot/boost/boost/boost/mpl/lambda.hpp,v $
-// $Date: 2004/09/02 15:40:41 $
-// $Revision: 1.5 $
+#ifndef BOOST_LAMBDA_LAMBDA_HPP
+#define BOOST_LAMBDA_LAMBDA_HPP
 
-#include <boost/mpl/lambda_fwd.hpp>
-#include <boost/mpl/bind.hpp>
-#include <boost/mpl/aux_/config/lambda.hpp>
 
-#if !defined(BOOST_MPL_CFG_NO_FULL_LAMBDA_SUPPORT)
-#   include <boost/mpl/aux_/full_lambda.hpp>
-#else
-#   include <boost/mpl/aux_/lambda_no_ctps.hpp>
-#   include <boost/mpl/aux_/lambda_support.hpp>
-#   define BOOST_MPL_CFG_NO_IMPLICIT_METAFUNCTIONS
+#include "boost/lambda/core.hpp"
+
+#ifdef BOOST_NO_FDECL_TEMPLATES_AS_TEMPLATE_TEMPLATE_PARAMS
+#include <istream>
+#include <ostream>
 #endif
 
-#endif // BOOST_MPL_LAMBDA_HPP_INCLUDED
+#include "boost/lambda/detail/operator_actions.hpp"
+#include "boost/lambda/detail/operator_lambda_func_base.hpp"
+#include "boost/lambda/detail/operator_return_type_traits.hpp"
+
+
+#include "boost/lambda/detail/operators.hpp"
+
+#ifndef BOOST_LAMBDA_FAILS_IN_TEMPLATE_KEYWORD_AFTER_SCOPE_OPER
+// sorry, member ptr does not work with gcc2.95
+#include "boost/lambda/detail/member_ptr.hpp"
+#endif
+
+
+#endif

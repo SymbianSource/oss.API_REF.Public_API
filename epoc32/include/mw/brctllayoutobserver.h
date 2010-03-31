@@ -48,12 +48,12 @@ enum TBrCtlTabDirection
 * Usage:
 *
 * @code
-*  #include <BrCtlLayoutObserver.h>
+*  #include <brctllayoutobserver.h>
 *
 *  
 * @see S60 Platform: Browser Control API Developer's Guide Version 2.0
 * @lib BrowserEngine.lib
-* @file BrCtlLayoutObserver.h
+* @file brctllayoutobserver.h
 * @endcode     *
 */
 class MBrCtlLayoutObserver

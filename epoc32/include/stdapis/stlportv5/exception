@@ -1,229 +1,116 @@
 /*
- * © Portions copyright (c) 2006-2007 Nokia Corporation.  All rights reserved.
+ * Copyright (c) 2008-2009 Nokia Corporation and/or its subsidiary(- *   * ies).
+ * All rights reserved.
+ * This component and the accompanying materials are made available
+ * under the terms of the License "Eclipse Public License v1.0"
+ * which accompanies this distribution, and is available
+ * at the URL "http://www.eclipse.org/legal/epl-v10.html".
  *
- * Copyright (c) 1996,1997
- * Silicon Graphics Computer Systems, Inc.
+ * Initial Contributors:
+ * Nokia Corporation - initial contribution.
  *
- * Copyright (c) 1999 
- * Boris Fomitchev
+ * Contributors:
  *
- * This material is provided "as is", with absolutely no warranty expressed
- * or implied. Any use is at your own risk.
- *
- * Permission to use or copy this software for any purpose is hereby granted 
- * without fee, provided the above notices are retained on all copies.
- * Permission to modify the code and to distribute modified code is granted,
- * provided the above notices are retained, and a notice that the code was
- * modified is included with the above copyright notice.
+ * Description:
+ * Name       : exception
+ * Part of    : standard c++ library.
  *
  */
 
-// This header exists solely for portability.  Normally it just includes
-// the native header <exception>.
-
-// The header <exception> contains low-level functions that interact
-// with a compiler's exception-handling mechanism.  It is assumed to
-// be supplied with the compiler, rather than with the library, because
-// it is inherently tied very closely to the compiler itself.
-
-// On platforms where <exception> does not exist, this header defines
-// an exception base class.  This is *not* a substitute for everything
-// in <exception>, but it suffices to support a bare minimum of STL
-// functionality.
 
 
-# if !defined (_STLP_OUTERMOST_HEADER_ID)
-#  define _STLP_OUTERMOST_HEADER_ID 0x423
-#  include <stl/_prolog.h>
-# elif (_STLP_OUTERMOST_HEADER_ID == 0x423) && ! defined (_STLP_DONT_POP_0x423)
-#  define _STLP_DONT_POP_0x423
-# endif
 
-#ifndef _STLP_EXCEPTION
-#define _STLP_EXCEPTION
+#ifndef _SYMCPP_EXCEPTION_H_
+#define _SYMCPP_EXCEPTION_H_
 
-# if   ! defined (_STLP_NO_EXCEPTION_HEADER)
+#ifdef __EABI__
+/* EABI specific definitions */
+#include <e32def.h>
+namespace std
+{
+    class exception
+        {
+    public:
+        IMPORT_C exception() __NO_THROW;
+        IMPORT_C exception(const exception&) __NO_THROW;
+        IMPORT_C exception& operator=(const exception&) __NO_THROW;
+        IMPORT_C virtual ~exception() __NO_THROW;
+        IMPORT_C virtual const char* what() const __NO_THROW;
+        };
 
-#  if defined ( _UNCAUGHT_EXCEPTION )
-#   undef _STLP_INCOMPLETE_EXCEPTION_HEADER
-#  endif
+    class bad_exception : public exception
+        {
+    public:
+        IMPORT_C bad_exception() __NO_THROW;
+        IMPORT_C bad_exception(const bad_exception&)  __NO_THROW;
+        IMPORT_C bad_exception& operator=(const bad_exception&)  __NO_THROW;
+        IMPORT_C virtual ~bad_exception()  __NO_THROW;
+        IMPORT_C virtual const char* what() const  __NO_THROW;
+        };
 
-# if defined(_STLP_BROKEN_EXCEPTION_CLASS)
-#  define exception     _STLP_NULLIFIED_BROKEN_EXCEPTION_CLASS
-#  define bad_exception _STLP_NULLIFIED_BROKEN_BAD_EXCEPTION_CLASS
-#  if defined (_STLP_NO_NEW_NEW_HEADER)
-#   include _STLP_NATIVE_CPP_RUNTIME_HEADER(Exception.h)
+    typedef void (*unexpected_handler)();
+
+    IMPORT_C unexpected_handler set_unexpected(unexpected_handler)  __NO_THROW;
+    IMPORT_C void unexpected();
+
+    typedef void (*terminate_handler)();
+
+    IMPORT_C terminate_handler set_terminate(terminate_handler)  __NO_THROW;
+    IMPORT_C void terminate();
+
+    IMPORT_C extern bool uncaught_exception()  __NO_THROW;
+} 
+
+
+
 #  else
-#   include _STLP_NATIVE_CPP_RUNTIME_HEADER(Exception)
-#  endif
-#  undef exception
-#  undef bad_exception
-# else
 
-#ifndef _STLP_NO_NEW_NEW_HEADER
-#define _STLP_NO_NEW_NEW_HEADER
-#endif
+/* Declarations common to all other platforms (Non-EABI) here.
+ * WINSCW specific definitions are in exception_winscw.h
+ */
+#    include <e32def.h>
 
-# if defined (_STLP_NO_NEW_NEW_HEADER)
-#  include _STLP_NATIVE_CPP_RUNTIME_HEADER(exception.h)
-# else
-#   include _STLP_NATIVE_CPP_RUNTIME_HEADER(exception)
-# endif
+namespace std {
 
-# endif
+  class exception {
+  public:
+	  exception() __NO_THROW;
+	  exception(const exception&) __NO_THROW;
+      exception& operator=(const exception&) __NO_THROW;
+      virtual ~exception() __NO_THROW;
+      virtual const char* what() const __NO_THROW;
+  };
 
-#    if defined (_STLP_MSVC) || defined (__ICL)
-// dwa 02/04/00 - here I'm assuming that __ICL uses the same library headers as vc6.
-// the header <yvals.h> which ships with vc6 and is included by its native <exception>
-// actually turns on warnings, so we have to turn them back off.
-#      include <config/_msvc_warnings_off.h>
-#    endif
+  class bad_exception : public exception {
+  public:
+      bad_exception() __NO_THROW; 
+      bad_exception(const bad_exception&) __NO_THROW; 
+      bad_exception& operator=(const bad_exception&) __NO_THROW;
+      virtual ~bad_exception() __NO_THROW;
+      virtual const char* what() const __NO_THROW;
+  };
 
+  typedef void (*terminate_handler)();
+  extern terminate_handler set_terminate(terminate_handler) __NO_THROW;
 
-#  ifdef _STLP_USE_OWN_NAMESPACE
+  typedef void (*unexpected_handler)();
+  extern unexpected_handler set_unexpected(unexpected_handler) __NO_THROW;
 
-_STLP_BEGIN_NAMESPACE
+  void terminate();
+  void unexpected();
+  bool uncaught_exception() __NO_THROW;
 
-#if !defined(_STLP_BROKEN_EXCEPTION_CLASS)
-using _STLP_VENDOR_EXCEPT_STD::exception;
-using _STLP_VENDOR_EXCEPT_STD::bad_exception;
-#endif
+}
 
-# if ! defined (_STLP_NO_USING_FOR_GLOBAL_FUNCTIONS)
+#    ifdef __WINSCW__
+/*
+ * C++ Exception specific stuff required from the CW runtime.
+ * Certain functions are implemented inline in CW headers.
+ * We're providing the same in exception_winscw.h
+ */
+#      include <stdapis/stlportv5/exception_winscw.h>
+#    endif //__WINSCW__
 
-// fbp : many platforms present strange mix of
-// those in various namespaces
-#  if !defined(_STLP_VENDOR_UNEXPECTED_STD)
-#   define _STLP_VENDOR_UNEXPECTED_STD _STLP_VENDOR_EXCEPT_STD
-#  endif
-
-// weird errors
-# if (! defined (__BORLANDC__)) || (defined (__STD_EXCEPTION) && defined (__RWSTD_EXCEPTION_SEEN) && defined ( _STLP_DONT_POP_0x423))
-using _STLP_VENDOR_UNEXPECTED_STD::unexpected;
-using _STLP_VENDOR_UNEXPECTED_STD::unexpected_handler;
-using _STLP_VENDOR_UNEXPECTED_STD::set_unexpected;
-using _STLP_VENDOR_UNEXPECTED_STD::terminate;
-using _STLP_VENDOR_UNEXPECTED_STD::terminate_handler;
-using _STLP_VENDOR_UNEXPECTED_STD::set_terminate;
-# endif
-
-# if !defined (_STLP_INCOMPLETE_EXCEPTION_HEADER) 
-using _STLP_VENDOR_UNEXPECTED_STD::uncaught_exception;
-# endif
-
-#  endif
-
-_STLP_END_NAMESPACE
-
-#  endif /* _STLP_OWN_NAMESPACE */
-
-#else /* _STLP_NO_EXCEPTION_HEADER */
-
-// fbp : absence of <exception> usually means that those
-// functions are not going to be called by compiler.
-// Still, define them for the user.
-#ifdef __SYMBIAN32__
-_STLP_BEGIN_NAMESPACE
-#endif //__SYMBIAN32__
-typedef void (*unexpected_handler)();
-unexpected_handler set_unexpected(unexpected_handler f) _STLP_NOTHROW_INHERENTLY;
-void unexpected();
-
-typedef void (*terminate_handler)();
-terminate_handler set_terminate(terminate_handler f) _STLP_NOTHROW_INHERENTLY;
-void terminate();
-
-bool uncaught_exception(); // not implemented under mpw as of Jan/1999
-
-#ifdef __SYMBIAN32__
-_STLP_END_NAMESPACE
-#endif //__SYMBIAN32__
-
-#endif  /* _STLP_NO_EXCEPTION_HEADER */	
-
-# if   defined (_STLP_NO_EXCEPTION_HEADER) || defined(_STLP_BROKEN_EXCEPTION_CLASS)
-# ifndef _STLP_EXCEPTION_H
-#  define _STLP_EXCEPTION_H
-
-_STLP_BEGIN_NAMESPACE
-
-// section 18.6.1
-#ifdef __SYMBIAN32__
-class exception
-#else
-class _STLP_CLASS_DECLSPEC exception 
-#endif
-	{
-	public:
-# ifdef _STLP_OWN_IOSTREAMS
-        _STLP_DECLSPEC exception() _STLP_NOTHROW;
-        _STLP_DECLSPEC virtual ~exception() _STLP_NOTHROW;
-	_STLP_DECLSPEC virtual const char* what() const _STLP_NOTHROW;
-# else
-        exception() _STLP_NOTHROW {}
-		virtual ~exception() _STLP_NOTHROW {}
-		virtual const char* what() const _STLP_NOTHROW {return "class exception";}
-# endif
-	};
-	
-	
-
-// section 18.6.2.1
-#ifdef __SYMBIAN32__
-class bad_exception : public exception 
-#else
-class _STLP_CLASS_DECLSPEC bad_exception : public exception 
-#endif
-	{
-	public:
-# ifdef _STLP_OWN_IOSTREAMS
-	  _STLP_DECLSPEC bad_exception() _STLP_NOTHROW;
-	  _STLP_DECLSPEC ~bad_exception() _STLP_NOTHROW;
-	  _STLP_DECLSPEC const char* what() const _STLP_NOTHROW;
-# else
-	  bad_exception() _STLP_NOTHROW {}
-	  ~bad_exception() _STLP_NOTHROW {}
-	  const char* what() const _STLP_NOTHROW {return "class bad_exception";}
-# endif
-	};
-
-#ifdef __SYMBIAN32__
-// Give forward declaration, this should be supported by the stdard libraries from platform vendor.
-typedef void (*unexpected_handler)();
-_STLP_DECLSPEC unexpected_handler set_unexpected(unexpected_handler f) _STLP_NOTHROW_INHERENTLY;
-_STLP_DECLSPEC void unexpected();
-
-typedef void (*terminate_handler)();
-_STLP_DECLSPEC terminate_handler set_terminate(terminate_handler f) _STLP_NOTHROW_INHERENTLY;
-_STLP_DECLSPEC void terminate();
-
-_STLP_DECLSPEC bool uncaught_exception(); // not implemented under mpw as of Jan/1999
-
-#endif
-_STLP_END_NAMESPACE
-
-#endif /* _STLP_NO_EXCEPTION_HEADER */
-
-_STLP_BEGIN_NAMESPACE
-// forward declaration
-class __Named_exception;
-_STLP_END_NAMESPACE
-#endif /* _STLP_EXCEPTION_H */
-
-#endif //_STLP_EXCEPTION
-
-# if (_STLP_OUTERMOST_HEADER_ID == 0x423)
-#  if ! defined (_STLP_DONT_POP_0x423)
-#   include <stl/_epilog.h>
-#   undef  _STLP_OUTERMOST_HEADER_ID
-#   endif
-#   undef  _STLP_DONT_POP_0x423
-# endif
-
-
-// Local Variables:
-// mode:C++
-// End:
-
-
+#endif // __EABI__
+#endif //_SYMCPP_EXCEPTION_
 

@@ -1,9 +1,9 @@
 // Copyright (c) 1997-2009 Nokia Corporation and/or its subsidiary(-ies).
 // All rights reserved.
 // This component and the accompanying materials are made available
-// under the terms of the License "Symbian Foundation License v1.0" to Symbian Foundation members and "Symbian Foundation End User License Agreement v1.0" to non-members
+// under the terms of "Eclipse Public License v1.0"
 // which accompanies this distribution, and is available
-// at the URL "http://www.symbianfoundation.org/legal/licencesv10.html".
+// at the URL "http://www.eclipse.org/legal/epl-v10.html".
 //
 // Initial Contributors:
 // Nokia Corporation - initial contribution.
@@ -17,6 +17,10 @@
 #define __EIKAMNT_H__
 
 #include <e32base.h>
+
+#ifndef SYMBIAN_ENABLE_SPLIT_HEADERS
+#include <uikon/eikautomenutitlearray.h>
+#endif
 
 class CGulIcon;
 class MEikAutoMenuObserver;
@@ -61,21 +65,6 @@ public:
 	MEikAutoMenuObserver& iMenuObserver;
 	TInt iMenuPaneResourceId;
 	CGulIcon* iIcon;
-	};
-
-
-/** Creates a standard array of CEikAutoMenuTitle objects. 
-
-@publishedPartner 
-@released */
-NONSHARABLE_CLASS(CEikAutoMenuTitleArray) : public CArrayPtrFlat<CEikAutoMenuTitle>
-// If more than one title is specified for the start or end, they will be placed in the same order they appear
-// in the array (so the first EStart in the array will be the first on a menu bar also but the last EEnd will
-// be the last).
-	{
-public:
-	CEikAutoMenuTitleArray();
-	~CEikAutoMenuTitleArray();
 	};
 
 #endif	// __EIKAMNT_H__

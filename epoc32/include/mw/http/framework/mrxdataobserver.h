@@ -1,9 +1,9 @@
 // Copyright (c) 2001-2009 Nokia Corporation and/or its subsidiary(-ies).
 // All rights reserved.
 // This component and the accompanying materials are made available
-// under the terms of the License "Symbian Foundation License v1.0" to Symbian Foundation members and "Symbian Foundation End User License Agreement v1.0" to non-members
+// under the terms of "Eclipse Public License v1.0"
 // which accompanies this distribution, and is available
-// at the URL "http://www.symbianfoundation.org/legal/licencesv10.html".
+// at the URL "http://www.eclipse.org/legal/epl-v10.html".
 //
 // Initial Contributors:
 // Nokia Corporation - initial contribution.
@@ -12,8 +12,6 @@
 //
 // Description:
 //
-
-
 
 /**
  @file MRxDataObserver.h
@@ -47,15 +45,16 @@ public:
 	@param			aStatus		The status (or error) code.
 */
 	//##ModelId=3B1E6B5800E5
-	virtual void SetStatusL(CRxData& aRxData, TInt aStatus) =0;
+	virtual void SetStatusL(CRxData& aRxData, TInt aStatus) =0;	
 
-private: // methods
-
-/**	@fn				Reserved1()
-	Intended Usage:	Reserve a slot in the v-table to preserve future BC
- */
-	//##ModelId=3C4C37CE035D
-	inline virtual void MRDO_Reserved1();
+private: 
+    // methods
+    /**    @fn             Reserved1()
+   Intended Usage: Reserve a slot in the v-table to preserve future BC
+   */
+   //##ModelId=3C4C37CE035D
+   inline virtual void MRDO_Reserved1();
+    
 
 /**	@fn				Reserved2()
 	Intended Usage:	Reserve a slot in the v-table to preserve future BC
@@ -64,9 +63,10 @@ private: // methods
 	inline virtual void MRDO_Reserved2();
 	};
 
-
 inline void MRxDataObserver::MRDO_Reserved1()
-	{}
+    {}
+
+
 inline void MRxDataObserver::MRDO_Reserved2()
 	{}
 

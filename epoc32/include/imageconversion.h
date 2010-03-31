@@ -1,9 +1,9 @@
 // Copyright (c) 2001-2009 Nokia Corporation and/or its subsidiary(-ies).
 // All rights reserved.
 // This component and the accompanying materials are made available
-// under the terms of the License "Symbian Foundation License v1.0" to Symbian Foundation members and "Symbian Foundation End User License Agreement v1.0" to non-members
+// under the terms of "Eclipse Public License v1.0"
 // which accompanies this distribution, and is available
-// at the URL "http://www.symbianfoundation.org/legal/licencesv10.html".
+// at the URL "http://www.eclipse.org/legal/epl-v10.html".
 //
 // Initial Contributors:
 // Nokia Corporation - initial contribution.
@@ -28,6 +28,10 @@
 #include <icl/imagedata.h>
 #include <icl/icl_uids.hrh>
 #include <icl/imageconversionextension.h>
+
+#ifndef SYMBIAN_ENABLE_SPLIT_HEADERS
+#include <iclrecognizerutil.h>
+#endif
 
 class MImageDecoderRelay;
 class MImageEncoderRelay;
@@ -61,6 +65,7 @@ public:
 	@internalComponent
 	*/
 	static CImageTypeDescription* NewLC(const TDesC& aDescription, const TUid aImageType, const TUid aSubType);
+	
 	IMPORT_C ~CImageTypeDescription();
 	IMPORT_C const TDesC& Description() const;
 	IMPORT_C TUid ImageType() const;
@@ -144,8 +149,9 @@ public:
 	@internalComponent
 	*/
 	static CImplementationInformationType* NewLC();
-	IMPORT_C ~CImplementationInformationType();
 
+	IMPORT_C ~CImplementationInformationType();
+	
 	/**
 	@internalComponent
 	*/
@@ -261,7 +267,7 @@ public:
 		/**
 		@publishedAll
 		@released
-		
+				
 		Codec must support crop.
 		 */
 		EOptionExtCrop = 0x0100,
@@ -269,7 +275,7 @@ public:
 		/**
 		@publishedAll
 		@released
-		
+			
 		Codec must support block streaming extension.
 		 */
 		EOptionExtStream = 0x0200,
@@ -277,7 +283,7 @@ public:
 		/**
 		@publishedAll
 		@released
-		
+			
 		Codec must support rotation through the operation extension.
 		 */
 		EOptionExtRotation = 0x0400,
@@ -285,7 +291,7 @@ public:
 		/**
 		@publishedAll
 		@released
-		
+				
 		Codec must support horizontal mirror through the operation extension.
 		 */
 		EOptionExtMirrorHorizontalAxis = 0x0800,
@@ -293,7 +299,7 @@ public:
 		/**
 		@publishedAll
 		@released
-		
+				
 		Codec must support vertical mirror through the operation extension.
 		 */
 		EOptionExtMirrorVerticalAxis = 0x1000,
@@ -301,7 +307,7 @@ public:
 		/**
 		@publishedAll
 		@released
-		
+				
 		Codec must support the scaling extension.
 		 */
 		EOptionExtScaling = 0x2000,
@@ -326,7 +332,15 @@ public:
 		Allows WMF codec to ignore any SETVIEWPORTORG, SETVIEWPORTEXT, SCALEVIEWPORTEXT 
 		or OFFSETVIEWPORTORG commands in the metafile and allows scaling to destination bitmap.
 		*/
-		EOptionWmfIgnoreViewportMetaData = 0x020000
+		EOptionWmfIgnoreViewportMetaData = 0x020000,
+
+		/**
+		@publishedPartner
+		@prototype
+		
+		Requests that codec applies the auto rotation when decoding according to the orientation tag in the image Exif header.
+		*/
+		EOptionAutoRotate = 0x040000
 		};
 
 	/**
@@ -573,9 +587,16 @@ public:
 		EOptionGenerateAdaptivePalette = 0x02,
 
 		/**
+		Use the highest possible image encoding speed; this may result in lower image quality. 
+		This flag is more applicable to formats which use "lossy" compression algorithms, such as JPEG. 
+		Decoders that do not support fast encoding will ignore it.
+		*/
+		EPreferFastEncode = 0x04,
+
+		/**
 		@publishedAll
 		@released
-		
+				
 		Codec must support block streaming extension.
 		 */
 		EOptionExtStream = 0x0100,
@@ -583,7 +604,7 @@ public:
 		/**
 		@publishedAll
 		@released
-		
+				
 		Codec must support rotation through the operation extension.
 		 */
 		EOptionExtRotation = 0x0200,
@@ -591,6 +612,7 @@ public:
 		/**
 		@publishedAll
 		@released
+				
 		Codec must support horizontal mirror through the operation extension.
 		 */
 		EOptionExtMirrorHorizontalAxis = 0x0400,
@@ -598,6 +620,7 @@ public:
 		/**
 		@publishedAll
 		@released
+				
 		Codec must support vertical mirror through the operation extension.
 		 */
 		EOptionExtMirrorVerticalAxis = 0x0800,
@@ -605,6 +628,7 @@ public:
 		/**
 		@publishedAll
 		@released
+				
 		Codec must support setting thumbnail when using the other extensions (e.g. thumbnail rotation)
 		 */
 		EOptionExtUseWithSetThumbnail = 0x1000,
@@ -685,30 +709,5 @@ private:
 friend class CImageEncodeConstruct;
 	};
 
-class CIclRecognizerUtil; // declared here
-/**
-@internalComponent
-
-ICL utility class used by ICL recognizer
-Maintains an array of CImplementationInformation objects
-so that data headers can be speedily matched against.
-Updates the array when notified by ECOM of a change to the global
-interface implementation registration data.
-*/
-NONSHARABLE_CLASS( CIclRecognizerUtil ) : public CBase
-	{
-public:
-	IMPORT_C static CIclRecognizerUtil* NewL();
-	~CIclRecognizerUtil();
-	IMPORT_C TBool GetMimeTypeL(const TDesC8& aImageData, const TDesC& aFileName, TDes8& aMimeType);
-
-private:
-	CIclRecognizerUtil();
-	void ConstructL();
-
-private:
-	class CBody;
-	CBody* iBody;	
-	};
-
 #endif // IMAGECONVERSION_H
+

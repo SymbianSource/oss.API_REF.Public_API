@@ -1,6 +1,5 @@
 /*-
  * Copyright (c) 1990, 1993
- * © Portions copyright (c) 2006 Symbian Software Ltd. All rights reserved.
 
  *	The Regents of the University of California.  All rights reserved.
  *
@@ -30,8 +29,7 @@
  *
  *	@(#)stdlib.h	8.5 (Berkeley) 5/19/95
  * $FreeBSD: src/include/stdlib.h,v 1.57 2005/01/09 03:55:12 tjr Exp $
- * © Portions copyright (c) 2007 Symbian Software Ltd. All rights reserved.
- * © Portions copyright (c) 2006 Nokia Corporation.  All rights reserved.
+ * Portions Copyright (c) 2006-2007 Nokia Corporation and/or its subsidiary(-ies).All rights reserved.
  */
 
 #ifndef _STDLIB_H_
@@ -226,6 +224,11 @@ IMPORT_C void	 unsetenv(const char *);
 /* long	 a64l(const char *); */
 #ifndef _MKSTEMP_DECLARED
 IMPORT_C int	 mkstemp(char *);
+
+#if defined(SYMBIAN_OE_LARGE_FILE_SUPPORT) && !defined(SYMBIAN_OE_NO_LFS)
+#define mkstemp64 mkstemp
+#endif /* SYMBIAN_OE_LARGE_FILE_SUPPORT && !SYMBIAN_OE_NO_LFS */
+
 #define	_MKSTEMP_DECLARED
 #endif
 IMPORT_C int	 putenv(const char *);

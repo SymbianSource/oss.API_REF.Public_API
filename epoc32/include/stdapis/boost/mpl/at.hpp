@@ -1,39 +1,52 @@
-# /* Copyright (C) 2001
-#  * Housemarque Oy
-#  * http://www.housemarque.com
-#  *
-#  * Distributed under the Boost Software License, Version 1.0. (See
-#  * accompanying file LICENSE_1_0.txt or copy at
-#  * http://www.boost.org/LICENSE_1_0.txt)
-#  */
-#
-# /* Revised by Paul Mensonides (2002) */
-#
-# /* See http://www.boost.org for most recent version. */
-#
-# ifndef BOOST_PREPROCESSOR_LIST_AT_HPP
-# define BOOST_PREPROCESSOR_LIST_AT_HPP
-#
-# include <boost/preprocessor/config/config.hpp>
-# include <boost/preprocessor/list/adt.hpp>
-# include <boost/preprocessor/list/rest_n.hpp>
-#
-# /* BOOST_PP_LIST_AT */
-#
-# if ~BOOST_PP_CONFIG_FLAGS() & BOOST_PP_CONFIG_EDG()
-#    define BOOST_PP_LIST_AT(list, index) BOOST_PP_LIST_FIRST(BOOST_PP_LIST_REST_N(index, list))
-# else
-#    define BOOST_PP_LIST_AT(list, index) BOOST_PP_LIST_AT_I(list, index)
-#    define BOOST_PP_LIST_AT_I(list, index) BOOST_PP_LIST_FIRST(BOOST_PP_LIST_REST_N(index, list))
-# endif
-#
-# /* BOOST_PP_LIST_AT_D */
-#
-# if ~BOOST_PP_CONFIG_FLAGS() & BOOST_PP_CONFIG_EDG()
-#    define BOOST_PP_LIST_AT_D(d, list, index) BOOST_PP_LIST_FIRST(BOOST_PP_LIST_REST_N_D(d, index, list))
-# else
-#    define BOOST_PP_LIST_AT_D(d, list, index) BOOST_PP_LIST_AT_D_I(d, list, index)
-#    define BOOST_PP_LIST_AT_D_I(d, list, index) BOOST_PP_LIST_FIRST(BOOST_PP_LIST_REST_N_D(d, index, list))
-# endif
-#
-# endif
+
+#ifndef BOOST_MPL_AT_HPP_INCLUDED
+#define BOOST_MPL_AT_HPP_INCLUDED
+
+// Copyright Aleksey Gurtovoy 2000-2004
+//
+// Distributed under the Boost Software License, Version 1.0. 
+// (See accompanying file LICENSE_1_0.txt or copy at 
+// http://www.boost.org/LICENSE_1_0.txt)
+//
+// See http://www.boost.org/libs/mpl for documentation.
+
+// $Source: /cvsroot/boost/boost/boost/mpl/at.hpp,v $
+// $Date: 2004/09/04 01:33:46 $
+// $Revision: 1.7 $
+
+#include <boost/mpl/at_fwd.hpp>
+#include <boost/mpl/aux_/at_impl.hpp>
+#include <boost/mpl/long.hpp>
+#include <boost/mpl/sequence_tag.hpp>
+#include <boost/mpl/aux_/na_spec.hpp>
+#include <boost/mpl/aux_/lambda_support.hpp>
+#include <boost/mpl/aux_/nttp_decl.hpp>
+
+namespace boost { namespace mpl {
+
+template<
+      typename BOOST_MPL_AUX_NA_PARAM(Sequence)
+    , typename BOOST_MPL_AUX_NA_PARAM(N)
+    >
+struct at
+    : at_impl< typename sequence_tag<Sequence>::type >
+        ::template apply< Sequence,N >
+{
+    BOOST_MPL_AUX_LAMBDA_SUPPORT(2,at,(Sequence,N))
+};
+
+template<
+      typename Sequence
+    , BOOST_MPL_AUX_NTTP_DECL(long, N)
+    >
+struct at_c
+    : at_impl< typename sequence_tag<Sequence>::type >
+        ::template apply< Sequence,mpl::long_<N> >
+{
+};
+
+BOOST_MPL_AUX_NA_SPEC(2, at)
+
+}}
+
+#endif // BOOST_MPL_AT_HPP_INCLUDED

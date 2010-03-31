@@ -1,9 +1,9 @@
 // Copyright (c) 1997-2009 Nokia Corporation and/or its subsidiary(-ies).
 // All rights reserved.
 // This component and the accompanying materials are made available
-// under the terms of the License "Symbian Foundation License v1.0" to Symbian Foundation members and "Symbian Foundation End User License Agreement v1.0" to non-members
+// under the terms of "Eclipse Public License v1.0"
 // which accompanies this distribution, and is available
-// at the URL "http://www.symbianfoundation.org/legal/licencesv10.html".
+// at the URL "http://www.eclipse.org/legal/epl-v10.html".
 //
 // Initial Contributors:
 // Nokia Corporation - initial contribution.
@@ -14,8 +14,6 @@
 // Header file for the Automated Test Tool
 // 
 //
-
-
 
 /**
  @file 
@@ -30,11 +28,16 @@
 #include <e32std.h>
 #include <comms-infras/metadata.h>
 #include <comms-infras/metatype.h>
+#include <comms-infras/es_parameterfamily.h>
 
 #include <es_sock.h>
 
+//Parameter Types are defined here and enums defined locally in the class
 const TInt32 KSubConnQosGenericParamsType = 1;
 const TInt32 KSubConnAuthorisationGenericParamsType = 2;
+const TInt32 KFlowRequestParametersType = 3;
+const TInt32 KSubConnProtocolGenericParamsType = 4;
+
 using Meta::SMetaDataECom;
 
 class CSubConQosGenericParamSet : public CSubConGenericParameterSet
@@ -67,7 +70,14 @@ GetName()/SetName() - Accessor function for QoS Parameters name.
 @released since v9.1 */
 {
 public:
+	enum
+		{
+		EUid=KSubConnGenericParamsImplUid,
+		EType=KSubConnQosGenericParamsType
+		};
+
 	inline static CSubConQosGenericParamSet* NewL(CSubConParameterFamily& aFamily, CSubConParameterFamily::TParameterSetType aType);
+	inline static CSubConQosGenericParamSet* NewL(RParameterFamily& aFamily, RParameterFamily::TParameterSetType aType);
 	inline static CSubConQosGenericParamSet* NewL();
 
 	inline CSubConQosGenericParamSet();
@@ -138,7 +148,14 @@ This class contains authorization generic parameters.
 @released since v9.1 */
 {
 public:
+	enum
+		{
+		EUid=KSubConnGenericParamsImplUid,
+		EType=KSubConnAuthorisationGenericParamsType
+		};
+
 	inline static CSubConAuthorisationGenericParamSet* NewL(CSubConParameterFamily& aFamily, CSubConParameterFamily::TParameterSetType aType);
+	inline static CSubConAuthorisationGenericParamSet* NewL(RParameterFamily& aFamily, RParameterFamily::TParameterSetType aType);
 	inline static CSubConAuthorisationGenericParamSet* NewL();
 
 	inline CSubConAuthorisationGenericParamSet();
@@ -154,15 +171,8 @@ protected:
 	TInt iId;
 	};
 
-class CSubConGenericParamsFactory : public CBase
-/** Sub connection generic parameter set factory.
-
-@internalComponent
-@released since v9.1 */
-	{
-public:
-	static CSubConGenericParameterSet* NewL(TAny* aConstructionParameters);
-	};
 
 #include <cs_subconparams.inl>
+
 #endif	// __CS_SUBCONPARAMS_H__
+

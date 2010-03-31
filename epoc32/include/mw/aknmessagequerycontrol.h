@@ -2,9 +2,9 @@
 * Copyright (c) 2002-2007 Nokia Corporation and/or its subsidiary(-ies).
 * All rights reserved.
 * This component and the accompanying materials are made available
-* under the terms of the License "Symbian Foundation License v1.0" to Symbian Foundation members and "Symbian Foundation End User License Agreement v1.0" to non-members
+* under the terms of "Eclipse Public License v1.0"
 * which accompanies this distribution, and is available
-* at the URL "http://www.symbianfoundation.org/legal/licencesv10.html".
+* at the URL "http://www.eclipse.org/legal/epl-v10.html".
 *
 * Initial Contributors:
 * Nokia Corporation - initial contribution.
@@ -22,8 +22,8 @@
 
 // INCLUDES
 
-#include <akncontrol.h>
-#include <aknutils.h>
+#include <AknControl.h>
+#include <AknUtils.h>
 
 // FORWARD DECLARATIONS
 
@@ -224,7 +224,7 @@ private:
     * @return EFalse if out of range, the position was not changed. ETrue
     * if the position was changed successfully.
     */
-    TBool SetCurPos( TInt aCurPos );
+    TBool SetCurPosL( TInt aCurPos );
     
     /**
     * Truncates the text that doesn't fit to the maximum lines number allowed for the
@@ -234,6 +234,9 @@ private:
     * this function returns immediately.
     */
     void TruncateTextForListQLayout( TDes& aMessage );
+    
+    void DoSizeChangedL();
+    
 
 private:
     /*

@@ -16,11 +16,9 @@
 */
 
 
-
-
 /**
  @file
- @publishedPartner
+ @publishedAll
  @released
 */
 
@@ -77,7 +75,7 @@ class CCTTokenTypeInfo : public CBase
 	 * Destructor.
 	 *
 	 * Frees all resources owned by the object. 
-	 * @internalAll
+	 * @internalComponent
 	 */
 	~CCTTokenTypeInfo();
 

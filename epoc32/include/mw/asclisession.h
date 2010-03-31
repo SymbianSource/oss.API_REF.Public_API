@@ -1,9 +1,9 @@
 // Copyright (c) 1999-2009 Nokia Corporation and/or its subsidiary(-ies).
 // All rights reserved.
 // This component and the accompanying materials are made available
-// under the terms of the License "Symbian Foundation License v1.0" to Symbian Foundation members and "Symbian Foundation End User License Agreement v1.0" to non-members
+// under the terms of "Eclipse Public License v1.0"
 // which accompanies this distribution, and is available
-// at the URL "http://www.symbianfoundation.org/legal/licencesv10.html".
+// at the URL "http://www.eclipse.org/legal/epl-v10.html".
 //
 // Initial Contributors:
 // Nokia Corporation - initial contribution.
@@ -33,9 +33,9 @@ class RASCliSession : public RSessionBase
 @released
 */
 	{
-///////////////////////////////////////////////////////////////////////////////////////
+//
 public:										// CONNECT TO SERVER & VERSIONING
-///////////////////////////////////////////////////////////////////////////////////////
+//
 
 	IMPORT_C RASCliSession();
 
@@ -43,9 +43,9 @@ public:										// CONNECT TO SERVER & VERSIONING
 
 	IMPORT_C TVersion						Version() const;
 
-///////////////////////////////////////////////////////////////////////////////////////
+//
 public:										// ALARM SPECIFIC FUNCTIONALITY
-///////////////////////////////////////////////////////////////////////////////////////
+//
 
 	IMPORT_C TInt							AlarmAdd(TASShdAlarm& aAlarm) const;
 
@@ -66,6 +66,8 @@ public:										// ALARM SPECIFIC FUNCTIONALITY
 	IMPORT_C TInt							GetAlarmOwner(TAlarmId aAlarmId, TFullName& aThreadName) const;
 
 	IMPORT_C TInt							SetAlarmStatus(TAlarmId aAlarmId, TAlarmStatus aStatus) const;
+	
+	IMPORT_C TInt                           SetAlarmStatusForCalendarFile(const TDesC& aFileName, TAlarmStatus aStatus) const;
 
 	IMPORT_C TInt							GetAlarmStatus(TAlarmId aAlarmId, TAlarmStatus& aStatus) const;
 
@@ -77,16 +79,22 @@ public:										// ALARM SPECIFIC FUNCTIONALITY
 
 	IMPORT_C TInt							GetAlarmCharacteristics(TAlarmId aAlarmId, TAlarmCharacteristicsFlags& aCharacteristics) const;
 
+#ifdef SYMBIAN_SYSTEM_STATE_MANAGEMENT
+	IMPORT_C TInt							SetWakeup(TAlarmId aAlarmId, TBool aEnabled) const;
+#endif
+
 	IMPORT_C TInt							SetClientData(const TASShdAlarm& aAlarm);
 
+#ifdef SYMBIAN_ALARM_REPEAT_EXTENSIONS
 	IMPORT_C TInt							SetAlarmDays(TAlarmId aAlarmId, TUint8 aAlarmDays) const;
     IMPORT_C TInt							GetAlarmDays(TAlarmId aAlarmId, TUint8& aAlarmDays) const;
     IMPORT_C TInt							SetContinuous(TAlarmId aAlarmId, TBool aContinuous) const;
     IMPORT_C TInt							GetContinuous(TAlarmId aAlarmId, TBool& aContinuous) const;
+#endif
 	
-///////////////////////////////////////////////////////////////////////////////////////
+//
 public:										// ALARM DATA FUNCTIONALITY
-///////////////////////////////////////////////////////////////////////////////////////
+//
 
 	IMPORT_C TInt							AlarmDataAttachL(TAlarmId aAlarmId, const TDesC8& aData) const;
 
@@ -100,9 +108,9 @@ public:										// ALARM DATA FUNCTIONALITY
 
 	IMPORT_C TInt							GetAlarmData(TAlarmId aAlarmId, HBufC8*& aSink) const;
 
-///////////////////////////////////////////////////////////////////////////////////////
+//
 public:										// CATEGORY-SPECIFIC FUNCTIONALITY
-///////////////////////////////////////////////////////////////////////////////////////
+//
 
 	IMPORT_C TInt							SetAlarmStatusByCategory(TAlarmCategory aCategory, TAlarmStatus aStatus) const;
 
@@ -112,13 +120,15 @@ public:										// CATEGORY-SPECIFIC FUNCTIONALITY
 
 	IMPORT_C TInt							AlarmDeleteByCategory(TAlarmCategory aCategory, TDeleteType aWhatToDelete) const;
 
+	IMPORT_C TInt                           AlarmDeleteByCalendarFile(const TDesC& aFileName, TDeleteType aWhatToDelete) const;
+	
 	IMPORT_C void							GetAvailableCategoryListL(RArray<TAlarmCategory>& aCategories) const;
 
 	IMPORT_C void							GetAlarmIdListForCategoryL(TAlarmCategory aCategory, RArray<TAlarmId>& aAlarmIds) const;
 
-///////////////////////////////////////////////////////////////////////////////////////
+//
 public:										// MISC FUNCTIONALITY
-///////////////////////////////////////////////////////////////////////////////////////
+//
 
 	IMPORT_C TInt							AlarmCountByState(TAlarmState aState) const;
 
@@ -130,9 +140,9 @@ public:										// MISC FUNCTIONALITY
 
 	IMPORT_C TInt							NumberOfAlarmsActiveInQueue() const;
 
-///////////////////////////////////////////////////////////////////////////////////////
+//
 public:										// SOUND CONTROL
-///////////////////////////////////////////////////////////////////////////////////////
+//
 
 	IMPORT_C TInt							SetAlarmSoundState(TAlarmGlobalSoundState aState) const;
 
@@ -152,17 +162,17 @@ public:										// SOUND CONTROL
 
 	IMPORT_C void							GetAlarmPlayIntervalsL(CArrayFix<TASCliSoundPlayDefinition>& aIntervals) const;
 
-///////////////////////////////////////////////////////////////////////////////////////
+//
 public:										// CHANGE NOTIFICATION
-///////////////////////////////////////////////////////////////////////////////////////
+//
 
 	IMPORT_C void							NotifyChange(TRequestStatus& aStatus, TAlarmId& aAlarmId);
 
 	IMPORT_C void							NotifyChangeCancel() const;
 
-///////////////////////////////////////////////////////////////////////////////////////
+//
 public:										// DEBUG ONLY
-///////////////////////////////////////////////////////////////////////////////////////
+//
 
 	IMPORT_C void							__DbgShutDownServer() const;
 
@@ -173,9 +183,9 @@ public:										// DEBUG ONLY
 	IMPORT_C TInt							__DbgSnoozeAlarm(TAlarmId aAlarmId, const TTime& aNewTime) const;
 	
 	IMPORT_C TInt 							__DbgSetEnvChgHandling(TBool aFlag) const;
-///////////////////////////////////////////////////////////////////////////////////////
+//
 private:									// MEMBER DATA
-///////////////////////////////////////////////////////////////////////////////////////
+//
 
 	void									FetchAlarmIdsFromBufferL(RArray<TAlarmId>& aAlarmIds, TInt aBufferSize) const;
 
@@ -184,17 +194,17 @@ private:									// MEMBER DATA
 	void									DoAlarmAddWithNotification(TRequestStatus& aStatus, TASShdAlarm& aAlarm, const TDesC8& aData);
 	TInt									DoAlarmAdd(TASShdAlarm& aAlarm, const TDesC8& aData) const;
 
-///////////////////////////////////////////////////////////////////////////////////////
+//
 private:									// MEMBER DATA
-///////////////////////////////////////////////////////////////////////////////////////
+//
 
 	TPtr8									iPackage;
 	TPtr8									iAlarmIdPointer;
 	};
 
-///////////////////////////////////////////////////////////////////////////////////////
+//
 // ----> RASCliSession (inlines)
-///////////////////////////////////////////////////////////////////////////////////////
+//
 inline TInt RASCliSession::AlarmDataDetatch(TAlarmId aAlarmId) const
 /** @deprecated 8.0
 

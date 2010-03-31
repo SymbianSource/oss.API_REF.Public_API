@@ -1,9 +1,9 @@
 // Copyright (c) 2005-2009 Nokia Corporation and/or its subsidiary(-ies).
 // All rights reserved.
 // This component and the accompanying materials are made available
-// under the terms of the License "Symbian Foundation License v1.0" to Symbian Foundation members and "Symbian Foundation End User License Agreement v1.0" to non-members
+// under the terms of "Eclipse Public License v1.0"
 // which accompanies this distribution, and is available
-// at the URL "http://www.symbianfoundation.org/legal/licencesv10.html".
+// at the URL "http://www.eclipse.org/legal/epl-v10.html".
 //
 // Initial Contributors:
 // Nokia Corporation - initial contribution.
@@ -12,8 +12,6 @@
 //
 // Description:
 //
-
-
 
 /**
  @file	
@@ -30,6 +28,10 @@
 #include <s32strm.h>
 #include <ecam/ecamconstants.h>
 #include <ecamimageprocessing.h>
+#ifndef SYMBIAN_ENABLE_SPLIT_HEADERS
+#include <ecamadvsettingsconst.h>
+#include <ecamadvsettingsdef.h>
+#endif
 
 class MCameraPresets;
 class MCameraAdvancedSettings;
@@ -37,26 +39,21 @@ class MCameraAdvancedSettings2;
 class MCameraAdvancedSettings3;
 class MCameraAdvancedSettings4;
 class MCameraPresets2;
+class MCameraContinuousZoom;
 
 /* General purpose constants */
 
-/** 
-The current Version of the TECamLEDSpecialEffectStep class.
 
-@internalTechnology
-*/
-static const TUint KECamLEDSpecialEffectStepCurrentVersion = 1;
-
-/** 
+/**
 	UID used to identify the CCamera Advanced Settings API.
 	This API is used to control specific individual advanced settings of camera hardware.
 	These settings directly relate to the image acquisition phase.
-	
+
 	@see CCamera::CCameraAdvancedSettings
 */
 static const TUid KECamAdvancedSettingUid 	= {KECamAdvancedSettingUidValue};
 
-/** 
+/**
 	UID used to identify the CCamera Presets API.
 	This API is used to simplify user - camera interaction by allowing simultaneous 
 	setting of various advanced camera hardware settings using a single predefined parameter. 
@@ -64,7 +61,6 @@ static const TUid KECamAdvancedSettingUid 	= {KECamAdvancedSettingUidValue};
 */
 static const TUid  KECamPresetsUid 			= {KECamPresetsUidValue};
 
-	
 /** All clients receive these events, irrespective of camera index.  */
 /** Camera slots in for 8 cameras. */
 /** Camera with index 0 Plugged-in */
@@ -300,103 +296,71 @@ void CCamera::CCameraAdvancedSettings::GetDisabledSettingsL(RArray<TUid>& aDisab
 */
 static const TUid  KUidECamEventCameraSettingAFAssistantLight	= {KUidECamEventCameraSettingAFAssistantLightUidValue};
 
-/**
-Notifies the client that continuous zoom limit has been reached.
 
-This TUid is available from the following methods only to the API clients using CCamera::New2L() or CCamera::NewDuplicate2L():
-void CCamera::CCameraAdvancedSettings::GetSupportedSettingsL(RArray<TUid>& aSettings) const;
-void CCamera::CCameraAdvancedSettings::GetActiveSettingsL(RArray<TUid>& aActiveSettings) const;
-void CCamera::CCameraAdvancedSettings::GetDisabledSettingsL(RArray<TUid>& aDisabledSettings) const;
 
-@publishedPartner
+class CCameraContinuousZoom;
+/**	
+A mixin class to be implemented by the client in order to use the Continuous Zoom API. The callbacks are invoked by the implementation
+whenever the continuous zoom operations are ready to be notified.
+
+@see CCameraContinuousZoom
+
+@internalTechnology
 @prototype
-*/
-static const TUid KUidECamEventCameraSettingContinuousZoomReachedLimit = {KUidECamEventCameraSettingContinuousZoomReachedLimitUidValue};
+*/	
+class MContinuousZoomObserver
+	{	
+public:
+	
+	/**
+	This callback is sent when a new zoom factor is achieved. Client may not receive a callback for every new zoom factor as it is up
+	to the implementation to choose the zoom factors for which it will issue this callback. Should an error occur, this implies that the
+	continuous zoom operation has been stopped.
 
-/**
-Notifies the client about the setting of performance operation preference.
+	@param  aContinuousZoomHandle
+			Reference to CCameraContinuousZoom class object which was used to start the continuous zoom operation.
 
-This TUid is available from the following methods only to the API clients using CCamera::New2L() or CCamera::NewDuplicate2L():
-void CCamera::CCameraAdvancedSettings::GetSupportedSettingsL(RArray<TUid>& aSettings) const;
-void CCamera::CCameraAdvancedSettings::GetActiveSettingsL(RArray<TUid>& aActiveSettings) const;
-void CCamera::CCameraAdvancedSettings::GetDisabledSettingsL(RArray<TUid>& aDisabledSettings) const;
+	@param  aZoomFactor
+		    The new zoom factor value, multiplied by KECamFineResolutionFactor, which has been achieved.
 
-@publishedPartner
-@prototype
-*/
-static const TUid KUidECamEventCameraSettingOperationPreference = {KUidECamEventCameraSettingOperationPreferenceUidValue};
+	@param  aError
+			Appropriate error code.
+	*/
+	virtual void ContinuousZoomProgress(CCamera::CCameraContinuousZoom& aContinuousZoomHandle, TInt aZoomFactor, TInt aError)=0;
 
-/**
-Notifies the client that the flicker removal value has been set.
+	/**
+	Implementation sends this callback when the Continuous Zoom operation has been completed. This callback will be sent when
+	target zoom factor is achieved. This zoom factor may in some cases be less than the target zoom factor due to the complexity
+	of the continuous zoom operation. Once this callback is received, client need not issue StopContinuousZoom() and can call
+	StartContinuousZoom() again.
 
-This TUid is available from the following methods only to the API clients using CCamera::New2L() or CCamera::NewDuplicate2L():
-void CCamera::CCameraAdvancedSettings::GetSupportedSettingsL(RArray<TUid>& aSettings) const;
-void CCamera::CCameraAdvancedSettings::GetActiveSettingsL(RArray<TUid>& aActiveSettings) const;
-void CCamera::CCameraAdvancedSettings::GetDisabledSettingsL(RArray<TUid>& aDisabledSettings) const;
+	@param  aContinuousZoomHandle
+			Reference to CCameraContinuousZoom class object which was used to start the continuous zoom operation.
 
-@internalTechnology
-*/
-static const TUid KUidECamEventCameraSettingFlickerRemovalValue = {KUidECamEventCameraSettingFlickerRemovalValueUidValue};
+	@param  aFinalZoomFactor
+			The final zoom factor value once the continuous zoom operation has completed. This zoom factor may in some cases be
+			less than the target zoom factor due to the complexity of the continuous zoom operation.
 
-/**
-Notifies the client about the setting of neutral density filter.
+	@param  aErrorCode
+			Appropriate error code.
+	*/
+	virtual void ContinuousZoomCompleted(CCamera::CCameraContinuousZoom& aContinuousZoomHandle, TInt aFinalZoomFactor, TInt aError)=0;
 
-This TUid is available from the following methods only to the API clients using CCamera::New2L() or CCamera::NewDuplicate2L():
-void CCamera::CCameraAdvancedSettings::GetSupportedSettingsL(RArray<TUid>& aSettings) const;
-void CCamera::CCameraAdvancedSettings::GetActiveSettingsL(RArray<TUid>& aActiveSettings) const;
-void CCamera::CCameraAdvancedSettings::GetDisabledSettingsL(RArray<TUid>& aDisabledSettings) const;
+	/**
+	Gets a custom interface for future callbacks. This method will be called by the implementation to get a new interface
+	which would support future callbacks.
 
-@internalTechnology
-*/
-static const TUid KUidECamEventCameraSettingNDFilter = {KUidECamEventCameraSettingNDFilterUidValue};
+	@param  aInterface
+		    The Uid of the particular interface function required for callbacks.
+		   
+	@param  aPtrInterface
+		    The implementation has to type-cast the retrieved custom interface pointer to the appropriate type.	
 
-/**
-Notifies the client about the setting of LED effect.
+	@return The error code.
+	*/
+	virtual TInt CustomInterface(TUid aInterface, TAny*& aPtrInterface)=0;
+	};
 
-This TUid is available from the following methods only to the API clients using CCamera::New2L() or CCamera::NewDuplicate2L():
-void CCamera::CCameraAdvancedSettings::GetSupportedSettingsL(RArray<TUid>& aSettings) const;
-void CCamera::CCameraAdvancedSettings::GetActiveSettingsL(RArray<TUid>& aActiveSettings) const;
-void CCamera::CCameraAdvancedSettings::GetDisabledSettingsL(RArray<TUid>& aDisabledSettings) const;
-
-@internalTechnology
-*/
-static const TUid KUidECamEventCameraSettingLEDEffect = {KUidECamEventCameraSettingLEDEffectUidValue};
-
-/**
-Notifies the client about the setting of LED 'custom' effect.
-
-This TUid is available from the following methods only to the API clients using CCamera::New2L() or CCamera::NewDuplicate2L():
-void CCamera::CCameraAdvancedSettings::GetSupportedSettingsL(RArray<TUid>& aSettings) const;
-void CCamera::CCameraAdvancedSettings::GetActiveSettingsL(RArray<TUid>& aActiveSettings) const;
-void CCamera::CCameraAdvancedSettings::GetDisabledSettingsL(RArray<TUid>& aDisabledSettings) const;
-
-@internalTechnology
-*/
-static const TUid KUidECamEventCameraSettingLEDCustomEffect = {KUidECamEventCameraSettingLEDCustomEffectUidValue};
-
-/**
-Notifies the client about the white balance lock setting.
-
-This TUid is available from the following methods only to the API clients using CCamera::New2L() or CCamera::NewDuplicate2L():
-void CCamera::CCameraAdvancedSettings::GetSupportedSettingsL(RArray<TUid>& aSettings) const;
-void CCamera::CCameraAdvancedSettings::GetActiveSettingsL(RArray<TUid>& aActiveSettings) const;
-void CCamera::CCameraAdvancedSettings::GetDisabledSettingsL(RArray<TUid>& aDisabledSettings) const;
-
-@internalTechnology
-*/
-static const TUid KUidECamEventCameraSettingLockWhiteBalance = {KUidECamEventCameraSettingLockWhiteBalanceUidValue};
-
-/**
-Instructs the client to restore its original priority.
-
-This TUid is available from the following methods only to the API clients using CCamera::New2L() or CCamera::NewDuplicate2L():
-void CCamera::CCameraAdvancedSettings::GetSupportedSettingsL(RArray<TUid>& aSettings) const;
-void CCamera::CCameraAdvancedSettings::GetActiveSettingsL(RArray<TUid>& aActiveSettings) const;
-void CCamera::CCameraAdvancedSettings::GetDisabledSettingsL(RArray<TUid>& aDisabledSettings) const;
-
-@internalTechnology
-*/
-static const TUid KUidECamEventCameraSettingRestoreClientPriority = {KUidECamEventCameraSettingRestoreClientPriorityUidValue};
 
 /** 
 CCamera advanced settings class exposes an API for controlling individually 
@@ -566,21 +530,33 @@ public:
 	enum TDriveMode
 		{
 		/** Automatic. Default */
-		EDriveModeAuto			= 0x0000,
+		EDriveModeAuto				= 0x0000,
 		/** Camera takes a single image/shot. */	
-		EDriveModeSingleShot	= 0x0001,
+		EDriveModeSingleShot		= 0x0001,
 		/** Camera continuously captures images (as fast as it can) until stopped or out of storage medium. */	
-		EDriveModeContinuous	= 0x0002,
+		EDriveModeContinuous		= 0x0002,
 		/** Camera is in bracketing mode, producing individual frames. @see TBracketMode */	
-		EDriveModeBracket		= 0x0004,
+		EDriveModeBracket			= 0x0004,
 		/** Camera is in bracketing mode, but producing a single image. @see TBracketMode */	
-		EDriveModeBracketMerge	= 0x0008,
+		EDriveModeBracketMerge		= 0x0008,
 		/** camera captures a single shot after specified time period. @see Timer() */	
-		EDriveModeTimed			= 0x0010,
+		EDriveModeTimed				= 0x0010,
 		/** Camera captures a set of images with an uniform interval between them. @see TimeLapse() */	
-		EDriveModeTimeLapse		= 0x0020,
+		EDriveModeTimeLapse			= 0x0020,
 		/** Camera captures a set of images as fast as it can, but in batches(bursts). */	
-		EDriveModeBurst			= 0x0040		
+		EDriveModeBurst				= 0x0040,
+		/** Camera captures a set of images before and after camera capture key press event. Client can specify
+		the amount of pre-capture and post-capture images to be saved via TDriveModeDependentAttributes.
+		The total amount of images to be saved will be pre-capture images + 1 + post-capture images.
+
+		@note This drive mode is only available to clients using the CCamera::New2L() or CCamera::NewDuplicate2L()
+			  in addition to the new image capture APIs ie. CCameraPreImageCaptureControl, CCameraImageCapture and
+			  CCameraPostImageCaptureControl.
+
+		@publishedPartner
+		@prototype
+		*/
+		EDriveModeTimeNudgeCapture	= 0x0080
 		};
 
 	/** Specifies Bracket mode. */				
@@ -1007,6 +983,80 @@ public:
 		TTimeIntervalMicroSeconds32 iDuration;
 	};
 
+	/**
+	Class used to provide supported continuous zoom information.
+	
+	@internalTechnology
+	@prototype
+	*/
+	class TContinuousZoomSupportInfo
+		{
+	public:
+		IMPORT_C TContinuousZoomSupportInfo();
+
+		IMPORT_C TUint Size() const;
+		IMPORT_C TUint Version() const;
+
+	private:
+		//for future expansion
+		TUint iSize:24;
+		TUint iVersion:8;
+
+		// reserved for future expansion
+		TInt iReserved1;
+		TInt iReserved2;
+		TInt iReserved3;
+
+	public:
+		/** Maximum continuous zoom speed supported. Minimum speed is 0. */
+		TInt iMaxSpeedSupported;
+		/**  Minimum continuous zoom acceleration supported. A negative value signifies deceleration. */
+		TInt iMinAccelerationSupported;
+		/**  Maximum continuous zoom acceleration supported. */
+		TInt iMaxAccelerationSupported;
+		/** Minimum continuous zoom value. For digital zoom, this could be 0 unless viewfinder frames are not cropped and scaled up by default.
+		Represented as a concrete value multiplied by KECamFineResolutionFactor. */
+		TInt iContinuousZoomMinLimit;
+		/** Maximum continuous zoom value. Represented as a concrete value multiplied by KECamFineResolutionFactor. */
+		TInt iContinuousZoomMaxLimit;
+		};
+
+	/**
+	Class used to provide essential parameters for continuous zoom operation.
+	
+	@internalTechnology
+	@prototype
+	*/
+	class TContinuousZoomParameters
+		{
+	public:
+		IMPORT_C TContinuousZoomParameters();
+
+		IMPORT_C TUint Size() const;
+		IMPORT_C TUint Version() const;
+
+	private:
+		//for future expansion
+		TUint iSize:24;
+		TUint iVersion:8;
+
+		// reserved for future expansion
+		TInt iReserved1;
+		TInt iReserved2;
+		TInt iReserved3;
+
+	public:
+		/** Type of continuous zoom to be used. */
+		TContinuousZoomType iContinuousZoomType;
+		/**  Zoom direction to be used. */
+		TZoomDirection iZoomDirection;
+		/**  Continuous zoom speed to be used. Represented as a concrete value multiplied by KECamFineResolutionFactor. */
+		TInt iContinuousZoomSpeed;
+		/** Continuous zoom acceleration to be used. Represented as a concrete value multiplied by KECamFineResolutionFactor. */
+		TInt iContinuousZoomAcceleration;
+		/** Limit of continuous zoom range. Represented as a concrete value multiplied by KECamFineResolutionFactor. */
+		TInt iContinuousZoomLimit;
+		};
 
 public:
 
@@ -1307,10 +1357,6 @@ public:
 	IMPORT_C void SetAFAssistantLightL(TAFAssistantLight aAFAssistantLight); 
 	
 	IMPORT_C void GetSupportedContinuousZoomTypeL(TUint& aSupportedContinuousZoomType) const;
-
-	IMPORT_C void StartContinuousZoomL(TContinuousZoomType aContinuousZoomType, TZoomDirection aZoomDirection);
-
-	IMPORT_C void StopContinuousZoom();
 	
 	IMPORT_C void GetFocalLengthInfoL(TInt& aMinFocalLength, TInt& aCurrentFocalLength, TInt& aMaxFocalLength) const;
 	
@@ -1328,11 +1374,21 @@ public:
 	
 	IMPORT_C void GetIndirectFeatureChangesL(TUid aRequestedSetting, RArray<TUid>& aIndirectFeatureChanges) const;
 	
+	IMPORT_C void CreateContinuousZoomL(MContinuousZoomObserver& aObserver, TContinuousZoomType aContinuousZoomType, CCameraContinuousZoom*& aContinuousZoom);
+
 private:
 	IMPORT_C CCameraAdvancedSettings(CCamera& aOwner);
 	IMPORT_C void ConstructL();
 	
 private:
+	enum TECAMEventFilterScheme
+		{
+		/** Black listing will mean not to receive specific events */
+		EECAMEventFilterSchemeBlackList, 
+		/** White listing will mean to receive only specific events */
+		EECAMEventFilterSchemeWhiteList
+		};
+
 	void RegisterEventsL(TECAMEventFilterScheme aEventFilter, const RArray<TUid>& aEvents);
 	void GetRegisterEventsL(TECAMEventFilterScheme aEventFilter, RArray<TUid>& aEvents, TValueInfo& aInfo) const;
 	
@@ -1489,73 +1545,6 @@ CCamera::NewDuplicate2L().
 
 */
 static const TUid  KUidECamPresetAmbienceMood		= {KUidECamPresetAmbienceMoodUidValue};
-/** 
-Used to for video telephony.
-
-This uid value is available from the 'supported' or 'getter' methods only to the API clients using CCamera::New2L() or 
-CCamera::NewDuplicate2L().
-
-@publishedPartner
-@prototype
-*/
-static const TUid  KUidECamPresetVideoTelephony		= {KUidECamPresetVideoTelephonyUidValue};
-
-/** 
-Used to clarify that camera is not under any preset mode. Possible scenario: client sets camera in a particular preset 
-mode and then makes some setting changes on top of it. Then theoretically camera is out of that preset. Hence, 
-KUidECamPresetNone will be used in such cases.
-
-This uid value is available from the 'supported' or 'getter' methods only to the API clients using CCamera::New2L() or 
-CCamera::NewDuplicate2L().
-
-@publishedPartner
-@prototype
-*/
-static const TUid  KUidECamPresetNone		= {KUidECamPresetNoneUidValue};
- 
-/** Notifications related to presets */
-/**
-Used to notify clients about possible range restrictions, when camera works under a particular preset mode.
-This is not a particular preset uid.
-
-@note   Call CCamera::CCameraPresets::GetRangeRestrictedSettingsL(RArray<TUid>& aRangeRestrictedSettings) to retrieve 
-		the list of settings whose range have been restricted.
-
-@publishedPartner
-@prototype
-*/
-static const TUid  KUidECamEventRangeRestricted  = {KUidECamEventRangeRestrictedUidValue};
-
-/**
-Used to notify clients about possible feature restrictions, when camera works under a particular preset mode.
-This is not a particular preset uid.
-
-@note   Call CCamera::CCameraPresets::GetFeatureRestrictedSettingsL(RArray<TUid>& aFeatureRestrictedSettings) to retrieve 
-		the list of settings which have been restricted.
-
-@publishedPartner
-@prototype
-*/
-static const TUid  KUidECamEventFeatureRestricted  = {KUidECamEventFeatureRestrictedUidValue};
-
-/**
-Used to notify clients that locking of the preset operation has completed, when camera works under a particular preset mode.
-This is not a particular preset uid.
-
-@publishedPartner
-@prototype
-*/
-static const TUid  KUidECamEventPresetLocked  = {KUidECamEventPresetLockedUidValue};
-
-/**
-Used to notify clients that unlocking of the preset operation has completed, when camera works under a particular preset mode.
-This is not a particular preset uid.
-
-@publishedPartner
-@prototype
-*/
-static const TUid  KUidECamEventPresetUnlocked  = {KUidECamEventPresetUnlockedUidValue};
- 
  
 /**
 This API is used to simplify user - camera interaction by allowing simultaneous
@@ -1618,5 +1607,49 @@ private:
     MCameraPresets* iImpl;  // not owned
     MCameraPresets2* iImpl2;  // not owned
 	};
-	
+
+
+/**
+This API is used to provide advanced continuous zoom support to the user.
+
+This class is not directly created by the client but instead created via 
+CCameraAdvancedSettings::CreateContinuousZoomL(). Ownership of the object
+is passed back to the client.
+
+@note  This class is not intended for sub-classing and used to standardise existing
+       varieties of implementations.
+      
+@note  If the class methods leave, the output type parameter value is not guaranteed to be valid.
+
+@internalTechnology
+@prototype
+*/
+class CCamera::CCameraContinuousZoom : public CBase
+	{
+	friend void CCamera::CCameraAdvancedSettings::CreateContinuousZoomL(MContinuousZoomObserver& aObserver, TContinuousZoomType aContinuousZoomType, CCameraContinuousZoom*& aContinuousZoom);
+
+public:
+	IMPORT_C void StartContinuousZoomL(CCamera::CCameraAdvancedSettings::TContinuousZoomParameters aContinuousZoomParameters);
+
+	IMPORT_C void StopContinuousZoom();
+
+	IMPORT_C void GetContinuousZoomSupportInfoL(CCamera::CCameraAdvancedSettings::TContinuousZoomSupportInfo& aContinuousZoomInfo) const;
+
+	IMPORT_C void GetContinuousZoomId(TInt& aZoomId) const;
+
+	IMPORT_C ~CCameraContinuousZoom();
+
+private:
+	static CCameraContinuousZoom* CreateL(MContinuousZoomObserver& aObserver, CCamera::CCameraAdvancedSettings::TContinuousZoomType aContinuousZoomType, const MImplementationFactory& aImplFactory);
+
+	CCameraContinuousZoom();
+	void ConstructL(MContinuousZoomObserver& aObserver, CCamera::CCameraAdvancedSettings::TContinuousZoomType aContinuousZoomType, const MImplementationFactory& aImplFactory);
+
+private:
+	MCameraContinuousZoom*		iImpl;
+	};
+
 #endif // ECAMADVSETTINGS_H
+
+
+

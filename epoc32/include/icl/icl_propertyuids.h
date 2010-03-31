@@ -1,9 +1,9 @@
 // Copyright (c) 2006-2009 Nokia Corporation and/or its subsidiary(-ies).
 // All rights reserved.
 // This component and the accompanying materials are made available
-// under the terms of the License "Symbian Foundation License v1.0" to Symbian Foundation members and "Symbian Foundation End User License Agreement v1.0" to non-members
+// under the terms of "Eclipse Public License v1.0"
 // which accompanies this distribution, and is available
-// at the URL "http://www.symbianfoundation.org/legal/licencesv10.html".
+// at the URL "http://www.eclipse.org/legal/epl-v10.html".
 //
 // Initial Contributors:
 // Nokia Corporation - initial contribution.
@@ -12,8 +12,6 @@
 //
 // Description:
 //
-
-
 
 /**
  @file
@@ -93,6 +91,12 @@ Identifier for the decoding to reduced size support property.
  @see KDecodeToReducedSizeSupportUidValue
 */ 
 const TUid KUidDecodeToReducedSizeSupport   = {KDecodeToReducedSizeSupportUidValue};
+
+/** 
+Identifier for the auto rotate support property.
+ @see KUidJPGAutoRotateSupportValue
+*/ 
+const TUid KUidJPGAutoRotateSupport   = {KUidJPGAutoRotateSupportValue};
 
 /**
 Identifier for an ICL Extension. This is used in the opaque_data section of an ICL

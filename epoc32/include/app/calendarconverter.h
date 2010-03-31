@@ -1,9 +1,9 @@
 // Copyright (c) 2002-2009 Nokia Corporation and/or its subsidiary(-ies).
 // All rights reserved.
 // This component and the accompanying materials are made available
-// under the terms of the License "Symbian Foundation License v1.0" to Symbian Foundation members and "Symbian Foundation End User License Agreement v1.0" to non-members
+// under the terms of "Eclipse Public License v1.0"
 // which accompanies this distribution, and is available
-// at the URL "http://www.symbianfoundation.org/legal/licencesv10.html".
+// at the URL "http://www.eclipse.org/legal/epl-v10.html".
 //
 // Initial Contributors:
 // Nokia Corporation - initial contribution.
@@ -16,6 +16,7 @@
 #ifndef __CALENDARCONVERTER_H__
 #define __CALENDARCONVERTER_H__
 
+// System includes
 #include <e32std.h>
 #include <e32base.h>
 
@@ -52,7 +53,6 @@ are calculated using the -2636 epoch. This is equivalent to 2637 BCE (Before Com
 	{
 public:
 	IMPORT_C static CChineseCalendarConverter* NewL();
-
 	/** Creates a Chinese date from a TDateTime value.
 	
 	@param aDateTime The date/time value to convert.
@@ -85,5 +85,4 @@ public:
 	@return The Julian date. */
 	virtual TReal JulianDate() __SOFTFP =0;
 	};
-
 #endif

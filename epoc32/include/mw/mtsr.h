@@ -1,9 +1,9 @@
 // Copyright (c) 1998-2009 Nokia Corporation and/or its subsidiary(-ies).
 // All rights reserved.
 // This component and the accompanying materials are made available
-// under the terms of the License "Symbian Foundation License v1.0" to Symbian Foundation members and "Symbian Foundation End User License Agreement v1.0" to non-members
+// under the terms of "Eclipse Public License v1.0"
 // which accompanies this distribution, and is available
-// at the URL "http://www.symbianfoundation.org/legal/licencesv10.html".
+// at the URL "http://www.eclipse.org/legal/epl-v10.html".
 //
 // Initial Contributors:
 // Nokia Corporation - initial contribution.
@@ -11,8 +11,13 @@
 // Contributors:
 //
 // Description:
+// MTSR.H
 //
-
+/**
+ @file
+ @publishedAll
+ @released
+*/
 #ifndef __MTSR_H__
 #define __MTSR_H__
 
@@ -21,6 +26,9 @@
 #include <msvstd.h>
 #include <msvreg.h>
 #include <tnonoperationmtmdata.h>
+#ifndef SYMBIAN_ENABLE_SPLIT_HEADERS  
+#include "cinstalledmtmgroup.h"
+#endif
 
 // forward declarations
 class RWriteStream;
@@ -30,6 +38,11 @@ class CDictionaryFileStore;
 class CInstalledMtmGroup;
 class CMsvServerEntry;
 class TMsvSystemProgress;
+class CInstalledMtmGroupArray;
+
+#if (defined SYMBIAN_USER_PROMPT_SERVICE)
+const TUint KUIDMsgClientThreadInfo = 0x10283090;
+#endif
 
 class CBaseServerMtm : public CActive
 /** Base class for Server-side MTM components. Server-side MTMs provide all message 
@@ -365,6 +378,10 @@ public:
 	virtual void MoveWithinServiceL(const CMsvEntrySelection& aSelection,TMsvId aDestination, TRequestStatus& aStatus)=0;
 
 	IMPORT_C TInt SystemProgress(TMsvSystemProgress& aOutSysProg);
+#if (defined SYMBIAN_USER_PROMPT_SERVICE)	
+	TInt ClientThreadInfo(TThreadId aClientInfo, TBool aCapabilityCheck);
+#endif
+
 	TInt GetNonOperationMtmData(TNonOperationMtmDataType& aMtmDataType, TPtrC8& aResultBuffer);
 
 protected:
@@ -428,19 +445,6 @@ private:
 	CBaseServerMtm* NewMtmL(const RLibrary& aLib, CMsvServerEntry* aServerEntry, CRegisteredMtmDll& aReg) const;
 	};
 
-
-class CInstalledMtmGroupArray : public CArrayPtrFlat<CInstalledMtmGroup>
-/**
-@internalComponent
-@released
-*/
-	{
-public:
-	CInstalledMtmGroupArray();
-	~CInstalledMtmGroupArray();
-	void AddInstalledMtmGroupL(CInstalledMtmGroup* aInstalledMtmGroup);
-	};
-
 //**********************************
 // CMsvMtmCache
 //**********************************
@@ -497,8 +501,9 @@ private:
 	CMtmGroupData *LoadResFileL(const TDesC& aFullName, TUid &aUid);	
 private:
 	RFs& iFs;
-	CInstalledMtmGroupArray iInstalledMtmGroupArray;
+	CInstalledMtmGroupArray* iInstalledMtmGroupArray;
 	CServerMtmDllRegistry& iServerMtmDllRegistry;
+	TPath iPathName;
 	};
 
 #endif	// __MTSR_H__

@@ -1,9 +1,9 @@
 // Copyright (c) 2002-2009 Nokia Corporation and/or its subsidiary(-ies).
 // All rights reserved.
 // This component and the accompanying materials are made available
-// under the terms of the License "Symbian Foundation License v1.0" to Symbian Foundation members and "Symbian Foundation End User License Agreement v1.0" to non-members
+// under the terms of "Eclipse Public License v1.0"
 // which accompanies this distribution, and is available
-// at the URL "http://www.symbianfoundation.org/legal/licencesv10.html".
+// at the URL "http://www.eclipse.org/legal/epl-v10.html".
 //
 // Initial Contributors:
 // Nokia Corporation - initial contribution.
@@ -18,6 +18,10 @@
 
 #include <e32std.h>
 #include <fbs.h>
+
+#ifndef SYMBIAN_ENABLE_SPLIT_HEADERS
+#include <icl/imagecodecdef.h>
+#endif
 
 // Pre-definitions needed to make sure everything always defined in the right order
 class TFrameInfo;
@@ -53,55 +57,6 @@ enum TFrameState
 	/** Processing of streaming block is complete.
 	*/
 	EBlockComplete
-	};
-
-/**
-@internalComponent
-
-
-Class used to shadow the descriptor supplying the image data.
-
-It maintains a flag to determine whether the descriptor contains a
-filename or the image data itself.
-
-This class is not intended for public use.
-*/
-class TImageParameterData
-	{
-public:
-
-	/**
-	Flag used to determine what the descriptor contains.
-	*/
-	enum TImageParameterDataFlag
-		{
-		/** Field not set.
-		*/
-		ENull		= 0x00000000,
-
-		/** Descriptor is a filename.
-		*/
-		EFilename	= 0x00000001,
-
-		/** Descriptor contains data.
-		*/
-		EData		= 0x00000002
-		};
-
-	TImageParameterData();
-	void SetFilenamePtr(const TDesC* aSourceFilenamePtr);
-	void SetDataPtr(const TDesC8* aSourceDataPtr);
-	IMPORT_C TBool IsFilename() const;
-	IMPORT_C const TDesC* SourceFilenamePtr() const;
-	IMPORT_C const TDesC8* SourceDataPtr() const;
-
-private:
-	TImageParameterDataFlag iImageParameterDataFlag;
-	union
-		{
-		const TDesC* iSourceFilenamePtr;
-		const TDesC8* iSourceDataPtr;
-		};
 	};
 
 /**
@@ -359,6 +314,7 @@ protected:
 /**
 @publishedAll
 @released
+
 
 Provides functions to determine or set features of the codec's CImageProcessor plus
 provide extra functionality for Framework Extensions.

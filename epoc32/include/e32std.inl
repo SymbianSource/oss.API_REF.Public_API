@@ -1,9 +1,9 @@
 // Copyright (c) 1994-2009 Nokia Corporation and/or its subsidiary(-ies).
 // All rights reserved.
 // This component and the accompanying materials are made available
-// under the terms of the License "Symbian Foundation License v1.0" to Symbian Foundation members and "Symbian Foundation End User License Agreement v1.0" to non-members
+// under the terms of the License "Eclipse Public License v1.0"
 // which accompanies this distribution, and is available
-// at the URL "http://www.symbianfoundation.org/legal/licencesv10.html".
+// at the URL "http://www.eclipse.org/legal/epl-v10.html".
 //
 // Initial Contributors:
 // Nokia Corporation - initial contribution.
@@ -119,7 +119,7 @@ existing content.
 
 
 
-#ifndef __GCC32__
+#if !(defined(__GCC32__) && defined(__MARM__))
 inline TInt Mem::Compare(const TUint8* aLeft, TInt aLeftL, const TUint8* aRight, TInt aRightL)
 /**
 Compares a block of data at one specified location with a block of data at 
@@ -2393,6 +2393,8 @@ Assigns a string to this object from another TLex16 object.
 inline TLocale::TLocale(TInt)
 	{}
 
+inline TInt TLocale::RegionCode() const
+	{return(iRegionCode);}
 inline TInt TLocale::CountryCode() const
 /**
 Gets the code which is used to select country-specific locale data.
@@ -3203,6 +3205,11 @@ inline void TLocale::SetDeviceTime(TDeviceTimeState aState)
    	}
    
 
+/**
+Get the pointer to the TLocale object contained in this extended locale.
+
+@return Pointer to the TLocale object. 
+*/
 inline TLocale*	TExtendedLocale::GetLocale()
 	{ return &iLocale; }
 
@@ -3552,7 +3559,7 @@ inline TInt RDevice::Open(const TFindLogicalDevice& aFind,TOwnerType aType)
 // Class RCriticalSection
 inline TBool RCriticalSection::IsBlocked() const
 /**
-Tests whether the critical section is occupied by another thread.
+Tests whether the critical section is occupied by any thread.
 
 @return True, if the critical section is occupied by another thread. False, 
         otherwise.
@@ -5006,6 +5013,22 @@ inline TBool User::CreatorHasCapability(TCapability aCapability1, TCapability aC
 
 #endif // !__REMOVE_PLATSEC_DIAGNOSTIC_STRINGS__
 
+
+inline const TAny* User::LeaveIfNull(const TAny* aPtr)
+/**
+Leaves with the reason code KErrNoMemory, if the specified pointer is NULL. 
+
+If the pointer is not NULL, the function simply returns with the value of 
+the pointer.
+
+Used to check pointers to const objects.
+
+@param aPtr The pointer to be tested.
+
+@return If the function returns, the value of aPtr.
+*/
+	{ return (const TAny*)LeaveIfNull((TAny*)aPtr); }
+
 /** Sets this TSecurityInfo to the security attributes of this process. */
 inline void TSecurityInfo::SetToCurrentInfo()
 	{ new (this) TSecurityInfo(RProcess()); }
@@ -6147,6 +6170,9 @@ a sequential search.
 Matching is based on the comparison of a TInt value at the key offset position 
 within the objects.
 
+For classes which define their own equality operator (==), the alternative method
+FindL(const T& anEntry, TIdentityRelation<T> anIdentity) is recommended.
+
 The find operation always starts at the low index end of the array. There 
 is no assumption about the order of objects in the array.
 
@@ -6168,6 +6194,11 @@ a sequential search and a matching algorithm.
 
 The algorithm for determining whether two class T type objects match is provided 
 by a function supplied by the caller.
+
+Such a function need not be supplied if an equality operator (==) is defined for class T. 
+In this case, default construction of anIdentity provides matching.
+
+See Find(const T& anEntry, TIdentityRelation<T> anIdentity) for more details.
 
 The find operation always starts at the low index end of the array. There 
 is no assumption about the order of objects in the array.
@@ -6194,6 +6225,9 @@ a sequential search.
 Matching is based on the comparison of a TInt value at the key offset position 
 within the objects.
 
+For classes which define their own equality operator (==), the alternative method
+FindReverseL(const T& anEntry, TIdentityRelation<T> anIdentity) is recommended.
+
 The find operation always starts at the high index end of the array. There 
 is no assumption about the order of objects in the array.
 
@@ -6215,6 +6249,11 @@ a sequential search and a matching algorithm.
 
 The algorithm for determining whether two class T type objects match is provided 
 by a function supplied by the caller.
+
+Such a function need not be supplied if an equality operator (==) is defined for class T. 
+In this case, default construction of anIdentity provides matching.
+
+See Find(const T& anEntry, TIdentityRelation<T> anIdentity) for more details.
 
 The find operation always starts at the high index end of the array. There 
 is no assumption about the order of objects in the array.
@@ -7224,6 +7263,94 @@ inline void RArray<TUint>::ReserveL(TInt aCount)
 
 
 
+// class TChunkHeapCreateInfo
+/**
+Sets single thread property of the chunk heap.
+
+This overrides any previous call to TChunkHeapCreateInfo::SetSingleThread()
+for this TChunkHeapCreateInfo object.
+
+@param aSingleThread	ETrue when the chunk heap is to be single threaded,
+						EFalse otherwise.
+*/
+inline void TChunkHeapCreateInfo::SetSingleThread(const TBool aSingleThread)
+	{
+	iSingleThread = aSingleThread;
+	}
+
+
+/**
+Sets alignment of the cells of the chunk heap to be created.
+
+This overrides any previous call to TChunkHeapCreateInfo::SetAlignment()
+for this TChunkHeapCreateInfo object.
+
+@param aAlignment	The alignment of the heap cells.
+*/
+inline void TChunkHeapCreateInfo::SetAlignment(TInt aAlign)
+	{
+	iAlign = aAlign;
+	}
+
+
+/**
+Sets the increments to the size of the host chunk.  If the supplied value is 
+less than KMinHeapGrowBy, it is discarded and the value KMinHeapGrowBy is 
+used instead.
+
+This overrides any previous call to TChunkHeapCreateInfo::SetGrowBy()
+for this TChunkHeapCreateInfo object.
+
+@param aGrowBy	The increment to the size of the host chunk.
+*/
+inline void TChunkHeapCreateInfo::SetGrowBy(TInt aGrowBy)
+	{
+	iGrowBy = aGrowBy;
+	}
+
+
+/**
+Sets the offset from the base of the host chunk to the start of the heap.
+
+This overrides any previous call to TChunkHeapCreateInfo::SetOffset()
+for this TChunkHeapCreateInfo object.
+
+@param aOffset	The offset in bytes.
+*/
+inline void TChunkHeapCreateInfo::SetOffset(TInt aOffset)
+	{
+	iOffset = aOffset;
+	}
+
+
+/**
+Sets the mode flags of the chunk heap.
+
+This overrides any previous call to TChunkHeapCreateInfo::SetMode()
+for this TChunkHeapCreateInfo object.
+
+@param aMode	The mode flags for the chunk heap to be created, this should be
+				one or more of the values from TChunkHeapCreateMode.
+*/
+inline void TChunkHeapCreateInfo::SetMode(TUint aMode)
+	{
+	iMode = aMode;
+	}
+
+
+/**
+Sets the paging attribute of the chunk heap to be created.
+
+This overrides any previous call to TChunkHeapCreateInfo::SetPaging()
+for this TChunkHeapCreateInfo object.
+
+@param aPaging	The paging attribute for the chunk heap to be created.
+*/
+inline void TChunkHeapCreateInfo::SetPaging(const TChunkHeapPagingAtt aPaging)
+	{
+	iPaging = aPaging;
+	}
+
 
 /**
 Sets the priority of the client's process.
@@ -7345,8 +7472,11 @@ inline TInt RProcess::RenameMe(const TDesC& aName)
 #ifdef __SUPPORT_CPP_EXCEPTIONS__
 // The standard header file <exception> defines the following guard macro for EDG and CW, VC++, GCC respectively.
 // The guard below is ugly. It will surely come back and bite us unless we resolve the whole issue of standard headers
-// when we move to supporting Standard C++. 
-#if !defined(_EXCEPTION) && !defined(_EXCEPTION_) && !defined(__EXCEPTION__)
+// when we move to supporting Standard C++.
+
+// The macro __SYMBIAN_STDCPP_SUPPORT__ is defined when building a StdC++ target.
+// In this case, we wish to avoid defining uncaught_exception below since it clashes with the StdC++ specification 
+#if !defined(_EXCEPTION) && !defined(_EXCEPTION_) && !defined(__EXCEPTION__) && !defined(__SYMBIAN_STDCPP_SUPPORT__)
 
 #if defined(__VC32__) && !defined(_CRTIMP_PURE)
 

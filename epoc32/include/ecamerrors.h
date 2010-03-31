@@ -1,9 +1,9 @@
 // Copyright (c) 2005-2009 Nokia Corporation and/or its subsidiary(-ies).
 // All rights reserved.
 // This component and the accompanying materials are made available
-// under the terms of the License "Symbian Foundation License v1.0" to Symbian Foundation members and "Symbian Foundation End User License Agreement v1.0" to non-members
+// under the terms of "Eclipse Public License v1.0"
 // which accompanies this distribution, and is available
-// at the URL "http://www.symbianfoundation.org/legal/licencesv10.html".
+// at the URL "http://www.eclipse.org/legal/epl-v10.html".
 //
 // Initial Contributors:
 // Nokia Corporation - initial contribution.
@@ -15,8 +15,6 @@
 // 
 //
 
-
-
 /**
  @publishedAll
  @released
@@ -25,6 +23,11 @@
 
 #ifndef  ECAMERRORS_H
 #define  ECAMERRORS_H
+
+#ifndef SYMBIAN_ENABLE_SPLIT_HEADERS
+#include <ecamerrorsconst.h>
+#include <ecamerrorsdef.h>
+#endif
 
 /** The camera has been disabled, hence calls do not succeed  */
 static const TInt KErrECamCameraDisabled			= -12100;
@@ -54,42 +57,5 @@ conversion to different colors.
 
 */
 static const TInt KErrECamColorOperationConflict	= -12106;
-
-/**
-This error code is supposed to be used with new event KUidECamEvent2CameraRequestForcedTimedTakeOver 
-and KUidECamEvent2CameraRequestTimedTakeOver.
-This would mean that another such reserve request is outstanding and has higher priority than this client.
-
-@internalTechnology
-*/
-static const TInt KErrECamHighPriorityReserveRequesterExists = -12107;
-
-/**
-This error code is supposed to be used whenever any fatal error occurs from which the client cannot recover.
-
-@publishedPartner
-@prototype
-*/
-static const TInt KErrECamFatalError = -12108;
-
-/**
-If error is KErrECamImageResourceNotReleased and client wants to successfully call the Prepare method again, 
-client needs to delete all CCameraImageCapture objects and any Snapshot and Histogram objects associated with
-it as well. 
-
-@publishedPartner
-@prototype
-*/
-static const TInt KErrECamImageResourceNotReleased = -12109;
-
-/**
-If error is KErrECamVideoResourceNotReleased and client wants to successfully call the Prepare method again,
-client needs to call ReleaseVideoResource to unprepare video and then delete any Snapshot and Histogram 
-objects associated with it as well.
-
-@publishedPartner
-@prototype
-*/
-static const TInt KErrECamVideoResourceNotReleased = -12110;
 
 #endif // ECAMERRORS_H

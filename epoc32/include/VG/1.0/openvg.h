@@ -1,9 +1,9 @@
 /*------------------------------------------------------------------------
  *
- * OpenVG 1.1 Reference Implementation
+ * OpenVG 1.0.1 Reference Implementation
  * -------------------------------------
  *
- * Copyright (c) 2008 The Khronos Group Inc.
+ * Copyright (c) 2007-2009 The Khronos Group Inc.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a
  * copy of this software and /or associated documentation files
@@ -26,11 +26,11 @@
  *
  *//**
  * \file
- * \brief	OpenVG 1.1 API.
+ * \brief	OpenVG 1.0.1 API.
  *//*-------------------------------------------------------------------*/
 
-#ifndef __VG_1_1_OPENVG_H
-#define __VG_1_1_OPENVG_H
+#ifndef __VG_1_0_OPENVG_H
+#define __VG_1_0_OPENVG_H
 
 #ifndef __VG_OPENVG_H_
 #error Do not include this file directly. Use <VG/openvg.h>.
@@ -43,7 +43,7 @@
 	#define VG_API_CALL extern 
 	to 
 	#define VG_API_CALL IMPORT_C
-- the addition of __SOFTFP to all function prototypes
+- the addition of __SOFTFP in some of the function prototypes
 - the addition of VG_PATH_DATATYPE_INVALID in VGPathDatatype
 - the addition of VG_IMAGE_FORMAT_INVALID in VGImageFormat
 - the addition of VGeglImageKHR typedef for the VG_KHR_EGL_image extension
@@ -58,12 +58,12 @@
 extern "C" {
 #endif
 
+#define OPENVG_VERSION_1_0		1
+#define OPENVG_VERSION_1_0_1	1
+
 #include <khronos_types.h>
 
-#define OPENVG_VERSION_1_0 1
-#define OPENVG_VERSION_1_1 2
-
-typedef khronos_float_t  VGfloat;
+typedef khronos_float    VGfloat;
 typedef khronos_int8_t   VGbyte;
 typedef khronos_uint8_t  VGubyte;
 typedef khronos_int16_t  VGshort;
@@ -107,10 +107,6 @@ typedef enum {
   /* Scissoring rectangles */
   VG_SCISSOR_RECTS                            = 0x1106,
 
-  /* Color Transformation */
-  VG_COLOR_TRANSFORM                          = 0x1170,
-  VG_COLOR_TRANSFORM_VALUES                   = 0x1171,
-
   /* Stroke parameters */
   VG_STROKE_LINE_WIDTH                        = 0x1110,
   VG_STROKE_CAP_STYLE                         = 0x1111,
@@ -125,9 +121,6 @@ typedef enum {
 
   /* Color for vgClear */
   VG_CLEAR_COLOR                              = 0x1121,
-
-  /* Glyph origin */
-  VG_GLYPH_ORIGIN                             = 0x1122,
 
   /* Enable/disable alpha masking and scissoring */
   VG_MASKING                                  = 0x1130,
@@ -176,8 +169,7 @@ typedef enum {
   VG_MATRIX_PATH_USER_TO_SURFACE              = 0x1400,
   VG_MATRIX_IMAGE_USER_TO_SURFACE             = 0x1401,
   VG_MATRIX_FILL_PAINT_TO_USER                = 0x1402,
-  VG_MATRIX_STROKE_PAINT_TO_USER              = 0x1403,
-  VG_MATRIX_GLYPH_USER_TO_SURFACE             = 0x1404
+  VG_MATRIX_STROKE_PAINT_TO_USER              = 0x1403
 } VGMatrixMode;
 
 typedef enum {
@@ -352,8 +344,6 @@ typedef enum {
   VG_lL_8                                     = 10,
   VG_A_8                                      = 11,
   VG_BW_1                                     = 12,
-  VG_A_1                                      = 13,
-  VG_A_4                                      = 14,
 
   /* {A,X}RGB channel ordering */
   VG_sXRGB_8888                               =  0 | (1 << 6),
@@ -445,371 +435,212 @@ typedef enum {
   VG_EXTENSIONS                               = 0x2303
 } VGStringID;
 
-typedef enum {
-  VG_FONT_NUM_GLYPHS                          = 0x2F00
-} VGFontParamType;
-
-
 /* Function Prototypes */
 
 #ifndef VG_API_CALL
-#define VG_API_CALL IMPORT_C
-#endif
-#ifndef VG_APIENTRY
-#define VG_APIENTRY /* nothing */
-#endif
-#ifndef VG_APIEXIT
-#define VG_APIEXIT __SOFTFP
+#   if defined(SYMBIAN_VG_DLL_EXPORTS) 
+#       define VG_API_CALL EXPORT_C
+#   else
+#       define VG_API_CALL IMPORT_C
+#   endif //defined(SYMBIAN_VG_DLL_EXPORTS)
 #endif
 
-VG_API_CALL VGErrorCode VG_APIENTRY
-    vgGetError(void) VG_APIEXIT;
+VG_API_CALL VGErrorCode vgGetError(void);
 
-VG_API_CALL void VG_APIENTRY
-    vgFlush(void) VG_APIEXIT;
-VG_API_CALL void VG_APIENTRY
-    vgFinish(void) VG_APIEXIT;
+VG_API_CALL void vgFlush(void);
+VG_API_CALL void vgFinish(void);
 
 /* Getters and Setters */
-VG_API_CALL void VG_APIENTRY
-   vgSetf (VGParamType type, VGfloat value) VG_APIEXIT;
-VG_API_CALL void VG_APIENTRY
-    vgSeti (VGParamType type, VGint value) VG_APIEXIT;
-VG_API_CALL void VG_APIENTRY
-    vgSetfv(VGParamType type, VGint count,
-        const VGfloat * values) VG_APIEXIT;
-VG_API_CALL void VG_APIENTRY
-    vgSetiv(VGParamType type, VGint count,
-        const VGint * values) VG_APIEXIT;
-VG_API_CALL VGfloat VG_APIENTRY
-    vgGetf(VGParamType type) VG_APIEXIT;
-VG_API_CALL VGint   VG_APIENTRY
-    vgGeti(VGParamType type) VG_APIEXIT;
-VG_API_CALL VGint   VG_APIENTRY
-    vgGetVectorSize(VGParamType type) VG_APIEXIT;
-VG_API_CALL void    VG_APIENTRY
-    vgGetfv(VGParamType type, VGint count,
-        VGfloat * values) VG_APIEXIT;
-VG_API_CALL void    VG_APIENTRY
-    vgGetiv(VGParamType type, VGint count,
-        VGint * values) VG_APIEXIT;
-VG_API_CALL void VG_APIENTRY
-    vgSetParameterf(VGHandle object,
-        VGint paramType,
-        VGfloat value) VG_APIEXIT;
-VG_API_CALL void VG_APIENTRY
-    vgSetParameteri(VGHandle object,
-        VGint paramType,
-        VGint value) VG_APIEXIT;
-VG_API_CALL void VG_APIENTRY
-    vgSetParameterfv(VGHandle object,
-        VGint paramType,
-        VGint count,
-        const VGfloat * values) VG_APIEXIT;
-VG_API_CALL void VG_APIENTRY
-    vgSetParameteriv(VGHandle object,
-        VGint paramType,
-        VGint count,
-        const VGint * values) VG_APIEXIT;
+VG_API_CALL void vgSetf (VGParamType type, VGfloat value) __SOFTFP;
+VG_API_CALL void vgSeti (VGParamType type, VGint value);
+VG_API_CALL void vgSetfv(VGParamType type, VGint count,
+                         const VGfloat * values);
+VG_API_CALL void vgSetiv(VGParamType type, VGint count,
+                         const VGint * values);
 
-VG_API_CALL VGfloat VG_APIENTRY
-    vgGetParameterf(VGHandle object,
-        VGint paramType) VG_APIEXIT;
-VG_API_CALL VGint VG_APIENTRY
-    vgGetParameteri(VGHandle object,
-        VGint paramType) VG_APIEXIT;
-VG_API_CALL VGint VG_APIENTRY
-    vgGetParameterVectorSize(VGHandle object,
-        VGint paramType) VG_APIEXIT;
-VG_API_CALL void VG_APIENTRY
-    vgGetParameterfv(VGHandle object,
-        VGint paramType,
-        VGint count,
-        VGfloat * values) VG_APIEXIT;
-VG_API_CALL void VG_APIENTRY
-    vgGetParameteriv(VGHandle object,
-        VGint paramType,
-        VGint count,
-        VGint * values) VG_APIEXIT;
+VG_API_CALL VGfloat vgGetf(VGParamType type) __SOFTFP;
+VG_API_CALL VGint   vgGeti(VGParamType type);
+VG_API_CALL VGint   vgGetVectorSize(VGParamType type);
+VG_API_CALL void    vgGetfv(VGParamType type, VGint count, VGfloat * values);
+VG_API_CALL void    vgGetiv(VGParamType type, VGint count, VGint * values);
+
+VG_API_CALL void vgSetParameterf(VGHandle object,
+                                 VGint paramType,
+                                 VGfloat value) __SOFTFP;
+VG_API_CALL void vgSetParameteri(VGHandle object,
+                                 VGint paramType,
+                                 VGint value);
+VG_API_CALL void vgSetParameterfv(VGHandle object,
+                                  VGint paramType,
+                                  VGint count, const VGfloat * values);
+VG_API_CALL void vgSetParameteriv(VGHandle object,
+                                  VGint paramType,
+                                  VGint count, const VGint * values);
+
+VG_API_CALL VGfloat vgGetParameterf(VGHandle object,
+                                    VGint paramType) __SOFTFP;
+VG_API_CALL VGint vgGetParameteri(VGHandle object,
+                                  VGint paramType);
+VG_API_CALL VGint vgGetParameterVectorSize(VGHandle object,
+                                           VGint paramType);
+VG_API_CALL void vgGetParameterfv(VGHandle object,
+                                  VGint paramType,
+                                  VGint count, VGfloat * values);
+VG_API_CALL void vgGetParameteriv(VGHandle object,
+                                  VGint paramType,
+                                  VGint count, VGint * values);
 
 /* Matrix Manipulation */
-VG_API_CALL void VG_APIENTRY
-    vgLoadIdentity(void) VG_APIEXIT;
-VG_API_CALL void VG_APIENTRY
-    vgLoadMatrix(const VGfloat * m) VG_APIEXIT;
-VG_API_CALL void VG_APIENTRY
-    vgGetMatrix(VGfloat * m) VG_APIEXIT;
-VG_API_CALL void VG_APIENTRY
-    vgMultMatrix(const VGfloat * m) VG_APIEXIT;
-VG_API_CALL void VG_APIENTRY
-    vgTranslate(VGfloat tx, VGfloat ty) VG_APIEXIT;
-VG_API_CALL void VG_APIENTRY
-    vgScale(VGfloat sx, VGfloat sy) VG_APIEXIT;
-VG_API_CALL void VG_APIENTRY
-    vgShear(VGfloat shx, VGfloat shy) VG_APIEXIT;
-VG_API_CALL void VG_APIENTRY
-    vgRotate(VGfloat angle) VG_APIEXIT;
+VG_API_CALL void vgLoadIdentity(void);
+VG_API_CALL void vgLoadMatrix(const VGfloat * m);
+VG_API_CALL void vgGetMatrix(VGfloat * m);
+VG_API_CALL void vgMultMatrix(const VGfloat * m);
+VG_API_CALL void vgTranslate(VGfloat tx, VGfloat ty) __SOFTFP;
+VG_API_CALL void vgScale(VGfloat sx, VGfloat sy) __SOFTFP;
+VG_API_CALL void vgShear(VGfloat shx, VGfloat shy) __SOFTFP;
+VG_API_CALL void vgRotate(VGfloat angle) __SOFTFP;
 
 /* Masking and Clearing */
-typedef VGHandle VGMaskLayer;
-
-VG_API_CALL void VG_APIENTRY
-    vgMask(VGHandle mask, VGMaskOperation operation,
-        VGint x, VGint y,
-        VGint width, VGint height) VG_APIEXIT;
-VG_API_CALL void VG_APIENTRY
-    vgRenderToMask(VGPath path,
-        VGbitfield paintModes,
-        VGMaskOperation operation) VG_APIEXIT;
-VG_API_CALL VGMaskLayer VG_APIENTRY
-    vgCreateMaskLayer(VGint width, VGint height) VG_APIEXIT;
-VG_API_CALL void VG_APIENTRY
-    vgDestroyMaskLayer(VGMaskLayer maskLayer) VG_APIEXIT;
-VG_API_CALL void VG_APIENTRY
-    vgFillMaskLayer(VGMaskLayer maskLayer,
-        VGint x, VGint y,
-        VGint width, VGint height,
-        VGfloat value) VG_APIEXIT;
-VG_API_CALL void VG_APIENTRY
-    vgCopyMask(VGMaskLayer maskLayer,
-        VGint sx, VGint sy,
-        VGint dx, VGint dy,
-        VGint width, VGint height) VG_APIEXIT;
-VG_API_CALL void VG_APIENTRY
-    vgClear(VGint x, VGint y,
-        VGint width, VGint height) VG_APIEXIT;
+VG_API_CALL void vgMask(VGImage mask, VGMaskOperation operation,
+                        VGint x, VGint y, VGint width, VGint height);
+VG_API_CALL void vgClear(VGint x, VGint y, VGint width, VGint height);
 
 /* Paths */
-VG_API_CALL VGPath VG_APIENTRY
-    vgCreatePath(VGint pathFormat,
-        VGPathDatatype datatype,
-        VGfloat scale, VGfloat bias,
-        VGint segmentCapacityHint,
-        VGint coordCapacityHint,
-        VGbitfield capabilities) VG_APIEXIT;
-VG_API_CALL void VG_APIENTRY
-    vgClearPath(VGPath path, VGbitfield capabilities) VG_APIEXIT;
-VG_API_CALL void VG_APIENTRY
-    vgDestroyPath(VGPath path) VG_APIEXIT;
-VG_API_CALL void VG_APIENTRY
-    vgRemovePathCapabilities(VGPath path,
-        VGbitfield capabilities) VG_APIEXIT;
-VG_API_CALL VGbitfield VG_APIENTRY
-    vgGetPathCapabilities(VGPath path) VG_APIEXIT;
-VG_API_CALL void VG_APIENTRY
-    vgAppendPath(VGPath dstPath, VGPath srcPath) VG_APIEXIT;
-VG_API_CALL void VG_APIENTRY
-    vgAppendPathData(VGPath dstPath,
-        VGint numSegments,
-        const VGubyte * pathSegments,
-        const void * pathData) VG_APIEXIT;
-VG_API_CALL void VG_APIENTRY
-    vgModifyPathCoords(VGPath dstPath,
-        VGint startIndex,
-        VGint numSegments,
-        const void * pathData) VG_APIEXIT;
-VG_API_CALL void VG_APIENTRY
-    vgTransformPath(VGPath dstPath, VGPath srcPath) VG_APIEXIT;
-VG_API_CALL VGboolean VG_APIENTRY
-    vgInterpolatePath(VGPath dstPath,
-        VGPath startPath,
-        VGPath endPath,
-        VGfloat amount) VG_APIEXIT;
-VG_API_CALL VGfloat VG_APIENTRY
-    vgPathLength(VGPath path,
-        VGint startSegment,
-        VGint numSegments) VG_APIEXIT;
-VG_API_CALL void VG_APIENTRY
-    vgPointAlongPath(VGPath path,
-        VGint startSegment,
-        VGint numSegments,
-        VGfloat distance,
-        VGfloat * x, VGfloat * y,
-        VGfloat * tangentX,
-        VGfloat * tangentY) VG_APIEXIT;
-VG_API_CALL void VG_APIENTRY
-    vgPathBounds(VGPath path,
-        VGfloat * minX,
-        VGfloat * minY,
-        VGfloat * width,
-        VGfloat * height) VG_APIEXIT;
-VG_API_CALL void VG_APIENTRY
-    vgPathTransformedBounds(VGPath path,
-        VGfloat * minX,
-        VGfloat * minY,
-        VGfloat * width,
-        VGfloat * height) VG_APIEXIT;
-VG_API_CALL void VG_APIENTRY
-    vgDrawPath(VGPath path, VGbitfield paintModes) VG_APIEXIT;
+VG_API_CALL VGPath vgCreatePath(VGint pathFormat,
+                                VGPathDatatype datatype,
+                                VGfloat scale, VGfloat bias,
+                                VGint segmentCapacityHint,
+                                VGint coordCapacityHint,
+                                VGbitfield capabilities) __SOFTFP;
+VG_API_CALL void vgClearPath(VGPath path, VGbitfield capabilities);
+VG_API_CALL void vgDestroyPath(VGPath path);
+VG_API_CALL void vgRemovePathCapabilities(VGPath path,
+                                          VGbitfield capabilities);
+VG_API_CALL VGbitfield vgGetPathCapabilities(VGPath path);
+VG_API_CALL void vgAppendPath(VGPath dstPath, VGPath srcPath);
+VG_API_CALL void vgAppendPathData(VGPath dstPath,
+                                  VGint numSegments,
+                                  const VGubyte * pathSegments,
+                                  const void * pathData);
+VG_API_CALL void vgModifyPathCoords(VGPath dstPath, VGint startIndex,
+                                    VGint numSegments,
+                                    const void * pathData);
+VG_API_CALL void vgTransformPath(VGPath dstPath, VGPath srcPath);
+VG_API_CALL VGboolean vgInterpolatePath(VGPath dstPath,
+                                        VGPath startPath,
+                                        VGPath endPath,
+                                        VGfloat amount) __SOFTFP;
+VG_API_CALL VGfloat vgPathLength(VGPath path,
+                                 VGint startSegment, VGint numSegments) __SOFTFP;
+VG_API_CALL void vgPointAlongPath(VGPath path,
+                                  VGint startSegment, VGint numSegments,
+                                  VGfloat distance,
+                                  VGfloat * x, VGfloat * y,
+                                  VGfloat * tangentX, VGfloat * tangentY) __SOFTFP;
+VG_API_CALL void vgPathBounds(VGPath path,
+                              VGfloat * minX, VGfloat * minY,
+                              VGfloat * width, VGfloat * height);
+VG_API_CALL void vgPathTransformedBounds(VGPath path,
+                                         VGfloat * minX, VGfloat * minY,
+                                         VGfloat * width, VGfloat * height);
+VG_API_CALL void vgDrawPath(VGPath path, VGbitfield paintModes);
 
 /* Paint */
-VG_API_CALL VGPaint VG_APIENTRY
-    vgCreatePaint(void) VG_APIEXIT;
-VG_API_CALL void VG_APIENTRY
-    vgDestroyPaint(VGPaint paint) VG_APIEXIT;
-VG_API_CALL void VG_APIENTRY
-    vgSetPaint(VGPaint paint, VGbitfield paintModes) VG_APIEXIT;
-VG_API_CALL VGPaint VG_APIENTRY
-    vgGetPaint(VGPaintMode paintMode) VG_APIEXIT;
-VG_API_CALL void VG_APIENTRY
-    vgSetColor(VGPaint paint, VGuint rgba) VG_APIEXIT;
-VG_API_CALL VGuint VG_APIENTRY
-    vgGetColor(VGPaint paint) VG_APIEXIT;
-VG_API_CALL void VG_APIENTRY
-    vgPaintPattern(VGPaint paint, VGImage pattern) VG_APIEXIT;
+VG_API_CALL VGPaint vgCreatePaint(void);
+VG_API_CALL void vgDestroyPaint(VGPaint paint);
+VG_API_CALL void vgSetPaint(VGPaint paint, VGbitfield paintModes);
+VG_API_CALL VGPaint vgGetPaint(VGPaintMode paintMode);
+VG_API_CALL void vgSetColor(VGPaint paint, VGuint rgba);
+VG_API_CALL VGuint vgGetColor(VGPaint paint);
+VG_API_CALL void vgPaintPattern(VGPaint paint, VGImage pattern);
 
 /* Images */
-VG_API_CALL VGImage VG_APIENTRY
-    vgCreateImage(VGImageFormat format,
-        VGint width, VGint height,
-        VGbitfield allowedQuality) VG_APIEXIT;
-VG_API_CALL void VG_APIENTRY
-    vgDestroyImage(VGImage image) VG_APIEXIT;
-VG_API_CALL void VG_APIENTRY
-    vgClearImage(VGImage image,
-        VGint x, VGint y,
-        VGint width, VGint height) VG_APIEXIT;
-VG_API_CALL void VG_APIENTRY
-    vgImageSubData(VGImage image,
-        const void * data,
-        VGint dataStride,
-        VGImageFormat dataFormat,
-        VGint x, VGint y,
-        VGint width, VGint height) VG_APIEXIT;
-VG_API_CALL void VG_APIENTRY
-    vgGetImageSubData(VGImage image,
-        void * data,
-        VGint dataStride,
-        VGImageFormat dataFormat,
-        VGint x, VGint y,
-        VGint width, VGint height) VG_APIEXIT;
-VG_API_CALL VGImage VG_APIENTRY
-    vgChildImage(VGImage parent,
-        VGint x, VGint y,
-        VGint width, VGint height) VG_APIEXIT;
-VG_API_CALL VGImage VG_APIENTRY
-    vgGetParent(VGImage image) VG_APIEXIT;
-VG_API_CALL void VG_APIENTRY
-    vgCopyImage(VGImage dst, VGint dx, VGint dy,
-        VGImage src, VGint sx, VGint sy,
-        VGint width, VGint height,
-        VGboolean dither) VG_APIEXIT;
-VG_API_CALL void VG_APIENTRY
-    vgDrawImage(VGImage image) VG_APIEXIT;
-VG_API_CALL void VG_APIENTRY
-    vgSetPixels(VGint dx, VGint dy,
-        VGImage src, VGint sx, VGint sy,
-        VGint width, VGint height) VG_APIEXIT;
-VG_API_CALL void VG_APIENTRY
-    vgWritePixels(const void * data, VGint dataStride,
-        VGImageFormat dataFormat,
-        VGint dx, VGint dy,
-        VGint width, VGint height) VG_APIEXIT;
-VG_API_CALL void VG_APIENTRY
-    vgGetPixels(VGImage dst, VGint dx, VGint dy,
-        VGint sx, VGint sy,
-        VGint width, VGint height) VG_APIEXIT;
-VG_API_CALL void VG_APIENTRY
-    vgReadPixels(void * data, VGint dataStride,
-        VGImageFormat dataFormat,
-        VGint sx, VGint sy,
-        VGint width, VGint height) VG_APIEXIT;
-VG_API_CALL void VG_APIENTRY
-    vgCopyPixels(VGint dx, VGint dy,
-        VGint sx, VGint sy,
-        VGint width, VGint height) VG_APIEXIT;
-
-/* Text */
-typedef VGHandle VGFont;
-
-VG_API_CALL VGFont VG_APIENTRY
-    vgCreateFont(VGint glyphCapacityHint) VG_APIEXIT;
-VG_API_CALL void VG_APIENTRY
-    vgDestroyFont(VGFont font) VG_APIEXIT;
-VG_API_CALL void VG_APIENTRY
-    vgSetGlyphToPath(VGFont font,
-        VGuint glyphIndex,
-        VGPath path,
-        VGboolean isHinted,
-        const VGfloat glyphOrigin [2],
-        const VGfloat escapement[2]) VG_APIEXIT;
-VG_API_CALL void VG_APIENTRY
-    vgSetGlyphToImage(VGFont font,
-        VGuint glyphIndex,
-        VGImage image,
-        const VGfloat glyphOrigin [2],
-        const VGfloat escapement[2]) VG_APIEXIT;
-VG_API_CALL void VG_APIENTRY
-    vgClearGlyph(VGFont font,
-        VGuint glyphIndex) VG_APIEXIT;
-VG_API_CALL void VG_APIENTRY
-    vgDrawGlyph(VGFont font,
-        VGuint glyphIndex,
-        VGbitfield paintModes,
-        VGboolean allowAutoHinting) VG_APIEXIT;
-VG_API_CALL void VG_APIENTRY
-    vgDrawGlyphs(VGFont font,
-        VGint glyphCount,
-        const VGuint * glyphIndices,
-        const VGfloat * adjustments_x,
-        const VGfloat * adjustments_y,
-        VGbitfield paintModes,
-        VGboolean allowAutoHinting) VG_APIEXIT;
+VG_API_CALL VGImage vgCreateImage(VGImageFormat format,
+                                  VGint width, VGint height,
+                                  VGbitfield allowedQuality);
+VG_API_CALL void vgDestroyImage(VGImage image);
+VG_API_CALL void vgClearImage(VGImage image,
+                              VGint x, VGint y, VGint width, VGint height);
+VG_API_CALL void vgImageSubData(VGImage image,
+                                const void * data, VGint dataStride,
+                                VGImageFormat dataFormat,
+                                VGint x, VGint y, VGint width, VGint height);
+VG_API_CALL void vgGetImageSubData(VGImage image,
+                                   void * data, VGint dataStride,
+                                   VGImageFormat dataFormat,
+                                   VGint x, VGint y,
+                                   VGint width, VGint height);
+VG_API_CALL VGImage vgChildImage(VGImage parent,
+                                 VGint x, VGint y, VGint width, VGint height);
+VG_API_CALL VGImage vgGetParent(VGImage image); 
+VG_API_CALL void vgCopyImage(VGImage dst, VGint dx, VGint dy,
+                             VGImage src, VGint sx, VGint sy,
+                             VGint width, VGint height,
+                             VGboolean dither);
+VG_API_CALL void vgDrawImage(VGImage image);
+VG_API_CALL void vgSetPixels(VGint dx, VGint dy,
+                             VGImage src, VGint sx, VGint sy,
+                             VGint width, VGint height);
+VG_API_CALL void vgWritePixels(const void * data, VGint dataStride,
+                               VGImageFormat dataFormat,
+                               VGint dx, VGint dy,
+                               VGint width, VGint height);
+VG_API_CALL void vgGetPixels(VGImage dst, VGint dx, VGint dy,
+                             VGint sx, VGint sy,
+                             VGint width, VGint height);
+VG_API_CALL void vgReadPixels(void * data, VGint dataStride,
+                              VGImageFormat dataFormat,
+                              VGint sx, VGint sy,
+                              VGint width, VGint height);
+VG_API_CALL void vgCopyPixels(VGint dx, VGint dy,
+                              VGint sx, VGint sy,
+                              VGint width, VGint height);
 
 /* Image Filters */
-VG_API_CALL void VG_APIENTRY
-    vgColorMatrix(VGImage dst, VGImage src,
-        const VGfloat * matrix) VG_APIEXIT;
-VG_API_CALL void VG_APIENTRY
-    vgConvolve(VGImage dst, VGImage src,
-        VGint kernelWidth, VGint kernelHeight,
-        VGint shiftX, VGint shiftY,
-        const VGshort * kernel,
-        VGfloat scale,
-        VGfloat bias,
-        VGTilingMode tilingMode) VG_APIEXIT;
-VG_API_CALL void VG_APIENTRY
-    vgSeparableConvolve(VGImage dst, VGImage src,
-        VGint kernelWidth,
-        VGint kernelHeight,
-        VGint shiftX, VGint shiftY,
-        const VGshort * kernelX,
-        const VGshort * kernelY,
-        VGfloat scale,
-        VGfloat bias,
-        VGTilingMode tilingMode) VG_APIEXIT;
-VG_API_CALL void VG_APIENTRY
-    vgGaussianBlur(VGImage dst, VGImage src,
-        VGfloat stdDeviationX,
-        VGfloat stdDeviationY,
-        VGTilingMode tilingMode) VG_APIEXIT;
-VG_API_CALL void VG_APIENTRY
-    vgLookup(VGImage dst, VGImage src,
-        const VGubyte * redLUT,
-        const VGubyte * greenLUT,
-        const VGubyte * blueLUT,
-        const VGubyte * alphaLUT,
-        VGboolean outputLinear,
-        VGboolean outputPremultiplied) VG_APIEXIT;
-VG_API_CALL void VG_APIENTRY
-    vgLookupSingle(VGImage dst, VGImage src,
-        const VGuint * lookupTable,
-        VGImageChannel sourceChannel,
-        VGboolean outputLinear,
-        VGboolean outputPremultiplied) VG_APIEXIT;
+VG_API_CALL void vgColorMatrix(VGImage dst, VGImage src,
+                               const VGfloat * matrix);
+VG_API_CALL void vgConvolve(VGImage dst, VGImage src,
+                            VGint kernelWidth, VGint kernelHeight,
+                            VGint shiftX, VGint shiftY,
+                            const VGshort * kernel,
+                            VGfloat scale,
+                            VGfloat bias,
+                            VGTilingMode tilingMode) __SOFTFP;
+VG_API_CALL void vgSeparableConvolve(VGImage dst, VGImage src,
+                                     VGint kernelWidth,
+                                     VGint kernelHeight,
+                                     VGint shiftX, VGint shiftY,
+                                     const VGshort * kernelX,
+                                     const VGshort * kernelY,
+                                     VGfloat scale,
+                                     VGfloat bias,
+                                     VGTilingMode tilingMode) __SOFTFP;
+VG_API_CALL void vgGaussianBlur(VGImage dst, VGImage src,
+                                VGfloat stdDeviationX,
+                                VGfloat stdDeviationY,
+                                VGTilingMode tilingMode) __SOFTFP;
+VG_API_CALL void vgLookup(VGImage dst, VGImage src,
+                          const VGubyte * redLUT,
+                          const VGubyte * greenLUT,
+                          const VGubyte * blueLUT,
+                          const VGubyte * alphaLUT,
+                          VGboolean outputLinear,
+                          VGboolean outputPremultiplied);
+VG_API_CALL void vgLookupSingle(VGImage dst, VGImage src,
+                                const VGuint * lookupTable,
+                                VGImageChannel sourceChannel,
+                                VGboolean outputLinear,
+                                VGboolean outputPremultiplied);
 
 /* Hardware Queries */
-VG_API_CALL VGHardwareQueryResult VG_APIENTRY
-    vgHardwareQuery
-        (VGHardwareQueryType key,
-        VGint setting) VG_APIEXIT;
+VG_API_CALL VGHardwareQueryResult vgHardwareQuery(VGHardwareQueryType key,
+                                                  VGint setting);
 
 /* Renderer and Extension Information */
-VG_API_CALL const VGubyte * VG_APIENTRY
-    vgGetString(VGStringID name) VG_APIEXIT;
+VG_API_CALL const VGubyte * vgGetString(VGStringID name);
 
-#ifdef __cplusplus
+#ifdef __cplusplus 
 } /* extern "C" */
 #endif
 
-#endif /* __VG_1_1_OPENVG_H */
+#endif /*__VG_1_0_OPENVG_H */

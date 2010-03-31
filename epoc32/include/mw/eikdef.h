@@ -1,9 +1,9 @@
 // Copyright (c) 1997-2009 Nokia Corporation and/or its subsidiary(-ies).
 // All rights reserved.
 // This component and the accompanying materials are made available
-// under the terms of the License "Symbian Foundation License v1.0" to Symbian Foundation members and "Symbian Foundation End User License Agreement v1.0" to non-members
+// under the terms of "Eclipse Public License v1.0"
 // which accompanies this distribution, and is available
-// at the URL "http://www.symbianfoundation.org/legal/licencesv10.html".
+// at the URL "http://www.eclipse.org/legal/epl-v10.html".
 //
 // Initial Contributors:
 // Nokia Corporation - initial contribution.
@@ -18,6 +18,12 @@
 
 #include <e32std.h>
 #include <coedef.h>
+
+#ifndef SYMBIAN_ENABLE_SPLIT_HEADERS
+#include <uikon/eikdefconst.h>
+#include <uikon/eikdefmacros.h>
+#include <uikon/eikdefconstinternal.h>
+#endif
 
 /** This is used in combination with a specified position to place a popout on 
 the display. 
@@ -61,32 +67,6 @@ enum TEikPortFlag
 @released
 */
 #define iEikonEnv (STATIC_CAST(CEikonEnv*,iCoeEnv))
-
-/** Defines the border style for an editable control.
-
-@publishedPartner
-@released
-*/
-#define KEikEditableControlBorder TGulBorder::EShallowSunken
-
-/** Name of the default bitmap store.
-
-@publishedPartner
-@released
-*/
-_LIT(KEikDefaultAppBitmapStore,"*");
-
-/** Uid of the KEikMessageColorSchemeChange message.
-
-@publishedPartner
-@released
-*/
-const TInt KUidValueEikColorSchemeChangeEvent	=0x10006956;
-
-/**
-@internalComponent
-*/
-const TInt KEikCustomColorsArrayValue			=0x100057C2;
 
 /** Indicates that all windows should appear faded.
 
@@ -196,126 +176,9 @@ const TInt KEikPostCoeAppUiConstructL = 0x10207F66;
 _LIT8(KDebugStart, "-DebugMemFail:");
 
 /**
-@publishedPartner 
-@released
+WARNING: constant for internal use ONLY.  Compatibility is not guaranteed in future releases.
 */
-const TInt KEikDefaultCursorWidth=2;
-
-/**
-@publishedPartner 
-@released
-*/
-const TInt KTimeBetweenClicks=1000000;	 // in Microseconds	
-
-/**
-@publishedPartner 
-@released
-*/		 
-const TInt KDoubleClickDistance=10;
-
-/**
-@publishedPartner 
-@released
-*/	
-const TInt KKeyboardRepeatRate=50000;
-
-/**
-@publishedPartner 
-@released
-*/	
-const TInt KKeyboardRepeatInitialDelay=800000;
-
-/** Resource id of the query dialog.
-@publishedPartner
-@released
-*/
-const TInt KEikResIdQueryDialog	=0;
-
-/** Resource id of the info dialog.
-@publishedPartner
-@released
-*/
-const TInt KEikResIdInfoDialog	=1;
-
-/**
-@publishedPartner 
-@released
-*/	
-const TInt KEikErrorResolverMaxTextLength = 256;
-
-/**
-@internalTechnology
-*/
-#define COMPARE_BOOLS(a,b) (((a) && (b)) || (!(a) && !(b)))
-
-/**
-@internalComponent
-*/
-#if defined(_DEBUG)
-#define __UHEAP_CHECK_INTEGRITY User::Heap().Check()
-#else
-#define __UHEAP_CHECK_INTEGRITY
-#endif
-
-/**
-@internalComponent
-*/
-#define PROFILE_POINT_EIKON_FIRST		32
-
-/**
-@internalComponent
-*/
-#define PROFILE_POINT_EIKON_LAST		39
-
-/**
-@internalComponent
-*/
-#define PROFILE_POINT_EIKON_SIMPLE		32
-
-/**
-@internalComponent
-*/
-#define PROFILE_POINT_EIKON_DIALOG_LOAD	33
-
-/**
-@internalComponent
-*/
-#define PROFILE_POINT_EIKON_APP_LAUNCH	34
-
-/**
-@internalComponent
-*/
-#define PROFILE_POINT_EIKON_CLOCK		35
-
-/**
-@internalComponent
-*/
-#define PROFILE_POINT_EIKON_CALENDER	35
-
-/**
-@internalComponent
-*/
-#define PROFILE_POINT_EIKON_LIBS_LOAD	36
-
-/**
-@internalComponent
-*/
-#define PROFILE_POINT_EIKON_ADD_RES		37
-
-/**
-@internalComponent
-*/
-#define KEikEikonBitmapStore		KNullDesC
-
-/**
-@internalComponent
-*/
-const TUid KSystemIniFileUid = {0x1000010C};
-
-/**
-@internalComponent
-*/	
-const TInt KLastSystemWideErrCode = KErrCommsBreak;
+const TInt KEikCustomColorsArrayValue			=0x100057C2;
 
 
 #endif	// __EIKDEF_H__

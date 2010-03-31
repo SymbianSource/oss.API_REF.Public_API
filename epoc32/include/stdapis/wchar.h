@@ -25,8 +25,7 @@
  *
  * $FreeBSD: src/include/wchar.h,v 1.45 2004/08/12 12:19:10 tjr Exp $
  *
- * © Portions copyright (c) 2006 Nokia Corporation.  All rights reserved.
- * © Portions copyright (c) 2007 Symbian Software Ltd. All rights reserved.
+ * © Portions Copyright (c) 2006-2007 Nokia Corporation and/or its subsidiary(-ies). All rights reserved.
  */
 
 /*-
@@ -75,7 +74,7 @@ extern "C"
 #include <sys/_null.h>
 #include <sys/_types.h>
 #include <sys/stat.h>
-#include <machine/_limits.h>
+#include <stdapis/machine/_limits.h>
 #include <_ctype.h>
 #include <_ansi.h>
 #include <stdio.h>
@@ -358,6 +357,16 @@ IMPORT_C int wcsicoll(const wchar_t *wcs1, const wchar_t *wcs2);
 IMPORT_C int wcsncoll(const wchar_t* wcs1, const wchar_t* wcs2, size_t n);
 IMPORT_C int wcsnicoll(const wchar_t* wcs1, const wchar_t* wcs2, size_t n);
 IMPORT_C wchar_t* wtmpnam(wchar_t *s);
+
+#if defined(SYMBIAN_OE_LARGE_FILE_SUPPORT) && !defined(SYMBIAN_OE_NO_LFS)
+#define	wfopen64	wfopen
+#define wfreopen64	wfreopen
+#define wstat64		wstat
+#define wcreat64	wcreat
+#define wopen64		wopen
+#define wreaddir64	wreaddir
+#endif /* SYMBIAN_OE_LARGE_FILE_SUPPORT && !SYMBIAN_OE_NO_LFS */
+	
 
 #endif //__SYMBIAN32__
 __END_DECLS

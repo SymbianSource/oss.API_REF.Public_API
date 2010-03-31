@@ -31,7 +31,7 @@
 
 #include <sys/cdefs.h>
 #include <sys/_types.h>
-#include <machine/endian.h>
+#include <stdapis/machine/endian.h>
 
 #ifndef _UINT16_T_DECLARED
 typedef	__uint16_t	uint16_t;

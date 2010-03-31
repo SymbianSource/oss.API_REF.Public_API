@@ -1,9 +1,9 @@
 // Copyright (c) 1997-2009 Nokia Corporation and/or its subsidiary(-ies).
 // All rights reserved.
 // This component and the accompanying materials are made available
-// under the terms of the License "Symbian Foundation License v1.0" to Symbian Foundation members and "Symbian Foundation End User License Agreement v1.0" to non-members
+// under the terms of "Eclipse Public License v1.0"
 // which accompanies this distribution, and is available
-// at the URL "http://www.symbianfoundation.org/legal/licencesv10.html".
+// at the URL "http://www.eclipse.org/legal/epl-v10.html".
 //
 // Initial Contributors:
 // Nokia Corporation - initial contribution.
@@ -12,6 +12,12 @@
 //
 // Description:
 //
+
+/**
+ @file
+ @publishedAll
+ @released
+*/
 
 #if !defined(__UIKON_RH__)
 #define __UIKON_RH__
@@ -27,7 +33,6 @@
 #if !defined(__BAERRRSVR_RH__)
 #include <baerrrsvr.rh>
 #endif
-
 
 STRUCT RESOURCE_LINK
 	{
@@ -65,9 +70,10 @@ STRUCT NUMBER_INT32
 	LONG value=0;
 	}
 
+
 // EIKCOLOR.RH
 //
-// Copyright (c) 1997-1999 Symbian Ltd.  All rights reserved.
+// Copyright (c) 1997-2007 Nokia Corporation and/or its subsidiary(-ies).
 //
 
 STRUCT COLOR
@@ -98,7 +104,7 @@ STRUCT EIKCOLORLIST
 
 // EIKFONT.RH
 //
-// Copyright (c) 1997-1999 Symbian Ltd.  All rights reserved.
+// Copyright (c) 1997-2007 Nokia Corporation and/or its subsidiary(-ies).
 //
 
 //#include <eikfont.hrh>
@@ -118,7 +124,7 @@ STRUCT NAMED_FONT
 
 // EIKPRIV.RH
 //
-// Copyright (c) 1997-1999 Symbian Ltd.  All rights reserved.
+// Copyright (c) 1997-2007 Nokia Corporation and/or its subsidiary(-ies).
 //
 
 STRUCT INT16
@@ -126,14 +132,15 @@ STRUCT INT16
 	WORD value;
 	}
 
+
 // EIKPRTPV.RH
 //
-// Copyright (c) 1997-1999 Symbian Ltd.  All rights reserved.
+// Copyright (c) 1997-2007 Nokia Corporation and/or its subsidiary(-ies).
 //
 
 // EIKDEF.RH
 //
-// Copyright (c) 1997-1999 Symbian Ltd.  All rights reserved.
+// Copyright (c) 1997-2007 Nokia Corporation and/or its subsidiary(-ies).
 //
 
 STRUCT RSS_SIGNATURE
@@ -180,7 +187,7 @@ STRUCT VIEW_ID
 
 // EIKSPANE.RH
 //
-// Copyright (c) 1999 - 2003 Symbian Ltd.  All rights reserved.
+// Copyright (c) 1997-2007 Nokia Corporation and/or its subsidiary(-ies).
 //
 
 

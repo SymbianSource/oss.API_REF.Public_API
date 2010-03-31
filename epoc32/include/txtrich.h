@@ -1,17 +1,20 @@
-// Copyright (c) 1997-2009 Nokia Corporation and/or its subsidiary(-ies).
-// All rights reserved.
-// This component and the accompanying materials are made available
-// under the terms of the License "Symbian Foundation License v1.0" to Symbian Foundation members and "Symbian Foundation End User License Agreement v1.0" to non-members
-// which accompanies this distribution, and is available
-// at the URL "http://www.symbianfoundation.org/legal/licencesv10.html".
-//
-// Initial Contributors:
-// Nokia Corporation - initial contribution.
-//
-// Contributors:
-//
-// Description:
-//
+/*
+* Copyright (c) 1997-2009 Nokia Corporation and/or its subsidiary(-ies).
+* All rights reserved.
+* This component and the accompanying materials are made available
+* under the terms of "Eclipse Public License v1.0"
+* which accompanies this distribution, and is available
+* at the URL "http://www.eclipse.org/legal/epl-v10.html".
+*
+* Initial Contributors:
+* Nokia Corporation - initial contribution.
+*
+* Contributors:
+*
+* Description: 
+*
+*/
+
 
 #ifndef __TXTRICH_H__
 #define __TXTRICH_H__
@@ -23,6 +26,10 @@
 #include <mparser.h>
 #include <medobsrv.h>
 
+#ifndef SYMBIAN_ENABLE_SPLIT_HEADERS
+#include <txtrich_internal.h>
+#include <txtclipboard.h>
+#endif
 
 // forward references
 class CRichTextIndex;
@@ -33,16 +40,6 @@ class MRichTextStoreResolver;
 class TCharFormatX;
 class TCharFormatXMask;
 class CParserData;
-
-
-/**
-UIDs
-@internalComponent 
-*/
-const TUid KRichTextStyleDataUid = { 268450335 };
-const TUid KClipboardUidTypeRichText = { 268450336 };
-const TUid KClipboardUidTypeRichTextWithStyles = { 268450337 };
-const TUid KRichTextMarkupDataUid = { 268435558 };
 
 
 class CRichText : public CGlobalText
@@ -327,3 +324,6 @@ private:
 
 
 #endif
+
+
+

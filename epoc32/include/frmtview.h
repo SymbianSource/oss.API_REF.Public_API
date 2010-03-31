@@ -1,17 +1,20 @@
-// Copyright (c) 1997-2009 Nokia Corporation and/or its subsidiary(-ies).
-// All rights reserved.
-// This component and the accompanying materials are made available
-// under the terms of the License "Symbian Foundation License v1.0" to Symbian Foundation members and "Symbian Foundation End User License Agreement v1.0" to non-members
-// which accompanies this distribution, and is available
-// at the URL "http://www.symbianfoundation.org/legal/licencesv10.html".
-//
-// Initial Contributors:
-// Nokia Corporation - initial contribution.
-//
-// Contributors:
-//
-// Description:
-//
+/*
+* Copyright (c) 1997-2009 Nokia Corporation and/or its subsidiary(-ies).
+* All rights reserved.
+* This component and the accompanying materials are made available
+* under the terms of "Eclipse Public License v1.0"
+* which accompanies this distribution, and is available
+* at the URL "http://www.eclipse.org/legal/epl-v10.html".
+*
+* Initial Contributors:
+* Nokia Corporation - initial contribution.
+*
+* Contributors:
+*
+* Description: 
+*
+*/
+
 
 #ifndef __FRMTVIEW_H__
 #define __FRMTVIEW_H__
@@ -296,8 +299,11 @@ public:
 		{
 		public:
 
-		/** Called after reformatting but before redisplay, so that edit
-		windows, etc., can be resized.
+		/** Called after reformatting but before redisplay, so that the height of edit windows, etc., 
+		can be adjusted. There is no need to adjust the width of displaying components as formatting 
+		is always done to fit the specified width.
+		Implementers are not allowed to call any formatting functions while handling reformatting 
+		notifications as it may cause recursive loops leading to unexpected consequences.
 		@param aTextView A pointer to the current text view object. */
 		virtual void OnReformatL(const CTextView* aTextView) = 0;
 		};
@@ -317,6 +323,8 @@ public:
 	To use it, construct a TTagmaForwarder object, then call InitL(), which
 	finishes background formatting, then call the MTmTextLayoutForwarder
 	functions.
+	
+	The class should only be used internally by FORM component.
 	@publishedAll
 	@released
 	*/
@@ -444,7 +452,8 @@ public:
 	IMPORT_C TInt ScrollDisplayL(TCursorPosition::TMovementType aMovement,
 		CTextLayout::TAllowDisallow aScrollBlankSpace=CTextLayout::EFDisallowScrollingBlankSpace);
 	IMPORT_C TPoint SetViewLineAtTopL(TInt aLineNo);
-	IMPORT_C void ScrollDisplayPixelsL(TInt& aDeltaY);
+    IMPORT_C void ScrollDisplayPixelsL(TInt& aDeltaY);
+    IMPORT_C void ScrollDisplayPixelsNoLimitBorderL(TInt aDeltaY);
 	IMPORT_C TInt ScrollDisplayLinesL(TInt& aDeltaLines,
 		CTextLayout::TAllowDisallow aScrollBlankSpace = CTextLayout::EFDisallowScrollingBlankSpace);
 	IMPORT_C TInt ScrollDisplayParagraphsL(TInt& aDeltaParas,
@@ -560,9 +569,7 @@ private:
 	TInt iHorizontalScrollJump;
 	TInt iHeightNotDrawn;
 	MObserver* iObserver;	// must not be moved
-	/** Explicit off-screen bitmap to draw to.
-	@internalComponent */
-	CBitmapContext* iOffScreenContext;
+	CBitmapContext* iOffScreenContext; //Explicit off-screen bitmap to draw to.
 	TRect iReducedDrawingAreaRect;
 	TUint iDummy;// was iRedrawExtendedHighlight;
 	TBool iContextIsNavigation;

@@ -1,67 +1,89 @@
 /*
-* Copyright (c) 2009 Nokia Corporation and/or its subsidiary(-ies). All rights reserved.
+ * Copyright (c) 1999
+ * Boris Fomitchev
+ *
+ * This material is provided "as is", with absolutely no warranty expressed
+ * or implied. Any use is at your own risk.
+ *
+ * Permission to use or copy this software for any purpose is hereby granted
+ * without fee, provided the above notices are retained on all copies.
+ * Permission to modify the code and to distribute modified code is granted,
+ * provided the above notices are retained, and a notice that the code was
+ * modified is included with the above copyright notice.
+ *
+ */
 
-* Redistribution and use in source and binary forms, with or without 
-* modification, are permitted provided that the following conditions are met:
+#ifndef _STLP_INTERNAL_NEW
+#define _STLP_INTERNAL_NEW
 
-* Redistributions of source code must retain the above copyright notice, this 
-* list of conditions and the following disclaimer.
-* Redistributions in binary form must reproduce the above copyright notice, 
-* this list of conditions and the following disclaimer in the documentation 
-* and/or other materials provided with the distribution.
-* Neither the name of Nokia Corporation nor the names of its contributors 
-* may be used to endorse or promote products derived from this software 
-* without specific prior written permission.
+#ifndef _STLP_INTERNAL_CSTDDEF
+// size_t
+#  include <stl/_cstddef.h>
+#endif
 
-* THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" 
-* AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE 
-* IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE 
-* DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE 
-* FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL 
-* DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR 
-* SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER 
-* CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, 
-* OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE 
-* OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-*
-* Description:
-*
-*/
+#if defined (__BORLANDC__) && (__BORLANDC__ < 0x580)
+// new.h uses ::malloc ;(
+#  include _STLP_NATIVE_CPP_C_HEADER(cstdlib)
+using _STLP_VENDOR_CSTD::malloc;
+#endif
 
-#ifndef _STLP_NEW_H_HEADER
-# define _STLP_NEW_H_HEADER
+#if !defined (_STLP_NO_NEW_NEW_HEADER)
+#  if defined (_STLP_BROKEN_BAD_ALLOC_CLASS)
+#    define bad_alloc _STLP_NULLIFIED_BROKEN_BAD_ALLOC_CLASS
+#    define nothrow_t _STLP_NULLIFIED_BROKEN_BAD_NOTHROW_T_CLASS
+#    define nothrow _STLP_NULLIFIED_BROKEN_BAD_NOTHROW
+#  endif
 
-# ifdef _STLP_NO_BAD_ALLOC
-# ifndef _STLP_NEW_DONT_THROW
-#   define _STLP_NEW_DONT_THROW 1
-# endif /* _STLP_NEW_DONT_THROW */
+// eMbedded Visual C++ .NET unfortunately uses _INC_NEW for both <new.h> and <new>
+// we undefine the symbol to get the stuff in the SDK's <new>
+#  if defined (_STLP_WCE_NET) && defined (_INC_NEW)
+#    undef _INC_NEW
+#  endif
 
-#  include <exception>
+#  if defined (new)
+/* STLport cannot replace native Std library new header if new is a macro,
+ * please define new macro after <new> header inclusion.
+ */
+#    error Cannot include native new header as new is a macro.
+#  endif
 
+#  include _STLP_NATIVE_CPP_RUNTIME_HEADER(new)
+
+#  if defined (_STLP_BROKEN_BAD_ALLOC_CLASS)
+#    undef bad_alloc
+#    undef nothrow_t
+#    undef nothrow
+#    undef _STLP_NULLIFIED_BROKEN_BAD_ALLOC_CLASS
+#    undef _STLP_NULLIFIED_BROKEN_BAD_NOTHROW_T_CLASS
+#    undef _STLP_NULLIFIED_BROKEN_BAD_NOTHROW
+#  endif
+#else
+#  include <new.h>
+#endif
+
+#if defined (_STLP_NO_BAD_ALLOC) && !defined (_STLP_NEW_DONT_THROW_BAD_ALLOC)
+#  define _STLP_NEW_DONT_THROW_BAD_ALLOC 1
+#endif
+
+#if defined (_STLP_USE_EXCEPTIONS) && defined (_STLP_NEW_DONT_THROW_BAD_ALLOC)
+
+#  ifndef _STLP_INTERNAL_EXCEPTION
+#    include <stl/_exception.h>
+#  endif
 
 _STLP_BEGIN_NAMESPACE
 
-#if defined(__SYMBIAN32__) && defined( __WINSCW__)
-// already defined symcpp.h included from rvct2_2.h
+#  if defined (_STLP_NO_BAD_ALLOC)
 struct nothrow_t {};
-#endif
+#    define nothrow nothrow_t()
+#  endif
 
-
-# ifdef _STLP_OWN_IOSTREAMS
-#ifdef __ARMCC__
-extern _STLP_DECLSPEC const nothrow_t nothrow;
-#else
-extern IMPORT_C const nothrow_t& GetNoThrowObj();
-#define nothrow GetNoThrowObj()
-#endif
-# else
-#  define nothrow nothrow_t()
-# endif
-#ifndef _STLP_EXCEPTION_BASE
-#  define _STLP_EXCEPTION_BASE exception
-#endif
-
-class bad_alloc : public _STLP_EXCEPTION_BASE { 
+/*
+ * STLport own bad_alloc exception to be used if the native C++ library
+ * do not define it or when the new operator do not throw it to avoid
+ * a useless library dependency.
+ */
+class bad_alloc : public exception {
 public:
   bad_alloc () _STLP_NOTHROW_INHERENTLY { }
   bad_alloc(const bad_alloc&) _STLP_NOTHROW_INHERENTLY { }
@@ -72,137 +94,68 @@ public:
 
 _STLP_END_NAMESPACE
 
-#endif /* _STLP_NO_BAD_ALLOC */
+#endif /* _STLP_USE_EXCEPTIONS && (_STLP_NO_BAD_ALLOC || _STLP_NEW_DONT_THROW_BAD_ALLOC) */
 
-#if defined (_STLP_WINCE)
+#if defined (_STLP_RTTI_BUG)
 _STLP_BEGIN_NAMESPACE
 
-inline void* _STLP_CALL __stl_new(size_t __n) {
-  return ::malloc(__n);
-}
+inline void* _STLP_CALL __stl_new(size_t __n)
+{ return ::malloc(__n); }
 
-inline void _STLP_CALL __stl_delete(void* __p) {
-  free(__p);
-}
-
-#ifndef __cdecl
-# define __cdecl
-#endif
-
+inline void _STLP_CALL __stl_delete(void* __p)
+{ ::free(__p); }
 _STLP_END_NAMESPACE
 
-#else /* _STLP_WINCE */
+#else /* _STLP_RTTI_BUG */
 
-#include <new>
+#  if defined (_STLP_USE_OWN_NAMESPACE)
 
-# ifndef _STLP_NO_BAD_ALLOC
-#  ifdef _STLP_USE_OWN_NAMESPACE
+_STLP_BEGIN_NAMESPACE
 
-    _STLP_BEGIN_NAMESPACE
-    using _STLP_VENDOR_EXCEPT_STD::bad_alloc;
-    using _STLP_VENDOR_EXCEPT_STD::nothrow_t;
-    using _STLP_VENDOR_EXCEPT_STD::nothrow;
+#    if !defined (_STLP_NEW_DONT_THROW_BAD_ALLOC)
+using _STLP_VENDOR_EXCEPT_STD::bad_alloc;
+#    endif
 
-#  if defined (_STLP_GLOBAL_NEW_HANDLER)
-    using ::new_handler;
-    using ::set_new_handler;
+#    if !defined (_STLP_NO_BAD_ALLOC)
+using _STLP_VENDOR_EXCEPT_STD::nothrow_t;
+using _STLP_VENDOR_EXCEPT_STD::nothrow;
+#      if defined (_STLP_GLOBAL_NEW_HANDLER)
+using ::new_handler;
+using ::set_new_handler;
+#      else
+using _STLP_VENDOR_EXCEPT_STD::new_handler;
+using _STLP_VENDOR_EXCEPT_STD::set_new_handler;
+#      endif
+#    endif /* !_STLP_NO_BAD_ALLOC */
+
+_STLP_END_NAMESPACE
+#  endif /* _STLP_USE_OWN_NAMESPACE */
+
+#  if defined (_STLP_USE_EXCEPTIONS) && \
+     (defined (_STLP_NO_NEW_NEW_HEADER) || defined (_STLP_NEW_DONT_THROW_BAD_ALLOC))
+#    define _STLP_CHECK_NULL_ALLOC(__x) void* __y = __x; if (__y == 0) { _STLP_THROW(_STLP_STD::bad_alloc()); } return __y
 #  else
-    using _STLP_VENDOR_EXCEPT_STD::new_handler;
-    using _STLP_VENDOR_EXCEPT_STD::set_new_handler;
+#    define _STLP_CHECK_NULL_ALLOC(__x) return __x
 #  endif
-    
-    _STLP_END_NAMESPACE
 
-#  endif /* _STLP_OWN_NAMESPACE */
+_STLP_BEGIN_NAMESPACE
 
-# endif /* _STLP_NO_BAD_ALLOC */
+#  if ((defined (__IBMCPP__) || defined (__OS400__) || defined (__xlC__) || defined (qTidyHeap)) && defined (__DEBUG_ALLOC__))
+inline void* _STLP_CALL __stl_new(size_t __n)   { _STLP_CHECK_NULL_ALLOC(::operator _STLP_NEW(__n, __FILE__, __LINE__)); }
+inline void  _STLP_CALL __stl_delete(void* __p) { ::operator delete(__p, __FILE__, __LINE__); }
+#  else
+inline void* _STLP_CALL __stl_new(size_t __n)   { _STLP_CHECK_NULL_ALLOC(::operator _STLP_NEW(__n)); }
+inline void  _STLP_CALL __stl_delete(void* __p) { ::operator delete(__p); }
+#  endif
+_STLP_END_NAMESPACE
 
-# if defined (_STLP_NO_NEW_NEW_HEADER) || defined (_STLP_NEW_DONT_THROW) || defined (__SYMBIAN32__) \
-                    || defined (__WINS__) && ! defined (_STLP_CHECK_NULL_ALLOC)
-#  define _STLP_CHECK_NULL_ALLOC(__x) void* __y = __x;if (__y == 0){_STLP_THROW(bad_alloc());}return __y
-# if defined (__SYMBIAN32__)
-//# define _STLP_NEW operator new
-#define _STLP_NEW  ::malloc
-#endif
+#endif /* _STLP_RTTI_BUG */
+
+#endif /* _STLP_INTERNAL_NEW */
+
+
 /*
-# elif defined (__SYMBIAN32__) || defined (__WINS__)
-#  ifndef _STLP_USE_TRAP_LEAVE
-#   define _STLP_CHECK_NULL_ALLOC(__x) void* __y = __x;if (__y == 0){abort();}return __y
-#  else
-#   define _STLP_NEW(x) :: operator new (x, ELeave) 
-#   define _STLP_CHECK_NULL_ALLOC(__x) return __x
-#  endif
-*/
-# else
-#  define _STLP_CHECK_NULL_ALLOC(__x) return __x
-# endif
-
-#ifndef _STLP_NEW
-# define _STLP_NEW ::operator new
-#endif
-# define _STLP_PLACEMENT_NEW ::new
-
-_STLP_BEGIN_NAMESPACE
-
-#ifdef __SYMBIAN32__
-
-typedef void(*new_handler)();
-
-_STLP_DECLSPEC new_handler set_new_handler(new_handler pnew) throw();
-
-#endif
-
-#if (( defined(__IBMCPP__)|| defined(__OS400__) || defined (__xlC__) || defined (qTidyHeap)) && defined(__DEBUG_ALLOC__) )
-inline void*  _STLP_CALL __stl_new(size_t __n) {  _STLP_CHECK_NULL_ALLOC(_STLP_NEW(__n, __FILE__, __LINE__)); }
-inline void _STLP_CALL __stl_delete(void* __p) { ::operator delete(__p, __FILE__, __LINE__); }
-#else
-inline void*  _STLP_CALL __stl_new(size_t __n)   { return ::operator new(__n); }
-inline void   _STLP_CALL __stl_delete(void* __p) { ::operator delete(__p); }
-#endif
-_STLP_END_NAMESPACE
-
-
-# endif /* _STLP_WINCE */
-
-#if defined(__SYMBIAN32__) && !defined(__GCCE__)
-_STLP_DECLSPEC void *operator new(unsigned int aSize);
-
-_STLP_DECLSPEC void *operator new[](unsigned int aSize);
-#endif
-
-_STLP_DECLSPEC void operator delete(void* aPtr) throw();
-
-_STLP_DECLSPEC void operator delete[](void* aPtr) throw();
-
-_STLP_DECLSPEC void* operator new(unsigned int aSize, const std::nothrow_t& /*aNoThrow*/) throw();
-
-_STLP_DECLSPEC void* operator new[](unsigned int aSize, const std::nothrow_t& aNoThrow) throw();
-
-_STLP_DECLSPEC void operator delete(void* aPtr, const std::nothrow_t& /*aNoThrow*/) throw();
-
-_STLP_DECLSPEC void operator delete[](void* aPtr, const std::nothrow_t& /*aNoThrow*/) throw();
-
-
-// placement delete
-#ifndef __PLACEMENT_VEC_NEW_INLINE
-#define __PLACEMENT_VEC_NEW_INLINE
-inline void* operator new[](unsigned int /*aSize*/, void* aBase) throw()
-	{return aBase;}
-inline void operator delete[](void* /*aPtr*/, void* /*aBase*/) throw()
-    {
-    
-    }
-#endif
-
-#ifndef __PLACEMENT_NEW_INLINE
-#define __PLACEMENT_NEW_INLINE
-inline void* operator new(unsigned int /*aSize*/, void* aBase) throw()
-	{return aBase;}
-
-// Global placement operator delete
-inline void operator delete(void* /*aPtr*/, void* /*aBase*/) throw()
-	{}
-#endif //__PLACEMENT_NEW_INLINE
-
-
-#endif /* _STLP_NEW_H_HEADER */
+ * Local Variables:
+ * mode:C++
+ * End:
+ */

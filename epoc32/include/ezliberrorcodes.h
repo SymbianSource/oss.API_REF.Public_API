@@ -1,9 +1,9 @@
 // Copyright (c) 1997-2009 Nokia Corporation and/or its subsidiary(-ies).
 // All rights reserved.
 // This component and the accompanying materials are made available
-// under the terms of the License "Symbian Foundation License v1.0" to Symbian Foundation members and "Symbian Foundation End User License Agreement v1.0" to non-members
+// under the terms of "Eclipse Public License v1.0"
 // which accompanies this distribution, and is available
-// at the URL "http://www.symbianfoundation.org/legal/licencesv10.html".
+// at the URL "http://www.eclipse.org/legal/epl-v10.html".
 //
 // Initial Contributors:
 // Nokia Corporation - initial contribution.
@@ -16,8 +16,6 @@
 // 
 //
 
-
-
 /**
  @file
  @publishedAll 
@@ -27,9 +25,11 @@
 #ifndef __EZLIBERRORCODES_H__
 #define __EZLIBERRORCODES_H__
 
-////////////////////////////////////////////////////////////
+#include <e32def.h>
+
+//
 // Error codes returned from the CEZDecompressor and CEZCompressor classes 
-////////////////////////////////////////////////////////////
+//
 /** The Z_STREAM_ERROR zlib error code has been returned by an internal method 
 	due to a stream error. */
 const TInt KEZlibErrStream				= -11501;
@@ -51,9 +51,9 @@ const TInt KEZlibErrInflateTerminated	= -11507;
 /** An error has occured inflating the dictionary. */
 const TInt KEZlibErrInflateDictionary	= -11508;
 
-////////////////////////////////////////////////////////////
+//
 // Error codes returned from GZip classes (eg EZGZipFile and CEZGZipToFile)
-////////////////////////////////////////////////////////////
+//
 const TInt KEZlibErrNotGZipFile			= -11509;
 const TInt KEZlibErrInvalidCompression	= -11510;
 const TInt KEZlibErrBadGZipHeader		= -11511;

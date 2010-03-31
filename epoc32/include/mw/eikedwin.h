@@ -2,9 +2,9 @@
 * Copyright (c) 1997-1999 Nokia Corporation and/or its subsidiary(-ies).
 * All rights reserved.
 * This component and the accompanying materials are made available
-* under the terms of the License "Symbian Foundation License v1.0" to Symbian Foundation members and "Symbian Foundation End User License Agreement v1.0" to non-members
+* under the terms of "Eclipse Public License v1.0"
 * which accompanies this distribution, and is available
-* at the URL "http://www.symbianfoundation.org/legal/licencesv10.html".
+* at the URL "http://www.eclipse.org/legal/epl-v10.html".
 *
 * Initial Contributors:
 * Nokia Corporation - initial contribution.
@@ -63,6 +63,8 @@ class CAknExtendedInputCapabilities;
 class CAknPointerEventSuppressor;
 class CSmileyManager;
 class CSmileyCustomWrap;
+class CAknEdwinPhysicsHandler;
+class CEdwinAsyncFormat;
 
 // Forward declaration of now removed (Series 60 2.0) custom drawer class for CEikEdwin
 class CEikAvkonCustomDraw;
@@ -324,7 +326,22 @@ private:
         * @return value of current ClearDirection
         */
         TInt ClearDirection() const;
+        
+        /**
+         * Enables kinetic scrolling.
+         */
+        void EnableKineticScrollingL();
 
+        /**
+         * Enables physics.
+         */
+        void EnablePhysicsL();
+
+        /**
+         * Initializes physics.
+         */
+        void InitPhysicsL();
+        
     public: // from MCenRepNotifyHandlerCallback
         void HandleNotifyInt(TUint32 aId, TInt aNewValue);
 
@@ -338,7 +355,8 @@ private:
         enum TFlagIndices
             {
             ESkinBackgroundControlContextHasBeenSetIndex = 0,
-            ESuppressBackgroundDrawing
+            ESuppressBackgroundDrawing,
+            EKineticScrollingEnabled
             };
         class TAknEdwinPictographDrawer : public MAknPictographAnimatorCallBack
             {
@@ -394,15 +412,73 @@ private:
             EDrawing
             };
         TInt iDrawInvoked;
-        TInt iThumbPos;        
-#ifdef FF_AVKON_EMOTION_ICON_ENABLED
+        TInt iThumbPos;
         // own
         CSmileyManager* iSmiley;        
         CSmileyCustomWrap* iSmileyWrap;
         TBool iInlineEditing;
         TBool iDisableConvertInFormat;
-#endif
-		};
+        TCursorSelection iVisibleRange;
+        CEdwinAsyncFormat* iAsyncFormat;
+        
+        /**
+         * Pointer to CEikEdwin.
+         * Not own.
+         */
+        CEikEdwin* iEdwin;
+        
+        /**
+         * Scrolled offset if using rate scroll way.
+         */
+        TInt iScrolledDelta;
+
+        /**
+         * If ETrue, uses rate scroll. Otherwise uses original way.
+    	 */
+        TBool iUseRateScroll;
+
+        /**
+         * Used with each step of dragging scrollbar to record
+         * the thumb position before dragging action
+         */
+        TInt iScrollbarPosition;
+
+       /**
+         * Physics handler. Used only when physics feature is enabled.
+         * Own.
+         */
+        CAknEdwinPhysicsHandler* iPhysicsHandler;
+        
+        /**
+         * Content has moved down so that empty space
+         * above the editor content is visible.
+         */
+        TBool iStartBorderExceeded;
+        
+        /**
+         * Content has moved up so that empty space
+         * below the editor content is visible.
+         */
+        TBool iEndBorderExceeded;
+        
+        /**
+         * Amount of pixels out of border. In practice width
+         * of empty space above or below editor content.
+         */
+        TInt iPixelsOutOfBorder;
+
+        /**
+         * If ETrue, text cursor was visible before drag or flick started.
+         * Used to store cursor state so that it is possible to enable cursor
+         * again when dragging, flicking or bounce stops.
+         */
+        TBool iCursorWasVisible;
+        
+        /**
+         * If ETrue, ongoing scrolling is caused by moving scrollbar thumb.
+         */
+        TBool iScrolledByScrollBar;
+        };
 
 public:
 
@@ -1479,6 +1555,15 @@ public:
      *         @c EFalse otherwise. 
      */
     IMPORT_C TBool IsReadOnly() const;
+    
+    /**
+         * Gets editor flags from the editor.
+         * @return editor flags if existed
+         * @or return KErrNotFound
+         */
+    IMPORT_C TInt CEikEdwin::AknEditorFlags();
+    
+
 	
     /**
      * Determines whether the document being edited is read only. Displays 
@@ -1690,6 +1775,9 @@ public:
      * @param aHeight The maximum Edwin height.
     */
 	IMPORT_C void SetMaximumHeight(TInt aHeight);
+	
+	void OnEditorStateFlagChange( TInt aOldFlag, TInt aNewFlag );
+	void ReportChinesePopupEventL( TBool aChinesePopupOpen );
 
 public: // new utility methods
 
@@ -2231,26 +2319,42 @@ public: // Pictograph support
      */
     IMPORT_C void SetSuppressFormatting( TBool aSuppressed );
 
-#ifdef FF_AVKON_EMOTION_ICON_ENABLED
+    /**
+     * Enables kinetic scrolling in editor.
+     * 
+     * Note that when kinetic scrolling is enabled, it is
+     * no longer possible to disable it with this function.
+     * 
+     * @since S60 v5.2
+     * @param aEnable ETrue if kinetic scrolling should be enabled.
+     */
+    IMPORT_C void EnableKineticScrollingL( TBool aEnable );
+
 public: 
     void EnableSmileySupportL( TBool aEnableSmiley );
     TBool IsSmileyEnabled() const;
     void DrawSmileyInTextL( CBitmapContext& aGc, CFont& aFont, 
-        const TDesC& aText, TPoint& aPt );
+        const TDesC& aText, const TPoint& aPt );
     void ConvertVisibleTextForSmileyL( TBool aTextToCode );    
     void HandleScrollForSmileyL();
     TBool AdjustCursorForSmileyL( TInt aOldCursor, TCursorSelection& aSelect );
+    TRect AdjustDrawRectForSmiley( const TRect& aRect ) const;
+    void GetClipRegionForSmiley( RRegion& rgn, CFont& aFont, const TDesC& aText, 
+        const TPoint& aPt, const TRect& aRect ) const;
+    HBufC* ExtractTextLC( TCursorSelection aSelect );
+    void ConvertSmileyIconToTextL( TInt aStartPos, TDes& aText );
 
 private:
     void ConvertTextForSmileyL( TCursorSelection aSelect, 
         TBool aTextToCode, TBool aRedraw = ETrue );
     void TrimText( TDes& aText );
     TCursorSelection GetVisibleTextRangeL();
-    HBufC* ExtractTextLC( TCursorSelection aSelect );    
     void ExtendedRangeForSmiley( TCursorSelection& aSelect );
-    void ConvertSmileyForDeleteL( TInt aDocPos, TBool aBackSpace ); 
+    TBool ConvertSmileyForDeleteL( TInt aDocPos, TBool aBackSpace ); 
     void ConvertSmileyForDeleteL( const TCursorSelection &aSelect );
-#endif
+    TBool AdjustCursorPosByMovementL( TCursorPosition::TMovementType aMovement, 
+        TBool aSelect );
+    void HandleSelectionForSmiley( TCursorSelection aSelect );
 	    
 protected:
 
@@ -2307,7 +2411,8 @@ protected:
          */
         EPhoneNumberGrouping = 0x00000020,
 		ESuppressNotifyDraw  = 0x00000040,
-		ESuppressFormatting  = 0x00000080 // Suppresses calls to formatting
+		ESuppressFormatting  = 0x00000080, // Suppresses calls to formatting
+		ESkipBackgroundDrawer = 0x00000100
         };
 
 protected: // from MEditObserver
@@ -2630,7 +2735,28 @@ private:
     void SetVKBStatus();
     void ScrollViewToCursorLineL();
     void PerformRecordedOperationL();
-    void ScrollIfAtTopOrBottom();
+    void ScrollIfAtTopOrBottomL();
+    void SetSelectionVisibilityL(TBool isVisable);
+    
+    /**
+     * Sets scrollbars with kinetic scrolling.
+     */
+    void SetKineticScrollingScrollBarsL();
+    
+    /**
+     * Sets vertical scrollbar model with kinetic scrolling.
+     * 
+     * @param aVertModel Vertical scrollbar model 
+     */
+    void SetKineticScrollingScrollBarModel(
+            TEikScrollBarModel& aVertModel ) const;
+    
+    /**
+     * Enables rate scrolling in editor.
+     * 
+     * @param aEnable ETrue if rate scrolling should be enabled.
+     */
+    void EnableRateScrolling( TBool aEnable );
 
 private:
 
@@ -2742,6 +2868,12 @@ private:
     * metrics used for the scroll bar calculations.
     */
     void CalculateLineMetricsForBandFormattingL();
+    
+    /**
+     * check the selection content is visible character or not 
+     */
+    TBool IsSelectionVisible();
+
 
 protected:	// from MObjectProvider
 
@@ -2816,6 +2948,84 @@ public: // new since 3.0
     * @return   TRgb for the color to be used for background.
     */
     TRgb EditorBackgroundColor(TRgb& aConditionalColor) const;
+
+public:
+    /**
+     * Can be used by custom drawers to check if background drawing should be
+     * performed. This is meant to be used only if editor has
+     * MCoeControlBackground object attached.
+     *
+     * @return ETrue if custom drawer shouldn't draw background.
+     */
+    TBool SkipBackgroundDrawer() const;
+    
+    /**
+     * Scrolls view by amount of pixels.
+     * Stops scrolling when beginning or end of content exceeded.
+     * This function should be used when scrolling starts from inside content
+     * (in other words in normal situation when begin- or end-border has not
+     * yet exceeded) 
+     *
+     * @param   aPixelsToScroll Amount of pixels to scroll
+     * @param   aBorderExceeded returns ETrue if border was exceeded
+     * @param   aRestOfPixels   Amount of pixels not scrolled because border
+     *                          was exceeded  
+     *
+     * @return Amount of scrolled pixels.
+     */
+    TInt ScrollView( TInt aPixelsToScroll, TBool& aBorderExceeded,
+            TInt& aRestOfPixels );
+    
+    /**
+     * Scrolls view by amount of pixels.
+     *
+     * This function should be used to scroll when we have already
+     * exceeded begin- or end-border (we are out of borders).
+     * This function supports scrolling so that there can be empty space
+     * above or below the editor content (used in bounce effect).
+     * Stops scrolling when we return back to inside borders.
+     *
+     * @param   aPixelsToScroll Amount of pixels to scroll
+     * @param   aEndOfBounce    returns ETrue if content scrolled back
+     *                          to inside of borders
+     * @param   aRestOfPixels   Amount of pixels not scrolled
+     *
+     * @return Amount of scrolled pixels.
+     */
+    TInt ScrollViewWithBounce( TInt aPixelsToScroll, TBool& aEndOfBounce,
+            TInt& aRestOfPixels );
+    
+    /**
+     * Returns amount of pixels how much we are out of borders.
+     *
+     * @return Amount of pixels scrolled out of borders.
+     */
+    TInt PixelsOutOfBorder() const;
+    
+    /**
+     * Handles scrollbar events with kinetic scrolling.
+     *
+     * @param aScrollBar The scrollbar.
+     */
+    void HandleScrollEventWithPhysics( CEikScrollBar* aScrollBar );
+	
+	 /**
+     * If cursor is visible, disables it and stores cursor visibility info.
+     */
+    void StoreCursorState();
+    
+    /**
+     * Show cursor again if needed (based on stored cursor visibility info).
+     */
+    void RestoreCursorState();
+    
+    /**
+     * Returns ETrue if kinetic scrolling is enabled.
+     *
+     * @return ETrue if kinetic scrolling is enabled.
+     */
+    TBool KineticScrollingEnabled() const;
+
 	
 protected:
 

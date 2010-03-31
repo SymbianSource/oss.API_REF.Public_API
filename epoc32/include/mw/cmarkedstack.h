@@ -1,9 +1,9 @@
 // Copyright (c) 2000-2009 Nokia Corporation and/or its subsidiary(-ies).
 // All rights reserved.
 // This component and the accompanying materials are made available
-// under the terms of the License "Symbian Foundation License v1.0" to Symbian Foundation members and "Symbian Foundation End User License Agreement v1.0" to non-members
+// under the terms of "Eclipse Public License v1.0"
 // which accompanies this distribution, and is available
-// at the URL "http://www.symbianfoundation.org/legal/licencesv10.html".
+// at the URL "http://www.eclipse.org/legal/epl-v10.html".
 //
 // Initial Contributors:
 // Nokia Corporation - initial contribution.
@@ -35,7 +35,7 @@ types of mark to be used on the same stack.
 Template parameter T specifies the type of object on the stack. Owner should be set to 
 ETrue if the object's destructor should delete the objects on the stack.
     @publishedAll
-    @released
+    @deprecated
  
 */
 {

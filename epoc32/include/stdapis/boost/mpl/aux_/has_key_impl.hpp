@@ -1,9 +1,9 @@
 
-#ifndef BOOST_MPL_SET_AUX_HAS_KEY_IMPL_HPP_INCLUDED
-#define BOOST_MPL_SET_AUX_HAS_KEY_IMPL_HPP_INCLUDED
+#ifndef BOOST_MPL_AUX_HAS_KEY_IMPL_HPP_INCLUDED
+#define BOOST_MPL_AUX_HAS_KEY_IMPL_HPP_INCLUDED
 
-// Copyright Aleksey Gurtovoy 2003-2004
-// Copyright David Abrahams 2003-2004
+// Copyright Aleksey Gurtovoy 2002-2004
+// Copyright David Abrahams 2003
 //
 // Distributed under the Boost Software License, Version 1.0. 
 // (See accompanying file LICENSE_1_0.txt or copy at 
@@ -11,50 +11,24 @@
 //
 // See http://www.boost.org/libs/mpl for documentation.
 
-// $Source: /cvsroot/boost/boost/boost/mpl/set/aux_/has_key_impl.hpp,v $
-// $Date: 2004/10/13 18:23:37 $
-// $Revision: 1.7 $
+// $Source: /cvsroot/boost/boost/boost/mpl/aux_/has_key_impl.hpp,v $
+// $Date: 2004/09/02 15:40:43 $
+// $Revision: 1.3 $
 
-#include <boost/mpl/set/aux_/tag.hpp>
 #include <boost/mpl/has_key_fwd.hpp>
-#include <boost/mpl/bool.hpp>
-#include <boost/mpl/aux_/overload_names.hpp>
-#include <boost/mpl/aux_/static_cast.hpp>
-#include <boost/mpl/aux_/yes_no.hpp>
-#include <boost/mpl/aux_/type_wrapper.hpp>
-#include <boost/mpl/aux_/config/workaround.hpp>
-#include <boost/mpl/aux_/config/static_constant.hpp>
+#include <boost/mpl/aux_/traits_lambda_spec.hpp>
 
 namespace boost { namespace mpl {
 
-template<>
-struct has_key_impl< aux::set_tag >
+// no default implementation; the definition is needed to make MSVC happy 
+
+template< typename Tag > struct has_key_impl
 {
-    template< typename Set, typename T > struct apply
-#if BOOST_WORKAROUND(BOOST_MSVC, BOOST_TESTED_AT(1400)) \
-    || BOOST_WORKAROUND(__EDG_VERSION__, <= 245)
-    {
-        BOOST_STATIC_CONSTANT(bool, value = 
-              ( sizeof( BOOST_MPL_AUX_OVERLOAD_CALL_IS_MASKED(
-                    Set
-                  , BOOST_MPL_AUX_STATIC_CAST(aux::type_wrapper<T>*, 0)
-                  ) ) == sizeof(aux::no_tag) )
-            );
-
-        typedef bool_<value> type;
-
-#else // ISO98 C++
-        : bool_< 
-              ( sizeof( BOOST_MPL_AUX_OVERLOAD_CALL_IS_MASKED(
-                    Set
-                  , BOOST_MPL_AUX_STATIC_CAST(aux::type_wrapper<T>*, 0)
-                  ) ) == sizeof(aux::no_tag) )
-            >
-    {
-#endif
-    };
+    template< typename AssociativeSequence, typename Key > struct apply;
 };
+
+BOOST_MPL_ALGORITM_TRAITS_LAMBDA_SPEC(2,has_key_impl)
 
 }}
 
-#endif // BOOST_MPL_SET_AUX_HAS_KEY_IMPL_HPP_INCLUDED
+#endif // BOOST_MPL_AUX_HAS_KEY_IMPL_HPP_INCLUDED

@@ -42,7 +42,7 @@
 #include <sys/_types.h>
 #include <sys/_sigset.h>
 
-#include <machine/signal.h>	/* sig_atomic_t; trap codes; sigcontext */
+#include <stdapis/machine/signal.h>	/* sig_atomic_t; trap codes; sigcontext */
 
 /*
  * System defined signals.
@@ -81,6 +81,8 @@
 #define	SIGUSR2		31	/* user defined signal 2 */
 #define	SIGTHR		32	/* Thread interrupt. */
 
+#define SIGRTMIN	33
+#define SIGRTMAX	64
 /*
  * XXX missing SIGRTMIN, SIGRTMAX.
  */
@@ -88,6 +90,9 @@
 #define	SIG_DFL		((__sighandler_t *)0)
 #define	SIG_IGN		((__sighandler_t *)1)
 #define	SIG_ERR		((__sighandler_t *)-1)
+#define	SIG_HOLD	((__sighandler_t *)3)
+
+
 /*
  * XXX missing SIG_HOLD.
  */
@@ -110,30 +115,29 @@
  */
 typedef	void __sighandler_t(int);
 
-#if __POSIX_VISIBLE || __XSI_VISIBLE
 #ifndef _SIGSET_T_DECLARED
 #define	_SIGSET_T_DECLARED
-typedef	__sigset_t	sigset_t;
+typedef	__uint64_t sigset_t;
 #endif
-#endif
-
 
 #if __POSIX_VISIBLE || __XSI_VISIBLE
-struct __siginfo;
+struct __siginfo_t;
 
 /*
  * Signal vector "template" used in sigaction call.
  */
 struct sigaction {
 	union {
-		void    (*__sa_handler)(int);
-		void    (*__sa_sigaction)(int, struct __siginfo *, void *);
-	} __sigaction_u;		/* signal handler */
+		void    (*_sa_handler)(int);
+		void    (*_sa_sigaction)(int, struct __siginfo_t*, void *);
+	} _sa_u;		/* signal handler */
 	int	sa_flags;		/* see signal options below */
 	sigset_t sa_mask;		/* signal mask to apply */
 };
 
-#define	sa_handler	__sigaction_u.__sa_handler
+#define	sa_handler		_sa_u._sa_handler
+#define sa_sigaction 	_sa_u._sa_sigaction
+
 #endif
 
 #if __POSIX_VISIBLE || __XSI_VISIBLE

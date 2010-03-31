@@ -1,9 +1,9 @@
 // Copyright (c) 1997-2009 Nokia Corporation and/or its subsidiary(-ies).
 // All rights reserved.
 // This component and the accompanying materials are made available
-// under the terms of the License "Symbian Foundation License v1.0" to Symbian Foundation members and "Symbian Foundation End User License Agreement v1.0" to non-members
+// under the terms of the License "Eclipse Public License v1.0"
 // which accompanies this distribution, and is available
-// at the URL "http://www.symbianfoundation.org/legal/licencesv10.html".
+// at the URL "http://www.eclipse.org/legal/epl-v10.html".
 //
 // Initial Contributors:
 // Nokia Corporation - initial contribution.
@@ -14,8 +14,6 @@
 // e32\include\e32panic.h
 // 
 //
-
-
 
 /**
  @file e32panic.h
@@ -344,7 +342,7 @@ enum TCdtPanic
 	
 	/**
     It is raised by TRawEvent::ScanCode() when
-    the event is not a key down or key up event.
+    the event is not a key down, up or repeat event.
     
    	This panic is raised in debug builds only.
 	*/
@@ -1987,6 +1985,75 @@ enum TCdtPanic
 	@see TChunkCreateInfo
 	*/
 	EChkCreateInvalidVersion = 215,
+
+	
+	/**
+	This panic is raised when an invalid flag is set in the aMode parameter
+	to UserHeap::ChunkHeap().
+
+	@see TChunkHeapCreateMode
+	*/
+	EHeapCreateInvalidMode = 216,
+
+
+	/**
+	This panic is raised when a RReadWriteLock is created with an invalid
+	priority.
+
+	@see RReadWriteLock
+	*/
+	EReadWriteLockInvalidPriority = 217,
+
+
+	/**
+	This panic is raised when a RReadWriteLock is closed with readers/writers
+	still pending.
+
+	@see RReadWriteLock
+	*/
+	EReadWriteLockStillPending = 218,
+
+
+	/**
+	This panic is raised when a RReadWriteLock is requested with too many
+	readers or pending readers/writers.
+
+	@see RReadWriteLock
+	*/
+	EReadWriteLockTooManyClients = 219,
+
+
+	/**
+	This panic is raised when a RReadWriteLock is unlocked but the lock flags
+	are inconsistent, eg read and write lock held or no lock held.
+
+	@see RReadWriteLock
+	*/
+	EReadWriteLockBadLockState = 220,
+
+
+	/**
+	This debug-only panic is raised if the lock has been given to a reader
+	more than a thousand times in a row, while there is a pending writer.
+	It is intended to give a debug indication that writer starvation might be
+	happening.
+
+	@see RReadWriteLock
+	*/
+	EReadWriteLockWriterStarvation = 221,
+
+	/**
+    It is raised by TRawEvent::Repeats() when
+    the event is not a key repeat event.
+    
+   	This panic is raised in debug builds only.
+	*/
+	ETEventNotKeyRepeatType=222,
+
+	/**
+	This panic is raised when a corrupt surrogate is found in a descriptor.
+	*/
+	ECorruptSurrogateFound = 223,
 	};
 
 
@@ -2980,7 +3047,22 @@ enum TBasePanic
 	It can appear in debug build only.
 	*/
 	EObjInconsistent=104,
+	
+	/**
+	This panic is raised as a result of a call to the Pop() and PopAndDestroy()
+	static member functions of the CleanupStack class.
+	
+	The panic occurs when the cleanup operation of a popped item modifies the 
+	cleanup stack. In such a case, the function cannot guarantee that the correct 
+	items will be popped.
+	*/
+	EClnStackModified=105,
 
+	/**
+	This panic is raised as a result of a call to CServer2::SetPinClientDescriptors() after
+	CServer2::Start() has been invoked on a CServer2 object.
+	*/
+	ECServer2InvalidSetPin = 106,
     };
 
 #endif

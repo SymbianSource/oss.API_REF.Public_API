@@ -1,9 +1,9 @@
 // Copyright (c) 2001-2009 Nokia Corporation and/or its subsidiary(-ies).
 // All rights reserved.
 // This component and the accompanying materials are made available
-// under the terms of the License "Symbian Foundation License v1.0" to Symbian Foundation members and "Symbian Foundation End User License Agreement v1.0" to non-members
+// under the terms of "Eclipse Public License v1.0"
 // which accompanies this distribution, and is available
-// at the URL "http://www.symbianfoundation.org/legal/licencesv10.html".
+// at the URL "http://www.eclipse.org/legal/epl-v10.html".
 //
 // Initial Contributors:
 // Nokia Corporation - initial contribution.
@@ -13,12 +13,10 @@
 // Description:
 //
 
-
-
 /**
  @file WSPDecoder.h
  @publishedAll
- @released
+ @deprecated
 */
 
 #ifndef	__WSPDECODER_H__
@@ -40,7 +38,7 @@
 /**
 enum DecoderPanic
 @publishedAll
-@released
+@deprecated
 */
 enum TWspDecoderPanic
 	{
@@ -60,7 +58,7 @@ This is a simple class that associates these values.
 No ownership is handed to this class.  It is up to user of this class to
 open and close all resources used.
 @publishedAll
-@released
+@deprecated
 */
 class TWspField 
 	{
@@ -89,7 +87,7 @@ It detects boundaries between header/values based on the WAP-WSP spec.
 	- NextL() returns KErrNotFound when done
 
 @publishedAll
-@released
+@deprecated
 */ 
 class TWspHeaderSegmenter
 	{
@@ -118,7 +116,7 @@ private:
 /** 
 Decoder for WSP Primitves - WAP-WSP Section 8.4.1
 @publishedAll
-@released
+@deprecated
 */ 
 class TWspPrimitiveDecoder 
 	{
@@ -242,3 +240,5 @@ inline TWspPrimitiveDecoder::TWspPrimitiveDecoder(TPtrC8 aBuffer) :
 
 
 #endif // __WSPDECODER_H__
+
+

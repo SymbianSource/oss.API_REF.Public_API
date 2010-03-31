@@ -1,9 +1,9 @@
 // Copyright (c) 2000-2009 Nokia Corporation and/or its subsidiary(-ies).
 // All rights reserved.
 // This component and the accompanying materials are made available
-// under the terms of the License "Symbian Foundation License v1.0" to Symbian Foundation members and "Symbian Foundation End User License Agreement v1.0" to non-members
+// under the terms of "Eclipse Public License v1.0"
 // which accompanies this distribution, and is available
-// at the URL "http://www.symbianfoundation.org/legal/licencesv10.html".
+// at the URL "http://www.eclipse.org/legal/epl-v10.html".
 //
 // Initial Contributors:
 // Nokia Corporation - initial contribution.
@@ -39,14 +39,14 @@ class CAttributeLookupTable : public CBase
 	same ID value. 
 
 	@publishedAll
-	@released
+	@deprecated
 */
 {
 public:
 	//##ModelId=3B666BC701E3
 	IMPORT_C ~CAttributeLookupTable();
 	//##ModelId=3B666BC701DC
-	IMPORT_C static CAttributeLookupTable* CAttributeLookupTable::NewL();
+	IMPORT_C static CAttributeLookupTable* NewL();
 	//##ModelId=3B666BC701DA
 	IMPORT_C const HBufC* Des2IDL( const TDesC& ); // map descriptor to ID
 	//##ModelId=3B666BC701D3

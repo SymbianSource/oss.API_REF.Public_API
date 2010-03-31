@@ -2,9 +2,9 @@
 * Copyright (c) 1997-2009 Nokia Corporation and/or its subsidiary(-ies).
 * All rights reserved.
 * This component and the accompanying materials are made available
-* under the terms of the License "Symbian Foundation License v1.0" to Symbian Foundation members and "Symbian Foundation End User License Agreement v1.0" to non-members
+* under the terms of "Eclipse Public License v1.0"
 * which accompanies this distribution, and is available
-* at the URL "http://www.symbianfoundation.org/legal/licencesv10.html".
+* at the URL "http://www.eclipse.org/legal/epl-v10.html".
 *
 * Initial Contributors:
 * Nokia Corporation - initial contribution.
@@ -901,56 +901,6 @@ private:
      */
     void SetItemIndex( TInt aItemIndex );
  
-    /**
-     * Tests whether an item is visible. This method get bottom item index 
-     * from parameter
-     *
-     * @param aItemIndex Index of item to be tested.
-     * @param aBottomItemIndex Index of item in the bottom of view.
-     * @return @c ETrue if the item is visible.
-     */
-    TBool ItemIsVisible(TInt aItemIndex, TInt aBottomItemIndex) const;
-
-    /**
-     * Selects an item by index. 
-     *
-     * This function leaves if memory could not be allocated for an extra item
-     * in the array of selected items.
-     *
-     * @param aItemIndex Item to select.
-     * @param aBottomItemIndex Index of item in the bottom of view.
-     * @panic EEikPanicListBoxNoSelIndexArray Panics if selection indexes have 
-     *        not been defined for this class. 
-     */
-    void SelectItemL(TInt aItemIndex, TInt aBottomItemIndex);
-
-    /**
-     * Deselects an item by index.
-     *
-     * @param aItemIndex Item to deselect.
-     * @param aBottomItemIndex Index of item in the bottom of view.
-     * @panic EEikPanicListBoxNoSelIndexArray Panics if selection indexes have 
-     *        not been defined for this class. 
-     */
-    void DeselectItem(TInt aItemIndex, TInt aBottomItemIndex);
-
-    /**
-     * Draws the specified item via @c CListBoxDrawer::DrawItem() if it is 
-     * visible.
-     *
-     * @param aItemIndex Index number of the item to draw.
-     * @param aBottomItemIndex Index of item in the bottom of view.
-     */
-    void DrawItem(TInt aItemIndex, TInt aBottomItemIndex) const;
-    
-    /**
-     * Updates item selection.
-     *
-     * @param aSelectionMode The selection mode. 
-     * @param aBottomItemIndex Index of item in the bottom of view.
-     */
-    void UpdateSelectionL(TSelectionMode aSelectionMode, TInt aBottomItemIndex);
-
 protected:
 
     /**

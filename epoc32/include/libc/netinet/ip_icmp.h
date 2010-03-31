@@ -1,6 +1,7 @@
 /* IP_ICMP.H
  * 
- * Portions copyright (c) 1997-1999 Symbian Ltd.  All rights reserved.
+ * Portions Copyright (c) 1997-1999 Nokia Corporation and/or its subsidiary(-ies).
+ * All rights reserved.
  */
  
 /** @file
@@ -27,10 +28,6 @@
 
 #ifndef	_NETINET_IP_ICMP_H
 #define	_NETINET_IP_ICMP_H
-
-#include <libc\netinet\net_types.h>
-#include <libc\netinet\in.h>
-#include <libc\netinet\ip.h>
 
 #ifdef	__cplusplus
 extern "C" {

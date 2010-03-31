@@ -1,9 +1,9 @@
 // Copyright (c) 1997-2009 Nokia Corporation and/or its subsidiary(-ies).
 // All rights reserved.
 // This component and the accompanying materials are made available
-// under the terms of the License "Symbian Foundation License v1.0" to Symbian Foundation members and "Symbian Foundation End User License Agreement v1.0" to non-members
+// under the terms of "Eclipse Public License v1.0"
 // which accompanies this distribution, and is available
-// at the URL "http://www.symbianfoundation.org/legal/licencesv10.html".
+// at the URL "http://www.eclipse.org/legal/epl-v10.html".
 //
 // Initial Contributors:
 // Nokia Corporation - initial contribution.
@@ -28,30 +28,13 @@
 #include <w32std.h>
 #endif
 
-//
-// miscellaneous typedefs
-//
-/** @internalComponent */
-typedef TBuf8<1024> TConstructorBuf8; // implementation class
+//exported due to dependancies
+#include <graphics/clock/displayaddition.h>
 
-//
-// miscellaneous enums
-//
-
-/** @internalComponent */
-enum TDisplayType // implementation class
-	{
-	EDisplayDigital,
-	EDisplayAnalog
-	};
-
-/** @internalComponent */
-enum TAnalogDisplayHandFeatureType // implementation class
-	{
-	EAnalogDisplayHandFeatureLine,
-	EAnalogDisplayHandFeaturePolyLine,
-	EAnalogDisplayHandFeatureCircle
-	};
+/**
+@file
+@publishedAll
+ */
 
 /** Horizontal alignment options for text in a digital clock's display.
 
@@ -119,11 +102,12 @@ enum TAnalogDisplayHandType
 // miscellaneous structs
 //
 
-struct STimeDeviceShadow
+
 /** Determines how shadows are added to the clock display. 
 
 @publishedAll
 @released */
+struct STimeDeviceShadow
 	{
 	/** True if shadows should be displayed, else false. */
 	TBool iIsOn;
@@ -133,12 +117,13 @@ struct STimeDeviceShadow
 	TPoint iOffset;
 	};
 
-struct SAnalogDisplayAmPm
+
 /** Defines the display parameters of the AM/PM display for an analogue clock.
 
 @see RAnalogClock 
 @publishedAll
 @released */
+struct SAnalogDisplayAmPm
 	{
 	/** Position relative to the clock face. */
 	TPoint iPositionRelativeToFace;
@@ -161,25 +146,12 @@ struct SAnalogDisplayAmPm
 //
 
 
-class TDisplayAddition
-/** This class is used in the derivation of TAnalogDisplayHand and TDigitalDisplayTextSection. 
-
-@internalComponent */
-	{
-public:
-	const TDesC8& Buf() const;
-protected:
-	TConstructorBuf8 iBuf;
-	};
-
-//
-
-class TDigitalDisplayTextSection : public TDisplayAddition
 /** A text section for a digital clock.
 
 @see RDigitalClock 
 @publishedAll 
 @released */
+class TDigitalDisplayTextSection : public TDisplayAddition
 	{
 public:
 	IMPORT_C TDigitalDisplayTextSection(TInt aFontHandle, TRgb aTextColor, TDigitalDisplayHorizontalTextAlignment aHorizontalAlignment,
@@ -192,7 +164,7 @@ public:
 
 //
 
-class TAnalogDisplayHand : public TDisplayAddition
+
 /** A hand for an analogue clock.
 
 A hand is a vector drawing made from a number of features (lines, circles, 
@@ -202,6 +174,7 @@ position, with TPoint(0,0) being the center of the clock.
 @see RAnalogClock 
 @publishedAll 
 @released */
+class TAnalogDisplayHand : public TDisplayAddition
 	{
 public:
 	IMPORT_C TAnalogDisplayHand(TAnalogDisplayHandType aType);
@@ -226,12 +199,13 @@ private:
 // utility class
 //
 
-class RAnimWithUtils : public RAnim
+
 /** Utility class to support clock animation. 
 
 @publishedAll
 @released
 */
+class RAnimWithUtils : public RAnim
 	{
 protected:
 	RAnimWithUtils(RAnimDll& aAnimDll, const RWindowBase& aWindow);
@@ -256,12 +230,13 @@ private:
 //
 
 
-class RTimeDevice : public RAnimWithUtils
+
 /** Sets display parameters for clocks.
  
 @publishedAll
 @released
 */
+class RTimeDevice : public RAnimWithUtils
 	{
 protected:
 	RTimeDevice(RAnimDll& aAnimDll, const RWindowBase& aWindow);
@@ -281,11 +256,12 @@ public:
 
 //
 
-class RClock : public RTimeDevice
+
 /** Sets the time for clocks.
 
 @publishedAll
 @released */
+class RClock : public RTimeDevice
 	{
 protected:
 	RClock(RAnimDll& aAnimDll, const RWindowBase& aWindow);
@@ -298,7 +274,7 @@ public:
 // time-device concrete classes
 //
 
-class RDigitalClock : public RClock
+
 /** A digital clock.
 
 A digital clock is composed of one or more text sections, which define
@@ -306,6 +282,7 @@ how the time information is displayed.
 
 @publishedAll 
 @released */
+class RDigitalClock : public RClock
 	{
 public:
 	IMPORT_C RDigitalClock(RAnimDll& aAnimDll, const RWindowBase& aWindow);
@@ -320,13 +297,13 @@ public:
 //
 
 
-class RAnalogClock : public RClock
+
 /** An analogue clock.
 
 @see CFbsBitmap::Handle() 
 @publishedAll 
 @released */
-
+class RAnalogClock : public RClock
 	{
 public:
 	IMPORT_C RAnalogClock(RAnimDll& aAnimDll, const RWindowBase& aWindow);
@@ -348,7 +325,7 @@ public:
 //
 
 
-class RMessageWindow : public RAnimWithUtils
+
 /** A configurable window that appears for a brief time to display a message to 
 the user and then disappears.
 
@@ -364,6 +341,7 @@ reasons only.
 @see CEikonEnv 
 @publishedAll 
 @released */
+class RMessageWindow : public RAnimWithUtils
 	{
 public:
 	/** Defines the maximum length of text in the message. */
@@ -387,3 +365,4 @@ public:
 	};
 
 #endif
+

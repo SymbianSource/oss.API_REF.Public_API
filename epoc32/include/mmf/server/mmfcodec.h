@@ -1,9 +1,9 @@
 // Copyright (c) 2002-2009 Nokia Corporation and/or its subsidiary(-ies).
 // All rights reserved.
 // This component and the accompanying materials are made available
-// under the terms of the License "Symbian Foundation License v1.0" to Symbian Foundation members and "Symbian Foundation End User License Agreement v1.0" to non-members
+// under the terms of "Eclipse Public License v1.0"
 // which accompanies this distribution, and is available
-// at the URL "http://www.symbianfoundation.org/legal/licencesv10.html".
+// at the URL "http://www.eclipse.org/legal/epl-v10.html".
 //
 // Initial Contributors:
 // Nokia Corporation - initial contribution.
@@ -22,7 +22,7 @@
 #include <e32base.h>
 #include <ecom/ecom.h>
 #include <mmf/common/mmfutilities.h>
-#include <mmfplugininterfaceuids.hrh>
+#include <mmf/plugin/mmfplugininterfaceuids.hrh>
 
 /*
  * This UID is the INTERFACE_UID for CMMFCodec.  It is used to search for codec plugins in plugin DLLs.
@@ -338,3 +338,4 @@ inline void CMMFCodec::ConfigureL(TUid /*aConfigType*/, const TDesC8& /*aConfigD
 }
 
 #endif
+

@@ -1,9 +1,9 @@
 // Copyright (c) 2001-2009 Nokia Corporation and/or its subsidiary(-ies).
 // All rights reserved.
 // This component and the accompanying materials are made available
-// under the terms of the License "Symbian Foundation License v1.0" to Symbian Foundation members and "Symbian Foundation End User License Agreement v1.0" to non-members
+// under the terms of "Eclipse Public License v1.0"
 // which accompanies this distribution, and is available
-// at the URL "http://www.symbianfoundation.org/legal/licencesv10.html".
+// at the URL "http://www.eclipse.org/legal/epl-v10.html".
 //
 // Initial Contributors:
 // Nokia Corporation - initial contribution.
@@ -55,30 +55,28 @@ enum TMdaPriority
 @publishedAll
 @released
 
-A set of priority values which define the behaviour to be adopted by an
-audio client if a higher priority client takes over the device.
+Audio priority preference values. These are to be interpreted as discrete values and not separate flags.
 */
 enum TMdaPriorityPreference
 	{
 	/**
-	No priority.
+	Default value - no specific meaning.
 	*/
-    EMdaPriorityPreferenceNone =	0x00000000,
+    EMdaPriorityPreferenceNone =	0,
 	/**
-	The audio data is time sensitive. The playback operation fails if it cannot happen when 
-	requested but degraded output such as mixing or muting is allowed.
-	*/
-    EMdaPriorityPreferenceTime =	0x00000001,
+	The audio data is time sensitive. The playback operation may fail if it cannot happen when 
+	requested but degraded output such as mixing or muting is allowed. Note that this is the
+	default behaviour anyway, but this declaration is maintained for compatability.	*/
+    EMdaPriorityPreferenceTime =	1,
 	/**
-    The audio data must be played at the best possible quality (for example, it must not be degraded by 
-	muting or mixing). The playback operation is delayed until the sound device is available for exclusive use.
+    The audio data should be played at the best possible quality (for example, it should not be degraded by 
+	muting or mixing). This is an advisory to the adaptation and can be ignored.
 	*/
-    EMdaPriorityPreferenceQuality = 0x00000002,
+    EMdaPriorityPreferenceQuality = 2,
 	/**
-    The audio data is both time and quality sensitive. The playback operation fails if it cannot 
-	happen immediately at the highest quality.
+    The audio data is both time and quality sensitive. Identical in behaviour to EMdaPriorityPreferenceQuality.
 	*/
-    EMdaPriorityPreferenceTimeAndQuality = EMdaPriorityPreferenceTime|EMdaPriorityPreferenceQuality
+    EMdaPriorityPreferenceTimeAndQuality = 3
 	};
 
 /**
@@ -115,36 +113,31 @@ enum TMMFState
 
 A class type representing the audio client's priority,
 priority preference and state settings.
+
+Note: The Priority Value and Priority Preference are used primarily when deciding what to do when
+several audio clients attempt to play or record simultaneously. In addition to the Priority Value and Preference, 
+the adaptation may consider other parameters such as the SecureId and Capabilities of the client process. 
+Whatever, the decision  as to what to do in such situations is up to the audio adaptation, and may
+vary between different phones. Portable applications are advised not to assume any specific behaviour. 
+
 */
 class TMMFPrioritySettings
 	{
 public:
 	TMMFPrioritySettings();
 	/**
-	Absolute priority of a client of the MMF Server.
-
-	Used by the policy server to determine which client should gain access to the sound device.
-
-	The priority which should be an integer in the range -100 to +100.
+    The Priority Value - this client's relative priority. This is a value between EMdaPriorityMin and 
+    EMdaPriorityMax and represents a relative priority. A higher value indicates a more important request.
 	*/
 	TInt iPriority;
 
 	/**
-    The priority preference that expresses the nature of the priority that can be none, 
-	time (or speed), quality or both time and quality.
-
-	If this is set to EMdaPriorityPreferenceTime then the audio data is time sensitive. The playback 
-	operation fails if it cannot happen when requested but degraded output such as mixing or muting 
-	is allowed.
-
-	If this is set to EMdaPriorityPreferenceQuality then the audio data must be played at the best possible 
-	quality (for example, it must not be degraded by muting or mixing). The playback operation is delayed
-	until the sound device is available for exclusive use.
-
-	If this is set to EMdaPriorityPreferenceTimeAndQuality then the audio data is both time and quality 
-	sensitive. The playback operation fails if it cannot happen immediately at the highest quality.
+    The Priority Preference - an additional audio policy parameter. The suggested default is 
+    EMdaPriorityPreferenceNone. Further values are given by TMdaPriorityPreference, and additional 
+    values may be supported by given phones and/or platforms, but should not be depended upon by 
+    portable code.
 	*/
-	TMdaPriorityPreference iPref;
+	TInt iPref;
 
 	/**
     The state of the MMF player such as idle, playing, recording and so on. See the TMMFState enum for possible states.

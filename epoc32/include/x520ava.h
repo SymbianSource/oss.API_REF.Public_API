@@ -17,11 +17,10 @@
 */
 
 
-
-
 /**
  @file 
- @internalTechnology 
+ @publishedAll
+ @released
 */
  
 #if !defined(__X520AVA_H__)
@@ -31,55 +30,7 @@
 #include <e32std.h>
 #include <s32std.h>
 
-/** The attribute type. 
-* 
-* @publishedAll
-* @released
-* @since v6.0 */
-enum TAttributeType
-	{
-	/** A common name */
-	ECommonName,
-	/** A locality name */
-	ELocalityName,
-	/** A state or province name */
-	EStateOrProvinceName,
-	/** An organization name */
-	EOrganizationName,
-	/** An organizational unit name */
-	EOrganizationalUnitName,
-	/** A title */
-	ETitle,
-	/** A qualifier */
-	EDNQualifier,
-	/** The name of a country */
-	ECountryName,
-	/** A given name */
-	EGivenName,
-	/** A surname */
-	ESurname,
-	/** Initials */
-	EInitials,
-	/** A generation qualifier */
-	EGenerationQualifier,
-	/** An email address. This is deprecated. */
-	EPKCS9EmailAddress,
-	/** A postal code */
-	EPostalCode,
-	/** A serial number */
-	ESerialNumber,
-	/** An RFC 2247 domain component.
-	* 
-	* A domain name is made up of an ordered set of components.*/
-	ERFC2247DomainComponent,
-	/** RFC 2256 street component.
-	* 
-	* A street */
-	ERFC2256Street,
-	/** A name of the subject of a certificate as an unstructured ASCII string */
-	EPKCS9UnstructuredName
-	};
-
+//these are for internal use only
 //these are the only attribute types we handle at present
 _LIT(KX520CountryName,"2.5.4.6");
 _LIT(KX520OrganizationName,"2.5.4.10");
@@ -94,6 +45,9 @@ _LIT(KX520Initials,"2.5.4.43");
 _LIT(KX520GenerationQualifier,"2.5.4.44");
 _LIT(KX520DNQualifier,"2.5.4.46");
 _LIT(KX520SerialNumber,"2.5.4.5");
+_LIT(KX520Description,"2.5.4.13");
+
+//more attribute types we handle at present
 _LIT(KX520PostalCode,"2.5.4.17");
 _LIT(KRFC2247DomainComponent, "0.9.2342.19200300.100.1.25");
 _LIT(KRFC2256Street,"2.5.4.9");
@@ -139,6 +93,59 @@ const TInt KPKCS9MaxUnstructuredNameLength = 256;
 const TInt KRFC2247MaxDomainComponentLength = 128;
 /** The maximum length allowed a for street. */
 const TInt KRFC2256StreetLength = 128;
+/** The maximum length allowed for an Description field. */
+const TInt KX520MaxDescriptionLength = 1024;
+
+
+/** The attribute type. 
+* 
+* @since v6.0 */
+enum TAttributeType
+	{
+	/** A common name */
+	ECommonName,
+	/** A locality name */
+	ELocalityName,
+	/** A state or province name */
+	EStateOrProvinceName,
+	/** An organization name */
+	EOrganizationName,
+	/** An organizational unit name */
+	EOrganizationalUnitName,
+	/** A title */
+	ETitle,
+	/** A qualifier */
+	EDNQualifier,
+	/** The name of a country */
+	ECountryName,
+	/** A given name */
+	EGivenName,
+	/** A surname */
+	ESurname,
+	/** Initials */
+	EInitials,
+	/** A generation qualifier */
+	EGenerationQualifier,
+	/** An email address. This is deprecated. */
+	EPKCS9EmailAddress,
+	/** A postal code */
+	EPostalCode,
+	/** A serial number */
+	ESerialNumber,
+	/** An RFC 2247 domain component.
+	* 
+	* A domain name is made up of an ordered set of components.*/
+	ERFC2247DomainComponent,
+	/** RFC 2256 street component.
+	* 
+	* A street */
+	ERFC2256Street,
+	/** A name of the subject of a certificate as an unstructured ASCII string */
+	EPKCS9UnstructuredName,
+	/** A Description */
+	EX520Description,
+	};
+
 
 class CASN1EncSequence;
 
@@ -148,8 +155,6 @@ class CX520AttributeTypeAndValue : public CBase
 * A Distinguished Name object, as defined by the X.500 standard, consists of 
 * a sequence of these objects. 
 * 
-* @publishedAll
-* @released
 * @since v6.0 
 */
 // Attribute and value pair class. Attribute and value pairs 
@@ -310,16 +315,16 @@ private:
 	void ConstructL(const TDesC8& aBinaryData, TInt& aPos);
 	void ConstructL(TAttributeType aType, const TDesC8& aValue);
 	/**
-	 * This method finds out if case-insensitive comparisons must be done or not.
+     * This method finds out if case-insensitive comparisons must be done or not.
 	 * Email Address is the exceptional case of 'IA5String' value type for which comparisons must be
 	 * done case-insensitivly.
 	 * 
 	 * @param aSource	contains the encoded value of the attribute type.
-	 * @return			ETrue, if case-insensitive comparisons are to be done. 
-	 * 						   This is only when value type is a Printable String OR if attribute type is an Email Address. 
-	 * 					EFalse, otherwise.
-	 */ 
-	TBool IsCaseInSensitive(const TDesC8& aSource) const;
+ 	 * @return	    	ETrue, if case-insensitive comparisons are to be done. 
+	 * 		        	This is only when value type is a Printable String OR if attribute type is an Email Address. 
+	 * 		        	EFalse, otherwise.
+ 	 */ 
+ 	TBool IsCaseInSensitiveL(const TDesC8& aSource) const;
 	HBufC* iType; ///< The encoded type
 	HBufC8* iValue; ///< The encoded value
 	};

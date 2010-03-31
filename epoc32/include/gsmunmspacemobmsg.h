@@ -1,9 +1,9 @@
 // Copyright (c) 2004-2009 Nokia Corporation and/or its subsidiary(-ies).
 // All rights reserved.
 // This component and the accompanying materials are made available
-// under the terms of the License "Symbian Foundation License v1.0" to Symbian Foundation members and "Symbian Foundation End User License Agreement v1.0" to non-members
+// under the terms of "Eclipse Public License v1.0"
 // which accompanies this distribution, and is available
-// at the URL "http://www.symbianfoundation.org/legal/licencesv10.html".
+// at the URL "http://www.eclipse.org/legal/epl-v10.html".
 //
 // Initial Contributors:
 // Nokia Corporation - initial contribution.
@@ -17,8 +17,6 @@
 // Correspondent ETEL types could be found in ETELMM.h, class RMobileSmsMessaging.
 // 
 //
-
-
 
 /**
  @file
@@ -43,12 +41,15 @@ namespace NMobileSmsMessaging
 	enum
 		{
 		KGsmTpduSize = 165,		// 140 bytes user data + 25 bytes TPDU header
+		/* @deprecated 9.5 */
 		KCdmaTpduSize  = 256	// Max size of Bearer Data in Transport Layer message
 		};
 
 	/** A typedef'd buffer for GSM or WCDMA message data.*/
 	typedef TBuf8<KGsmTpduSize>	TMobileSmsGsmTpdu;
-	/** A typedef'd buffer for CDMA message data.*/
+	/** A typedef'd buffer for CDMA message data.
+	 @deprecated 9.5
+	  */
 	typedef TBuf8<KCdmaTpduSize> TMobileSmsCdmaTpdu;
 	}
 

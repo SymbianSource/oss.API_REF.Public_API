@@ -1,0 +1,85 @@
+/*
+* Copyright (c) 2004 Nokia Corporation and/or its subsidiary(-ies). 
+* All rights reserved.
+* This component and the accompanying materials are made available
+* under the terms of "Eclipse Public License v1.0"
+* which accompanies this distribution, and is available
+* at the URL "http://www.eclipse.org/legal/epl-v10.html".
+*
+* Initial Contributors:
+* Nokia Corporation - initial contribution.
+*
+* Contributors:
+*
+* Description: For adding content to be synchronized.
+*
+*/
+
+
+
+/**
+@publishedPartner
+*/
+
+STRUCT SML_DATA_PROPERTY_PARAM
+	{
+	BYTE version=1;
+	LTEXT display_name;
+	LTEXT8 name;
+	LTEXT8 data_type;
+	LTEXT8 enum_values[];
+	}
+
+STRUCT SML_DATA_PROPERTY
+	{
+	BYTE version=1;
+	LTEXT display_name;
+	LTEXT8 name;
+	LTEXT8 data_type;
+	LTEXT8 enum_values[];
+	LONG flags;			// CSmlDataProperty::TOption bitmap (enum with integer value n maps to bit n)
+	WORD max_size;
+	WORD max_occur;
+	STRUCT params[];	// SML_DATA_PROPERTY_PARAM
+	}
+
+STRUCT SML_FILTER_CAPABILITY
+	{
+	BYTE version=1;
+	LTEXT8 mime_type;
+	LTEXT8 mime_ver;
+	LTEXT8 keywords[];
+	LTEXT8 properties[];
+	}
+
+STRUCT SML_MIME_FORMAT
+	{
+	BYTE version=1;
+	LTEXT8 mime_type;
+	LTEXT8 mime_ver;
+	STRUCT properties[];			// SML_DATA_PROPERTY
+	BYTE field_level;
+	}
+
+
+
+STRUCT SML_DATA_STORE_FORMAT
+	{
+	BYTE version=1;
+	LTEXT display_name;
+	WORD sync_types;				// TSmlSyncTypeMask
+	STRUCT mime_format[];			// SML_MIME_FORMAT
+   WORD mime_format_tx_pref;     // Preferred index for tx
+   WORD mime_format_rx_pref;     // Preferred index for rx
+	STRUCT folder_properties[];		// SML_DATA_PROPERTY
+	STRUCT filter_capabilities[];	// SML_FILTER_CAPABILITY
+	WORD max_size;
+	WORD max_items;
+	LONG flags;						// CSmlDataStoreFormat::TOption bitmap (enum with integer value n maps to bit n)
+	}
+
+
+
+
+
+

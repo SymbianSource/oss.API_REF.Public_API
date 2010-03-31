@@ -1,9 +1,9 @@
 // Copyright (c) 2002-2009 Nokia Corporation and/or its subsidiary(-ies).
 // All rights reserved.
 // This component and the accompanying materials are made available
-// under the terms of the License "Symbian Foundation License v1.0" to Symbian Foundation members and "Symbian Foundation End User License Agreement v1.0" to non-members
+// under the terms of "Eclipse Public License v1.0"
 // which accompanies this distribution, and is available
-// at the URL "http://www.symbianfoundation.org/legal/licencesv10.html".
+// at the URL "http://www.eclipse.org/legal/epl-v10.html".
 //
 // Initial Contributors:
 // Nokia Corporation - initial contribution.
@@ -252,6 +252,37 @@ public:
 	IMPORT_C virtual void GetInterface(TUid aInterfaceUid, TAny*& aInterface);
 private:
 	IMPORT_C virtual void Reserved2();
+	};
+	
+/** Extension interface UID
+@publishedAll
+@released
+*/
+const TUid KUidVersitPluginExtensionBase64Termination = {0x10285A92};
+
+/**
+Provides an extension to the MVersitPlugIn interface to allow a different ending of 
+the base64 multi-lines from the default format.
+
+Implementation of this interface is optional. Parser behaviour is not modified
+if the function MVersitPlugIn::GetInterface() has not been implemented or does
+not return an instance of a class implementing this interface when passed the
+Uid parameter value KUidVersitPluginExtensionBase64Termination.
+
+@publishedAll
+@released
+*/
+class MVersitPlugInExtensionBase64Ending
+	{
+public:
+
+	/** Allows Base64 encoding multi-lines without leading space and/or a blank line at the end
+	
+	@return ETrue, if the base64 data doesn't have leading spaces and/or a blank line at the end. The
+	versit parser will then search for ":" to determine if the next line is a continuation or a 
+	new property
+	*/
+	virtual TBool BlankLineAndLeadingSpaceNotRequired()=0;
 	};
 
 #endif

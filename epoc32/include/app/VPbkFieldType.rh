@@ -1,0 +1,136 @@
+/*
+* Copyright (c) 2004-2007 Nokia Corporation and/or its subsidiary(-ies).
+* All rights reserved.
+* This component and the accompanying materials are made available
+* under the terms of "Eclipse Public License v1.0"
+* which accompanies this distribution, and is available
+* at the URL "http://www.eclipse.org/legal/epl-v10.html".
+*
+* Initial Contributors:
+* Nokia Corporation - initial contribution.
+*
+* Contributors:
+*
+* Description:  Field types resource structures.
+*
+*/
+
+
+#ifndef VPBKFIELDTYPE_RH
+#define VPBKFIELDTYPE_RH
+
+#include <VPbkFieldType.hrh>
+
+/**
+ * Resource structure for a Virtual Phonebook field basic Versit property.
+ */
+STRUCT VBK_FIELD_VERSIT_PROPERTY
+    {
+    /**
+     * Versit property name. One of the TVPbkFieldTypeName in vpbkfieldtype.hrh.
+     * @see TVPbkFieldVersitProperty::iName
+     */
+    BYTE name = EVPbkVersitNameNone;
+
+    /**
+     * Versit subfield. One of the TVPbkSubFieldType in vpbkfieldtype.hrh.
+     * @see TVPbkFieldVersitProperty::iSubField
+     */
+    BYTE subField = EVPbkVersitSubFieldNone;
+
+    /**
+     * Versit parameters. An array of TVPbkFieldTypeParameter in 
+     * vpbkfieldtype.hrh.
+     * @see TVPbkFieldVersitProperty::iParameters
+     */
+    LEN BYTE BYTE parameters[];
+
+    /**
+     * Name of a versit extension property.
+     * @see TVPbkFieldVersitProperty::iExtensionName
+     */
+    LTEXT8 extensionName;
+    }
+
+/**
+ * Resource structure for Virtual Phonebook field type parameters.
+ * @see enum TVPbkFieldTypeParameter
+ * @see VPbkFieldType.hrh
+ */
+STRUCT VPBK_FIELD_TYPE_PARAMS
+    {
+    LEN BYTE BYTE parameters[];
+    }
+
+/**
+ * Resource structure for Virtual Phonebook field type mapping.
+ * @see TVPbkFieldTypeMapping
+ */
+STRUCT VPBK_FIELD_TYPE_MAPPING
+    {
+    /**
+     * Versit property for this field type mapping.
+     *
+     * @see VBK_FIELD_VERSIT_PROPERTY
+     */
+    STRUCT versitProperty;
+
+    /**
+     * Non-versit type for this field type mapping.
+     *
+     * @see TVPbkNonVersitFieldType in vpbkfieldtype.hrh.
+     */
+    BYTE nonVersitType = EVPbkNonVersitTypeNone;
+    }
+
+/**
+ * Resource structure for a collection of Virtual Phonebook field type mappings.
+ * @see class CVPbkSortOrder
+ */
+STRUCT VPBK_FIELD_TYPE_MAPPING_LIST
+    {
+    /**
+     * Array of VPBK_FIELD_TYPE_MAPPING structures
+     */
+    STRUCT items[];
+    }
+
+/**
+ * Resource structure for Virtual Phonebook field type selector.
+ * @see CVPbkFieldTypeSelector
+ */
+STRUCT VPBK_FIELD_TYPE_SELECTOR
+    {
+    /**
+     * The version of this field type selector. Defined by Virtual Phonebook.
+     */
+    BYTE version = EVPbkFieldTypeSelectorV2;
+    
+    /**
+     * Included versit properties for this field type selector.
+     *
+     * @see VBK_FIELD_VERSIT_PROPERTY
+     */
+    STRUCT versitProperties[];
+    
+    /**
+     * Included non-versit types for this field type selector.
+     *
+     * @see TVPbkNonVersitFieldType in vpbkfieldtype.hrh.
+     */
+    BYTE nonVersitType[];
+    
+    /**
+     * Excluded Type parameters. When a Versit property is matched against this
+     * field type it is considered a match only if it doesn't contain any of the
+     * excluded parameters. 
+     *
+     * @see TVPbkFieldTypeParameter
+     * @see MVPbkFieldType::ExcludedParameters()
+     */
+    LEN BYTE BYTE excludedParameters[];    
+    }
+
+#endif // VPBKFIELDTYPE_RH
+//End of file
+

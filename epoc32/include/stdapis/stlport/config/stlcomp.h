@@ -38,18 +38,22 @@
 #ifndef _STLP_COMP_H
 # define _STLP_COMP_H
 
+#include <_ansi.h>
 #ifdef __SYMBIAN32__
+/*
 #ifndef __NO_THROW
 #define __NO_THROW throw()
 #endif //__NO_THROW
 #ifndef NONSHARABLE_CLASS
 #define NONSHARABLE_CLASS(x) class x
 #endif
-#   include <_ansi.h>
+*/
 #else
 #   define EXPORT_C
 #   define IMPORT_C
 #endif
+
+
 
 #if 0
 #ifdef __SYMBIAN32__
@@ -127,19 +131,29 @@
  * Apple MPW MrCpp 4.1.0 */
 #  include <config/stl_apple.h>
 # elif defined(__SYMBIAN32__) && defined(EKA2) && defined (__GCCE__)
-#  include <config/stl_gcce.h>
+//#warning ***************USING GCCE COMPILER **************
+#   include <config/stl_epoc.h>
+#   include <config/_gcc.h>
+#   include <config/stl_gcce.h>
+//#  warning *****************************************
 # elif defined(__SYMBIAN32__) && defined(EKA2) && defined (__WINSCW__)
 /* Metrowerks CodeWarrior for Symbian EKA2 */
-
 //#  warning ********** USING METROWERKS COMPILER **********
+# include <config/stl_epoc.h>
 #  include <config/stl_winscw.h>
 //#  warning *****************************************
-
 #elif defined (__SYMBIAN32__) && defined(EKA2) && defined(__ARMCC__)
 /* ARM RVCT for Symbian EKA2 */
 //#  warning ********** USING RVCT COMPILER **********
+# include <config/stl_epoc.h>
 #  include <config/stl_rvct.h>
-
+//#  warning *****************************************
+# elif defined(__SYMBIAN32__) && defined(EKA2) && defined (__GCCXML__)
+//#warning ***************USING GCCXML COMPILER **************
+#   include <config/stl_epoc.h>
+#   include <config/_gcc.h>
+#   include <config/stl_gccxml.h>
+//#  warning *****************************************
 #elif defined (__SYMBIAN32__)
 
 /* NO-OP: This is just for the Symbian build process, to silence

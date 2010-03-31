@@ -1,9 +1,9 @@
 // Copyright (c) 1997-2009 Nokia Corporation and/or its subsidiary(-ies).
 // All rights reserved.
 // This component and the accompanying materials are made available
-// under the terms of the License "Symbian Foundation License v1.0" to Symbian Foundation members and "Symbian Foundation End User License Agreement v1.0" to non-members
+// under the terms of "Eclipse Public License v1.0"
 // which accompanies this distribution, and is available
-// at the URL "http://www.symbianfoundation.org/legal/licencesv10.html".
+// at the URL "http://www.eclipse.org/legal/epl-v10.html".
 //
 // Initial Contributors:
 // Nokia Corporation - initial contribution.
@@ -25,8 +25,10 @@
 
 // classes defined:
 class CApaSystemControl;
+#ifndef SYMBIAN_ENABLE_SPLIT_HEADERS
 class CApaSystemControlList;
-//
+#endif //SYMBIAN_ENABLE_SPLIT_HEADERS
+
 // classes referenced:
 class RFs;
 class CApaMaskedBitmap;
@@ -110,7 +112,7 @@ private:
 	};
 
 
-
+#ifndef SYMBIAN_ENABLE_SPLIT_HEADERS
 class CApaSystemControlList : public CBase
 /** Provides a list of all available control panel applications present on the phone. 
 This class is implemented as a linked list of CApaSystemControl. Updates the control panel application list by removing 
@@ -155,6 +157,6 @@ updated (by calling UpdateL()). It returns 1 for a newly created list.
 @return The number of times the control panel application list has been changed. */
 	{ return iUpdateCount; }
 
-
+#endif //SYMBIAN_ENABLE_SPLIT_HEADERS
 
 #endif
